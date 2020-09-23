@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <script>
+            const { remote } = require('electron')
+        </script>
+    </head>
+    <body>
+        <h2>Configure ENB Settings</h2>
+        <button onclick="remote.app.quit()">Test IFRAME Node Integrations</button>
+        <div
+            id='ENBProfilesList'>
+            <h3>ENB Profiles</h3>
+            <input
+                type="text"
+                class='ENBProfileTextBoxes'
+                id='ENBProfileText01'
+                rows=1
+                value='{Empty}'/>
+            <button
+                class='ENBPofileLoadButtons'
+                id='ENBProfileLoadButton01'>
+                Load
+            </button>
+            <button
+                class='ENBPofileConfigureButtons'
+                id='ENBPofileConfigureButton01'>
+                Configure
+            </button>
+            <br>
+            <input
+                type="text"
+                class='ENBProfileTextBoxes'
+                id='ENBProfileText02'
+                rows=1
+                value='{Empty}'/>
+            <button
+                class='ENBPofileLoadButtons'
+                id='ENBProfileLoadButton02'>
+                Load
+            </button>
+            <button
+                class='ENBPofileConfigureButtons'
+                id='ENBPofileConfigureButton02'>
+                Configure
+            </button>
+            <br>
+            <input
+                type="text"
+                class='ENBProfileTextBoxes'
+                id='ENBProfileText03'
+                rows=1
+                value='{Empty}'/>
+            <button
+                class='ENBPofileLoadButtons'
+                id='ENBProfileLoadButton03'>
+                Load
+            </button>
+            <button
+                class='ENBPofileConfigureButtons'
+                id='ENBPofileConfigureButton03'>
+                Configure
+            </button>
+            <br>
+        </div>
+    </body>
+</html>

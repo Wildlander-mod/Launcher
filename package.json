@@ -1,0 +1,23 @@
+{
+  "name": "ultskylauncher",
+  "version": "1.0.0",
+  "description": "A launcher for Ultimate Skyrim",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RingComics/UltSkyLauncher.git"
+  },
+  "author": "RingComics",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RingComics/UltSkyLauncher/issues"
+  },
+  "homepage": "https://github.com/RingComics/UltSkyLauncher#readme",
+  "dependencies": {
+    "electron": "^10.1.2",
+    "patreon": "^0.4.1"
+  }
+}
