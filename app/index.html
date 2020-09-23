@@ -1,17 +1,25 @@
 <html>
     <head>
         <title>Ultimate Skyrim Launcher</title>
+        <script src="js/reqs.js"></script>
         <script>
-            const { remote } = require('electron')
+            //Changes menu shown in nodeIntegration enabled webview
+            function changeMenu(htmlFile) {document.getElementById('settingsWindow').src = htmlFile}
         </script>
         <style>
+            body {
+                background-color: lightgray;
+            }
             #appQuitX {
+                float: right;
+                margin: 0;cursor: pointer;
+            }
+            #appMinimize_ {
                 float: right;
                 margin: 0;cursor: pointer;
             }
             #logoDragRegion {
                 -webkit-app-region: drag;
-                cursor: grab;
                 margin-right: 30px;
                 margin-top:0px;
                 margin-left:0;
@@ -28,7 +36,11 @@
                 background-color: rgba(255,255,255,.5);
             }
             .leftPanel {
-                float: left;border-radius: 25px;background-color:rgba(255,255,255,.5);padding:10px
+                float: left;
+                border-radius: 10px;
+                background-color:rgba(255,255,255,.5);
+                padding:10px;
+                margin-bottom: 5px;
             }
             a {
                 text-decoration: underline;
@@ -47,9 +59,16 @@
             onclick="remote.app.quit()">
             X
         </h2>
+        <h2
+            id=appMinimize_
+            onclick="remote.BrowserWindow.getFocusedWindow().minimize()">
+            _  
+        </h2>
+        <!--Allows you to move the window around. Working on making the cursor change when you hover, can't get it to work for some God forsaken reason-->
         <div id="logoDragRegion">
             <img 
-                src="app/img/logo_ultimate-skyrim_black-horizontal.png" 
+                src="img/logo_ultimate-skyrim_black-horizontal.png" 
+                draggable="false"
                 width=500 
                 height=50 
                 style="float:left;"
@@ -59,6 +78,7 @@
                 Official Launcher
             </h1>
         </div>
+        <!--This iframe is specifically for remote content that NEEDS to be opened in the main renderer-->
         <iframe 
             class="menuWindows"
             id="newsWindow"
@@ -67,12 +87,13 @@
             width=500 
             src=https://www.ultimateskyrim.com/news>
         </iframe>
+        <!--ABSOLUTELY NO REMOTE CONTENT IN THIS WEBVIEW TAG-->
         <webview
             class="menuWindows" 
             id=settingsWindow 
             style="margin-right: 10px;height: 450;width: 400" 
             nodeIntegration
-            src='app/welcome.html'>
+            src='welcome.html'>
         </webview>
         <div 
             class="leftPanel" 
@@ -93,13 +114,18 @@
             class="leftPanel" 
             id=advancedFunctions>
             <button 
-                onclick="document.getElementById('settingsWindow').src = 'app/configureENB.html'">
+                onclick="changeMenu('ENBMenu.html')">
                 Configure ENB
+            </button>
+            <button 
+                id='debugButton'
+                onclick="remote.BrowserWindow.getFocusedWindow().openDevTools();document.getElementById('settingsWindow').openDevTools()">
+                Debug
             </button>
             <br>
             <button>Open ModOrganizer</button><br>
             <button 
-                onclick="document.getElementById('settingsWindow').src = 'app/optionsMenu.html'">
+                onclick="changeMenu('optionsMenu.html')">
                 Options
             </button>
         </div>

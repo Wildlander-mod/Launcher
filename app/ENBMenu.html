@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script src="js/reqs.js"></script>
+        <script src="js/ENBManager.js"></script>
+        <script>
+            
+        </script>
+    </head>
+    <body>
+        <h2>Configure ENB Settings</h2>
+        <p>Current ENB: <span id='currentENBSpan'>None</span></p>
+        <div
+            id='ENBProfilesList'>
+            <h3>ENB Profiles</h3>
+            <button
+                id="noENBButton"
+                onclick="loadENB(0)">
+                Don't use ENB
+            </button>
+            <button
+                id="addENBProfile"
+                onclick='addENB()'>
+                Add an ENB Profile
+            </button>
+            <br><br>
+        </div>
+    </body>
+    <script>
+        let profileListDiv = document.getElementById('ENBProfilesList')
+        for(i=1;i < Object.keys(ENBProfiles.profiles).length;i++)
+        {
+            profileListDiv.innerHTML += `<input disabled type="text" class="ENBProfileTextBoxes" id="ENBProfileText${i}" value="${ENBProfiles.profiles[i].name}"><button class='ENBPofileLoadButtons' id='ENBProfileLoadButton${i}' onclick="loadENB(${i})"">Load</button><button class='ENBPofileConfigureButtons' id='ENBPofileConfigureButton${i}' onclick='configureENB(${i})'>Configure</button><button class='ENBProfileDeleteButtons' id='ENBProfileDeleteButton${i}' onclick='deleteENB(${i})'>Delete</button><input type="checkbox" id='ENBChecked${i}' disabled><br>`
+        }
+        document.getElementById('currentENBSpan').innerHTML = ENBProfiles.profiles[ENBProfiles.currentENB].name
+        if(ENBProfiles.currentENB != 0){document.getElementById('ENBChecked' + ENBProfiles.currentENB).checked = true}
+    </script>
+</html>

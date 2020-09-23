@@ -1,0 +1,19 @@
+{
+  "currentENB": 0,
+  "profiles": {
+    "0": {
+      "name": "None",
+      "files": [
+        ""
+      ]
+    },
+    "1": {
+      "name": "test",
+      "files": "ENBMenu.htmlindex.htmloptionsMenu.htmlwelcome.html"
+    },
+    "2": {
+      "name": "bruh",
+      "files": "ENBMenu.htmlindex.htmloptionsMenu.htmlwelcome.html"
+    }
+  }
+}
