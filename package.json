@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/RingComics/UltSkyLauncher#readme",
   "dependencies": {
+    "dialogs": "^2.0.1",
     "electron": "^10.1.2",
+    "node-powershell": "^4.0.0",
     "patreon": "^0.4.1"
   }
 }

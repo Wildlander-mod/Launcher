@@ -8,8 +8,8 @@ function createWindow () {
     center: true,
     resizable: false,
     maximizable: false,
-    transparent: true,
     frame: false,
+    transparent: true,
     icon: __dirname + "/app/img/icon.ico",
     webPreferences: {
       nodeIntegration: true,
@@ -19,11 +19,9 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  win.loadFile('index.html')
-
+  win.loadFile(__dirname + '/app/index.html')
   // Open the DevTools.
-  win.webContents.openDevTools()
-  //win.setMenu(null)
+  //win.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
