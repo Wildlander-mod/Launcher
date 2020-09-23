@@ -19,6 +19,7 @@
   "dependencies": {
     "dialogs": "^2.0.1",
     "electron": "^10.1.2",
+    "fs-extra": "^9.0.1",
     "node-powershell": "^4.0.0",
     "patreon": "^0.4.1"
   }

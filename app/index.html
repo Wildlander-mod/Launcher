@@ -12,11 +12,20 @@
             }
             #appQuitX {
                 float: right;
-                margin: 0;cursor: pointer;
+                margin-top: 0;
+                margin-left: 10px;
+                cursor: pointer;
+            }
+            #appQuitX:hover {
+                color: gray;
             }
             #appMinimize_ {
                 float: right;
-                margin: 0;cursor: pointer;
+                margin: 0;
+                cursor: pointer;
+            }
+            #appMinimize_:hover {
+                color: gray;
             }
             #logoDragRegion {
                 -webkit-app-region: drag;
@@ -54,16 +63,19 @@
     </head>
 
     <body>
-        <h2 
-            id="appQuitX" 
-            onclick="remote.app.quit()">
-            X
-        </h2>
-        <h2
-            id=appMinimize_
-            onclick="remote.BrowserWindow.getFocusedWindow().minimize()">
-            _  
-        </h2>
+            <h2  
+                id="appQuitX"   
+                onclick="remote.app.quit()">
+                X
+            </h2>           
+        <div
+            id="appQuitX">
+            <h1
+                id=appMinimize_
+                onclick="remote.BrowserWindow.getFocusedWindow().minimize()">
+                -  
+            </h1>
+        </div>
         <!--Allows you to move the window around. Working on making the cursor change when you hover, can't get it to work for some God forsaken reason-->
         <div id="logoDragRegion">
             <img 
@@ -119,6 +131,7 @@
             </button>
             <button 
                 id='debugButton'
+                style='display: none;'
                 onclick="remote.BrowserWindow.getFocusedWindow().openDevTools();document.getElementById('settingsWindow').openDevTools()">
                 Debug
             </button>
@@ -167,4 +180,33 @@
             </a>
         </div>
     </body>
+    <script>
+        document.getElementById("performanceProfileDropDown").options.selectedIndex = currentConfig.defaultPreset
+        if(currentConfig.debug){document.getElementById('debugButton').style.display = 'inline-block'}
+        if(currentConfig.skyrimDirectory == "")
+        {
+            //Get registry key and autofill Skyrim Directory. Confirm with user. Save to config
+            dialogs.confirm("Your Skyrim folder has not been configured! Would you like to select it now?", ok =>
+            {
+                if(ok)
+                {
+                    let path = remote.dialog.showOpenDialogSync({
+                        title: "Open Skyrim Folder",
+                        buttonLabel: 'Choose folder',
+                        properties: ['openDirectory']
+                    })
+                    dialogs.confirm(`Is |${path}| the correct path?`, ok =>
+                    {
+                        if(ok)
+                        {
+                            currentConfig.skyrimDirectory = path.replace(/\\/g,'\\\\')
+                            fs.writeFileSync("config/config.json", JSON.stringify(currentConfig,null,2))
+                            dialogs.alert("Path saved.", ok => {location.reload()})
+                        }
+                    })
+                }
+                dialogs.alert('You can set your Skyrim path in the options menu.', ok => {})
+            })
+        }
+    </script>
 </html>

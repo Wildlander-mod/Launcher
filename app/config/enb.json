@@ -8,12 +8,15 @@
       ]
     },
     "1": {
-      "name": "test",
-      "files": "ENBMenu.htmlindex.htmloptionsMenu.htmlwelcome.html"
-    },
-    "2": {
-      "name": "bruh",
-      "files": "ENBMenu.htmlindex.htmloptionsMenu.htmlwelcome.html"
+      "name": "Ultimate Skyrim",
+      "files": [
+        "d3d9.dll",
+        "d3dx9_42.dll",
+        "enbhost.exe",
+        "enblocal.ini",
+        "enbseries",
+        "enbseries.ini"
+      ]
     }
   }
 }

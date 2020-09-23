@@ -1,0 +1,1610 @@
+//=================================================================================================================
+//
+//	ULTIMATE SHADER ADDON for ENB 1.1
+//
+//	CREDITS
+//	Based on Post-Process Effects Addon for ENB by ZeroKing
+//	Initial D-N-I separation code and GUI implementation by --JawZ--
+//	Kinematic Filter code (formerly known as Old Black-White TV Filter) originally by Boris Vorontsov
+//	Kinematic Filter code tweaked by Trillville, Midhras, Kyokushinoyama, Insomnia
+//	LumaSharpen code by CeeJay.dk, ported from SweetFX by ZeroKing, tweaked by prod80
+//	Blur, Sharpening, Color Shift, Vignette code by Boris Vorontsov
+//	Contrast and Vibrance code by CeeJay.dk, ported from SweetFX by ZeroKing
+//	Noise code by MTichenor/IndigoNeko
+//	Dithering, Border, Splitscreen code by CeeJay.dk, ported from SweetFX by Marty McFly
+//	Letterbox code by Matso
+//
+//	Combined, edited, tweaked and arranged by Miratheus
+//
+//	ENBSeries (c) 2007-2014 Boris Vorontsov
+//	Visit enbdev.com for updates, presets, shader effects, screenshots, technical support
+//
+//=================================================================================================================
+
+
+//	INTERNAL PARAMETERS, CAN BE MODIFIED
+
+//=================================================================================================================
+//	DEFINES: set to 0 to deactivate
+//=================================================================================================================
+
+#define USE_K_FILTER		1
+#define USE_LUMASHARPEN		1
+#define USE_BLURRING		1
+#define USE_SHARPENING		1
+#define USE_COLORSHIFT		1
+#define USE_CONTRAST		1
+#define USE_VIGNETTE		1
+#define USE_NOISE		1
+#define USE_DITHERING		1
+#define USE_BORDER		1
+#define USE_LETTERBOX		1
+
+
+//	GUI ELEMENTS
+
+//=================================================================================================================
+//	KINEMATIC FILTER
+//=================================================================================================================
+
+#if USE_K_FILTER == 1
+
+bool	enable_k_filter <
+	string UIName = "------------  Kinematic Filter  -------------";
+> = {false};
+
+float	k_brightness_ext_day <
+	string UIName = "Brightness - Exterior Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {1.1};
+
+float	k_brightness_ext_night <
+	string UIName = "Brightness - Exterior Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {1.1};
+
+float	k_brightness_int_day <
+	string UIName = "Brightness - Interior Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {1.1};
+
+float	k_brightness_int_night <
+	string UIName = "Brightness - Interior Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {1.1};
+
+bool	enable_k_blackness <
+	string UIName = "Enable Kinematic Blackness";
+> = {false};
+
+float	noise_mix_curve_ext_day <
+	string UIName = "Noise Mix Curve - Exterior Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {0.03};
+
+float	noise_mix_curve_ext_night <
+	string UIName = "Noise Mix Curve - Exterior Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {0.03};
+
+float	noise_mix_curve_int_day <
+	string UIName = "Noise Mix Curve - Interior Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {0.03};
+
+float	noise_mix_curve_int_night <
+	string UIName = "Noise Mix Curve - Interior Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 5.0;
+> = {0.03};
+
+float	noise_mix_multiplier <
+	string UIName = "Noise Mix Multiplier";
+	string UIWidget = "Spinner";
+	float UIMin = 0.01;
+	float UIMax = 1.0;
+> = {0.15};
+
+#endif
+
+
+//=================================================================================================================
+//	LUMASHARPEN
+//=================================================================================================================
+
+#if USE_LUMASHARPEN == 1
+
+#define LUMASHARPEN_PATTERN 4
+
+bool	enable_lumasharpen <
+	string UIName = "--------------  LumaSharpen  --------------";
+> = {true};
+
+float	offset_bias <
+	string UIName = "LumaSharpen Offset Bias";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.1;
+> = {1.0};
+
+float	lumasharp_strength_day <
+	string UIName = "LumaSharpen Strength - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 5.0;
+	float UIStep = 0.001;
+> = {1.0};
+
+float	lumasharp_strength_night <
+	string UIName = "LumaSharpen Strength - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 5.0;
+	float UIStep = 0.001;
+> = {1.0};
+
+float	lumasharp_strength_int <
+	string UIName = "LumaSharpen Strength - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 5.0;
+	float UIStep = 0.001;
+> = {1.0};
+
+float	lumasharp_clamp_day <
+	string UIName = "LumaSharpen Clamp - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 1.0;
+	float UIStep = 0.001;
+> = {0.025};
+
+float	lumasharp_clamp_night <
+	string UIName = "LumaSharpen Clamp - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 1.0;
+	float UIStep = 0.001;
+> = {0.025};
+
+float	lumasharp_clamp_int <
+	string UIName = "LumaSharpen Clamp - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 1.0;
+	float UIStep = 0.001;
+> = {0.025};
+
+#endif
+
+
+//=================================================================================================================
+//	BLURRING
+//=================================================================================================================
+
+#if USE_BLURRING == 1
+
+bool	enable_blurring <
+	string UIName = "-----------------  Blurring  ------------------";
+> = {false};
+
+float	blur_range <
+	string UIName = "Blur Range";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 1.0;
+> = {0.05};
+
+bool	use_h_blur <
+	string UIName = "Use Horizontal Blur";
+> = {false};
+
+#endif
+
+
+//=================================================================================================================
+//	SHARPENING
+//=================================================================================================================
+
+#if USE_SHARPENING == 1
+
+#define SHARPENING_QUALITY 2	// 1 - Standard Quality, 2 - High Quality
+
+bool	enable_sharpening <
+	string UIName = "---------------  Sharpening  ----------------";
+> = {true};
+
+float	sharp_range <
+	string UIName = "Sharpening Range";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 1.0;
+> = {1.0};
+
+float	sharp_amount_day <
+	string UIName = "Sharpening Amount - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 5.0;
+> = {0.5};
+
+float	sharp_amount_night <
+	string UIName = "Sharpening Amount - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 5.0;
+> = {0.5};
+
+float	sharp_amount_int <
+	string UIName = "Sharpening Amount - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 5.0;
+> = {0.5};
+
+bool	use_sharp_by_color <
+	string UIName = "Use Sharpening by Color";
+> = {true};
+
+#endif
+
+
+//=================================================================================================================
+//	COLOR SHIFT
+//=================================================================================================================
+
+#if USE_COLORSHIFT == 1
+
+bool	enable_color_shift <
+	string UIName = "---------------  Color Shift  ----------------";
+> = {false};
+
+float	color_shift_range <
+	string UIName = "Color Shift Range";
+	string UIWidget = "Spinner";
+	float UIMin = -3.0;
+	float UIMax = 3.0;
+> = {1.0};
+
+#endif
+
+
+//=================================================================================================================
+//	CONTRAST
+//=================================================================================================================
+
+#if USE_CONTRAST == 1
+
+bool	enable_contrast <
+	string UIName = "-----------------  Contrast  -----------------";
+> = {false};
+
+float	contrast_ext_day <
+	string UIName = "Contrast - Exterior Day";
+	string UIWidget = "Spinner";
+	float UIMin = -1.0;
+	float UIMax = 1.0;
+> = {0.25};
+
+float	contrast_ext_night <
+	string UIName = "Contrast - Exterior Night";
+	string UIWidget = "Spinner";
+	float UIMin = -1.0;
+	float UIMax = 1.0;
+> = {0.25};
+
+float	contrast_int_day <
+	string UIName = "Contrast - Interior Day";
+	string UIWidget = "Spinner";
+	float UIMin = -1.0;
+	float UIMax = 1.0;
+> = {0.25};
+
+float	contrast_int_night <
+	string UIName = "Contrast - Interior Night";
+	string UIWidget = "Spinner";
+	float UIMin = -1.0;
+	float UIMax = 1.0;
+> = {0.25};
+
+#endif
+
+
+//=================================================================================================================
+//	VIBRANCE
+//=================================================================================================================
+
+bool   USE_VIBRANCE <
+	string UIName = "-----------------  Vibrance  -----------------";
+> = {true};
+
+float	VibranceDay <
+	string UIName="Vibrance - Day";
+	string UIWidget="Spinner";
+	float UIMin=-2.0;
+	float UIMax=2.0;
+> = {0};
+
+float	VibranceNight <
+	string UIName="Vibrance - Night";
+	string UIWidget="Spinner";
+	float UIMin=-2.0;
+	float UIMax=2.0;
+> = {0};
+
+float	VibranceInt <
+	string UIName="Vibrance - Interior";
+	string UIWidget="Spinner";
+	float UIMin=-2.0;
+	float UIMax=2.0;
+> = {0};
+
+//  RAIN DESATURATION  //
+
+float	DesaturationFade <
+	string UIName="Rain Desaturation - Fade";
+	string UIWidget="Spinner";
+	float UIMin=1.0;
+	float UIMax=10.0;
+> = {5.0};	
+
+float	DesaturationOffset <
+	string UIName="Rain Desaturation - Offset";
+	string UIWidget="Spinner";
+	float UIMin=-1.0;
+	float UIMax=0.0;
+> = {-0.1};
+
+
+
+//=================================================================================================================
+//	LETTERBOX
+//=================================================================================================================
+
+#if USE_LETTERBOX == 1
+
+bool	enable_letterbox <
+	string UIName = "----------------  Letterbox  -----------------";
+> = {false};
+
+float	letterbox_size <
+	string UIName = "Letterbox Size (%)";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.1;
+> = {8.0};
+
+#endif
+
+
+//=================================================================================================================
+//	VIGNETTE
+//=================================================================================================================
+
+#if USE_VIGNETTE == 1
+
+bool	enable_vignette <
+	string UIName = "-----------------  Vignette  -----------------";
+> = {false};
+
+float	vignette_amount_day <
+	string UIName = "Vignette Amount - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {0.5};
+
+float	vignette_amount_night <
+	string UIName = "Vignette Amount - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {0.5};
+
+float	vignette_amount_int <
+	string UIName = "Vignette Amount - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {0.5};
+
+float	vignette_curve_day <
+	string UIName = "Vignette Curve - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {1.5};
+
+float	vignette_curve_night <
+	string UIName = "Vignette Curve - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {1.5};
+
+float	vignette_curve_int <
+	string UIName = "Vignette Curve - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {1.5};
+
+float	vignette_radius_day <
+	string UIName = "Vignette Radius - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {1.5};
+
+float	vignette_radius_night <
+	string UIName = "Vignette Radius - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {1.5};
+
+float	vignette_radius_int <
+	string UIName = "Vignette Radius - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 10.0;
+> = {1.5};
+
+float3	vignette_color <
+	string UIName = "Vignette Color";
+	string UIWidget = "Color";
+> = {0.0, 0.0, 0.0};
+
+#endif
+
+
+//=================================================================================================================
+//	NOISE
+//=================================================================================================================
+
+#if USE_NOISE == 1
+
+bool	enable_noise <
+	string UIName = "------------------  Noise  -------------------";
+> = {true};
+
+float	grain_intensity_day <
+	string UIName = "Grain Intensity - Day";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.001;
+> = {0.01};
+
+float	grain_intensity_night <
+	string UIName = "Grain Intensity - Night";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.001;
+> = {0.01};
+
+float	grain_intensity_int <
+	string UIName = "Grain Intensity - Interior";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.001;
+> = {0.01};
+
+float	grain_saturation <
+	string UIName = "Grain Saturation";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.001;
+> = {0.5};
+
+float	grain_motion <
+	string UIName = "Grain Motion";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 50.0;
+	float UIStep = 0.001;
+> = {0.005};
+
+#endif
+
+
+//=================================================================================================================
+//	DITHERING
+//=================================================================================================================
+
+#if USE_DITHERING == 1
+
+bool	enable_dithering <
+	string UIName = "----------------  Dithering  -----------------";
+> = {true};
+
+float	dither_size <
+	string UIName = "Dithering Grid Size";
+	string UIWidget = "Spinner";
+	float UIMin = 1.0;
+	float UIMax = 8.0;
+	float UIStep = 1.0;
+> = {2.0};
+
+#endif
+
+
+//=================================================================================================================
+//	BORDER
+//=================================================================================================================
+
+#if USE_BORDER == 1
+
+bool	enable_border <
+	string UIName = "------------------  Border  ------------------";
+> = {false};
+
+float	border_width <
+	string UIName = "Border Width";
+	string UIWidget = "Spinner";
+	float UIMin = 0.0;
+	float UIMax = 8.0;
+	float UIStep = 1.0;
+> = {1.0};
+
+#endif
+
+
+
+//	EXTERNAL PARAMETERS, DO NOT MODIFY
+//	UNLESS YOU KNOW WHAT YOU ARE DOING
+
+//=================================================================================================================
+//	KEYBOARD CONTROLLED TEMPORARY VARIABLES
+//	Press and hold key 1,2,3...8 together with PageUp or PageDown to modify. By default all set to 1.0
+//=================================================================================================================
+
+float4	tempF1;			// 0, 1, 2, 3
+float4	tempF2;			// 5, 6, 7, 8
+float4	tempF3;			// 9, 0
+
+
+//=================================================================================================================
+//	GLOBAL VARIABLES
+//=================================================================================================================
+
+float4	Timer;			// x = generic timer in range 0..1, period of 16777216 ms (4.6 hours), w = frame time elapsed (in seconds)
+float4	ScreenSize;		// x = Width, y = 1 / Width, z = ScreenScaleY, w = 1 / ScreenScaleY
+float	ENightDayFactor;	// changes in range 0..1, 0 means that night time, 1 - day time
+float	EInteriorFactor;	// changes 0 or 1. 0 means that exterior, 1 - interior
+float4	WeatherAndTime;
+
+
+//=================================================================================================================
+//	TEXTURES | SAMPLERS
+//=================================================================================================================
+
+texture2D texColor;
+texture2D texNoise;
+
+sampler2D SamplerColor = sampler_state
+{
+	Texture = <texColor>;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	MipFilter = NONE;
+	AddressU = Clamp;
+	AddressV = Clamp;
+	SRGBTexture = FALSE;
+	MaxMipLevel = 0;
+	MipMapLodBias = 0;
+};
+
+sampler2D SamplerNoise = sampler_state
+{
+	Texture = <texNoise>;
+	MinFilter = POINT;
+	MagFilter = POINT;
+	MipFilter = NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+	SRGBTexture = FALSE;
+	MaxMipLevel = 0;
+	MipMapLodBias = 0;
+};
+
+
+//=================================================================================================================
+//	DATA STRUCTURE
+//=================================================================================================================
+
+struct VS_OUTPUT_POST
+{
+	float4 vpos : POSITION;
+	float2 txcoord : TEXCOORD0;
+};
+
+struct VS_INPUT_POST
+{
+	float3 pos : POSITION;
+	float2 txcoord : TEXCOORD0;
+};
+
+VS_OUTPUT_POST VS_PostProcess (VS_INPUT_POST IN)
+{
+	VS_OUTPUT_POST OUT;
+
+	float4 pos = float4 (IN.pos.x, IN.pos.y, IN.pos.z, 1.0);
+
+	OUT.vpos = pos;
+	OUT.txcoord.xy = IN.txcoord.xy;
+
+	return OUT;
+}
+
+
+//=================================================================================================================
+//	HELPER FUNCTIONS
+//=================================================================================================================
+
+// Pseudo Random Number Generator
+float random (in float2 uv)
+{
+	float2 noise = (frac (sin (dot (uv, float2 (12.9898, 78.233) * 2.0)) * 43758.5453));
+	return abs (noise.x + noise.y) * 0.5;
+}
+
+// Vignette
+float vignette (float2 coord, float _int)
+{
+	float2 coords = coord;
+	coords = (coords - 0.5) * 2.0;
+	float coord_dot = dot (coords, coords);
+	return 1.0 - coord_dot * _int * 0.1;
+}
+
+
+//=================================================================================================================
+//	SHADERS
+//=================================================================================================================
+
+// KINEMATIC FILTER
+float4	PS_Process_Filter (VS_OUTPUT_POST IN, float2 vPos : VPOS) : COLOR
+{
+	float4 res;
+	float4 coord = 0.0;
+	coord.xy = IN.txcoord.xy;
+	float4 original = tex2Dlod (SamplerColor, coord);
+
+	#if USE_K_FILTER == 0
+	return original;
+
+	#elif USE_K_FILTER == 1
+
+	if (enable_k_filter == false) return original;
+
+	float k_brightness = lerp (k_brightness_ext_night, k_brightness_ext_day, ENightDayFactor);
+	float noise_mix_curve = lerp (noise_mix_curve_ext_night, noise_mix_curve_ext_day, ENightDayFactor);
+
+	if (EInteriorFactor)
+	{
+		k_brightness = lerp (k_brightness_int_night, k_brightness_int_day, ENightDayFactor);
+		noise_mix_curve = lerp (noise_mix_curve_int_night, noise_mix_curve_int_day, ENightDayFactor);
+	};
+
+	float3 gray_filter = float3 (0.5285, 0.515, 0.515);
+
+	float clamp_low = 0.000005;
+	float clamp_high = 15.25;
+
+	float additive_noise_factor = 0.0075;				// More ANF = more noise. Comment this line to disable the B&W filter entirely
+	float multiplicative_noise_min = -0.45;
+	float multiplicative_noise_max = -0.45;
+
+	// Black-white filter
+	// original.xyz = dot (original.xyz, gray_filter.xyz);		// MIDHRAS: Comment this line to regain colour but keep TV noise
+	
+	// Scale
+	original.xyz *= k_brightness;
+	
+	// Limit
+	original.xyz = clamp (original.xyz, clamp_low, clamp_high);
+
+	// Noise
+	coord.xy = IN.txcoord.xy * ScreenSize.y * 4000.0;
+	coord.y += frac (Timer.x * 140000.0);
+	float4 noise_big = tex2D (SamplerNoise, coord);
+	float mix_fact = noise_big.x;
+	mix_fact = saturate ((mix_fact - 0.5) * 5.0);
+
+	coord.xy = IN.txcoord.xy * ScreenSize.x * 0.008;
+	coord.x += frac ((noise_big.y) * frac (Timer.x * 100000.0) * 1.3);
+	coord.y += frac (Timer.x * 160000.0);
+	float4 noise_color = tex2D (SamplerNoise, coord);
+	noise_color.w = lerp (noise_color.x, noise_color.y, mix_fact);
+
+	// Mix gray with noise
+	mix_fact = dot (original.xyz, 2.133);
+	mix_fact = pow (saturate (noise_mix_multiplier * mix_fact), noise_mix_curve);
+	noise_color.x = noise_color.w * additive_noise_factor;
+	noise_color.w = lerp (multiplicative_noise_min, multiplicative_noise_max, noise_color.w);
+
+	if (enable_k_blackness == true)
+	{
+		res.xyz = lerp (original.xyz * noise_color.w + noise_color.x, original.xyz, mix_fact);
+	}
+
+	if (enable_k_blackness == false)
+	{
+		res.xyz = original.rgb;
+	}
+
+	res.w = 1.0;
+
+	#if USE_SPLITSCREEN == 1
+
+	if (enable_splitscreen == true)
+	{
+		if (invert_splitscreen == false)
+		{
+			return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+
+		if (invert_splitscreen == true)
+		{
+			return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+	}
+	#endif
+
+	return res;
+	#endif
+}
+
+// LUMASHARPEN
+float4	PS_Process_LumaSharpen (VS_OUTPUT_POST IN, float2 vPos : VPOS, float2 tex : TEXCOORD0) : COLOR
+{
+	float2 coord = IN.txcoord.xy;
+	float s_height = ScreenSize.x * ScreenSize.w;
+	float2 texel_size = float2 (ScreenSize.y, 1.0 / s_height);
+	float px = texel_size.x;
+	float py = texel_size.y;
+
+	half4 original = tex2D (SamplerColor, coord.xy);
+
+	#if USE_LUMASHARPEN == 0
+	return original;
+
+	#elif USE_LUMASHARPEN == 1
+
+	if (enable_lumasharpen == false) return original;
+
+	float lumasharp_strength = lerp (lerp (lumasharp_strength_night, lumasharp_strength_day, ENightDayFactor), lumasharp_strength_int, EInteriorFactor);
+	float lumasharp_clamp = lerp (lerp (lumasharp_clamp_night, lumasharp_clamp_day, ENightDayFactor), lumasharp_clamp_int, EInteriorFactor);
+
+	#define coef_luma			float4 (0.2126, 0.7152, 0.0722, 0)
+	#define lumasharp_strength_luma		(coef_luma * lumasharp_strength)
+
+	[branch] if (any (frac (original.rgb)))
+	{
+		// Pattern 1
+		#if LUMASHARPEN_PATTERN == 1
+		//  Gaussian filter
+		//  [ 2/9, 4/9,    ]     [ 1 , 2 ,   ]
+		//  [ 4/9, 8/9, 4/9]  =  [ 2 , 4 , 2 ]
+		//  [    , 2/9, 2/9]     [   , 2 , 1 ]
+
+		half4 blur_original = tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (-px, py, -px, py) / 3 * offset_bias);				// North West
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (px, -py, px, -py) / 3 * offset_bias);				// South East
+
+		// Divide by the number of texture fetches
+		blur_original /= 2;
+		#endif
+
+		// Pattern 2 - A 9 tap gaussian using 4+1 texture fetches
+		#if LUMASHARPEN_PATTERN == 2
+		//  Gaussian filter
+		//  [ .25, .50, .25]     [ 1 , 2 , 1 ]
+		//  [ .50,   1, .50]  =  [ 2 , 4 , 2 ]
+		//  [ .25, .50, .25]     [ 1 , 2 , 1 ]
+
+		half4 blur_original = tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (-px, py, -px, py) * 0.5 * offset_bias);			// North West
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (px, -py, px, -py) * 0.5 * offset_bias);				// South East
+
+		if (any ((blur_original.rgb / 2) - original.rgb))
+		{
+			blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (-px, -py, -px, -py) * 0.5 * offset_bias);			// South West
+			blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (px, py, px, py) * 0.5 * offset_bias);			// North East
+
+			// Divide by the number of texture fetches
+			blur_original *= 0.25;;
+		}
+
+		// Divide by the number of texture fetches
+		blur_original *= 0.25;;
+		#endif
+
+		// Pattern 3 - An experimental 17 tap gaussian using 4+1 texture fetches
+		#if LUMASHARPEN_PATTERN == 3
+		//  Gaussian filter
+		//  [   , 4 , 6 ,   ,   ]
+		//  [   ,16 ,24 ,16 , 4 ]
+		//  [ 6 ,24 ,50 ,24 , 6 ]
+		//  [ 4 ,16 ,24 ,16 ,   ]
+		//  [   ,   , 6 , 4 ,   ]
+
+		half4 blur_original = tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (-0.4 * px, 1.2 * py, -0.4 * px, 1.2 * py) * offset_bias);	// North North West
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (0.4 * px, -1.2 * py, 0.4 * px, -1.2 * py) * offset_bias);		// South South East
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (1.2 * px, 0.4 * py, 0, 0) * offset_bias);				// East North East
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (-1.2 * px, -0.4 * py, 0, 0) * offset_bias);			// West South West
+		blur_original += original;	// Probably not needed. Only serves to lessen the effect
+
+		// Divide by the number of texture fetches
+		blur_original /= 5;
+		#endif
+
+		// Pattern 4 - A 9 tap high pass using 4+1 texture fetches
+		#if LUMASHARPEN_PATTERN == 4
+		//  Gaussian filter
+		//  [ .50, .50, .50]     [ 1 , 1 , 1 ]
+		//  [ .50,    , .50]  =  [ 1 ,   , 1 ]
+		//  [ .50, .50, .50]     [ 1 , 1 , 1 ]
+
+		half4 blur_original = tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (0.5 * -px, py, 0.5 * -px, py) * offset_bias);			// North North West
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (0.5 * px, -py, 0.5 * px, -py));					// South South East
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (-px, 0.5 * -py, -px, 0.5 * -py));					// West South West
+		blur_original += tex2Dlod (SamplerColor, float4 (tex, tex) + float4 (px, 0.5 * py, px, 0.5 * py) * offset_bias);			// East North East
+		blur_original += (2 * original);	// Probably not needed. Only serves to lessen the effect
+
+		// Divide by the number of texture fetches
+		blur_original /= 6;
+		#endif
+
+		// Calculate the sharpening
+		half sharp = original - blur_original;
+
+		// Adjust strength of the sharpening
+		sharp = dot (sharp, lumasharp_strength_luma);
+
+		// Clamping the maximum amount of sharpening to prevent halo artifacts
+		sharp = clamp (sharp, -lumasharp_clamp, lumasharp_clamp);
+
+		// Combining the values to get the final sharpened pixel
+		half4 done = original + sharp;
+
+		#if USE_SPLITSCREEN == 1
+
+		if (enable_splitscreen == true)
+		{
+			if (invert_splitscreen == false)
+			{
+				return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : done;
+			}
+
+			if (invert_splitscreen == true)
+			{
+				return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : done;
+			}
+		}
+		#endif
+
+		return done;
+	}
+
+	else
+	{
+		return original;
+	}
+	#endif
+}
+
+// BLURRING
+float4	PS_Process_Blurring (VS_OUTPUT_POST IN, float2 vPos : VPOS) : COLOR
+{
+	float4 res;
+	float4 coord = 0.0;
+	coord.xy = IN.txcoord.xy;
+	coord.w = 0.0;
+	float4 original = tex2Dlod (SamplerColor, coord);
+
+	#if USE_BLURRING == 0
+	return original;
+
+	#elif USE_BLURRING == 1
+
+	if (enable_blurring == false) return original;
+
+	if (use_h_blur == false)
+	{
+		float2 offset[16] =
+		{
+			float2 (1.0, 1.0),
+			float2 (-1.0, -1.0),
+			float2 (-1.0, 1.0),
+			float2 (1.0, -1.0),
+
+			float2 (1.0, 0.0),
+			float2 (-1.0, 0.0),
+			float2 (0.0, 1.0),
+			float2 (0.0, -1.0),
+
+			float2 (1.41, 0.0),
+			float2 (-1.41, 0.0),
+			float2 (0.0, 1.41),
+			float2 (0.0, -1.41),
+
+			float2 (1.41, 1.41),
+			float2 (-1.41, -1.41),
+			float2 (-1.41, 1.41),
+			float2 (1.41, -1.41)
+		};
+
+		int i = 0;
+
+		float4 tcol = original;
+		float inv_screen_size = 1.0 / ScreenSize;
+
+		for (i = 0; i < 16; i ++)
+		{
+			float2 tdir = offset[i].xy;
+			coord.xy = IN.txcoord.xy + tdir.xy * inv_screen_size * blur_range;
+			float4 ct = tex2Dlod (SamplerColor, coord);
+
+			tcol += ct;
+		}
+
+		tcol *= 0.05882353;
+		res.xyz = tcol.xyz;
+	}
+
+	if (use_h_blur == true)
+	{
+		int i = 0;
+
+		float4 tcol = 0.0;
+		float2 inv_screen_size = ScreenSize.y;
+		float offset = -2.0;
+
+		for (i = 0; i < 5; i ++)
+		{
+			coord.x = IN.txcoord.x + offset * inv_screen_size * blur_range;
+			float4 ct = tex2Dlod (SamplerColor, coord);
+
+			tcol += ct;
+			offset += 1.0;
+		}
+
+		res.xyz = tcol.xyz * 0.2;
+	}
+
+	res.w = 1.0;
+
+	#if USE_SPLITSCREEN == 1
+
+	if (enable_splitscreen == true)
+	{
+		if (invert_splitscreen == false)
+		{
+			return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+
+		if (invert_splitscreen == true)
+		{
+			return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+	}
+	#endif
+
+	return res;
+	#endif
+}
+
+// SHARPENING
+float4	PS_Process_Sharpening (VS_OUTPUT_POST IN, float2 vPos : VPOS) : COLOR
+{
+	float4 res;
+	float4 coord = 0.0;
+	coord.xy = IN.txcoord.xy;
+	coord.w = 0.0;
+	float4 original = tex2Dlod (SamplerColor, coord);
+
+	#if USE_SHARPENING == 0
+	return original;
+
+	#elif USE_SHARPENING == 1
+
+	if (enable_sharpening == false) return original;
+
+	float sharp_amount = lerp (lerp (sharp_amount_night, sharp_amount_day, ENightDayFactor), sharp_amount_int, EInteriorFactor);
+
+	float2 offset[8] =
+	{
+		float2 (1.0, 1.0),
+		float2 (-1.0, -1.0),
+		float2 (-1.0, 1.0),
+		float2 (1.0, -1.0),
+
+		float2 (1.41, 0.0),
+		float2 (-1.41, 0.0),
+		float2 (0.0, 1.41),
+		float2 (0.0, -1.41)
+	};
+
+	int i = 0;
+
+	float4 tcol = original;
+	float inv_screen_size = 1.0 / ScreenSize;
+
+	#if SHARPENING_QUALITY == 1
+	for (i = 0; i < 4; i ++)
+
+	#elif SHARPENING_QUALITY == 2
+	for (i = 0; i < 8; i ++)
+	#endif
+
+	{
+		float2 tdir = offset[i].xy;
+		coord.xy = IN.txcoord.xy + tdir.xy * inv_screen_size * sharp_range;
+		float4 ct = tex2Dlod (SamplerColor, coord);
+		tcol += ct;
+	}
+
+	#if SHARPENING_QUALITY == 1
+	tcol *= 0.2;
+
+	#elif SHARPENING_QUALITY == 2
+	tcol *= 0.1111;
+	#endif
+
+	// Sharp by color
+	if (use_sharp_by_color == true)
+	{
+		res = original * (1.0 + ((original - tcol) * sharp_amount));
+	}
+
+	// Sharp by gray
+	if (use_sharp_by_color == false)
+	{
+		float diff_fact = dot ((original.xyz - tcol.xyz), 0.333);
+		res = original * (1.0 + diff_fact * sharp_amount);
+	}
+
+	// Less sharpening for bright pixels
+	float r_gray = original.z;
+	r_gray = pow (r_gray, 3.0);
+	res = lerp (res, original, saturate (r_gray));
+
+	res.w = 1.0;
+
+	#if USE_SPLITSCREEN == 1
+
+	if (enable_splitscreen == true)
+	{
+		if (invert_splitscreen == false)
+		{
+			return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+
+		if (invert_splitscreen == true)
+		{
+			return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+	}
+	#endif
+
+	return res;
+	#endif
+}
+
+// COLOR SHIFT
+float4	PS_Process_ColorShift (VS_OUTPUT_POST IN, float2 vPos : VPOS) : COLOR
+{
+	float4 res;
+	float4 coord = 0.0;
+	coord.xy = IN.txcoord.xy;
+	coord.w = 0.0;
+	float4 original = tex2Dlod (SamplerColor, coord);
+
+	#if USE_COLORSHIFT == 0
+	return original;
+
+	#elif USE_COLORSHIFT == 1
+
+	if (enable_color_shift == false) return original;
+
+	int i = 0;
+	float4 tcol = original;
+	float2 inv_screen_size = 1.0 / ScreenSize.x;
+	inv_screen_size.y = inv_screen_size.y / ScreenSize.z;
+
+	coord.xy = IN.txcoord.xy;
+	original = tex2Dlod (SamplerColor, coord);
+	res.y = original.y;
+
+	coord.xy = IN.txcoord.xy;
+	coord.y -= inv_screen_size * color_shift_range;
+	original = tex2Dlod (SamplerColor, coord);
+	res.x = original.x;
+
+	coord.xy = IN.txcoord.xy;
+	coord.y += inv_screen_size * color_shift_range;
+	original = tex2Dlod (SamplerColor, coord);
+	res.z = original.z;
+
+	res.w = 1.0;
+
+	#if USE_SPLITSCREEN == 1
+
+	if (enable_splitscreen == true)
+	{
+		if (invert_splitscreen == false)
+		{
+			return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+
+		if (invert_splitscreen == true)
+		{
+			return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+	}
+	#endif
+
+	return res;
+	#endif
+}
+
+// CONTRAST
+float4	PS_Process_Contrast (VS_OUTPUT_POST IN, float2 vPos : VPOS) : COLOR
+{
+	float4 res;
+	float3 original = tex2D (SamplerColor, IN.txcoord.xy);
+
+	#if USE_CONTRAST == 0
+	res.rgb = original.rgb;
+	res.w = 1.0;
+	return res;
+
+	#elif USE_CONTRAST == 1
+
+	if (enable_contrast == false)
+	{
+		res.rgb = original.rgb;
+		res.w = 1.0;
+		return res;
+	}
+
+	float contrast_curve = lerp (contrast_ext_night, contrast_ext_day, ENightDayFactor);
+
+	if (EInteriorFactor)
+	{
+		contrast_curve = lerp (contrast_int_night, contrast_int_day, ENightDayFactor);
+	};
+
+	float3 luma_coef = float3 (0.212656, 0.715158, 0.072186);	// Calculate luma with these values
+
+	float luma = dot (luma_coef, original.rgb);
+	float3 chroma = original.rgb - luma;
+
+	float curves_contrast_blend = contrast_curve;
+	float PI = 3.1415926535897932384626433832795;
+
+	float x = luma;							// If the curve should be applied to Luma
+
+	x = x - 0.5;
+	x = x / ((abs (x) * 1.25) + 0.375) + 0.5;
+
+	x = lerp (luma, x, curves_contrast_blend);			// If the curve should be applied to both Luma and Chroma
+
+	res.rgb = x + chroma;						// Blend by curves_contrast
+
+	res.w = 1.0;
+
+	#if USE_SPLITSCREEN == 1
+
+	if (enable_splitscreen == true)
+	{
+		if (invert_splitscreen == false)
+		{
+			return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+
+		if (invert_splitscreen == true)
+		{
+			return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+	}
+	#endif
+
+	return res;
+	#endif
+}
+
+// VIBRANCE
+float4 PS_ProcessVibrance(VS_OUTPUT_POST IN, float2 vPos : VPOS) : COLOR
+{
+
+	float2 VibranceDayRain; //Desaturation for rainy weather.
+	
+	if(WeatherAndTime.x > 4.8 && WeatherAndTime.x < 5.2)
+	VibranceDayRain.x = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.x = VibranceDay;
+
+	if(WeatherAndTime.y > 4.8 && WeatherAndTime.y < 5.2)
+	VibranceDayRain.y = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.y = VibranceDay;
+	
+	if(WeatherAndTime.x > 14.8 && WeatherAndTime.x < 15.2)
+	VibranceDayRain.x = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.x = VibranceDay;
+	
+	if(WeatherAndTime.y > 14.8 && WeatherAndTime.y < 15.2)
+	VibranceDayRain.y = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.y = VibranceDay;
+	
+	if(WeatherAndTime.x > 17.8 && WeatherAndTime.x < 18.2)
+	VibranceDayRain.x = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.x = VibranceDay;
+	
+	if(WeatherAndTime.y > 17.8 && WeatherAndTime.y < 18.2)
+	VibranceDayRain.y = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.y = VibranceDay;
+	
+		if(WeatherAndTime.x > 25.8 && WeatherAndTime.x < 26.2)
+	VibranceDayRain.x = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.x = VibranceDay;
+	
+	if(WeatherAndTime.y > 25.8 && WeatherAndTime.y < 26.2)
+	VibranceDayRain.y = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.y = VibranceDay;
+	
+		if(WeatherAndTime.x > 36.8 && WeatherAndTime.x < 37.2)
+	VibranceDayRain.x = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.x = VibranceDay;
+	
+	if(WeatherAndTime.y > 36.8 && WeatherAndTime.y < 37.2)
+	VibranceDayRain.y = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.y = VibranceDay;
+	
+		if(WeatherAndTime.x > 37.8 && WeatherAndTime.x < 38.2)
+	VibranceDayRain.x = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.x = VibranceDay;
+	
+	if(WeatherAndTime.y > 37.8 && WeatherAndTime.y < 38.2)
+	VibranceDayRain.y = VibranceDay / DesaturationFade + DesaturationOffset;
+	else
+	VibranceDayRain.y = VibranceDay;
+
+	float Vibrance = lerp(lerp(VibranceNight, lerp(VibranceDayRain.y,VibranceDayRain.x,WeatherAndTime.z), ENightDayFactor), VibranceInt, EInteriorFactor);
+
+	float4	res;
+	float3	origcolor=tex2D(SamplerColor, IN.txcoord.xy);
+	
+	float3	lumCoeff = float3(0.212656, 0.715158, 0.072186);  				//Calculate luma with these values
+	float luma = dot(lumCoeff, origcolor.rgb);
+	float3 chroma = origcolor.rgb - luma;
+	float	max_color = max(origcolor.r, max(origcolor.g,origcolor.b)); 	//Find the strongest color
+	float	min_color = min(origcolor.r, min(origcolor.g,origcolor.b)); 	//Find the weakest color
+	
+	float	color_saturation = max_color - min_color; 						//Saturation is the difference between min and max
+	
+	if (USE_VIBRANCE == 1)			{	
+		res.rgb = lerp(luma, origcolor.rgb, (1.0 + (Vibrance * (1.0 - (sign(Vibrance) * color_saturation))))); 	//Extrapolate between luma and original by 1 + (1-saturation) - current
+	}	
+	if (USE_VIBRANCE == 0)			{
+		res.rgb = origcolor.rgb;
+	}	
+	  
+	res.w=1.0;
+	return res;
+}
+
+
+
+float4	PS_Process_AfterFX (VS_OUTPUT_POST IN, float2 vPos : VPOS, float2 tex : TEXCOORD0) : COLOR
+{
+	float4 res;
+	float3 original = tex2D (SamplerColor, IN.txcoord.xy);
+
+	// VIGNETTE
+	#if USE_VIGNETTE == 0
+	res.xyz = original.xyz;
+
+	#elif USE_VIGNETTE == 1
+
+	if (enable_vignette == false)
+	{
+		res.xyz = original.xyz;
+	}
+
+	if (enable_vignette == true)
+	{
+		float vignette_amount = lerp (lerp (vignette_amount_night, vignette_amount_day, ENightDayFactor), vignette_amount_int, EInteriorFactor);
+		float vignette_radius = lerp (lerp (vignette_radius_night, vignette_radius_day, ENightDayFactor), vignette_radius_int, EInteriorFactor);
+		float vignette_curve  = lerp (lerp (vignette_curve_night, vignette_curve_day, ENightDayFactor), vignette_curve_int, EInteriorFactor);
+
+		float2 uv = (IN.txcoord.xy - 0.5) * vignette_radius;
+		float vignette = saturate (dot (uv.xy, uv.xy));
+		vignette = pow (vignette, vignette_curve);
+
+		res.xyz = lerp (original.xyz, vignette_color, vignette * vignette_amount);
+	}
+	#endif
+
+	// NOISE
+	#if USE_NOISE == 1
+
+	if (enable_noise == true)
+	{
+		float grain_intensity = lerp (lerp (grain_intensity_night, grain_intensity_day, ENightDayFactor), grain_intensity_int, EInteriorFactor);
+
+		float grain_timer_seed = Timer.x * grain_motion;
+		float2 grain_tex_coord_seed = IN.txcoord.xy * 5.0;
+
+		// Generate grain seeds
+		float2 grain_seed_1 = grain_tex_coord_seed + float2 (0.0, grain_timer_seed);
+		float2 grain_seed_2 = grain_tex_coord_seed + float2 (grain_timer_seed, 0.0);
+		float2 grain_seed_3 = grain_tex_coord_seed + float2 (grain_timer_seed, grain_timer_seed);
+
+		// Generate pseudo random noise
+		float grain_noise_1 = random (grain_seed_1);
+		float grain_noise_2 = random (grain_seed_2);
+		float grain_noise_3 = random (grain_seed_3);
+		float grain_noise_4 = (grain_noise_1 + grain_noise_2 + grain_noise_3) * 0.333333333;
+
+		// Combine results
+		float3 grain_noise = float3 (grain_noise_4, grain_noise_4, grain_noise_4);
+		float3 grain_color = float3 (grain_noise_1, grain_noise_2, grain_noise_3);
+
+		// Add noise to color
+		res.xyz += (lerp (grain_noise, grain_color, grain_saturation) * grain_intensity) - (grain_intensity * 0.5);
+	}
+	#endif
+
+	// DITHERING
+	#if USE_DITHERING == 1
+
+	if (enable_dithering == true)
+	{
+		float dither_bit = 8.0;		// Number of bits per channel. Should be 8 for most monitors
+
+		float grid_position = frac (dot (IN.txcoord, (ScreenSize.x / dither_size)) + (0.5 / dither_size));
+
+		// Make some noise
+		float noise = frac (sin (dot (float4 (tex, -tex.yx), float4 (float2 (12.9898, 78.233), float2 (12.9898, 78.233) * acos (-1)))) * 43758.5453);	// Pseudo random number generator
+		noise -= 0.5;
+
+		// Calculate how big the shift should be
+		float dither_shift = (noise) * (1.0 / (pow (2, dither_bit) - 1.0));	// Using noise to determine shift. The noise ahould vary between +- 0.5
+
+		// Shift the individual colors differently, thus making it even harder to see the dithering pattern
+		float3 dither_shift_RGB = float3 (dither_shift, dither_shift, dither_shift);
+
+		// Shift the color by dither_shift
+		res.xyz += lerp (2.0 * dither_shift_RGB, -2.0 * dither_shift_RGB, grid_position);
+	}
+	#endif
+
+	// BORDER
+	#if USE_BORDER == 1
+
+	if (enable_border == true)
+	{
+		float2 dist_from_center = abs (IN.txcoord.xy - 0.5);
+		bool2 screen_border = step (0.5 - (border_width / ScreenSize.x), dist_from_center);
+		res.xyz = (!dot (screen_border, 1.0)) ? res.xyz : 0.0;
+	}
+	#endif
+
+	// LETTERBOX
+	#if USE_LETTERBOX == 1
+
+	if (enable_letterbox == true)
+	{
+		float offset = letterbox_size * 0.01;
+		if (IN.txcoord.y <= offset || IN.txcoord.y >= (1.0 - offset)) res.xyzw = 0.0;
+	}
+	#endif
+
+	res.w = 1.0f;
+
+	#if USE_SPLITSCREEN == 1
+
+	if (enable_splitscreen == true)
+	{
+		if (invert_splitscreen == false)
+		{
+			return (IN.txcoord.x > (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+
+		if (invert_splitscreen == true)
+		{
+			return (IN.txcoord.x < (splitscreen_pos / 100)) ? tex2D (SamplerColor, IN.txcoord) : res;
+		}
+	}
+	#endif
+
+	return res;
+}
+
+
+//=================================================================================================================
+//	TECHNIQUES
+//=================================================================================================================
+
+technique PostProcess
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_Filter ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
+
+technique PostProcess2
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_LumaSharpen ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
+
+technique PostProcess3
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_Blurring ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
+
+technique PostProcess4
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_Sharpening ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
+
+technique PostProcess5
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_ColorShift ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
+
+technique PostProcess6
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_Contrast ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
+
+technique PostProcess7
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess();
+		PixelShader  = compile ps_3_0 PS_ProcessVibrance();
+
+		DitherEnable=FALSE;
+		ZEnable=FALSE;
+		CullMode=NONE;
+		ALPHATESTENABLE=FALSE;
+		SEPARATEALPHABLENDENABLE=FALSE;
+		AlphaBlendEnable=FALSE;
+		StencilEnable=FALSE;
+		FogEnable=FALSE;
+		SRGBWRITEENABLE=FALSE;
+	}
+}
+
+technique PostProcess8
+{
+	pass P0
+	{
+		VertexShader = compile vs_3_0 VS_PostProcess ();
+		PixelShader  = compile ps_3_0 PS_Process_AfterFX ();
+
+		DitherEnable = FALSE;
+		ZEnable = FALSE;
+		CullMode = NONE;
+		ALPHATESTENABLE = FALSE;
+		SEPARATEALPHABLENDENABLE = FALSE;
+		AlphaBlendEnable = FALSE;
+		StencilEnable = FALSE;
+		FogEnable = FALSE;
+		SRGBWRITEENABLE = FALSE;
+	}
+}
