@@ -199,8 +199,8 @@
                     {
                         if(ok)
                         {
-                            currentConfig.skyrimDirectory = path.replace(/\\/g,'\\\\')
-                            fs.writeFileSync("config/config.json", JSON.stringify(currentConfig,null,2))
+                            currentConfig.skyrimDirectory = path.toString().replace(/\\/g,'\\\\')
+                            fs.writeFileSync(__dirname+"/config/config.json", JSON.stringify(currentConfig,null,2))
                             dialogs.alert("Path saved.", ok => {location.reload()})
                         }
                     })

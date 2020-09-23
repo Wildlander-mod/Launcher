@@ -34,7 +34,7 @@ function loadENB(ENB) {
         let newFiles = fs.readdirSync(__dirname+"/ENB Profiles/"+ENBProfiles.profiles[ENB].name)
         newFiles.forEach(file =>
         {
-            fs.copySync("app/ENB Profiles/"+ENBProfiles.profiles[ENB].name+"/"+file, currentConfig.skyrimDirectory+"\\"+file)
+            fs.copySync(__dirname+"/ENB Profiles/"+ENBProfiles.profiles[ENB].name+"/"+file, currentConfig.skyrimDirectory+"\\"+file)
         })
         ENBProfiles.currentENB = ENB
         fs.writeFileSync(__dirname + '/config/enb.json', JSON.stringify(ENBProfiles, null, 2))
