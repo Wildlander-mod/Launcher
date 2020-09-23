@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<help>
+	<category name="EFFECT">
+		<parameter name="UseOriginalPostProcessing">Fast. Turn on game post processing. It looks ugly, but vampire vision works with it properly</parameter>
+		<parameter name="UseOriginalObjectsProcessing">Fast. Useless thing, but users who want original game look mostly, need to turn this on</parameter>
+		<parameter name="EnableDepthOfField">Middle. Depth of field effect used from external shader file enbeffectprepass.fx. Download any made by users (also you may tweak it, shaders are text files). Performance depends from shader code, but in general faster than ambient occlusions</parameter>
+		<parameter name="EnableDetailedShadow">Fast. Adds short shadows to objects and also activates some other shadow changes. Even if this effect disabled, performance may be lower because of parameters activated in [SHADOW] category</parameter>
+		<parameter name="EnableSkyLighting">Chậm. High range ambient occlusion. Cannot be enabled when game is running, so modify configuration file manually</parameter>
+		<parameter name="EnableAmbientOcclusion">遅遅. Screen space ambient occlusion and/or indirect lighting effects. Performance depends from screen resolution, check [SSAO_SSIL] category</parameter>
+		<parameter name="EnableReflection">느린. Screen space reflections effect, check [REFLECTION] category to tweak it for optimal performance for your display resolution</parameter>
+		<parameter name="EnableWater">慢. Water effects, may run slow when displacement enabled at some camera angles</parameter>
+		<parameter name="EnableUnderwater">Медленно. Underwater effects, may run slow when volumetrics enabled at some camera angles</parameter>
+	</category>
+	<category name="COLORCORRECTION">
+		<parameter name="UseProceduralCorrection">Fast. Activates LDR post processing code of enbeffect.fx external shader. These tweaks are equal to basic modifications in image editors. Check values in shader editor window</parameter>
+	</category>
+	<category name="SSAO_SSIL">
+		<parameter name="SizeScale">Slow. Resolution of ambient occlusion render target as scale of screen resolution. Smaller values recommended also for downsampling/supersampling display resolutions.
+Value 1.0 is pixel perfect and slow.
+Value 0.75 is twice faster than 1.0 and visually have just a little difference</parameter>
+		<parameter name="SourceTexturesScale">Medium. Resolution of ambient occlusion input textures. Values somewhere between 0.5 and 1.0 almost don't have any visual difference, so better to use 0.5 or smaller. If value is too big together with screen resolution and SamplingRange, then performance may degrade a lot because of cache misses, but if misses not occurs, performance is stable and almost same</parameter>
+	</category>
+	<category name="WEATHER">
+		<parameter name="EnableMultipleWeathers">Activates weather system which uses most values per weather and have separate window for tweaking</parameter>
+	</category>
+	<category name="SKYLIGHTING">
+		<parameter name="AmbientMinLevelSunrise">Minimal darkness at sunrise time</parameter>
+	</category>
+</help>

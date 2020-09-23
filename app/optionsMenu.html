@@ -7,7 +7,7 @@
         <h2>Launcher Settings</h2>
         <label>Toggle Debug mode</label><input id=debugMode type="checkbox"><br><br>
         <label>Skyrim Directory:</label><br>
-        <input type="text" id='skyrimDirectory'><button>Browse</button><br><br>
+        <input type="text" id='skyrimDirectory' value=currentConfig.skyrimDirectory><button onclick='changeDirectory()'>Browse</button><br><br>
         <label>Default Performance Preset:</label>
         <select id=performancePreset>
             <option>Low</option>
