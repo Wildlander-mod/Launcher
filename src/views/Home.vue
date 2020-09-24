@@ -2,7 +2,13 @@
   <b-container fluid>
     <b-row no-gutters>
       <b-col cols="3">
-        <LeftPanel/>
+        <LeftPanel />
+      </b-col>
+      <b-col>
+        <CenterPanel />
+      </b-col>
+      <b-col>
+        <RightPanel />
       </b-col>
     </b-row>
   </b-container>
@@ -10,11 +16,15 @@
 
 <script>
 import LeftPanel from '../components/LeftPanel.vue'
+import CenterPanel from '../components/CenterPanel.vue'
+import RightPanel from '../components/RightPanel.vue'
 
 export default {
   name: 'Home',
   components: {
-    LeftPanel
+    LeftPanel,
+    CenterPanel,
+    RightPanel
   }
 }
 </script>

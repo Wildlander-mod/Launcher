@@ -1,7 +1,7 @@
 'use strict'
 /* global __static */
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
@@ -103,4 +103,8 @@ ipcMain.on('close', () => {
 
 ipcMain.on('minimize', () => {
   win.minimize()
+})
+
+ipcMain.on('follow-link', (_event, args) => {
+  shell.openExternal(args)
 })
