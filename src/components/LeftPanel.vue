@@ -11,6 +11,7 @@
     <b-button :pressed="this.currentMenu === 'enb'" v-on:click="changeMenu('enb')">Configure ENB</b-button>
     <b-button>Debug</b-button>
     <b-button>Open ModOrganizer 2</b-button>
+    <b-button :pressed="this.currentMenu === 'options'" v-on:click="changeMenu('options')">Options</b-button>
     <b-link v-for="link in links" :key="link.name" v-on:click="followLink(link.href)">
       {{ link.name }}
     </b-link>
