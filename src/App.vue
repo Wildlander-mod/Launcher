@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <b-container fluid>
+    <b-container fluid class="mb-4">
       <b-row no-gutters>
-        <b-col class="d-flex flex-grow" id="nav">
+        <b-col class="d-flex flex-grow" id="logoContainer">
           <b-img height="40" src="./assets/logo.png" id="logo"/>
         </b-col>
         <b-col cols="12" md="auto" class="d-flex justify-content-end">
@@ -32,7 +32,6 @@ export default {
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
 }
 
 #logo {
@@ -40,7 +39,7 @@ export default {
   -webkit-user-select: none;
 }
 
-#nav {
+#logoContainer {
   -webkit-app-region: drag;
 }
 </style>
