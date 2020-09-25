@@ -1,9 +1,9 @@
 <template>
-    <h1>Options</h1>
+  <h1>Options</h1>
 </template>
 
 <script>
 export default {
-    name: 'Options'
+  name: 'Options'
 }
 </script>

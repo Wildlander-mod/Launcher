@@ -1,10 +1,12 @@
 'use strict'
 /* global __static */
 
-import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, protocol, dialog, BrowserWindow, ipcMain, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
+import fs from 'fs'
+import { info } from 'console'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -99,12 +101,45 @@ if (isDevelopment) {
 
 ipcMain.on('close', () => {
   win.close()
-})
-
-ipcMain.on('minimize', () => {
+}).on('minimize', () => {
   win.minimize()
+}).on('follow-link', (_event, args) => {
+  shell.openExternal(args)
+}).on('configure-enb-profile', (_event, args) => {
+  shell.openPath(args)
 })
 
-ipcMain.on('follow-link', (_event, args) => {
-  shell.openExternal(args)
+ipcMain.handle('create-enb-profile', async (_event, name) => {
+  const profilePath = path.join(__dirname, '/ENB Profiles/', name)
+
+  fs.mkdirSync(profilePath, { recursive: true }, (error) => {
+    if (error) {
+      throw error
+    }
+  })
+
+  dialog.showMessageBoxSync({
+    type: 'info',
+    buttons: ['OK'],
+    title: 'Profile Folder Created',
+    message: `
+    A folder has been created for your new ENB profile.
+    After you hit OK, the folder will open.
+    Please copy the ENB files for this profile into the folder!
+    `
+  })
+  shell.openPath(profilePath)
+
+  // TODO: Implement a file caching system.
+
+  return {
+    name: name,
+    path: profilePath
+  }
+})
+
+ipcMain.handle('delete-enb-profile', async (_event, args) => {
+  // Check to see if we should be deleting from the skyrim directory
+  // Then delete the path
+  return shell.moveItemToTrash(args.path)
 })
