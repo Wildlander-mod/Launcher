@@ -2,12 +2,12 @@
   <div id="app">
     <b-container fluid class="mb-4">
       <b-row no-gutters>
-        <b-col class="d-flex flex-grow" id="logoContainer">
+        <b-col class="d-flex flex-grow" id="logo-container">
           <b-img height="40" src="./assets/logo.png" id="logo"/>
         </b-col>
         <b-col cols="12" md="auto" class="d-flex justify-content-end">
-          <b-button v-on:click="minimize"><b-icon icon="dash" /></b-button>
-          <b-button v-on:click="close"><b-icon icon="x" /></b-button>
+          <b-button @click="minimize"><b-icon icon="dash" /></b-button>
+          <b-button @click="close"><b-icon icon="x" /></b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -39,7 +39,7 @@ export default {
   -webkit-user-select: none;
 }
 
-#logoContainer {
+#logo-container {
   -webkit-app-region: drag;
 }
 </style>

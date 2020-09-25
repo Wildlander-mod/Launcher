@@ -8,11 +8,11 @@
       </b-form-group>
       <b-button type="submit" variant="primary">Launch Ultimate Skyrim</b-button>
     </b-form>
-    <b-button :pressed="this.currentMenu === 'enb'" v-on:click="changeMenu('enb')">Configure ENB</b-button>
+    <b-button :pressed="this.currentMenu === 'enb'" @click="changeMenu('enb')">Configure ENB</b-button>
     <b-button>Debug</b-button>
     <b-button>Open ModOrganizer 2</b-button>
-    <b-button :pressed="this.currentMenu === 'options'" v-on:click="changeMenu('options')">Options</b-button>
-    <b-link v-for="link in links" :key="link.name" v-on:click="followLink(link.href)">
+    <b-button :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button>
+    <b-link v-for="link in links" :key="link.name" @click="followLink(link.href)">
       {{ link.name }}
     </b-link>
   </b-container>
