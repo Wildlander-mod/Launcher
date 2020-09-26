@@ -99,6 +99,15 @@ if (isDevelopment) {
   }
 }
 
+//Define default configuration settings
+const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "None","Profiles":["None","Ultimate Skyrim"]}}')
+
+//Check if configuration file exists, if not, create a default one
+if(!fs.existsSync(__dirname + '/launcher.json'))
+{
+  fs.writeFileSync(__dirname + '/launcher.json',JSON.stringify(defaultConfig, null, 2))
+}
+
 ipcMain.on('close', () => {
   win.close()
 }).on('minimize', () => {
@@ -142,4 +151,24 @@ ipcMain.handle('delete-enb-profile', async (_event, args) => {
   // Check to see if we should be deleting from the skyrim directory
   // Then delete the path
   return shell.moveItemToTrash(args.path)
+})
+
+//Update configuration file
+ipcMain.handle('update-config', async (_event, args) => {
+  let newConfig = JSON.stringify(args, null, 2)
+  fs.writeFileSync(__dirname + '/launcher.json', newConfig)
+})
+
+//Get configuration
+ipcMain.handle('get-config', async (_event, args) => {
+  return JSON.parse(fs.readFileSync(__dirname + '/launcher.json'))
+})
+
+//Get Directory
+ipcMain.handle('get-directory', async (_event, args) => {
+  return dialog.showOpenDialogSync({
+    buttonLabel: 'Choose Folder',
+    properties: ["openDirectory"]
+  })
+
 })

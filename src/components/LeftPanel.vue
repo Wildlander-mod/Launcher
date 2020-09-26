@@ -1,15 +1,15 @@
 <template>
   <b-container fluid>
     <b-form @submit="launchGame" novalidate>
-      <b-form-group label="Performance Profile">
-        <b-form-radio v-model="performanceProfile" value="Low" class="ml-2">Low</b-form-radio>
-        <b-form-radio v-model="performanceProfile" value="Medium" class="ml-2">Medium</b-form-radio>
-        <b-form-radio v-model="performanceProfile" value="High" class="ml-2">High</b-form-radio>
-      </b-form-group>
+      <b-select v-model="performanceProfile" label="Performance Profile">
+        <b-select-option value="Low" class="ml-2">Low</b-select-option>
+        <b-select-option value="Medium" class="ml-2">Medium</b-select-option>
+        <b-select-option value="High" class="ml-2">High</b-select-option>
+      </b-select>
       <b-button type="submit" variant="primary">Launch Ultimate Skyrim</b-button>
     </b-form>
+    <br />
     <b-button :pressed="this.currentMenu === 'enb'" @click="changeMenu('enb')">Configure ENB</b-button>
-    <b-button>Debug</b-button>
     <b-button>Open ModOrganizer 2</b-button>
     <b-button :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button>
     <b-link v-for="link in links" :key="link.name" @click="followLink(link.href)">
@@ -32,7 +32,7 @@ export default {
         { name: 'Discord', href: 'https://discord.gg/8VkDrfq' },
         { name: 'Reddit', href: 'https://www.reddit.com/r/ultimateskyrim' },
         { name: 'YouTube', href: 'https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww' },
-        { name: 'Twitch', href: 'https://www.twitch.tv/dylanperry' },
+        { name: 'Twitch', href: 'https://www.twitch.tv/dylanbperry' },
         { name: 'Subscribe to Newsletter', href: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }
       ]
     }
@@ -53,7 +53,15 @@ export default {
     },
     followLink (value) {
       window.ipcRenderer.send('follow-link', value)
+    },
+    refreshConfig () {
+      window.ipcRenderer.invoke('get-config').then((result) => {
+        this.performanceProfile = result.Options.DefaultPreset
+      })
     }
+  },
+  beforeMount () {
+    this.refreshConfig()
   }
 }
 </script>
