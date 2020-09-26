@@ -10,11 +10,19 @@
     </b-form>
     <br />
     <b-button :pressed="this.currentMenu === 'enb'" @click="changeMenu('enb')">Configure ENB</b-button>
-    <b-button>Open ModOrganizer 2</b-button>
-    <b-button :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button>
+    <b-button @click="launchMO2">Open ModOrganizer 2</b-button>
+    <b-button :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button><br/>
     <b-link v-for="link in links" :key="link.name" @click="followLink(link.href)">
       {{ link.name }}
     </b-link>
+    <b-modal ref="warn-no-preset" title="No performance preset selected!" hide-footer>
+      <b-form @submit="this.$refs['warn-no-preset'].hide()">
+        <p class="text-center">
+          Please select a preset before launching the game!
+        </p>
+        <b-button type="submit" variant="outline-primary">OK</b-button>
+      </b-form>
+    </b-modal>
   </b-container>
 </template>
 
@@ -39,8 +47,14 @@ export default {
   },
   methods: {
     launchGame () {
-      // Here we would launch the game, doi.
-      console.log('I\'m Todd Howard, and I approve this message.')
+      if (this.performanceProfile === '') {
+        this.$refs['warn-no-preset'].show()
+      } else {
+        window.ipcRenderer.invoke('launch-game', this.performanceProfile)
+      }
+    },
+    launchMO2 () {
+      window.ipcRenderer.invoke('launch-mo2')
     },
     changeMenu (value) {
       if (this.$route.path.endsWith(value)) {

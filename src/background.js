@@ -6,6 +6,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
 import fs from 'fs'
+import child_process from 'child_process'
 import { info } from 'console'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -170,5 +171,16 @@ ipcMain.handle('get-directory', async (_event, args) => {
     buttonLabel: 'Choose Folder',
     properties: ["openDirectory"]
   })
+})
 
+ipcMain.handle('launch-game', async (_event, args) => {
+  let moPath = path.join(__dirname, '..\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
+  console.log(moPath)
+  child_process.exec(moPath)
+})
+
+ipcMain.handle('launch-mo2', async (_event, args) => {
+  let moPath = path.join(__dirname, '..\\ModOrganizer.exe')
+  console.log(moPath)
+  child_process.exec(moPath)
 })
