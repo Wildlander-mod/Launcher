@@ -70,10 +70,19 @@ app.on('activate', () => {
   }
 })
 
+//Define default configuration settings
+const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "None","Profiles":["None","Ultimate Skyrim"]}}')
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  //Check if configuration file exists, if not, create a default one
+  if(!fs.existsSync(__dirname + '/launcher.json'))
+  {
+    fs.writeFileSync(__dirname + '/launcher.json',JSON.stringify(defaultConfig, null, 2))
+  }
+
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -98,15 +107,6 @@ if (isDevelopment) {
       app.quit()
     })
   }
-}
-
-//Define default configuration settings
-const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "None","Profiles":["None","Ultimate Skyrim"]}}')
-
-//Check if configuration file exists, if not, create a default one
-if(!fs.existsSync(__dirname + '/launcher.json'))
-{
-  fs.writeFileSync(__dirname + '/launcher.json',JSON.stringify(defaultConfig, null, 2))
 }
 
 ipcMain.on('close', () => {

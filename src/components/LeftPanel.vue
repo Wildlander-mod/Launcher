@@ -23,6 +23,15 @@
         <b-button type="submit" variant="outline-primary">OK</b-button>
       </b-form>
     </b-modal>
+    <b-modal ref="warn-no-directory" title="Game directory not set!" hide-footer>
+      <b-form @submit="saveConfig">
+        <p class="text-center">
+          We could not find your Skyrim directory! Please enter it below or click browse to find it
+        </p>
+        <input type="text" id='input-directory' v-model="GameDirectory"><input type="button" @click='getDirectory' value='Browse'>
+        <b-button type="submit" variant="outline-primary">OK</b-button>
+      </b-form>
+    </b-modal>
   </b-container>
 </template>
 
@@ -34,6 +43,7 @@ export default {
       // Ideally we would get this from a saved config on launch and populate
       performanceProfile: '',
       currentMenu: '',
+      GameDirectory: '',
       links: [
         { name: 'Website', href: 'https://www.ultimateskyrim.com' },
         { name: 'Patreon', href: 'https://www.patreon.com/dylanbperry' },
@@ -68,14 +78,27 @@ export default {
     followLink (value) {
       window.ipcRenderer.send('follow-link', value)
     },
-    refreshConfig () {
+    getDirectory () {
+      window.ipcRenderer.invoke('get-directory').then((result) => {
+        if (result !== undefined) { this.GameDirectory = result[0] }
+      })
+    },
+    saveConfig () {
       window.ipcRenderer.invoke('get-config').then((result) => {
-        this.performanceProfile = result.Options.DefaultPreset
+        result.Options.GameDirectory = this.GameDirectory
+        window.ipcRenderer.invoke('update-config', result)
+        this.$refs['warn-no-directory'].hide()
       })
     }
   },
-  beforeMount () {
-    this.refreshConfig()
+  mounted () {
+    window.ipcRenderer.invoke('get-config').then((result) => {
+      this.performanceProfile = result.Options.DefaultPreset
+      this.GameDirectory = result.Options.GameDirectory
+      if (this.GameDirectory === '') {
+        this.$refs['warn-no-directory'].show()
+      }
+    })
   }
 }
 </script>
