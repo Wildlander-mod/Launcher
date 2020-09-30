@@ -6,14 +6,16 @@
         <b-select-option value="Medium" class="ml-2">Medium</b-select-option>
         <b-select-option value="High" class="ml-2">High</b-select-option>
       </b-select>
-      <b-button type="submit" variant="primary">Launch Ultimate Skyrim</b-button>
+      <b-button class=navbutton type="submit" variant="primary">Launch Ultimate Skyrim</b-button>
     </b-form>
     <br />
-    <b-button :pressed="this.currentMenu === 'enb'" @click="changeMenu('enb')">Configure ENB</b-button>
-    <b-button @click="launchMO2">Open ModOrganizer 2</b-button>
-    <b-button :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button><br/>
-    <b-link v-for="link in links" :key="link.name" @click="followLink(link.href)">
-      {{ link.name }}
+    <b-button class=navbutton :pressed="this.currentMenu === 'enb'" @click="changeMenu('enb')">Configure ENB</b-button>
+    <b-button class=navbutton @click="launchMO2">Open ModOrganizer 2</b-button>
+    <b-button class=navbutton :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button><br/>
+    <b-button class=navbutton @click="toggleLinks">Links</b-button>
+    <b-link id=linksNav v-bind:style="{ display: linksDisplay }" v-for="link in links" :key="link.name" @click="followLink(link.href)">
+      <b-img :src="link.img" height="15"/>
+      {{ link.name }}<br>
     </b-link>
     <b-modal ref="warn-no-preset" title="No performance preset selected!" hide-footer>
       <b-form @submit="this.$refs['warn-no-preset'].hide()">
@@ -43,15 +45,19 @@ export default {
       // Ideally we would get this from a saved config on launch and populate
       performanceProfile: '',
       currentMenu: '',
+      linksDisplay: 'none',
       GameDirectory: '',
+      buttonStyle: {
+        padding: '100%'
+      },
       links: [
-        { name: 'Website', href: 'https://www.ultimateskyrim.com' },
-        { name: 'Patreon', href: 'https://www.patreon.com/dylanbperry' },
-        { name: 'Discord', href: 'https://discord.gg/8VkDrfq' },
-        { name: 'Reddit', href: 'https://www.reddit.com/r/ultimateskyrim' },
-        { name: 'YouTube', href: 'https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww' },
-        { name: 'Twitch', href: 'https://www.twitch.tv/dylanbperry' },
-        { name: 'Subscribe to Newsletter', href: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }
+        { name: 'Website', href: 'https://www.ultimateskyrim.com', img: require('../assets/website-icon.png') },
+        { name: 'Patreon', href: 'https://www.patreon.com/dylanbperry', img: require('../assets/patreon-icon.png') },
+        { name: 'Discord', href: 'https://discord.gg/8VkDrfq', img: require('../assets/discord-icon.png') },
+        { name: 'Reddit', href: 'https://www.reddit.com/r/ultimateskyrim', img: require('../assets/reddit-icon.png') },
+        { name: 'YouTube', href: 'https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww', img: require('../assets/youtube-icon.png') },
+        { name: 'Twitch', href: 'https://www.twitch.tv/dylanbperry', img: require('../assets/twitch-icon.png') },
+        { name: 'Subscribe to Newsletter', href: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', img: require('../assets/mail-icon.png') }
       ]
     }
   },
@@ -65,6 +71,13 @@ export default {
     },
     launchMO2 () {
       window.ipcRenderer.invoke('launch-mo2')
+    },
+    toggleLinks () {
+      if (this.linksDisplay === 'none') {
+        this.linksDisplay = 'block'
+      } else {
+        this.linksDisplay = 'none'
+      }
     },
     changeMenu (value) {
       if (this.$route.path.endsWith(value)) {
@@ -104,5 +117,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+  .navbutton {
+    width: 100%;
+  }
 </style>
