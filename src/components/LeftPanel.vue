@@ -12,11 +12,15 @@
     <b-button class=navbutton :pressed="this.currentMenu === 'enb'" @click="changeMenu('enb')">Configure ENB</b-button>
     <b-button class=navbutton @click="launchMO2">Open ModOrganizer 2</b-button>
     <b-button class=navbutton :pressed="this.currentMenu === 'options'" @click="changeMenu('options')">Options</b-button><br/>
-    <b-button class=navbutton @click="toggleLinks">Links</b-button>
-    <b-link id=linksNav v-bind:style="{ display: linksDisplay }" v-for="link in links" :key="link.name" @click="followLink(link.href)">
-      <b-img :src="link.img" height="15"/>
-      {{ link.name }}<br>
-    </b-link>
+    <b-button class=navbutton v-b-toggle.linksNav>Links</b-button>
+    <b-collapse id=linksNav>
+      <b-card>
+        <b-link v-b-toggle.linksNav v-for="link in links" :key="link.name" @click="followLink(link.href)">
+          <b-img :src="link.img" height="15"/>
+          {{ link.name }}<br>
+        </b-link>
+      </b-card>
+    </b-collapse>
     <b-modal ref="warn-no-preset" title="No performance preset selected!" hide-footer>
       <b-form @submit="this.$refs['warn-no-preset'].hide()">
         <p class="text-center">
@@ -45,7 +49,6 @@ export default {
       // Ideally we would get this from a saved config on launch and populate
       performanceProfile: '',
       currentMenu: '',
-      linksDisplay: 'none',
       GameDirectory: '',
       buttonStyle: {
         padding: '100%'
@@ -71,13 +74,6 @@ export default {
     },
     launchMO2 () {
       window.ipcRenderer.invoke('launch-mo2')
-    },
-    toggleLinks () {
-      if (this.linksDisplay === 'none') {
-        this.linksDisplay = 'block'
-      } else {
-        this.linksDisplay = 'none'
-      }
     },
     changeMenu (value) {
       if (this.$route.path.endsWith(value)) {
