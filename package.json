@@ -11,6 +11,13 @@
     "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
+  "dependencies": {
+    "bootstrap-vue": "^2.1.0",
+    "core-js": "^3.6.5",
+    "ncp": "^2.0.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0"
+  },
   "devDependencies": {
     "@babel/polyfill": "^7.7.0",
     "@vue/cli-plugin-babel": "~4.5.0",
