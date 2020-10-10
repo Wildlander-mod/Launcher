@@ -70,7 +70,9 @@ app.on('activate', () => {
 })
 
 //Define default configuration settings
-const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "None","Profiles":["None","Ultimate Skyrim"]}}')
+let defaultENBPath = __dirname + '\\ENB Profiles\\Ultimate Skyrim'
+defaultENBPath = defaultENBPath.replace(/\\/gi,'\\\\')
+const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "Ultimate Skyrim","Profiles":{"Ultimate Skyrim":{"name":"Ultimate Skyrim","path":"' + defaultENBPath + '"}}}}')
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -80,6 +82,12 @@ app.on('ready', async () => {
   if(!fs.existsSync(__dirname + '/launcher.json'))
   {
     fs.writeFileSync(__dirname + '/launcher.json',JSON.stringify(defaultConfig, null, 2))
+  }
+  if(!fs.existsSync(path.join(__dirname,'ENB Profiles'))) {
+    fs.mkdirSync(path.join(__dirname,'/ENB Profiles/'))
+    if(!fs.existsSync(__dirname + '/ENB Profiles/Ultimate Skyrim')) {
+      fs.mkdirSync(__dirname + '/ENB Profiles/Ultimate Skyrim')
+    }
   }
 
   if (isDevelopment && !process.env.IS_TEST) {
