@@ -106,6 +106,17 @@ export default {
         this.loading = false
       })
     }
+  },
+  beforeMount () {
+
+  },
+  mounted () {
+    window.ipcRenderer.invoke('get-config').then((result) => {
+      Object.entries(result.ENB.Profiles).forEach(key => {
+        this.profiles.push({ name: key[1].name, path: key[1].path })
+      })
+      this.activeENBProfile = result.ENB.CurrentENB
+    })
   }
 }
 </script>
