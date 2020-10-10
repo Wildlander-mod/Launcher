@@ -1,13 +1,10 @@
-'use strict'
-/* global __static */
-
 import { app, protocol, dialog, BrowserWindow, ipcMain, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
 import fs from 'fs'
-import child_process from 'child_process'
-import { info } from 'console'
+import childProcess from 'child_process'
+import ncp from 'ncp'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -28,7 +25,6 @@ function createWindow () {
     resizable: false,
     maximizable: false,
     frame: false,
-    transparent: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -44,7 +40,7 @@ function createWindow () {
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL(path.join(__dirname,'index.html'))
   }
 
   win.on('closed', () => {
@@ -69,24 +65,23 @@ app.on('activate', () => {
   }
 })
 
-//Define default configuration settings
-let defaultENBPath = __dirname + '\\ENB Profiles\\Ultimate Skyrim'
-defaultENBPath = defaultENBPath.replace(/\\/gi,'\\\\')
+// Define default configuration settings
+let defaultENBPath = path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim')
+defaultENBPath = defaultENBPath.replace(/\\/gi, '\\\\')
 const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "Ultimate Skyrim","Profiles":{"Ultimate Skyrim":{"name":"Ultimate Skyrim","path":"' + defaultENBPath + '"}}}}')
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  //Check if configuration file exists, if not, create a default one
-  if(!fs.existsSync(__dirname + '/launcher.json'))
-  {
-    fs.writeFileSync(__dirname + '/launcher.json',JSON.stringify(defaultConfig, null, 2))
+  // Check if configuration file exists, if not, create a default one
+  if (!fs.existsSync(path.join(__dirname, '/launcher.json'))) {
+    fs.writeFileSync(path.join(__dirname, 'launcher.json'), JSON.stringify(defaultConfig, null, 2))
   }
-  if(!fs.existsSync(path.join(__dirname,'ENB Profiles'))) {
-    fs.mkdirSync(path.join(__dirname,'/ENB Profiles/'))
-    if(!fs.existsSync(__dirname + '/ENB Profiles/Ultimate Skyrim')) {
-      fs.mkdirSync(__dirname + '/ENB Profiles/Ultimate Skyrim')
+  if (!fs.existsSync(path.join(__dirname, 'ENB Profiles'))) {
+    fs.mkdirSync(path.join(__dirname, 'ENB Profiles'))
+    if (!fs.existsSync(path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim'))) {
+      fs.mkdirSync(path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim'))
     }
   }
 
@@ -161,33 +156,35 @@ ipcMain.handle('delete-enb-profile', async (_event, args) => {
   return shell.moveItemToTrash(args.path)
 })
 
-//Update configuration file
+// Update configuration file
 ipcMain.handle('update-config', async (_event, args) => {
-  let newConfig = JSON.stringify(args, null, 2)
-  fs.writeFileSync(__dirname + '/launcher.json', newConfig)
+  const newConfig = JSON.stringify(args, null, 2)
+  fs.writeFileSync(path.join(__dirname, '/launcher.json'), newConfig)
 })
 
-//Get configuration
+// Get configuration
 ipcMain.handle('get-config', async (_event, args) => {
-  return JSON.parse(fs.readFileSync(__dirname + '/launcher.json'))
+  return JSON.parse(fs.readFileSync(path.join(__dirname, 'launcher.json')))
 })
 
-//Get Directory
+// Get Directory
 ipcMain.handle('get-directory', async (_event, args) => {
   return dialog.showOpenDialogSync({
     buttonLabel: 'Choose Folder',
-    properties: ["openDirectory"]
+    properties: ['openDirectory']
   })
 })
 
 ipcMain.handle('launch-game', async (_event, args) => {
-  let moPath = path.join(__dirname, '..\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
-  console.log(moPath)
-  child_process.exec(moPath)
+  const moPath = path.join(__dirname, '..\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
+  const currentConfig = JSON.parse(fs.readFileSync(path.join(__dirname, 'launcher.json')))
+  const currentENB = currentConfig.ENB.CurrentENB
+  const ENBPath = path.join(__dirname, '\\ENB Profiles\\', currentENB)
+  ncp.ncp(ENBPath, currentConfig.Options.GameDirectory)
+  childProcess.exec(moPath)
 })
 
 ipcMain.handle('launch-mo2', async (_event, args) => {
-  let moPath = path.join(__dirname, '..\\ModOrganizer.exe')
-  console.log(moPath)
-  child_process.exec(moPath)
+  const moPath = path.join(__dirname, '..\\ModOrganizer.exe')
+  childProcess.exec(moPath)
 })

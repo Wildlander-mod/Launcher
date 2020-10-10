@@ -68,18 +68,16 @@ export default {
         this.profiles.push(result)
 
         this.loading = false
-      }).catch((error) => {
-        // Do some error handling here
-        console.log(error)
       })
     },
     loadENBProfile (name) {
       this.loading = true
 
-      // Do actual ENB switching in an ipcRenderer.invoke() here
-      // Also make sure to update the currentENB in the config
-
       this.activeENBProfile = name
+      window.ipcRenderer.invoke('get-config').then((result) => {
+        result.ENB.CurrentENB = this.activeENBProfile
+        window.ipcRenderer.invoke('update-config', result)
+      })
       this.loading = false
     },
     configureENBProfile (name) {
