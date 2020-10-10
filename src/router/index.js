@@ -13,6 +13,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    mode: 'hash',
     children: [
       {
         path: '',
