@@ -40,7 +40,7 @@ function createWindow () {
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL(path.join(__dirname,'index.html'))
+    win.loadURL(path.join(__dirname, 'index.html'))
   }
 
   win.on('closed', () => {
@@ -74,6 +74,16 @@ const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset"
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  if (isDevelopment && !process.env.IS_TEST) {
+    // Install Vue Devtools
+    try {
+      await installExtension(VUEJS_DEVTOOLS)
+    } catch (e) {
+      console.error('Vue Devtools failed to install:', e.toString())
+    }
+  }
+  createWindow()
+
   // Check if configuration file exists, if not, create a default one
   if (!fs.existsSync(path.join(__dirname, '/launcher.json'))) {
     fs.writeFileSync(path.join(__dirname, 'launcher.json'), JSON.stringify(defaultConfig, null, 2))
@@ -84,16 +94,6 @@ app.on('ready', async () => {
       fs.mkdirSync(path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim'))
     }
   }
-
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
-  createWindow()
 })
 
 // Exit cleanly on request from parent process in development mode.
