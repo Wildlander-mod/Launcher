@@ -5,6 +5,9 @@
       <span>Skyrim directory: <p>{{ this.GameDirectory }}</p></span>
       <b-button @click="showModal('open-folder-dialog')">Browse</b-button><br/><br/>
 
+      <span>UltSky directory: <p>{{ this.ModDirectory }}</p></span>
+      <b-button @click="showModal('open-mod-dialog')">Browse</b-button><br/><br/>
+
       <span>Default Preset</span>
       <b-select v-model="DefaultProfile" label="Performance Profile">
         <b-select-option value="Low" class="ml-2">Low</b-select-option>
@@ -23,6 +26,15 @@
         <b-button type="submit" variant="outline-primary">OK</b-button>
       </b-form>
     </b-modal>
+
+    <b-modal ref="open-mod-dialog" title="Get UltSky Directory" hide-footer>
+      <b-form @submit="getModDirectory">
+        <p class="text-center">
+          Please select your UltSky content folder
+        </p>
+        <b-button type="submit" variant="outline-primary">OK</b-button>
+      </b-form>
+    </b-modal>
   </div>
 </template>
 
@@ -33,6 +45,7 @@ export default {
   data () {
     return {
       GameDirectory: '',
+      ModDirectory: '',
       DefaultProfile: '',
       currentConfig: ''
     }
@@ -41,18 +54,26 @@ export default {
     loadConfig () {
       window.ipcRenderer.invoke('get-config').then((result) => {
         this.GameDirectory = result.Options.GameDirectory
+        this.ModDirectory = result.Options.ModDirectory
         this.DefaultProfile = result.Options.DefaultPreset
         this.currentConfig = result
       })
     },
     saveConfig () {
       this.currentConfig.Options.GameDirectory = this.GameDirectory
+      this.currentConfig.Options.ModDirectory = this.ModDirectory
       this.currentConfig.Options.DefaultPreset = this.DefaultProfile
       window.ipcRenderer.invoke('update-config', this.currentConfig)
     },
     getDirectory () {
       window.ipcRenderer.invoke('get-directory').then((result) => {
         if (result !== undefined) { this.GameDirectory = result[0] }
+      })
+      this.$refs['open-folder-dialog'].hide()
+    },
+    getModDirectory () {
+      window.ipcRenderer.invoke('get-directory').then((result) => {
+        if (result !== undefined) { this.ModDirectory = result[0] }
       })
       this.$refs['open-folder-dialog'].hide()
     },
