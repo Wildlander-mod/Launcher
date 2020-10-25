@@ -26,6 +26,7 @@ function createWindow () {
     resizable: false,
     maximizable: false,
     frame: false,
+    icon: path.join(__static, 'icon.ico'),
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
