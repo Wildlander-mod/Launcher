@@ -32,9 +32,12 @@
     <b-modal ref="warn-no-directory" title="Game directory not set!" hide-footer>
       <b-form @submit="saveConfig">
         <p class="text-center">
-          We could not find your Skyrim directory! Please enter it below or click browse to find it
+          We could not find your Skyrim or UltSky directory! Please enter them below or click browse.
         </p>
-        <input type="text" id='input-directory' v-model="GameDirectory"><input type="button" @click='getDirectory' value='Browse'>
+        <p>Skyrim:</p>
+        <input type="text" id='input-game-directory' v-model="GameDirectory"><input type="button" @click='getGameDirectory' value='Browse'><br>
+        <p>UltSky:</p>
+        <input type="text" id='input-mod-directory' v-model="ModDirectory"><input type="button" @click='getModDirectory' value='Browse'><br>
         <b-button type="submit" variant="outline-primary">OK</b-button>
       </b-form>
     </b-modal>
@@ -46,10 +49,10 @@ export default {
   name: 'LeftPanel',
   data () {
     return {
-      // Ideally we would get this from a saved config on launch and populate
       performanceProfile: '',
       currentMenu: '',
       GameDirectory: '',
+      ModDirectory: '',
       buttonStyle: {
         padding: '100%'
       },
@@ -87,14 +90,20 @@ export default {
     followLink (value) {
       window.ipcRenderer.send('follow-link', value)
     },
-    getDirectory () {
+    getGameDirectory () {
       window.ipcRenderer.invoke('get-directory').then((result) => {
         if (result !== undefined) { this.GameDirectory = result[0] }
+      })
+    },
+    getModDirectory () {
+      window.ipcRenderer.invoke('get-directory').then((result) => {
+        if (result !== undefined) { this.ModDirectory = result[0] }
       })
     },
     saveConfig () {
       window.ipcRenderer.invoke('get-config').then((result) => {
         result.Options.GameDirectory = this.GameDirectory
+        result.Options.ModDirectory = this.ModDirectory
         window.ipcRenderer.invoke('update-config', result)
         this.$refs['warn-no-directory'].hide()
       })
@@ -113,7 +122,5 @@ export default {
 </script>
 
 <style lang="scss">
-  .navbutton {
-    width: 100%;
-  }
+
 </style>

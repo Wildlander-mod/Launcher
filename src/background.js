@@ -5,6 +5,7 @@ import path from 'path'
 import fs from 'fs'
 import childProcess from 'child_process'
 import ncp from 'ncp'
+import os from 'os'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -66,9 +67,13 @@ app.on('activate', () => {
 })
 
 // Define default configuration settings
-let defaultENBPath = path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim')
+const homedir = path.join(os.homedir(),'Ultimate Skyrim Launcher')
+if(!fs.existsSync(homedir, err => {throw err})) {
+  fs.mkdir(homedir, err => {throw err})
+}
+let defaultENBPath = path.join(homedir, '/ENB Profiles/', 'Ultimate Skyrim')
 defaultENBPath = defaultENBPath.replace(/\\/gi, '\\\\')
-const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "Ultimate Skyrim","Profiles":{"Ultimate Skyrim":{"name":"Ultimate Skyrim","path":"' + defaultENBPath + '"}}}}')
+const defaultConfig = JSON.parse('{"Options":{"GameDirectory":"","ModDirectory":"","DefaultPreset":"Low","LauncherTheme":"Light"},"ENB":{"CurrentENB" : "Ultimate Skyrim","Profiles":{"Ultimate Skyrim":{"name":"Ultimate Skyrim","path":"' + defaultENBPath + '"}}}}')
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -85,13 +90,13 @@ app.on('ready', async () => {
   createWindow()
 
   // Check if configuration file exists, if not, create a default one
-  if (!fs.existsSync(path.join(__dirname, '/launcher.json'))) {
-    fs.writeFileSync(path.join(__dirname, 'launcher.json'), JSON.stringify(defaultConfig, null, 2))
+  if (!fs.existsSync(path.join(homedir, '/launcher.json'))) {
+    fs.writeFileSync(path.join(homedir, 'launcher.json'), JSON.stringify(defaultConfig, null, 2))
   }
-  if (!fs.existsSync(path.join(__dirname, 'ENB Profiles'))) {
-    fs.mkdirSync(path.join(__dirname, 'ENB Profiles'))
-    if (!fs.existsSync(path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim'))) {
-      fs.mkdirSync(path.join(__dirname, '/ENB Profiles/', 'Ultimate Skyrim'))
+  if (!fs.existsSync(path.join(homedir, 'ENB Profiles'))) {
+    fs.mkdirSync(path.join(homedir, 'ENB Profiles'))
+    if (!fs.existsSync(path.join(homedir, '/ENB Profiles/', 'Ultimate Skyrim'))) {
+      fs.mkdirSync(path.join(homedir, '/ENB Profiles/', 'Ultimate Skyrim'))
     }
   }
 })
@@ -136,7 +141,7 @@ ipcMain.on('close', () => {
 })
 
 ipcMain.handle('create-enb-profile', async (_event, name) => {
-  const profilePath = path.join(__dirname, '/ENB Profiles/', name)
+  const profilePath = path.join(homedir, '/ENB Profiles/', name)
 
   fs.mkdirSync(profilePath, { recursive: true }, (error) => {
     if (error) {
@@ -173,12 +178,12 @@ ipcMain.handle('delete-enb-profile', async (_event, args) => {
 // Update configuration file
 ipcMain.handle('update-config', async (_event, args) => {
   const newConfig = JSON.stringify(args, null, 2)
-  fs.writeFileSync(path.join(__dirname, '/launcher.json'), newConfig)
+  fs.writeFileSync(path.join(homedir, '/launcher.json'), newConfig)
 })
 
 // Get configuration
 ipcMain.handle('get-config', async (_event, args) => {
-  return JSON.parse(fs.readFileSync(path.join(__dirname, 'launcher.json')))
+  return JSON.parse(fs.readFileSync(path.join(homedir, 'launcher.json')))
 })
 
 // Get Directory
@@ -190,12 +195,12 @@ ipcMain.handle('get-directory', async (_event, args) => {
 })
 
 ipcMain.handle('launch-game', async (_event, args) => {
-  const currentConfig = JSON.parse(fs.readFileSync(path.join(__dirname, 'launcher.json')))
+  const currentConfig = JSON.parse(fs.readFileSync(path.join(homedir, 'launcher.json')))
   const currentENB = currentConfig.ENB.CurrentENB
-  const ENBPath = path.join(__dirname, '\\ENB Profiles\\', currentENB)
+  const ENBPath = path.join(homedir, '\\ENB Profiles\\', currentENB)
   ncp.ncp(ENBPath, currentConfig.Options.GameDirectory)
 
-  const moPath = path.join(__dirname, '..\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
+  const moPath = path.join(currentConfig.Options.ModDirectory, '\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
   childProcess.exec(moPath)
 
   let isSkyrimRunning = setInterval(checkProcess, 1000)
@@ -221,6 +226,7 @@ ipcMain.handle('launch-game', async (_event, args) => {
 })
 
 ipcMain.handle('launch-mo2', async (_event, args) => {
-  const moPath = path.join(__dirname, '..\\ModOrganizer.exe')
+  const currentConfig = JSON.parse(fs.readFileSync(path.join(homedir, 'launcher.json')))
+  const moPath = path.join(currentConfig.Options.ModDirectory, '\\ModOrganizer.exe')
   childProcess.exec(moPath)
 })

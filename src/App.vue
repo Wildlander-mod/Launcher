@@ -42,7 +42,4 @@ export default {
 #logo-container {
   -webkit-app-region: drag;
 }
-.navbutton {
-    padding: 25px 100%;
-  }
 </style>
