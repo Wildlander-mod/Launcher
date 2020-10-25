@@ -96,6 +96,20 @@ app.on('ready', async () => {
   }
 })
 
+const isRunning = (query, cb) => {
+  let platform = process.platform;
+  let cmd = '';
+  switch (platform) {
+      case 'win32' : cmd = `tasklist`; break;
+      case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
+      case 'linux' : cmd = `ps -A`; break;
+      default: break;
+  }
+  childProcess.exec(cmd, (err, stdout, stderr) => {
+      cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
+  });
+}
+
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
@@ -176,12 +190,34 @@ ipcMain.handle('get-directory', async (_event, args) => {
 })
 
 ipcMain.handle('launch-game', async (_event, args) => {
-  const moPath = path.join(__dirname, '..\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
   const currentConfig = JSON.parse(fs.readFileSync(path.join(__dirname, 'launcher.json')))
   const currentENB = currentConfig.ENB.CurrentENB
   const ENBPath = path.join(__dirname, '\\ENB Profiles\\', currentENB)
   ncp.ncp(ENBPath, currentConfig.Options.GameDirectory)
+
+  const moPath = path.join(__dirname, '..\\ModOrganizer.exe -p "UltSky 4.0.7 (' + args + ' Preset)" SKSE')
   childProcess.exec(moPath)
+
+  let isSkyrimRunning = setInterval(checkProcess, 1000)
+  function checkProcess () {
+    isRunning('ModOrganizer.exe', (status) => {
+      if (!status) {
+        clearInterval(isSkyrimRunning)
+        fs.readdir(ENBPath, (err,files) => {
+          files.forEach(file => {
+            fs.unlink(path.join(currentConfig.Options.GameDirectory, file), (err) => {
+              console.log(err)
+            })
+            fs.rmdir(path.join(currentConfig.Options.GameDirectory, file), { recursive: true }, (err) => {
+              if (err) {
+                  throw err;
+              }
+            })
+          })
+        })  
+      }
+    })
+  }
 })
 
 ipcMain.handle('launch-mo2', async (_event, args) => {
