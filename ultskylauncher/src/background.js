@@ -1,53 +1,47 @@
-import { app, protocol, dialog, BrowserWindow, ipcMain, shell } from 'electron'
+'use strict'
+
+import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import path from 'path'
+import childPrcoess from 'child_process'
 import fs from 'fs'
-import childProcess from 'child_process'
 import ncp from 'ncp'
 import os from 'os'
+import path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-function createWindow () {
+async function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({
-    width: 1200,
-    height: 600,
-    resizable: false,
-    maximizable: false,
+  const win = new BrowserWindow({
     frame: false,
+    height: 600,
     icon: path.join(__static, 'icon.ico'),
+    maximizable: false,
+    resizable: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    width: 800
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL(path.join(__dirname, 'index.html'))
+    win.loadURL('app://./index.html')
   }
-
-  win.on('closed', () => {
-    win = null
-  })
 }
 
 // Quit when all windows are closed.
@@ -62,9 +56,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    createWindow()
-  }
+  if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
 // Define default configuration settings
