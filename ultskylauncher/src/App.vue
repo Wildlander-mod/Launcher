@@ -1,30 +1,47 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="window">
+    <main>
+      <nav>
+        <h1>Nav</h1>
+      </nav>
+      <router-view />
+    </main>
+    <Footer />
   </div>
-  <router-view/>
 </template>
 
+<script>
+import Footer from './components/Footer.vue'
+
+export default {
+  name: 'App',
+  components: {
+    Footer
+  }
+}
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+body {
+  margin: 0px;
 }
 
-#nav {
-  padding: 30px;
+main {
+  // The url below is a placeholder until we get a system for user generated images
+  background-image: url(https://picsum.photos/1200/600);
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+nav {
+  width: 20%;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+#window {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  width: 1200px;
 }
 </style>
