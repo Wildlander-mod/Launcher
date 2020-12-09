@@ -1,9 +1,16 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { 
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  protocol,
+  shell
+} from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import childPrcoess from 'child_process'
+import childProcess from 'child_process'
 import fs from 'fs'
 import ncp from 'ncp'
 import os from 'os'
@@ -30,7 +37,7 @@ async function createWindow () {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, 'preload.js')
     },
-    width: 800
+    width: 1200
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
