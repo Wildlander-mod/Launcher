@@ -23,11 +23,15 @@ export default {
 
 <style lang="scss">
 footer {
-  background-color: black;
-  color: white;
+  background-color: #000000;
   display: flex;
+  height: 30px;
 
   p {
+    line-height: 30px;
+    margin: 0px;
+    padding-left: 8px;
+    size: 14px;
     white-space: nowrap;
   }
 }

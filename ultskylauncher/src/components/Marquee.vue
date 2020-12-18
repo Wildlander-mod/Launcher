@@ -1,25 +1,15 @@
 <template>
   <div id="marquee">
-    <div class="text-container">
-      <div id="text-1">
-        <p
-          v-for="text in tempText"
-          :key="text"
-        >
-          {{ text }}
-        </p>
-      </div>
-    </div>
-    <div class="text-container">
-      <div id="text-2">
-        <p
-          v-for="text in tempText"
-          :key="text"
-        >
-          {{ text }}
-        </p>
-      </div>
-    </div>
+    <div id="fade-before" />
+    <span>
+      <p
+        :key="element.key"
+        v-for="element in text"
+      >
+        {{ element }}
+      </p>
+    </span>
+    <div id="fade-after" />
   </div>
 </template>
 
@@ -28,67 +18,43 @@ export default {
   name: 'Marquee',
   props: {
     text: Array
-  },
-  data: () => {
-    return {
-      tempText: [
-        'JU1200',
-        'RingComics',
-        'Liz',
-        'Phin',
-        'Dylan Perry',
-        'Spence',
-        ''
-      ]
-    }
   }
 }
 </script>
 
 <style lang="scss">
 #marquee {
-  overflow: hidden;
-  white-space: nowrap;
+  position: relative;
   width: 100%;
 
-  .text-container {
-    display: inline-block;
-    vertical-align: top;
-    width: inherit;
+  div {
+    background: linear-gradient(90deg, #000000 30%, 70%, #00000000);
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 10%;
+    z-index: 1;
 
-    #text-1 {
-      display: flex;
-      justify-content: space-between;
-      // animation: text-1-scroll-left 10s linear infinite;
+    &#fade-before {
+      left: 0;
     }
 
-    #text-2 {
-      display: flex;
-      // animation: text-2-scroll-left 10s linear infinite;
-      animation-delay: 5s;
+    &#fade-after {
+      left: 90%;
+      transform: matrix(-1, 0, 0, 1, 0, 0);
     }
   }
 
-  p {
-    padding-left: 8px;
-  }
-}
+  span {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
 
-@keyframes text-1-scroll-left {
-  from {
-    transform: translateX(200%);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes text-2-scroll-left {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(-200%)
+    p {
+      font-family: 'Averta-Extra-Thin';
+      font-size: 10px;
+      line-height: 30px;
+    }
   }
 }
 </style>
