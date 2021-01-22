@@ -1,9 +1,14 @@
 <template>
-  <button
-    :class="cssClasses"
+  <div
+    :class="[
+      size,
+      type
+    ].join(' ')"
   >
-    {{ text }}
-  </button>
+    <p>
+      {{ text }}
+    </p>
+  </div>
 </template>
 
 <script>
@@ -19,26 +24,25 @@ export default {
       type: String,
       default: ''
     }
-  },
-  computed: {
-    cssClasses () {
-      return [this.size, this.type].join(' ')
-    }
   }
 }
 </script>
 
-<style lang="scss">
-button {
+<style lang="scss" scoped>
+div {
   background-color: #e1e1e199;
   border: 0px;
   border-radius: 2px;
   color: #ffffff;
-  font-family: 'Averta-Thin';
-  height: 35px;
-  line-height: 35px;
+  display: flex;
+  height: 30px;
+  justify-content: center;
   padding: 0px;
-  size: 20px;
+  user-select: none;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   &.large {
     width: 155px;
@@ -46,6 +50,10 @@ button {
 
   &.primary {
     background-color: #0b32e6;
+
+    &:active {
+      background-color: #3a5eff;
+    }
   }
 
   &.small {
