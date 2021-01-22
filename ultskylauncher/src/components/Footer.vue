@@ -1,6 +1,8 @@
 <template>
   <footer>
-    <p>Thanks to all the Patrons!</p>
+    <p>
+      Thanks to all the Patrons!
+    </p>
     <Marquee
       :text="marqueeText"
     />
@@ -21,17 +23,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 footer {
   background-color: #000000;
   display: flex;
   height: 30px;
 
   p {
-    line-height: 30px;
-    margin: 0px;
-    padding-left: 8px;
-    size: 14px;
+    font-weight: 600;
+    margin-left: 8px;
     white-space: nowrap;
   }
 }

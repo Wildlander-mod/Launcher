@@ -1,9 +1,11 @@
 <template>
   <div id="window">
-    <div id="title-bar" />
     <main>
       <Nav-Bar />
-      <router-view />
+      <div id="window__content">
+        <Title-Bar />
+        <router-view />
+      </div>
     </main>
     <Footer
       :marqueeText="getPatrons"
@@ -12,14 +14,16 @@
 </template>
 
 <script>
-import Footer from './components/Footer.vue'
-import NavBar from './components/NavBar.vue'
+import Footer from '@/components/Footer.vue'
+import NavBar from '@/components/NavBar.vue'
+import TitleBar from '@/components/TitleBar.vue'
 
 export default {
   name: 'App',
   components: {
     Footer,
-    NavBar
+    NavBar,
+    TitleBar
   },
   computed: {
     // TODO: This will need to be replaced with the system to get the actual Patrons
@@ -37,20 +41,7 @@ export default {
 </script>
 
 <style lang="scss">
-@font-face {
-  font-family: 'Averta';
-  src: url('./assets/fonts/Averta.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Averta-Thin';
-  src: url('./assets/fonts/Averta.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Averta-Extra-Thin';
-  src: url('./assets/fonts/Averta.ttf') format('truetype');
-}
+@import url(./assets/scss/font-face.scss);
 
 body {
   margin: 0px;
@@ -62,24 +53,31 @@ main {
   flex-grow: 1;
 }
 
-#app {
-  color: #ffffff;
-  font-family: 'Averta';
+p {
+  font-weight: 400;
+  line-height: 30px;
+  margin: 0px;
+  size: 14px;
 }
 
-#title-bar {
-  position: absolute;
-  height: 30px;
-  top: 0;
-  width: 100%;
+#app {
+  color: #ffffff;
 }
 
 #window {
   // The url below is a placeholder until we get a system for user generated images
-  background-image: url(https://picsum.photos/1200/600);
+  background-image:
+    linear-gradient(90deg, #000000aa 20%, #00000000 70%),
+    url(https://picsum.photos/1200/600);
   display: flex;
   flex-direction: column;
   height: 580px;
   width: 1000px;
+}
+
+#window__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 </style>

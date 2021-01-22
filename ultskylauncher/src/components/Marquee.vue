@@ -1,6 +1,6 @@
 <template>
   <div id="marquee">
-    <div id="fade-before" />
+    <div id="marquee__fade--before" />
     <span>
       <p
         :key="element.key"
@@ -9,7 +9,7 @@
         {{ element }}
       </p>
     </span>
-    <div id="fade-after" />
+    <div id="marquee__fade--after" />
   </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #marquee {
   position: relative;
   width: 100%;
@@ -35,11 +35,11 @@ export default {
     width: 10%;
     z-index: 1;
 
-    &#fade-before {
+    &#marquee__fade--before {
       left: 0;
     }
 
-    &#fade-after {
+    &#marquee__fade--after {
       left: 90%;
       transform: matrix(-1, 0, 0, 1, 0, 0);
     }
@@ -51,9 +51,8 @@ export default {
     justify-content: space-between;
 
     p {
-      font-family: 'Averta-Extra-Thin';
       font-size: 10px;
-      line-height: 30px;
+      font-weight: 200;
     }
   }
 }
