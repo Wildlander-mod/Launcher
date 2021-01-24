@@ -3,6 +3,7 @@
 import {
   app,
   BrowserWindow,
+  nativeImage,
   protocol
 } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
@@ -21,7 +22,7 @@ async function createWindow () {
   const win = new BrowserWindow({
     frame: false,
     height: 580,
-    icon: path.join(__static, 'icon.ico'),
+    icon: nativeImage.createFromPath(path.join(__static, 'icon.ico')),
     maximizable: false,
     resizable: false,
     webPreferences: {
