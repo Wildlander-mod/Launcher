@@ -116,8 +116,8 @@ div {
   &#select__options {
     background-color: #767676;
     height: auto;
-    margin-bottom: 8px;
-    margin-top: 8px;
+    padding-bottom: 8px;
+    padding-top: 8px;
     position: absolute;
     transform-origin: top;
     width: 200px;
