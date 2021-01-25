@@ -16,7 +16,7 @@
       class='nav__select'
       placeholder="No ENB"
     />
-    <hr>
+    <hr />
     <div id="nav__tabs">
       <div
         :class="`nav__tab-highlight--${activeTab}`"
