@@ -54,7 +54,7 @@ main {
 }
 
 p {
-  font-weight: 400;
+  font-weight: 300;
   line-height: 30px;
   margin: 0px;
   size: 14px;

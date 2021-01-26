@@ -40,6 +40,10 @@ div {
   padding: 0px;
   user-select: none;
 
+  &:active {
+    background-color: #e1e1e133;
+  }
+
   &:hover {
     cursor: pointer;
   }
