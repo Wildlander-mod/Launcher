@@ -14,7 +14,7 @@ export default {
 #news-box {
   backdrop-filter: blur(10px);
   background-color: #00000080;
-  border: 1px solid #ffffff33;
+  border: 1px solid #ffffff48;
   height: 120px;
   margin-top: 5px;
   width: 100%;
