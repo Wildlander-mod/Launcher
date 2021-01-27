@@ -35,6 +35,14 @@ export default {
   name: 'TitleBar',
   components: {
     Logo
+  },
+  methods: {
+    close () {
+      window.ipcRenderer.send('close')
+    },
+    minimize () {
+      window.ipcRenderer.send('minimize')
+    }
   }
 }
 </script>
