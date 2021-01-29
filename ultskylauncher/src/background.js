@@ -4,7 +4,8 @@ import {
   app,
   BrowserWindow,
   nativeImage,
-  protocol
+  protocol,
+  ipcMain
 } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
@@ -43,6 +44,14 @@ async function createWindow () {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+  // IPC handlers related to the win variable must be declared in this function
+  // in order to work properly without declaring the win object globally. Other
+  // IPC handlers can be found in ./js/ipcHandlers.js
+  ipcMain.on('close', () => {
+    win.close()
+  }).on('minimize', () => {
+    win.minimize()
+  })
 }
 
 // Quit when all windows are closed.
@@ -89,3 +98,6 @@ if (isDevelopment) {
     })
   }
 }
+
+// IPC functions
+require('./assets/js/ipcHandlers.js')
