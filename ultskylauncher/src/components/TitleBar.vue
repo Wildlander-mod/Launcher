@@ -29,11 +29,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import Logo from '@/components/svgs/Logo.vue'
-=======
-import Logo from '@/components/svg/Logo.vue'
->>>>>>> f0d4096e729b1b6557e92afa081085209ee73666
 
 export default {
   name: 'TitleBar',
