@@ -62,6 +62,7 @@
     <div id="nav__launcher-info">
       <p>Game Version: {{ gameVersion }}</p>
       <p>Launcher Version: {{ launcherVersion }}</p>
+      <p>Powered by <a href="#" @click="followLink('https://github.com/RingComics/azuras-star')">Azura's Star</a></p>
     </div>
   </nav>
 </template>
@@ -83,6 +84,11 @@ export default {
       gameVersion: '0',
       launcherVersion: '0',
       qualityOptions: [{ name: 'Low Quality' }, { name: 'Medium Quality' }, { name: 'High Quality' }]
+    }
+  },
+  methods: {
+    followLink (link) {
+      window.ipcRenderer.send('follow-link', link)
     }
   }
 }
