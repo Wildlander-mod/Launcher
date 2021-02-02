@@ -89,8 +89,8 @@ export default {
   name: 'Logo',
   props: {
     fill: String,
-    height: String,
-    width: String
+    height: Number,
+    width: Number
   }
 }
 </script>
