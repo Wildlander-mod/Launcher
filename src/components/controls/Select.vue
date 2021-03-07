@@ -1,27 +1,15 @@
 <template>
   <div id="select">
-    <div
-      @click="toggle"
-      id="select__head"
-    >
+    <div @click="toggle" id="select__head">
       <p>
         {{ currentOption.name }}
       </p>
-      <span
-        :class="'material-icons ' + `select__icon${isOpenModifier}`"
-      >
+      <span :class="'material-icons ' + `select__icon${isOpenModifier}`">
         expand_more
       </span>
     </div>
-    <div
-      :class="`select__options${isOpenModifier}`"
-      id="select__options"
-    >
-      <div
-        @click="select(option)"
-        :key='option.name'
-        v-for="option in options"
-      >
+    <div :class="`select__options${isOpenModifier}`" id="select__options">
+      <div @click="select(option)" :key="option.name" v-for="option in options">
         <p>
           {{ option.name }}
         </p>
@@ -32,33 +20,35 @@
 
 <script>
 export default {
-  name: 'Select',
+  name: "Select",
   props: {
     options: Array,
-    placeholder: String
+    placeholder: String,
   },
-  data () {
+  data() {
     return {
-      currentOption: this.options ? this.options[0] : { name: this.placeholder },
-      isOpenModifier: '--closed'
-    }
+      currentOption: this.options
+        ? this.options[0]
+        : { name: this.placeholder },
+      isOpenModifier: "--closed",
+    };
   },
   methods: {
-    select (option) {
-      this.currentOption = option
-      this.isOpenModifier = '--closed'
+    select(option) {
+      this.currentOption = option;
+      this.isOpenModifier = "--closed";
     },
-    toggle () {
+    toggle() {
       if (this.options) {
-        if (this.isOpenModifier === '--closed') {
-          this.isOpenModifier = '--open'
+        if (this.isOpenModifier === "--closed") {
+          this.isOpenModifier = "--open";
         } else {
-          this.isOpenModifier = '--closed'
+          this.isOpenModifier = "--closed";
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -90,10 +80,10 @@ div {
 
         @keyframes rotate-reverse {
           from {
-            transform: rotate(180deg)
+            transform: rotate(180deg);
           }
           to {
-            transform: rotate(360deg)
+            transform: rotate(360deg);
           }
         }
       }
@@ -103,10 +93,10 @@ div {
 
         @keyframes rotate {
           from {
-            transform: rotate(0deg)
+            transform: rotate(0deg);
           }
           to {
-            transform: rotate(180deg)
+            transform: rotate(180deg);
           }
         }
       }
@@ -123,7 +113,7 @@ div {
     width: 200px;
     z-index: 1;
 
-    &.select__options--closed{
+    &.select__options--closed {
       animation: retract 0.2s forwards;
     }
 
@@ -138,19 +128,19 @@ div {
 
     @keyframes expand {
       from {
-        transform: scaleY(0)
+        transform: scaleY(0);
       }
       to {
-        transform: scaleY(1)
+        transform: scaleY(1);
       }
     }
 
     @keyframes retract {
       from {
-        transform: scaleY(1)
+        transform: scaleY(1);
       }
       to {
-        transform: scaleY(0)
+        transform: scaleY(0);
       }
     }
   }

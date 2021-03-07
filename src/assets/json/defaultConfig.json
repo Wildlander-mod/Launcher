@@ -1,16 +1,16 @@
 {
-    "Options": {
-        "GameDirectory":"",
-        "ModDirectory":"",
-        "DefaultPreset":"Low"
-    },
-    "ENB": {
-        "CurrentENB" : "Ultimate Skyrim",
-        "Profiles": {
-            "Ultimate Skyrim": {
-                "name":"Ultimate Skyrim",
-                "path":""
-            }
-        }
+  "Options": {
+    "GameDirectory": "",
+    "ModDirectory": "",
+    "DefaultPreset": "Low"
+  },
+  "ENB": {
+    "CurrentENB": "Ultimate Skyrim",
+    "Profiles": {
+      "Ultimate Skyrim": {
+        "name": "Ultimate Skyrim",
+        "path": ""
+      }
     }
+  }
 }
