@@ -8,7 +8,7 @@
       </div>
     </main>
     <Footer
-      :marqueeText="getPatrons"
+      :marqueeItems="getPatrons"
     />
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
       const patrons = []
 
       for (let i = 0; i < 10; i++) {
-        patrons.push('JU12000')
+        patrons.push(`JU12000 ${i}`)
       }
 
       return patrons
