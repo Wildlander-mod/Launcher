@@ -1,45 +1,83 @@
 <template>
-  <div id="app">
-    <b-container fluid class="mb-4">
-      <b-row no-gutters>
-        <b-col class="d-flex flex-grow" id="logo-container">
-          <b-img height="40" src="./assets/logo.png" id="logo"/>
-        </b-col>
-        <b-col cols="12" md="auto" class="d-flex justify-content-end">
-          <b-button @click="minimize"><b-icon icon="dash" /></b-button>
-          <b-button @click="close"><b-icon icon="x" /></b-button>
-        </b-col>
-      </b-row>
-    </b-container>
-    <router-view/>
+  <div id="window">
+    <main>
+      <Nav-Bar />
+      <div id="window__content">
+        <Title-Bar />
+        <router-view />
+      </div>
+    </main>
+    <Footer
+      :marqueeText="getPatrons"
+    />
   </div>
 </template>
 
 <script>
+import Footer from '@/components/Footer.vue'
+import NavBar from '@/components/NavBar.vue'
+import TitleBar from '@/components/TitleBar.vue'
+
 export default {
   name: 'App',
-  methods: {
-    close () {
-      window.ipcRenderer.send('close')
-    },
-    minimize () {
-      window.ipcRenderer.send('minimize')
+  components: {
+    Footer,
+    NavBar,
+    TitleBar
+  },
+  computed: {
+    // TODO: This will need to be replaced with the system to get the actual Patrons
+    getPatrons () {
+      const patrons = []
+
+      for (let i = 0; i < 10; i++) {
+        patrons.push('JU12000')
+      }
+
+      return patrons
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import url(./assets/scss/font-face.scss);
+
+body {
+  margin: 0px;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+p {
+  font-weight: 300;
+  line-height: 30px;
+  margin: 0px;
+  size: 14px;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: #ffffff;
 }
 
-#logo {
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
+#window {
+  // The url below is a placeholder until we get a system for user generated images
+  background-image:
+    linear-gradient(90deg, #000000aa 20%, #00000000 70%),
+    url(https://picsum.photos/1200/600);
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+  width: 1000px;
 }
 
-#logo-container {
-  -webkit-app-region: drag;
+#window__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 </style>
