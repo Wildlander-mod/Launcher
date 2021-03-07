@@ -12,16 +12,16 @@
 </template>
 
 <script>
-import NewsBox from '@/components/NewsBox.vue'
-import PatronBox from '@/components/PatronBox.vue'
+import NewsBox from "@/components/NewsBox.vue";
+import PatronBox from "@/components/PatronBox.vue";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     NewsBox,
-    PatronBox
-  }
-}
+    PatronBox,
+  },
+};
 </script>
 
 <style lang="scss" scoped>

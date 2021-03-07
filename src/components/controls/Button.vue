@@ -1,10 +1,5 @@
 <template>
-  <div
-    :class="[
-      size,
-      type
-    ].join(' ')"
-  >
+  <div :class="[size, type].join(' ')">
     <p>
       {{ text }}
     </p>
@@ -13,19 +8,19 @@
 
 <script>
 export default {
-  name: 'Button',
+  name: "Button",
   props: {
     size: {
       type: String,
-      default: 'small'
+      default: "small",
     },
     text: String,
     type: {
       type: String,
-      default: ''
-    }
-  }
-}
+      default: "",
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

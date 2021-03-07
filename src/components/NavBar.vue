@@ -6,16 +6,8 @@
       type="primary"
       size="large"
     />
-    <Select
-      :options="qualityOptions"
-      class='nav__select'
-      placeholder="None"
-    />
-    <Select
-      :options="enbOptions"
-      class='nav__select'
-      placeholder="No ENB"
-    />
+    <Select :options="qualityOptions" class="nav__select" placeholder="None" />
+    <Select :options="enbOptions" class="nav__select" placeholder="No ENB" />
     <hr />
     <div id="nav__tabs">
       <div
@@ -26,7 +18,7 @@
         @click="activeTab = 'home'"
         :class="activeTab === 'home' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'Home'
+          name: 'Home',
         }"
       >
         Home
@@ -35,7 +27,7 @@
         @click="activeTab = 'enb'"
         :class="activeTab === 'enb' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'ENB'
+          name: 'ENB',
         }"
       >
         Configure ENB
@@ -44,7 +36,7 @@
         @click="activeTab = 'resources'"
         :class="activeTab === 'resources' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'Resources'
+          name: 'Resources',
         }"
       >
         Resources
@@ -53,7 +45,7 @@
         @click="activeTab = 'settings'"
         :class="activeTab === 'settings' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'Settings'
+          name: 'Settings',
         }"
       >
         Settings
@@ -62,36 +54,47 @@
     <div id="nav__launcher-info">
       <p>Game Version: {{ gameVersion }}</p>
       <p>Launcher Version: {{ launcherVersion }}</p>
-      <p>Powered by <a href="#" @click="followLink('https://github.com/RingComics/azuras-star')">Azura's Star</a></p>
+      <p>
+        Powered by
+        <a
+          href="#"
+          @click="followLink('https://github.com/RingComics/azuras-star')"
+          >Azura's Star</a
+        >
+      </p>
     </div>
   </nav>
 </template>
 
 <script>
-import Button from './controls/Button.vue'
-import Select from './controls/Select.vue'
+import Button from "./controls/Button.vue";
+import Select from "./controls/Select.vue";
 
 export default {
-  name: 'Nav-Bar',
+  name: "Nav-Bar",
   components: {
     Button,
-    Select
+    Select,
   },
-  data () {
+  data() {
     return {
-      activeTab: 'home',
+      activeTab: "home",
       enbOptions: undefined,
-      gameVersion: '0',
-      launcherVersion: '0',
-      qualityOptions: [{ name: 'Low Quality' }, { name: 'Medium Quality' }, { name: 'High Quality' }]
-    }
+      gameVersion: "0",
+      launcherVersion: "0",
+      qualityOptions: [
+        { name: "Low Quality" },
+        { name: "Medium Quality" },
+        { name: "High Quality" },
+      ],
+    };
   },
   methods: {
-    followLink (link) {
-      window.ipcRenderer.send('follow-link', link)
-    }
-  }
-}
+    followLink(link) {
+      window.ipcRenderer.send("follow-link", link);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

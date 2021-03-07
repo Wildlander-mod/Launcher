@@ -71,10 +71,10 @@
 
 <script>
 export default {
-  name: 'Patreon',
+  name: "Patreon",
   props: {
     height: String,
-    width: String
-  }
-}
+    width: String,
+  },
+};
 </script>

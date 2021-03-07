@@ -5,51 +5,38 @@
       <p>Current ENB: {{ currentENB.name }}</p>
       <div id="controls__button-wrapper">
         <div id="controls__primary-buttons">
-          <Button
-            text="New ENB Profile"
-            type="primary"
-            size="large"
-          />
+          <Button text="New ENB Profile" type="primary" size="large" />
         </div>
         <div id="controls__secondary-buttons">
-          <Button
-            text="Load"
-          />
-          <Button
-            text="Open"
-          />
-          <Button
-            text="Delete"
-          />
+          <Button text="Load" />
+          <Button text="Open" />
+          <Button text="Delete" />
         </div>
       </div>
     </div>
-    <div
-      v-if="enbs.length"
-      id="configure-enb__selector"
-    >
+    <div v-if="enbs.length" id="configure-enb__selector">
       <h1>Hi</h1>
     </div>
   </div>
 </template>
 
 <script>
-import Button from '../components/controls/Button.vue'
+import Button from "../components/controls/Button.vue";
 
 export default {
-  name: 'ConfigureENB',
+  name: "ConfigureENB",
   components: {
-    Button
+    Button,
   },
-  data () {
+  data() {
     return {
       currentENB: {
-        name: 'None'
+        name: "None",
       },
-      enbs: []
-    }
-  }
-}
+      enbs: [],
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

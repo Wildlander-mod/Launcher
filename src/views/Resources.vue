@@ -1,8 +1,6 @@
 <template>
   <div id="resources">
-    <p id="resources__title">
-      Resources
-    </p>
+    <p id="resources__title">Resources</p>
     <div id="resources__wrapper">
       <div class="resources__row">
         <div class="resources__link-container">
@@ -17,41 +15,31 @@
           <YouTubeLogo size="50" />
           <p>YouTube</p>
         </div>
-        <div class="resources__link-container">
-
-        </div>
+        <div class="resources__link-container"></div>
       </div>
       <div class="resources__row">
-        <div class="resources__link-container">
-
-        </div>
-        <div class="resources__link-container">
-
-        </div>
-        <div class="resources__link-container">
-
-        </div>
-        <div class="resources__link-container">
-
-        </div>
+        <div class="resources__link-container"></div>
+        <div class="resources__link-container"></div>
+        <div class="resources__link-container"></div>
+        <div class="resources__link-container"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import PatreonLogo from '@/components/svgs/PatreonLogo.vue'
-import WebsiteLogo from '@/components/svgs/WebsiteLogo.vue'
-import YouTubeLogo from '@/components/svgs/YouTubeLogo.vue'
+import PatreonLogo from "@/components/svgs/PatreonLogo.vue";
+import WebsiteLogo from "@/components/svgs/WebsiteLogo.vue";
+import YouTubeLogo from "@/components/svgs/YouTubeLogo.vue";
 
 export default {
-  name: 'Resources',
+  name: "Resources",
   components: {
     PatreonLogo,
     WebsiteLogo,
-    YouTubeLogo
-  }
-}
+    YouTubeLogo,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -73,7 +61,7 @@ export default {
       justify-content: space-between;
       margin-left: 30px;
       margin-right: 30px;
-      margin-top:30px;
+      margin-top: 30px;
 
       .resources__link-container {
         align-items: center;

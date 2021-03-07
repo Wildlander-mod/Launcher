@@ -2,10 +2,7 @@
   <div id="marquee">
     <div id="marquee__fade--before" />
     <span>
-      <p
-        :key="element.key"
-        v-for="element in text"
-      >
+      <p :key="element.key" v-for="element in text">
         {{ element }}
       </p>
     </span>
@@ -15,11 +12,11 @@
 
 <script>
 export default {
-  name: 'Marquee',
+  name: "Marquee",
   props: {
-    text: Array
-  }
-}
+    text: Array,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
