@@ -1,12 +1,6 @@
 'use strict'
 
-import {
-  app,
-  BrowserWindow,
-  nativeImage,
-  protocol,
-  ipcMain
-} from 'electron'
+import { app, BrowserWindow, nativeImage, protocol, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
@@ -23,6 +17,8 @@ async function createWindow () {
   const win = new BrowserWindow({
     frame: false,
     height: 580,
+    // TODO this shouldn't allow undefined. In electron __static is undefined
+    // eslint-disable-next-line no-undef
     icon: nativeImage.createFromPath(path.join(__static, 'icon.ico')),
     maximizable: false,
     resizable: false,
@@ -47,11 +43,13 @@ async function createWindow () {
   // IPC handlers related to the win variable must be declared in this function
   // in order to work properly without declaring the win object globally. Other
   // IPC handlers can be found in ./js/ipcHandlers.js
-  ipcMain.on('close', () => {
-    win.close()
-  }).on('minimize', () => {
-    win.minimize()
-  })
+  ipcMain
+    .on('close', () => {
+      win.close()
+    })
+    .on('minimize', () => {
+      win.minimize()
+    })
 }
 
 // Quit when all windows are closed.
