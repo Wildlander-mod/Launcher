@@ -7,37 +7,35 @@
         <router-view />
       </div>
     </main>
-    <Footer
-      :marqueeItems="getPatrons"
-    />
+    <Footer :marqueeItems="getPatrons" />
   </div>
 </template>
 
 <script>
-import Footer from '@/components/Footer.vue'
-import NavBar from '@/components/NavBar.vue'
-import TitleBar from '@/components/TitleBar.vue'
+import Footer from "@/components/Footer.vue";
+import NavBar from "@/components/NavBar.vue";
+import TitleBar from "@/components/TitleBar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Footer,
     NavBar,
-    TitleBar
+    TitleBar,
   },
   computed: {
     // TODO: This will need to be replaced with the system to get the actual Patrons
-    getPatrons () {
-      const patrons = []
+    getPatrons() {
+      const patrons = [];
 
       for (let i = 0; i < 10; i++) {
-        patrons.push(`JU12000 ${i}`)
+        patrons.push(`JU12000 ${i}`);
       }
 
-      return patrons
-    }
-  }
-}
+      return patrons;
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -66,8 +64,7 @@ p {
 
 #window {
   // The url below is a placeholder until we get a system for user generated images
-  background-image:
-    linear-gradient(90deg, #000000aa 20%, #00000000 70%),
+  background-image: linear-gradient(90deg, #000000aa 20%, #00000000 70%),
     url(https://picsum.photos/1200/600);
   display: flex;
   flex-direction: column;

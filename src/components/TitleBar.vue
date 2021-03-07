@@ -1,50 +1,38 @@
 <template>
   <div id="title-bar">
     <div id="title-bar__controls">
-      <span
-        @click="minimize"
-        class="material-icons"
-      >
-        remove
-      </span>
-      <span
-        @click="close"
-        class="material-icons"
-      >
-        close
-      </span>
+      <span @click="minimize" class="material-icons"> remove </span>
+      <span @click="close" class="material-icons"> close </span>
     </div>
     <div id="title-bar__title">
-      <Logo
-        fill="#ffffff"
-        height="30px"
-      />
+      <Logo fill="#ffffff" height="30px" />
       <p>
         Choose a performance preset and the click "Launch Game" to play!
-        <br>
-        Use the side navigation to edit or change your ENB and launcher settings.
+        <br />
+        Use the side navigation to edit or change your ENB and launcher
+        settings.
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import Logo from '@/components/svgs/Logo.vue'
+import Logo from "@/components/svgs/Logo.vue";
 
 export default {
-  name: 'TitleBar',
+  name: "TitleBar",
   components: {
-    Logo
+    Logo,
   },
   methods: {
-    close () {
-      window.ipcRenderer.send('close')
+    close() {
+      window.ipcRenderer.send("close");
     },
-    minimize () {
-      window.ipcRenderer.send('minimize')
-    }
-  }
-}
+    minimize() {
+      window.ipcRenderer.send("minimize");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

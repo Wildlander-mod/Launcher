@@ -1,26 +1,22 @@
 <template>
   <footer>
-    <p>
-      Thanks to all the Patrons!
-    </p>
-    <Marquee
-      :items="marqueeItems"
-    />
+    <p>Thanks to all the Patrons!</p>
+    <Marquee :items="marqueeItems" />
   </footer>
 </template>
 
 <script>
-import Marquee from './Marquee.vue'
+import Marquee from "./Marquee.vue";
 
 export default {
-  name: 'Footer',
+  name: "Footer",
   components: {
-    Marquee
+    Marquee,
   },
   props: {
-    marqueeItems: Array
-  }
-}
+    marqueeItems: Array,
+  },
+};
 </script>
 
 <style lang="scss" scoped>

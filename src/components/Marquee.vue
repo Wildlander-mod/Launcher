@@ -1,10 +1,10 @@
 <template>
   <div class="marquee marquee--fadeout">
-    <div class="marquee__scroller" :style="{'animation-duration': `${getAnimationLength()}s`}">
-      <p :class="`marquee__item`"
-         :key="element.key"
-         v-for="element in items"
-      >
+    <div
+      class="marquee__scroller"
+      :style="{ 'animation-duration': `${getAnimationLength()}s` }"
+    >
+      <p :class="`marquee__item`" :key="element.key" v-for="element in items">
         {{ element }}
       </p>
     </div>
@@ -13,24 +13,24 @@
 
 <script>
 export default {
-  name: 'Marquee',
+  name: "Marquee",
   props: {
-    items: Array
+    items: Array,
   },
   methods: {
-    getAnimationLength () {
+    getAnimationLength() {
       // The length of the animation should depend on the amount of items in the marquee
       // We can't use the length at lower numbers because it is too fast
       switch (true) {
-        case (this.$props.items.length < 5):
-          return 10
-        case (this.$props.items.length < 10):
-          return 20
+        case this.$props.items.length < 5:
+          return 10;
+        case this.$props.items.length < 10:
+          return 20;
       }
-      return this.$props.items.length * 2
-    }
-  }
-}
+      return this.$props.items.length * 2;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -46,12 +46,16 @@ export default {
       content: "";
       width: 5%;
       height: 100%;
-      top: 0
+      top: 0;
     }
 
     /* Fade out content on the left side of the marquee */
     &:before {
-      background: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0) 100%
+      );
       position: absolute;
       left: 0;
       z-index: 1;
@@ -59,7 +63,11 @@ export default {
 
     /* Fade in content on the right side of the marquee */
     &:after {
-      background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 1) 100%
+      );
       position: absolute;
       right: 0;
       z-index: 1;
@@ -87,6 +95,5 @@ export default {
       transform: translate(-100%, 0);
     }
   }
-
 }
 </style>

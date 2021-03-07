@@ -1,13 +1,11 @@
 <template>
-  <div id="patron-box">
-
-  </div>
+  <div id="patron-box"></div>
 </template>
 
 <script>
 export default {
-  name: 'PatronBox'
-}
+  name: "PatronBox",
+};
 </script>
 
 <style lang="scss" scoped>
