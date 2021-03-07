@@ -1,34 +1,43 @@
 <template>
-  <b-container fluid>
-    <b-row no-gutters>
-      <b-col cols="3">
-        <LeftPanel />
-      </b-col>
-      <b-col>
-        <CenterPanel />
-      </b-col>
-      <b-col>
-        <RightPanel />
-      </b-col>
-    </b-row>
-  </b-container>
+  <div id="home">
+    <div class="home__section">
+      <p>News</p>
+      <NewsBox />
+    </div>
+    <div class="home__section">
+      <p>Patron Highlight</p>
+      <PatronBox />
+    </div>
+  </div>
 </template>
 
 <script>
-import LeftPanel from '../components/LeftPanel.vue'
-import CenterPanel from '../components/CenterPanel.vue'
-import RightPanel from '../components/RightPanel.vue'
+import NewsBox from '@/components/NewsBox.vue'
+import PatronBox from '@/components/PatronBox.vue'
 
 export default {
   name: 'Home',
   components: {
-    LeftPanel,
-    CenterPanel,
-    RightPanel
+    NewsBox,
+    PatronBox
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+#home {
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+  width: 350px;
 
+  .home__section {
+    margin-top: 20px;
+  }
+
+  p {
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
 </style>

@@ -1,37 +1,35 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
-import Home from '../views/Home.vue'
-import Welcome from '../views/Welcome.vue'
-import ENB from '../views/ENB.vue'
-import Options from '../views/Options.vue'
-
-Vue.use(VueRouter)
+import ConfigureENB from '@/views/ConfigureENB.vue'
+import Home from '@/views/Home.vue'
+import Resources from '@/views/Resources.vue'
+import Settings from '@/views/Settings.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
-    mode: 'hash',
-    children: [
-      {
-        path: '',
-        component: Welcome
-      },
-      {
-        path: 'enb',
-        component: ENB
-      },
-      {
-        path: 'options',
-        component: Options
-      }
-    ]
+    component: Home
+  },
+  {
+    path: '/enb',
+    name: 'ENB',
+    component: ConfigureENB
+  },
+  {
+    path: '/resources',
+    name: 'Resources',
+    component: Resources
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   }
 ]
 
-const router = new VueRouter({
+const router = createRouter({
+  history: createWebHashHistory(),
   routes
 })
 
