@@ -1,7 +1,7 @@
 <template>
   <footer>
     <p>Thanks to all the Patrons!</p>
-    <Marquee :text="marqueeText" />
+    <Marquee :items="marqueeItems" />
   </footer>
 </template>
 
@@ -14,7 +14,7 @@ export default {
     Marquee,
   },
   props: {
-    marqueeText: Array,
+    marqueeItems: Array,
   },
 };
 </script>
