@@ -1,5 +1,5 @@
 <template>
-  <div class="marquee marquee--fadeout">
+  <div class="marquee marquee--fadeout" :key="items">
     <div
       class="marquee__scroller"
       :style="{ 'animation-duration': `${getAnimationLength()}s` }"
