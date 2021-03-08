@@ -50,8 +50,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 footer {
-  background-color: #000000;
+  background-color: $colour-background-secondary;
   display: flex;
   height: 30px;
 

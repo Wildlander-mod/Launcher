@@ -43,6 +43,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 #resources {
   display: flex;
   flex-direction: column;
@@ -52,7 +54,7 @@ export default {
 
   #resources__wrapper {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid #ffffff48;
+    border: 1px solid $colour-background--darker;
     height: 350px;
 
     .resources__row {
@@ -65,7 +67,7 @@ export default {
 
       .resources__link-container {
         align-items: center;
-        border: 1px solid #ffffff48;
+        border: 1px solid $colour-background--darker;
         display: flex;
         flex-direction: column;
         height: 125px;
@@ -73,12 +75,12 @@ export default {
         width: 150px;
 
         &:hover {
-          background-color: rgba(81, 81, 81, 0.5);
+          background-color: $colour-background-secondary--transparent;
         }
 
         p {
           font-size: 12px;
-          font-weight: 300px;
+          font-weight: 300;
         }
       }
     }

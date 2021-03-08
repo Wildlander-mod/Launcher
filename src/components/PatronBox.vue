@@ -9,10 +9,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 #patron-box {
   backdrop-filter: blur(10px);
-  background-color: #00000080;
-  border: 1px solid #ffffff48;
+  background-color: $colour-background-secondary--transparent;
+  border: 1px solid $colour-background--darker;
   height: 200px;
   margin-top: 5px;
   width: 100%;

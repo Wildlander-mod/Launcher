@@ -52,19 +52,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
+$selectBackground: transparentize($colour-background, 0.8);
+$selectFocus: darken($colour-secondary, 50%);
+
 div {
   height: 30px;
   user-select: none;
 
   &#select__head {
-    background-color: #e1e1e133;
+    background-color: $selectBackground;
     border-radius: 2px;
     display: flex;
     justify-content: space-between;
     width: 155px;
 
-    &:active {
-      background-color: #767676;
+    &:active,
+    &:hover {
+      background-color: $selectFocus;
     }
 
     &:hover {
@@ -104,7 +110,7 @@ div {
   }
 
   &#select__options {
-    background-color: #767676;
+    background-color: $selectFocus;
     height: auto;
     padding-bottom: 8px;
     padding-top: 8px;
@@ -122,7 +128,7 @@ div {
     }
 
     div:hover {
-      background-color: #ffffff1a;
+      background-color: $selectBackground;
       cursor: pointer;
     }
 

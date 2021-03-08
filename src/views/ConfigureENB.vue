@@ -40,6 +40,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 #configure-enb {
   display: flex;
   flex-direction: column;
@@ -49,7 +51,7 @@ export default {
 
   #configure-enb__controls {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid #ffffff48;
+    border: 1px solid $colour-background--darker;
     display: flex;
     flex-direction: column;
 
@@ -77,7 +79,7 @@ export default {
 
   #configure-enb__selector {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid #ffffff48;
+    border: 1px solid $colour-background--darker;
     height: 225px;
     margin-top: -1px;
   }

@@ -24,19 +24,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 div {
-  background-color: #e1e1e199;
-  border: 0px;
+  background-color: $colour-background--darker;
+  border: 0;
   border-radius: 2px;
-  color: #ffffff;
+  color: $colour-text;
   display: flex;
   height: 30px;
   justify-content: center;
-  padding: 0px;
+  padding: 0;
   user-select: none;
 
-  &:active {
-    background-color: #e1e1e133;
+  &:active,
+  &:hover {
+    background-color: lighten($colour-background--darker, 10%);
   }
 
   &:hover {
@@ -48,10 +51,11 @@ div {
   }
 
   &.primary {
-    background-color: #0b32e6;
+    background-color: $colour-primary;
 
-    &:active {
-      background-color: #3a5eff;
+    &:active,
+    &:hover {
+      background-color: lighten($colour-primary, 10%);
     }
   }
 
