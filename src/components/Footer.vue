@@ -1,7 +1,7 @@
 <template>
   <footer>
     <p>Thanks to all the Patrons!</p>
-    <Marquee :items="marqueeItems" />
+    <Marquee :items="patrons" />
   </footer>
 </template>
 
@@ -13,8 +13,29 @@ export default {
   components: {
     Marquee,
   },
-  props: {
-    marqueeItems: Array,
+
+  data() {
+    return {
+      patrons: [],
+    };
+  },
+
+  methods: {
+    async getPatrons() {
+      const patrons = [];
+
+      for (let i = 0; i < 10; i++) {
+        patrons.push(`JU12000 ${i}`);
+      }
+
+      return new Promise(() => {
+        this.patrons = patrons;
+      });
+    },
+  },
+
+  async created() {
+    await this.getPatrons();
   },
 };
 </script>

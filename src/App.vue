@@ -7,7 +7,7 @@
         <router-view />
       </div>
     </main>
-    <Footer :marqueeItems="getPatrons" />
+    <Footer />
   </div>
 </template>
 
@@ -22,18 +22,6 @@ export default {
     Footer,
     NavBar,
     TitleBar,
-  },
-  computed: {
-    // TODO: This will need to be replaced with the system to get the actual Patrons
-    getPatrons() {
-      const patrons = [];
-
-      for (let i = 0; i < 10; i++) {
-        patrons.push(`JU12000 ${i}`);
-      }
-
-      return patrons;
-    },
   },
 };
 </script>
