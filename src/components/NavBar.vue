@@ -69,6 +69,7 @@
 <script>
 import Button from "./controls/Button.vue";
 import Select from "./controls/Select.vue";
+import { version as launcherVersion } from "../../package.json";
 
 export default {
   name: "Nav-Bar",
@@ -81,7 +82,7 @@ export default {
       activeTab: "home",
       enbOptions: undefined,
       gameVersion: "0",
-      launcherVersion: "0",
+      launcherVersion,
       qualityOptions: [
         { name: "Low Quality" },
         { name: "Medium Quality" },
@@ -98,9 +99,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 nav {
   backdrop-filter: blur(20px);
-  background: #e1e1e133;
+  background: transparentize($colour-background, 0.8);
   display: flex;
   flex-direction: column;
   height: 550px;
@@ -119,14 +122,14 @@ nav {
     width: 150px;
 
     p {
-      color: #ffffff66;
+      color: $colour-text-secondary;
       font-size: 12px;
       line-height: 15px;
     }
   }
 
   #nav__tab-highlight {
-    background-color: #0b32e6;
+    background-color: $colour-primary;
     height: 50px;
     left: 220px;
     position: absolute;
@@ -140,14 +143,14 @@ nav {
     width: 150px;
 
     a {
-      color: #ffffff66;
+      color: $colour-text-secondary;
       font-size: 18px;
       line-height: 30px;
       margin-top: 30px;
       text-decoration: none;
 
       &.nav__tab--selected {
-        color: #ffffff;
+        color: $colour-text;
       }
     }
   }
@@ -180,8 +183,8 @@ nav {
   }
 
   hr {
-    border-color: #ffffff33;
-    margin-bottom: 0px;
+    border-color: $colour-background--darker;
+    margin-bottom: 0;
     margin-top: 30px;
     width: 223px;
   }

@@ -36,6 +36,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/scss/settings/colours";
+
 div {
   height: 100px;
 
@@ -52,7 +54,7 @@ div {
     margin-left: 30px;
 
     p {
-      color: #ffffff99;
+      color: $colour-text;
       font-size: 12px;
       line-height: 15px;
       margin-top: 10px;

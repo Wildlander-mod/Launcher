@@ -28,9 +28,10 @@ export default {
 
 <style lang="scss">
 @import url(./assets/scss/font-face.scss);
+@import "assets/scss/settings/colours";
 
 body {
-  margin: 0px;
+  margin: 0;
 }
 
 main {
@@ -42,12 +43,12 @@ main {
 p {
   font-weight: 300;
   line-height: 30px;
-  margin: 0px;
+  margin: 0;
   size: 14px;
 }
 
 #app {
-  color: #ffffff;
+  color: $colour-text;
 }
 
 #window {
