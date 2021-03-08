@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer v-if="patrons && patrons.length > 0">
     <p>Thanks to all the Patrons!</p>
     <Marquee :items="patrons" />
   </footer>
@@ -22,15 +22,24 @@ export default {
 
   methods: {
     async getPatrons() {
-      const patrons = [];
-
-      for (let i = 0; i < 10; i++) {
-        patrons.push(`JU12000 ${i}`);
+      try {
+        const response = await fetch("https://ultsky.phinocio.com/api/patreon");
+        const data = await response.json();
+        this.patrons = this.shuffleArray(data.patrons);
+      } catch (error) {
+        throw new Error(`Failed to get Patreons: ${error}`);
       }
+    },
 
-      return new Promise(() => {
-        this.patrons = patrons;
-      });
+    /**
+     * Taken from https://stackoverflow.com/a/12646864/3379536
+     */
+    shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     },
   },
 
