@@ -25,9 +25,12 @@ export default {
       try {
         const response = await fetch("https://ultsky.phinocio.com/api/patreon");
         const data = await response.json();
-        this.patrons = this.shuffleArray(data.patrons);
+        // Shuffle the array to show different Patrons each time
+        this.patrons = this.shuffleArray(
+          data.patrons.map((patron) => patron.name)
+        );
       } catch (error) {
-        throw new Error(`Failed to get Patreons: ${error}`);
+        throw new Error(`Failed to get Patrons: ${error}`);
       }
     },
 
