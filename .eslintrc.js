@@ -7,14 +7,14 @@ module.exports = {
 
   'extends': [
     'plugin:vue/vue3-essential',
-    '@vue/standard',
-    'prettier',
     'eslint:recommended',
-    '@vue/prettier'
+    "@vue/typescript/recommended",
+    '@vue/prettier',
+    "@vue/prettier/@typescript-eslint"
   ],
 
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@typescript-eslint/parser',
   },
 
   rules: {
@@ -23,24 +23,6 @@ module.exports = {
   },
 
   overrides: [
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)'
-      ],
-      env: {
-        jest: true
-      }
-    },
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)'
-      ],
-      env: {
-        jest: true
-      }
-    },
     {
       files: [
         '**/__tests__/*.{j,t}s?(x)',

@@ -70,6 +70,7 @@
 import Button from "./controls/Button.vue";
 import Select from "./controls/Select.vue";
 import { version as launcherVersion } from "../../package.json";
+import { ipcRenderer } from "electron";
 
 export default {
   name: "Nav-Bar",
@@ -92,7 +93,7 @@ export default {
   },
   methods: {
     followLink(link) {
-      window.ipcRenderer.send("follow-link", link);
+      ipcRenderer.send("follow-link", link);
     }
   }
 };

@@ -5,51 +5,51 @@
   </footer>
 </template>
 
-<script>
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
 import Marquee from "./Marquee.vue";
 
-export default {
-  name: "Footer",
+interface Patron {
+  name: string;
+  tier: "Patron" | "Super Patron";
+}
+
+@Options({
   components: {
     Marquee
-  },
+  }
+})
+export default class Footer extends Vue {
+  patrons: string[] = [];
 
-  data() {
-    return {
-      patrons: []
-    };
-  },
-
-  methods: {
-    async getPatrons() {
-      try {
-        const response = await fetch("https://ultsky.phinocio.com/api/patreon");
-        const data = await response.json();
-        // Shuffle the array to show different Patrons each time
-        this.patrons = this.shuffleArray(
-          data.patrons.map(patron => patron.name)
-        );
-      } catch (error) {
-        throw new Error(`Failed to get Patrons: ${error}`);
-      }
-    },
-
-    /**
-     * Taken from https://stackoverflow.com/a/12646864/3379536
-     */
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+  async getPatrons() {
+    try {
+      const response = await fetch("https://ultsky.phinocio.com/api/patreon");
+      const data = await response.json();
+      // Shuffle the array to show different Patrons each time
+      this.patrons = this.shuffleArray(
+        data.patrons.map((patron: Patron) => patron.name)
+      );
+    } catch (error) {
+      throw new Error(`Failed to get Patrons: ${error}`);
     }
-  },
+  }
+
+  /**
+   * Taken from https://stackoverflow.com/a/12646864/3379536
+   */
+  shuffleArray(array: string[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
   async created() {
     await this.getPatrons();
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

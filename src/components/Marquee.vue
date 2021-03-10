@@ -1,36 +1,39 @@
 <template>
-  <div class="marquee marquee--fadeout" :key="items">
+  <div class="marquee marquee--fadeout">
     <div
-      class="marquee__scroller"
       :style="{ 'animation-duration': `${getAnimationLength()}s` }"
+      class="marquee__scroller"
     >
-      <p :class="`marquee__item`" :key="element.key" v-for="element in items">
+      <p v-for="element in items" :key="element.key" :class="`marquee__item`">
         {{ element }}
       </p>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "Marquee",
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+
+@Options({
   props: {
     items: Array
-  },
-  methods: {
-    getAnimationLength() {
-      // The length of the animation should depend on the amount of items in the marquee
-      // We can't use the length at lower numbers because it is too fast
-      switch (true) {
-        case this.$props.items.length < 5:
-          return 10;
-        case this.$props.items.length < 10:
-          return 20;
-      }
-      return this.$props.items.length * 2;
-    }
   }
-};
+})
+export default class Marquee extends Vue {
+  items: string[] = [];
+
+  getAnimationLength(): number {
+    // The length of the animation should depend on the amount of items in the marquee
+    // We can't use the length at lower numbers because it is too fast
+    switch (true) {
+      case this.items.length < 5:
+        return 10;
+      case this.items.length < 10:
+        return 20;
+    }
+    return this.items.length * 2;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
