@@ -65,7 +65,7 @@
 export default {
   name: "PatreonLogo",
   props: {
-    size: Number,
-  },
+    size: Number
+  }
 };
 </script>

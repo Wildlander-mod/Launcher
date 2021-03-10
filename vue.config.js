@@ -3,8 +3,8 @@ module.exports = {
     electronBuilder: {
       preload: "src/preload.js",
       builderOptions: {
-        icon: "public/icon.png",
-      },
-    },
-  },
+        icon: "public/icon.png"
+      }
+    }
+  }
 };

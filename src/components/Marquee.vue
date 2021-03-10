@@ -15,7 +15,7 @@
 export default {
   name: "Marquee",
   props: {
-    items: Array,
+    items: Array
   },
   methods: {
     getAnimationLength() {
@@ -28,8 +28,8 @@ export default {
           return 20;
       }
       return this.$props.items.length * 2;
-    },
-  },
+    }
+  }
 };
 </script>
 

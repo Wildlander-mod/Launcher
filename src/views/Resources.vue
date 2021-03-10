@@ -37,8 +37,8 @@ export default {
   components: {
     PatreonLogo,
     WebsiteLogo,
-    YouTubeLogo,
-  },
+    YouTubeLogo
+  }
 };
 </script>
 

@@ -12,14 +12,14 @@ export default {
   props: {
     size: {
       type: String,
-      default: "small",
+      default: "small"
     },
     text: String,
     type: {
       type: String,
-      default: "",
-    },
-  },
+      default: ""
+    }
+  }
 };
 </script>
 

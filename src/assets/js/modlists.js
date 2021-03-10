@@ -39,10 +39,10 @@ export function launchGame() {
     const gffArray = fs.readdirSync(
       path.join(modlistPath, "Game Folder Files")
     );
-    gffArray.forEach((file) => {
+    gffArray.forEach(file => {
       toLog(file, 3);
     });
-    ncp.ncp(path.join(modlistPath, "Game Folder Files"), gamePath, (err) => {
+    ncp.ncp(path.join(modlistPath, "Game Folder Files"), gamePath, err => {
       if (err) {
         getWebContents().send("game-closed");
         sendError("B06-03-01", "Error while moving Game Folder Files", err, 2);
@@ -57,7 +57,7 @@ export function launchGame() {
       '" "moshortcut://:' +
       exe +
       '"';
-    childProcess.exec(execCMD, (error) => {
+    childProcess.exec(execCMD, error => {
       if (error) {
         getWebContents().send("game-closed");
         sendError("B06-03-02", "Error while executing ModOrganizer!", error, 2);
@@ -75,7 +75,7 @@ export function launchGame() {
       });
     };
     const isGameRunning = setInterval(() => {
-      isRunning("ModOrganizer.exe", (status) => {
+      isRunning("ModOrganizer.exe", status => {
         if (!status) {
           toLog("GAME CLOSED", 1);
           clearInterval(isGameRunning);
@@ -84,7 +84,7 @@ export function launchGame() {
             path.join(modlistPath, "Game Folder Files"),
             (err, files) => {
               if (err) throw err;
-              files.forEach((file) => {
+              files.forEach(file => {
                 toLog("Removing " + file, 3);
                 fs.unlink(path.join(gamePath, file));
                 fs.rmdir(path.join(gamePath, file), { recursive: true });

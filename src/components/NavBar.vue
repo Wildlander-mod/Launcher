@@ -18,7 +18,7 @@
         @click="activeTab = 'home'"
         :class="activeTab === 'home' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'Home',
+          name: 'Home'
         }"
       >
         Home
@@ -27,7 +27,7 @@
         @click="activeTab = 'enb'"
         :class="activeTab === 'enb' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'ENB',
+          name: 'ENB'
         }"
       >
         Configure ENB
@@ -36,7 +36,7 @@
         @click="activeTab = 'resources'"
         :class="activeTab === 'resources' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'Resources',
+          name: 'Resources'
         }"
       >
         Resources
@@ -45,7 +45,7 @@
         @click="activeTab = 'settings'"
         :class="activeTab === 'settings' ? 'nav__tab--selected' : ''"
         :to="{
-          name: 'Settings',
+          name: 'Settings'
         }"
       >
         Settings
@@ -75,7 +75,7 @@ export default {
   name: "Nav-Bar",
   components: {
     Button,
-    Select,
+    Select
   },
   data() {
     return {
@@ -86,15 +86,15 @@ export default {
       qualityOptions: [
         { name: "Low Quality" },
         { name: "Medium Quality" },
-        { name: "High Quality" },
-      ],
+        { name: "High Quality" }
+      ]
     };
   },
   methods: {
     followLink(link) {
       window.ipcRenderer.send("follow-link", link);
-    },
-  },
+    }
+  }
 };
 </script>
 

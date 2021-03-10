@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm ci
-      - run: npm run lint
+      - run: npm run lint -- --no-fix
 
   # Validate that commits are following the conventional commit format
   commit-validate:

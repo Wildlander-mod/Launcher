@@ -65,7 +65,7 @@
 export default {
   name: "WebsiteLogo",
   props: {
-    size: Number,
-  },
+    size: Number
+  }
 };
 </script>

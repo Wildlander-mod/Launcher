@@ -20,7 +20,7 @@
         ><cc:Work rdf:about=""
           ><dc:format>image/svg+xml</dc:format
           ><dc:type
-            rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"/></cc:Work
       ></rdf:RDF>
     </metadata>
     <defs id="defs6" />
@@ -74,7 +74,7 @@ export default {
   name: "Patreon",
   props: {
     height: String,
-    width: String,
-  },
+    width: String
+  }
 };
 </script>

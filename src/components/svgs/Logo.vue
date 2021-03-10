@@ -128,7 +128,7 @@ export default {
   props: {
     fill: String,
     height: Number,
-    width: Number,
-  },
+    width: Number
+  }
 };
 </script>

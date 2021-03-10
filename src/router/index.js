@@ -9,28 +9,28 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home
   },
   {
     path: "/enb",
     name: "ENB",
-    component: ConfigureENB,
+    component: ConfigureENB
   },
   {
     path: "/resources",
     name: "Resources",
-    component: Resources,
+    component: Resources
   },
   {
     path: "/settings",
     name: "Settings",
-    component: Settings,
-  },
+    component: Settings
+  }
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes
 });
 
 export default router;
