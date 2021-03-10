@@ -1,14 +1,17 @@
 "use strict";
 
 // Import modules
-import { app, protocol, BrowserWindow, nativeImage } from "electron";
+import { app, BrowserWindow, nativeImage, protocol } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import path from "path";
-import { initializeConfiguration, isDevelopment } from "./assets/js/config.js";
-import { toLog } from "./assets/js/log.js";
-import { fatalError } from "./assets/js/errorHandler.js";
-import { getWindow } from "./assets/js/ipcHandler.js";
+import { initializeConfiguration, isDevelopment } from "./assets/js/config";
+import { toLog } from "./assets/js/log";
+import { fatalError } from "./assets/js/errorHandler";
+import { setWindow } from "./assets/js/ipcHandler";
+
+// Electron __static is global to electron apps but there is no type definition for it
+declare const __static: string;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -29,8 +32,8 @@ async function createWindow() {
       webPreferences: {
         // Use pluginOptions.nodeIntegration, leave this alone
         // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-        nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-        preload: path.join(__dirname, "preload.js")
+        nodeIntegration: (process.env
+          .ELECTRON_NODE_INTEGRATION as unknown) as boolean
       },
       width: 1000
     });
@@ -44,9 +47,9 @@ async function createWindow() {
       // Load the index.html when not in development
       win.loadURL("app://./index.html");
     }
-    getWindow(win);
+    setWindow(win);
   } catch (err) {
-    fatalError("B00-01-00", "Error while creating BrowserWindow", err, 0);
+    fatalError("B00-01-00", "Error while creating BrowserWindow", err);
   }
 }
 
@@ -63,10 +66,10 @@ app.on("ready", async () => {
     }
   }
   initializeConfiguration().then(() => {
-    toLog("Creating window.", 1);
+    toLog("Creating window.");
     createWindow();
 
-    toLog("App started!\n" + "=".repeat(80) + "\n", 1);
+    toLog("App started!\n" + "=".repeat(80) + "\n");
   });
 });
 

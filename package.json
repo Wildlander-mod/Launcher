@@ -6,31 +6,39 @@
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
+    "lint": "tsc --noEmit && vue-cli-service lint",
     "electron:debug:main": "electron --remote-debugging-port=9223 ./dist_electron",
     "electron:debug:renderer": "npm run serve -- --debug",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "background.js",
+  "main": "index.js",
   "dependencies": {
     "core-js": "^3.6.5",
     "ncp": "^2.0.0",
     "vue": "^3.0.0",
+    "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^12.0.1",
+    "@types/electron-devtools-installer": "^2.2.0",
+    "@types/jest": "^24.0.19",
+    "@types/ncp": "^2.0.4",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "^4.5.11",
     "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-typescript": "^4.5.11",
     "@vue/cli-plugin-unit-jest": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "^2.0.0-0",
     "babel-eslint": "^10.1.0",
     "commitlint": "^12.0.1",
@@ -47,6 +55,7 @@
     "node-sass": "^4.12.0",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
+    "spectron": "11.0.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
     "vue-jest": "^5.0.0-0"
@@ -74,7 +83,7 @@
     "commit-msg": "commitlint -e -V "
   },
   "lint-staged": {
-    "*.{js,jsx,vue}": [
+    "*": [
       "vue-cli-service lint",
       "git add"
     ]

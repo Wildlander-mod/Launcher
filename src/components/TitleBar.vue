@@ -1,8 +1,8 @@
 <template>
   <div id="title-bar">
     <div id="title-bar__controls">
-      <span @click="minimize" class="material-icons"> remove </span>
-      <span @click="close" class="material-icons"> close </span>
+      <span class="material-icons" @click="minimize"> remove </span>
+      <span class="material-icons" @click="close"> close </span>
     </div>
     <div id="title-bar__title">
       <Logo fill="#ffffff" height="30px" />
@@ -16,8 +16,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Logo from "@/components/svgs/Logo.vue";
+import { ipcRenderer } from "electron";
 
 export default {
   name: "TitleBar",
@@ -26,10 +27,10 @@ export default {
   },
   methods: {
     close() {
-      window.ipcRenderer.send("close");
+      ipcRenderer.send("close");
     },
     minimize() {
-      window.ipcRenderer.send("minimize");
+      ipcRenderer.send("minimize");
     }
   }
 };

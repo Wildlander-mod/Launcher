@@ -1,7 +1,7 @@
 module.exports = {
   pluginOptions: {
     electronBuilder: {
-      preload: "src/preload.js",
+      nodeIntegration: true,
       builderOptions: {
         icon: "public/icon.png"
       }
