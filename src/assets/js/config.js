@@ -59,13 +59,13 @@ export const isDevelopment = process.env.NODE_ENV !== "production";
 export async function initializeConfiguration() {
   try {
     if (!fs.existsSync(homeDirectory)) {
-      fs.mkdir(homeDirectory, (err) => {
+      fs.mkdir(homeDirectory, err => {
         if (err) {
           fatalError("B01-02-01", "Error while creating home directory!", err);
           return;
         }
         if (!fs.existsSync(path.join(homeDirectory, "logs"))) {
-          fs.mkdirSync(path.join(homeDirectory, "logs"), (err) => {
+          fs.mkdirSync(path.join(homeDirectory, "logs"), err => {
             if (err) {
               fatalError(
                 "B01-02-02",
@@ -79,7 +79,7 @@ export async function initializeConfiguration() {
     }
 
     // Log initialization
-    fs.writeFile(currentLogPath, "LOG BEGIN", (err) => {
+    fs.writeFile(currentLogPath, "LOG BEGIN", err => {
       if (err) {
         sendError("B01-02-03", "Error while creating new log", err);
         return;

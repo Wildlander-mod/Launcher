@@ -21,8 +21,8 @@ export default {
   components: {
     Footer,
     NavBar,
-    TitleBar,
-  },
+    TitleBar
+  }
 };
 </script>
 

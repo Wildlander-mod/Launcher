@@ -65,7 +65,7 @@
 export default {
   name: "YouTubeLogo",
   props: {
-    size: Number,
-  },
+    size: Number
+  }
 };
 </script>

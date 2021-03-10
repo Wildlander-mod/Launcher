@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "PatronBox",
+  name: "PatronBox"
 };
 </script>
 

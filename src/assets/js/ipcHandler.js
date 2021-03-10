@@ -106,7 +106,7 @@ ipcMain.on("open-logs-directory", () => {
   }
 });
 // Launch MO2. Error ID: B03-05
-ipcMain.on("launch-mo2", (_event) => {
+ipcMain.on("launch-mo2", _event => {
   try {
     toLog("Launching MO2", 0);
     const currentConfig = getConfig(1);
@@ -118,7 +118,7 @@ ipcMain.on("launch-mo2", (_event) => {
   }
 });
 // Open Developer Console. Error ID: B03-06
-ipcMain.on("open-dev-tools", (_event) => {
+ipcMain.on("open-dev-tools", _event => {
   try {
     toLog("Opening developer tools", 0);
     _event.sender.openDevTools();
@@ -135,7 +135,7 @@ ipcMain.on("open-config", () => {
   }
 });
 // Stores webContents on app initialization. Error ID: B03-08
-ipcMain.once("initialized", (_event) => {
+ipcMain.once("initialized", _event => {
   try {
     webContents = _event.sender;
   } catch (err) {
@@ -153,7 +153,7 @@ ipcMain.handle("get-directory", async () => {
     toLog("Getting directory", 0);
     return dialog.showOpenDialogSync({
       buttonLabel: "Choose Folder",
-      properties: ["openDirectory"],
+      properties: ["openDirectory"]
     });
   } catch (err) {
     sendError("B03-09-00", "Error while getting directory path!", err, 0);
@@ -173,7 +173,7 @@ ipcMain.handle("get-config", async () => {
   return getConfig(1);
 });
 // Launch modlist. No Error ID
-ipcMain.handle("launch-game", async (_event) => {
+ipcMain.handle("launch-game", async _event => {
   launchGame();
 });
 // Reset config to default. No Error ID

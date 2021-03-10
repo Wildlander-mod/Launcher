@@ -26,16 +26,16 @@ import Button from "../components/controls/Button.vue";
 export default {
   name: "ConfigureENB",
   components: {
-    Button,
+    Button
   },
   data() {
     return {
       currentENB: {
-        name: "None",
+        name: "None"
       },
-      enbs: [],
+      enbs: []
     };
-  },
+  }
 };
 </script>
 

@@ -53,7 +53,7 @@ export function fatalError(code, message, err) {
     {
       type: "error",
       title: "A fatal error occured! " + code,
-      message: message + "\n" + err,
+      message: message + "\n" + err
     },
     () => {
       toLog(

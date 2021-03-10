@@ -19,8 +19,8 @@ export default {
   name: "Home",
   components: {
     NewsBox,
-    PatronBox,
-  },
+    PatronBox
+  }
 };
 </script>
 

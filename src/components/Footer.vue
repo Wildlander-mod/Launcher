@@ -11,12 +11,12 @@ import Marquee from "./Marquee.vue";
 export default {
   name: "Footer",
   components: {
-    Marquee,
+    Marquee
   },
 
   data() {
     return {
-      patrons: [],
+      patrons: []
     };
   },
 
@@ -27,7 +27,7 @@ export default {
         const data = await response.json();
         // Shuffle the array to show different Patrons each time
         this.patrons = this.shuffleArray(
-          data.patrons.map((patron) => patron.name)
+          data.patrons.map(patron => patron.name)
         );
       } catch (error) {
         throw new Error(`Failed to get Patrons: ${error}`);
@@ -43,12 +43,12 @@ export default {
         [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
-    },
+    }
   },
 
   async created() {
     await this.getPatrons();
-  },
+  }
 };
 </script>
 

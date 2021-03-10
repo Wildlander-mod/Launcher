@@ -22,7 +22,7 @@ import Logo from "@/components/svgs/Logo.vue";
 export default {
   name: "TitleBar",
   components: {
-    Logo,
+    Logo
   },
   methods: {
     close() {
@@ -30,8 +30,8 @@ export default {
     },
     minimize() {
       window.ipcRenderer.send("minimize");
-    },
-  },
+    }
+  }
 };
 </script>
 

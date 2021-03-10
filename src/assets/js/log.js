@@ -52,7 +52,7 @@ function getCurrentDate() {
     date.getFullYear(),
     date.getMonth() + 1,
     date.getDate(),
-    time.replace(/:/g, "-"),
+    time.replace(/:/g, "-")
   ];
   currentDate.forEach((entry, index) => {
     if (entry < 10) {
@@ -94,7 +94,7 @@ export function toLog(log, tabbed) {
   if (logging) {
     const logged =
       "\n" + getCurrentTime() + "  -  " + "  ".repeat(tabbed) + log;
-    fs.appendFile(currentLogPath, logged, (err) => {
+    fs.appendFile(currentLogPath, logged, err => {
       if (err) {
         logging = false;
         sendError(

@@ -23,14 +23,14 @@ export default {
   name: "Select",
   props: {
     options: Array,
-    placeholder: String,
+    placeholder: String
   },
   data() {
     return {
       currentOption: this.options
         ? this.options[0]
         : { name: this.placeholder },
-      isOpenModifier: "--closed",
+      isOpenModifier: "--closed"
     };
   },
   methods: {
@@ -46,8 +46,8 @@ export default {
           this.isOpenModifier = "--closed";
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
