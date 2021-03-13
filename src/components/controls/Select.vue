@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/assets/scss/settings/colours";
+@import "~@/assets/scss/settings";
 
 $selectBackground: transparentize($colour-background, 0.8);
 $selectFocus: darken($colour-secondary, 50%);

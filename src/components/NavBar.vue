@@ -100,14 +100,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/assets/scss/settings/colours";
+@import "~@/assets/scss/settings";
 
 nav {
   backdrop-filter: blur(20px);
   background: transparentize($colour-background, 0.8);
   display: flex;
   flex-direction: column;
-  height: 550px;
+  height: $size-window-height - 30px;
   width: 225px;
 
   #nav__launch-button {

@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/assets/scss/settings/colours";
+@import "~@/assets/scss/settings";
 
 #patron-box {
   backdrop-filter: blur(10px);
