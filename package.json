@@ -6,7 +6,10 @@
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "tsc --noEmit && vue-cli-service lint",
+    "lint": "npm run lint:typescript && npm run lint:eslint && npm run lint:styles",
+    "lint:styles": "stylelint **/*.scss",
+    "lint:typescript": "tsc --noEmit",
+    "lint:eslint": "vue-cli-service lint",
     "electron:debug:main": "electron --remote-debugging-port=9223 ./dist_electron",
     "electron:debug:renderer": "npm run serve -- --debug",
     "postinstall": "electron-builder install-app-deps",
@@ -56,6 +59,9 @@
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
     "spectron": "11.0.0",
+    "stylelint": "^13.12.0",
+    "stylelint-config-recommended-scss": "^4.2.0",
+    "stylelint-scss": "^3.19.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
     "vue-jest": "^5.0.0-0"
@@ -83,8 +89,12 @@
     "commit-msg": "commitlint -e -V "
   },
   "lint-staged": {
-    "*": [
+    "*.{js,jsx,vue,ts,tsx}": [
       "vue-cli-service lint",
+      "git add"
+    ],
+    "*.{scss}": [
+      "npm run lint:styles",
       "git add"
     ]
   }

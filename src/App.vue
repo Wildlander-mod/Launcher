@@ -28,7 +28,7 @@ export default {
 
 <style lang="scss">
 @import url(./assets/scss/font-face.scss);
-@import "assets/scss/settings/colours";
+@import "~@/assets/scss/settings";
 
 body {
   margin: 0;
@@ -57,8 +57,8 @@ p {
     url(https://picsum.photos/1200/600);
   display: flex;
   flex-direction: column;
-  height: 580px;
-  width: 1000px;
+  height: $size-window-height;
+  width: $size-window-width;
 }
 
 #window__content {
