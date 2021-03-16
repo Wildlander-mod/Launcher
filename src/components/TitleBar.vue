@@ -1,18 +1,23 @@
 <template>
-  <div id="title-bar">
-    <div id="title-bar__controls">
-      <span class="material-icons" @click="minimize"> remove </span>
-      <span class="material-icons" @click="close"> close </span>
+  <div class="c-navigation-bar">
+    <div class="c-navigation-bar__controls">
+      <span class="material-icons c-navigation-bar__control" @click="minimize">
+        remove
+      </span>
+      <span class="material-icons c-navigation-bar__control" @click="close">
+        close
+      </span>
     </div>
-    <div id="title-bar__title">
+  </div>
+  <div class="c-header">
+    <div class="c-header__title">
       <Logo fill="#ffffff" height="30px" />
-      <p>
-        Choose a performance preset and the click "Launch Game" to play!
-        <br />
-        Use the side navigation to edit or change your ENB and launcher
-        settings.
-      </p>
     </div>
+    <p class="c-header__subtext">
+      Choose a performance preset and the click "Launch Game" to play!
+      <br />
+      Use the side navigation to edit or change your ENB and launcher settings.
+    </p>
   </div>
 </template>
 
@@ -39,28 +44,24 @@ export default {
 <style lang="scss" scoped>
 @import "~@/assets/scss/settings";
 
-div {
-  height: 100px;
+.c-navigation-bar__controls {
+  height: 30px;
+  text-align: end;
+}
 
-  #title-bar__controls {
-    height: 30px;
-    text-align: end;
+.c-navigation-bar__control {
+  cursor: pointer;
+}
 
-    span:hover {
-      cursor: pointer;
-    }
-  }
+.c-header {
+  margin-left: 30px;
+}
 
-  #title-bar__title {
-    margin-left: 30px;
-
-    p {
-      color: $colour-text;
-      font-size: 12px;
-      line-height: 15px;
-      margin-top: 10px;
-      width: 450px;
-    }
-  }
+.c-header__subtext {
+  color: $colour-text;
+  font-size: 12px;
+  line-height: 15px;
+  margin-top: 8px;
+  width: 450px;
 }
 </style>
