@@ -1,43 +1,30 @@
 <template>
-  <div id="home">
-    <div class="home__section">
-      <p>News</p>
+  <Page>
+    <PageContent title="News" height="small">
       <NewsBox />
-    </div>
-    <div class="home__section">
-      <p>Patron Highlight</p>
+    </PageContent>
+
+    <PageContent title="Patron Highlight">
       <PatronBox />
-    </div>
-  </div>
+    </PageContent>
+  </Page>
 </template>
 
 <script>
 import NewsBox from "@/components/NewsBox.vue";
 import PatronBox from "@/components/PatronBox.vue";
+import PageContent from "@/components/PageContent";
+import Page from "@/components/Page";
 
 export default {
   name: "Home",
   components: {
     NewsBox,
-    PatronBox
+    PatronBox,
+    PageContent,
+    Page
   }
 };
 </script>
 
-<style lang="scss" scoped>
-#home {
-  display: flex;
-  flex-direction: column;
-  margin-left: 30px;
-  width: 350px;
-
-  .home__section {
-    margin-top: 20px;
-  }
-
-  p {
-    font-size: 18px;
-    font-weight: 700;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

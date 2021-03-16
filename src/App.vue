@@ -1,9 +1,9 @@
 <template>
   <div id="window">
     <main>
-      <Nav-Bar />
+      <NavBar />
       <div id="window__content">
-        <Title-Bar />
+        <TitleBar />
         <router-view />
       </div>
     </main>
@@ -11,23 +11,28 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Footer from "@/components/Footer.vue";
 import NavBar from "@/components/NavBar.vue";
 import TitleBar from "@/components/TitleBar.vue";
+import { Options as Component, Vue } from "vue-class-component";
+import { registerServices } from "@/services/service-container";
 
-export default {
-  name: "App",
+@Component({
   components: {
     Footer,
     NavBar,
     TitleBar
   }
-};
+})
+export default class App extends Vue {
+  async created() {
+    registerServices();
+  }
+}
 </script>
 
 <style lang="scss">
-@import url(./assets/scss/font-face.scss);
 @import "~@/assets/scss/settings";
 
 body {

@@ -1,53 +1,32 @@
 <template>
-  <footer v-if="patrons && patrons.length > 0">
+  <footer>
     <p>Thanks to all the Patrons!</p>
-    <Marquee :items="patrons" />
+    <Marquee
+      v-if="patronNames && patronNames.length > 0"
+      :items="patronNames"
+    />
   </footer>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { Options as Component, Vue } from "vue-class-component";
 import Marquee from "./Marquee.vue";
+import { PatreonService } from "@/services/Patreon.service";
+import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 
-interface Patron {
-  name: string;
-  tier: "Patron" | "Super Patron";
-}
-
-@Options({
+@Component({
   components: {
     Marquee
   }
 })
 export default class Footer extends Vue {
-  patrons: string[] = [];
-
-  async getPatrons() {
-    try {
-      const response = await fetch("https://ultsky.phinocio.com/api/patreon");
-      const data = await response.json();
-      // Shuffle the array to show different Patrons each time
-      this.patrons = this.shuffleArray(
-        data.patrons.map((patron: Patron) => patron.name)
-      );
-    } catch (error) {
-      throw new Error(`Failed to get Patrons: ${error}`);
-    }
-  }
-
-  /**
-   * Taken from https://stackoverflow.com/a/12646864/3379536
-   */
-  shuffleArray(array: string[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+  patreonService!: PatreonService;
+  patronNames: string[] = [];
 
   async created() {
-    await this.getPatrons();
+    this.patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
+    const patrons = await this.patreonService.getPatrons();
+    this.patronNames = patrons.map(patron => patron.name);
   }
 }
 </script>
