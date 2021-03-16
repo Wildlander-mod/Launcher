@@ -57,6 +57,7 @@
     "lint-staged": "^9.5.0",
     "node-sass": "^4.12.0",
     "prettier": "^1.19.1",
+    "reflect-metadata": "^0.1.13",
     "sass-loader": "^8.0.2",
     "spectron": "11.0.0",
     "stylelint": "^13.12.0",
@@ -64,7 +65,8 @@
     "stylelint-scss": "^3.19.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
-    "vue-jest": "^5.0.0-0"
+    "vue-jest": "^5.0.0-0",
+    "vue-property-decorator": "^9.1.2"
   },
   "commitlint": {
     "extends": [
