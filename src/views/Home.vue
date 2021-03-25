@@ -5,14 +5,14 @@
     </PageContent>
 
     <PageContent title="Patron Highlight">
-      <PatronBox />
+      <Patrons />
     </PageContent>
   </Page>
 </template>
 
 <script>
 import NewsBox from "@/components/NewsBox.vue";
-import PatronBox from "@/components/PatronBox.vue";
+import Patrons from "@/components/Patrons.vue";
 import PageContent from "@/components/PageContent";
 import Page from "@/components/Page";
 
@@ -20,7 +20,7 @@ export default {
   name: "Home",
   components: {
     NewsBox,
-    PatronBox,
+    Patrons,
     PageContent,
     Page
   }

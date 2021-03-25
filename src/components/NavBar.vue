@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/settings";
+@import "~@/assets/scss";
 
 nav {
   backdrop-filter: blur(20px);

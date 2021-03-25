@@ -42,7 +42,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/settings";
+@import "~@/assets/scss";
 
 .c-navigation-bar__controls {
   height: 30px;

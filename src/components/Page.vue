@@ -11,7 +11,7 @@ export default class Page extends Vue {}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/settings";
+@import "~@/assets/scss";
 
 .c-page {
   display: flex;

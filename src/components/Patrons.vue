@@ -2,7 +2,7 @@
   <div class="c-patrons">
     <List :items="superPatrons">
       <div class="c-patrons__title">
-        <div class="u-column u-center">
+        <div class="l-column l-center">
           <div class="c-patrons__star--stacked">
             <i class="material-icons c-patrons__star-icon">star_outline</i>
           </div>
@@ -42,7 +42,7 @@ import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
     List
   }
 })
-export default class PatronBox extends Vue {
+export default class Patrons extends Vue {
   patreonService!: PatreonService;
   superPatrons: string[] = [];
   otherPatrons: string[] = [];
@@ -63,7 +63,7 @@ export default class PatronBox extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/settings";
+@import "~@/assets/scss/index.scss";
 
 // The size and positioning of the "star" icons are heavily tied together
 // Changing the size of one will likely need all of these adjusting to fit
@@ -107,15 +107,6 @@ $star-stacked-size: 10px;
     width: $star-stacked-width;
   }
 
-  color: $color-star;
-}
-
-.u-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.u-center {
-  text-align: center;
+  color: $colour-star;
 }
 </style>
