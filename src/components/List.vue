@@ -3,7 +3,7 @@
     <div class="c-list__title">
       <slot></slot>
     </div>
-    <ul class="c-list__content">
+    <ul class="c-list__content u-list--bare">
       <li v-for="element in items" :key="element.key">{{ element }}</li>
     </ul>
   </div>
@@ -20,7 +20,7 @@ export default class List extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/settings";
+@import "~@/assets/scss";
 
 .c-list {
   display: flex;
@@ -41,7 +41,6 @@ export default class List extends Vue {
 }
 
 .c-list__content {
-  list-style: none;
   line-height: 16px;
   flex: 1;
   background-color: $colour-background-secondary--transparent;

@@ -26,10 +26,11 @@ export default class PageContent extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/settings";
+@import "~@/assets/scss";
 
 .c-page-content {
   margin-top: 10px;
+
   &:last-of-type {
     margin-bottom: 10px;
   }

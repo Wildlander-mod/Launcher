@@ -1,9 +1,12 @@
 $colour-primary: #0b32e6;
 $colour-secondary: #e1e1e1;
+$colour-alternate: #00BF6F;
 $colour-text: #ffffff;
 $colour-text-secondary: #ffffff66;
 $colour-background: #e1e1e1;
 $colour-background-secondary: #000000;
+
+$colour-text--darker: darken($colour-text, 60%);
 
 $colour-background--transparent: transparentize($colour-background, 0.8);
 $colour-background--darker: darken($colour-background, 20%);
@@ -12,4 +15,4 @@ $colour-background-secondary--transparent: transparentize(
   0.8
 );
 
-$color-star: #ffce00;
+$colour-star: #ffce00;

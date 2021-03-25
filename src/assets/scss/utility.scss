@@ -1,0 +1,15 @@
+// Utility classes not tied to a component
+
+.u-list--bare {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.u-scroll-x {
+  overflow-x: scroll;
+}
+
+.u-scroll-y {
+  overflow-y: scroll;
+}

@@ -1,0 +1,17 @@
+// TODO replace layout items with a proper layout library
+
+// All layout items are prefaced with `l-` to separate them from others
+
+.l-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.l-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.l-center {
+  text-align: center;
+}
