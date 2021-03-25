@@ -1,7 +1,7 @@
 <template>
   <Page>
     <PageContent title="News" height="small">
-      <NewsBox />
+      <News />
     </PageContent>
 
     <PageContent title="Patron Highlight">
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import NewsBox from "@/components/NewsBox.vue";
+import News from "@/components/News.vue";
 import Patrons from "@/components/Patrons.vue";
 import PageContent from "@/components/PageContent";
 import Page from "@/components/Page";
@@ -19,7 +19,7 @@ import Page from "@/components/Page";
 export default {
   name: "Home",
   components: {
-    NewsBox,
+    News,
     Patrons,
     PageContent,
     Page
