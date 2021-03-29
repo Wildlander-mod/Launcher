@@ -35,8 +35,24 @@ jobs:
         with:
           node-version: '14'
 
+      - name: remove me
+        run: echo ${{ github.actor }}
+
       - name: install dependencies
         run: npm ci
 
       - name: lint commits
         run: npx commitlint --from origin/$GITHUB_BASE_REF
+
+  version-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+
+      - name: bump version dry run
+        run: npx standard-version --dry-run
