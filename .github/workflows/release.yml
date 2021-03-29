@@ -2,35 +2,43 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
+    # Pattern matched against refs/tags
+    tags:
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  version-bump:
+  create-release:
     runs-on: windows-latest
-    # Prevent the versioning getting stuck in a loop when it pushes back to the main branch
-    if: github.actor != 'UltimateSkyrimGitHub'
-
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: Configure CI Git User
-        run: |
-          git config user.name 'UltimateSkyrimGitHubCI'
-          git config user.email 'ultimateskyrimgithub@gmail.com'
+      - name: GitHub Environment Variables Action
+        uses: FranzDiebold/github-env-vars-action@v2.1.0
 
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: '14'
 
-      - name: bump version
-        run: npx standard-version --no-verify
+      - name: Install dependencies
+        run: npm ci
 
-      - name: publish changes
-        run: git push --follow-tags
+      - name: Build app
+        run: npm run build -- --publish never
+
+      - name: Rename distribution
+        run: mv dist_electron "Ultimate Skyrim Launcher"
+
+      - name: Create archive
+        run: tar.exe -a -c -f dist.zip "Ultimate Skyrim Launcher/*"
+
+      - name: Create release
+        run: node ./.github/support/release.js
+        env:
+          CI: true
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

@@ -35,9 +35,6 @@ jobs:
         with:
           node-version: '14'
 
-      - name: remove me
-        run: echo ${{ github.actor }}
-
       - name: install dependencies
         run: npm ci
 
