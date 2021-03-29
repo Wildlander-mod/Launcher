@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  version-bump:
+    runs-on: windows-latest
+    # Prevent the versioning getting stuck in a loop when it pushes back to the main branch
+    if: github.actor != 'UltimateSkyrimGitHub'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Configure CI Git User
+        run: |
+          git config user.name 'UltimateSkyrimGitHubCI'
+          git config user.email 'ultimateskyrimgithub@gmail.com'
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+
+      - name: bump version
+        run: npx standard-version --no-verify
+
+      - name: publish changes
+        run: git push --follow-tags
