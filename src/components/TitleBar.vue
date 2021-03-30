@@ -1,11 +1,16 @@
 <template>
-  <div class="c-navigation-bar l-row l-end">
-    <span class="material-icons c-navigation-bar__control" @click="minimize">
-      remove
-    </span>
-    <span class="material-icons c-navigation-bar__control" @click="close">
-      close
-    </span>
+  <div class="c-control-bar l-row l-end">
+    <div class="c-navigation-bar"></div>
+    <div class="c-control-bar__control" @click="minimize">
+      <span class="material-icons">
+        remove
+      </span>
+    </div>
+    <div class="c-control-bar__control" @click="close">
+      <span class="material-icons">
+        close
+      </span>
+    </div>
   </div>
   <div class="c-header">
     <div class="c-header__title">
@@ -43,14 +48,15 @@ export default {
 @import "~@/assets/scss";
 
 .c-navigation-bar {
-  // All the whole window to be dragged by the title bar
+  // Allow the whole window to be dragged by the navigation bar
   -webkit-app-region: drag;
   -webkit-user-select: none;
-  cursor: pointer;
+  flex-grow: 1;
 }
 
-.c-navigation-bar__control {
+.c-control-bar__control {
   cursor: pointer;
+  -webkit-app-region: no-drag;
 }
 
 .c-header {
