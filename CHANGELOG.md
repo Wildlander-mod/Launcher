@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.5 (2021-03-30)
+
+
+### Bug Fixes
+
+* **windows:** fix not being able to close the app on Windows ([d3746ac](https://github.com/UltimateSkyrim/ultskylauncher/commit/d3746ac5bd4c2c2ab4103a9e374d8d0428b862f8))
+
 ### 0.1.4 (2021-03-30)
 
 
