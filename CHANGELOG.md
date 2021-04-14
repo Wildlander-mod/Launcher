@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.7 (2021-04-14)
+
+
+### Bug Fixes
+
+* failed requests to the Patreon API will now show an error ([1e32634](https://github.com/UltimateSkyrim/ultskylauncher/commit/1e32634b6bfd815acbde0d4d25ed32751bc7cc8a)), closes [#54](https://github.com/UltimateSkyrim/ultskylauncher/issues/54)
+
 ### 0.1.6 (2021-04-14)
 
 
