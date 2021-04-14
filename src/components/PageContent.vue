@@ -48,7 +48,7 @@ export default class PageContent extends Vue {
 
   backdrop-filter: blur(10px);
   background-color: $colour-background-secondary--transparent;
-  border: 1px solid $colour-background--darker;
+  border: 1px solid $colour-background--dark;
   height: 200px;
   margin-top: 5px;
 }

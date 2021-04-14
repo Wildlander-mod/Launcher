@@ -98,7 +98,7 @@ export default class News extends Vue {
   margin-right: $size-margin--x-small;
 
   border-radius: 8px;
-  background-color: $colour-background--darker;
+  background-color: $colour-background--dark;
 }
 
 .c-news__tag--news {

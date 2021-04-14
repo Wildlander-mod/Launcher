@@ -1,18 +1,26 @@
 <template>
-  <div id="select">
-    <div @click="toggle" id="select__head">
-      <p>
-        {{ currentOption.name }}
-      </p>
-      <span :class="'material-icons ' + `select__icon${isOpenModifier}`">
+  <div :class="`c-select c-select${isOpenModifier}`">
+    <div
+      :class="`c-select__head u-text c-select__head${isOpenModifier}`"
+      @click="toggle"
+    >
+      {{ currentOption.name }}
+      <span
+        :class="
+          'material-icons ' + `c-select__icon c-select__icon${isOpenModifier}`
+        "
+      >
         expand_more
       </span>
     </div>
-    <div :class="`select__options${isOpenModifier}`" id="select__options">
-      <div @click="select(option)" :key="option.name" v-for="option in options">
-        <p>
-          {{ option.name }}
-        </p>
+    <div :class="`c-select__options c-select__options${isOpenModifier}`">
+      <div
+        v-for="option in options"
+        :key="option.name"
+        class="c-select__option"
+        @click="select(option)"
+      >
+        <div class="u-text">{{ option.name }}</div>
       </div>
     </div>
   </div>
@@ -54,105 +62,109 @@ export default {
 <style lang="scss" scoped>
 @import "~@/assets/scss";
 
-$selectBackground: transparentize($colour-background, 0.8);
-$selectFocus: darken($colour-secondary, 50%);
+$selectBackground: #767676;
+$selectFocus: rgba(255, 255, 255, 0.1);
 
-div {
+.c-select {
   height: 30px;
   user-select: none;
+  border-radius: 2px;
 
-  &#select__head {
-    background-color: $selectBackground;
-    border-radius: 2px;
-    display: flex;
-    justify-content: space-between;
-    width: 155px;
-
-    &:active,
-    &:hover {
-      background-color: $selectFocus;
-    }
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    span {
-      align-self: center;
-      display: inline-block;
-
-      &.select__icon--closed {
-        animation: rotate-reverse 0.2s linear forwards;
-
-        @keyframes rotate-reverse {
-          from {
-            transform: rotate(180deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      }
-
-      &.select__icon--open {
-        animation: rotate 0.2s linear forwards;
-
-        @keyframes rotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(180deg);
-          }
-        }
-      }
-    }
+  background-color: $selectBackground;
+  &:hover {
+    cursor: pointer;
+    background-color: $colour-background--dark;
   }
 
-  &#select__options {
-    background-color: $selectFocus;
-    height: auto;
-    padding-bottom: 8px;
-    padding-top: 8px;
-    position: absolute;
-    transform-origin: top;
-    width: 200px;
-    z-index: 1;
+  &--open {
+    background-color: $colour-background--dark;
+  }
+}
 
-    &.select__options--closed {
-      animation: retract 0.2s forwards;
-    }
+.c-select__head {
+  display: flex;
+  justify-content: space-between;
+  width: 155px;
 
-    &.select__options--open {
-      animation: expand 0.2s forwards;
-    }
+  .c-select__icon {
+    align-self: center;
 
-    div:hover {
-      background-color: $selectBackground;
-      cursor: pointer;
-    }
+    &--closed {
+      animation: rotate-reverse 0.2s linear forwards;
 
-    @keyframes expand {
-      from {
-        transform: scaleY(0);
-      }
-      to {
-        transform: scaleY(1);
+      @keyframes rotate-reverse {
+        from {
+          transform: rotate(180deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
       }
     }
 
-    @keyframes retract {
-      from {
-        transform: scaleY(1);
-      }
-      to {
-        transform: scaleY(0);
+    &--open {
+      animation: rotate 0.2s linear forwards;
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(180deg);
+        }
       }
     }
   }
 }
 
-p {
-  margin-left: 8px;
+.c-select__options {
+  background-color: $selectBackground;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  position: absolute;
+  transform-origin: top;
+  width: 200px;
+  z-index: 1;
+  border-radius: 0 4px 4px 4px;
+
+  &--closed {
+    animation: retract 0.2s forwards;
+  }
+
+  &--open {
+    animation: expand 0.2s forwards;
+  }
+
+  @keyframes expand {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes retract {
+    from {
+      transform: scaleY(1);
+    }
+    to {
+      transform: scaleY(0);
+    }
+  }
+}
+
+.c-select__option:hover {
+  background-color: $selectFocus;
+  cursor: pointer;
+}
+
+// TODO this should be globally applied as a default
+.u-text {
+  padding-left: 8px;
+  font-weight: 300;
+  line-height: 30px;
+  size: 14px;
+  box-sizing: border-box;
 }
 </style>

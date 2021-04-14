@@ -184,7 +184,7 @@ nav {
   }
 
   hr {
-    border-color: $colour-background--darker;
+    border-color: $colour-background--dark;
     margin-bottom: 0;
     margin-top: 30px;
     width: 223px;

@@ -54,7 +54,7 @@ export default {
 
   #resources__wrapper {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid $colour-background--darker;
+    border: 1px solid $colour-background--dark;
     height: 350px;
 
     .resources__row {
@@ -67,7 +67,7 @@ export default {
 
       .resources__link-container {
         align-items: center;
-        border: 1px solid $colour-background--darker;
+        border: 1px solid $colour-background--dark;
         display: flex;
         flex-direction: column;
         height: 125px;
@@ -75,7 +75,7 @@ export default {
         width: 150px;
 
         &:hover {
-          background-color: $colour-background-secondary--transparent;
+          background-color: $colour-background-light;
         }
 
         p {
