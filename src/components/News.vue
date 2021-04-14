@@ -1,5 +1,5 @@
 <template>
-  <div class="l-column u-scroll-x">
+  <div class="l-column u-scroll-x" v-if="!failedToGetNews && news.length > 0">
     <ul class="c-news u-list--bare">
       <li v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
         <ExternalLink
@@ -39,6 +39,12 @@
       </li>
     </ul>
   </div>
+  <div v-if="failedToGetNews && news.length === 0">
+    Cannot load latest news. Please report this error in the
+    <ExternalLink href="https://discordapp.com/invite/8VkDrfq" :underline="true"
+      >Ultimate Skyrim Discord</ExternalLink
+    >.
+  </div>
 </template>
 
 <script lang="ts">
@@ -57,10 +63,15 @@ import ExternalLink from "@/components/ExternalLink.vue";
 export default class News extends Vue {
   newsService!: PostsService;
   news: Posts[] = [];
+  failedToGetNews = false;
 
   async created() {
     this.newsService = injectStrict(SERVICE_BINDINGS.NEWS_SERVICE);
-    this.news = await this.newsService.getPosts();
+    try {
+      this.news = await this.newsService.getPosts();
+    } catch {
+      this.failedToGetNews = true;
+    }
   }
 }
 </script>
