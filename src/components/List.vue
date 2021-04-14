@@ -44,7 +44,7 @@ export default class List extends Vue {
   line-height: 16px;
   flex: 1;
   background-color: $colour-background-secondary--transparent;
-  border: 1px solid $colour-background--darker;
+  border: 1px solid $colour-background--dark;
   margin: 0;
   padding: 6px 10px 10px;
   font-size: $font-size--small;

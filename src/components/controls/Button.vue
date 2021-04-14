@@ -27,7 +27,7 @@ export default {
 @import "~@/assets/scss";
 
 div {
-  background-color: $colour-background--darker;
+  background-color: $colour-background--dark;
   border: 0;
   border-radius: 2px;
   color: $colour-text;
@@ -39,7 +39,7 @@ div {
 
   &:active,
   &:hover {
-    background-color: lighten($colour-background--darker, 10%);
+    background-color: lighten($colour-background--dark, 10%);
   }
 
   &:hover {
@@ -55,7 +55,7 @@ div {
 
     &:active,
     &:hover {
-      background-color: lighten($colour-primary, 10%);
+      background-color: $colour-primary--light;
     }
   }
 

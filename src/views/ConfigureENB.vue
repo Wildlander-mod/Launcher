@@ -51,7 +51,7 @@ export default {
 
   #configure-enb__controls {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid $colour-background--darker;
+    border: 1px solid $colour-background--dark;
     display: flex;
     flex-direction: column;
 
@@ -79,7 +79,7 @@ export default {
 
   #configure-enb__selector {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid $colour-background--darker;
+    border: 1px solid $colour-background--dark;
     height: 225px;
     margin-top: -1px;
   }
