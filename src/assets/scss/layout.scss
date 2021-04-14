@@ -7,12 +7,16 @@
   flex-direction: column;
 }
 
+.l-center {
+  justify-content: center;
+}
+
 .l-row {
   display: flex;
   flex-direction: row;
 }
 
-.l-center {
+.l-center--text {
   text-align: center;
 }
 

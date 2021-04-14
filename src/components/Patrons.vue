@@ -1,8 +1,11 @@
 <template>
   <div class="c-patrons">
-    <List :items="superPatrons">
+    <List
+      v-if="!failedToGetPatrons && superPatrons.length !== 0"
+      :items="superPatrons"
+    >
       <div class="c-patrons__title">
-        <div class="l-column l-center">
+        <div class="l-column l-center--text">
           <div class="c-patrons__star--stacked">
             <i class="material-icons c-patrons__star-icon">star_outline</i>
           </div>
@@ -18,7 +21,10 @@
         </div>
       </div>
     </List>
-    <List :items="otherPatrons">
+    <List
+      v-if="!failedToGetPatrons && otherPatrons.length !== 0"
+      :items="otherPatrons"
+    >
       <div class="c-patrons__title">
         <div class="c-patrons__star">
           <i class="material-icons c-patrons__star-icon">star_outline</i>
@@ -28,6 +34,17 @@
         </div>
       </div>
     </List>
+    <div v-if="failedToGetPatrons">
+      <div>
+        Could not retrieve Patron list. Please report this error in the
+        <ExternalLink
+          href="https://discordapp.com/invite/8VkDrfq"
+          :underline="true"
+        >
+          Ultimate Skyrim Discord </ExternalLink
+        >.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,28 +53,35 @@ import { Options as Component, Vue } from "vue-class-component";
 import List from "./List.vue";
 import { PatreonService } from "@/services/Patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
+import ExternalLink from "@/components/ExternalLink.vue";
 
 @Component({
   components: {
-    List
+    List,
+    ExternalLink
   }
 })
 export default class Patrons extends Vue {
   patreonService!: PatreonService;
   superPatrons: string[] = [];
   otherPatrons: string[] = [];
+  failedToGetPatrons = false;
 
   async created() {
     this.patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
-    const patrons = await this.patreonService.getPatrons();
 
-    this.superPatrons = patrons
-      .filter(patron => patron.tier === "Super Patron")
-      .map(patron => patron.name);
+    try {
+      const patrons = await this.patreonService.getPatrons();
+      this.superPatrons = patrons
+        .filter(patron => patron.tier === "Super Patron")
+        .map(patron => patron.name);
 
-    this.otherPatrons = patrons
-      .filter(patron => patron.tier === "Patron")
-      .map(patron => patron.name);
+      this.otherPatrons = patrons
+        .filter(patron => patron.tier === "Patron")
+        .map(patron => patron.name);
+    } catch {
+      this.failedToGetPatrons = true;
+    }
   }
 }
 </script>
