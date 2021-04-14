@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.6 (2021-04-14)
+
+
+### Bug Fixes
+
+* apply consistent colours for dropdowns, menu and resourcess ([bb20a07](https://github.com/UltimateSkyrim/ultskylauncher/commit/bb20a071630509d01d2acb5fef689f0e9ad5e643)), closes [#39](https://github.com/UltimateSkyrim/ultskylauncher/issues/39)
+
 ### 0.1.5 (2021-03-30)
 
 
