@@ -1,7 +1,9 @@
 {
   "name": "ultskylauncher",
   "version": "0.1.8",
-  "private": true,
+  "description": "A launcher for the Ultimate Skyrim modpack",
+  "author": "Ultimate Skyrim",
+  "repository": "https://github.com/UltimateSkyrim/ultskylauncher",
   "scripts": {
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
