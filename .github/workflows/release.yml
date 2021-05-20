@@ -29,16 +29,7 @@ jobs:
         run: npm ci
 
       - name: Build app
-        run: npm run build -- --publish never
-
-      - name: Rename distribution
-        run: mv dist_electron "Ultimate Skyrim Launcher"
-
-      - name: Create archive
-        run: tar.exe -a -c -f dist.zip "Ultimate Skyrim Launcher/*"
-
-      - name: Create release
-        run: node ./.github/support/release.js
+        run: npm run build -- --publish always
         env:
           CI: true
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}

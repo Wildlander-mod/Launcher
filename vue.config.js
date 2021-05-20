@@ -3,7 +3,12 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       builderOptions: {
-        icon: "public/icon.png"
+        productName: "Ultimate Skyrim Launcher",
+        icon: "public/icon.png",
+        publish: {
+          provider: "github",
+          releaseType: "release"
+        }
       }
     }
   }
