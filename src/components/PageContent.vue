@@ -1,6 +1,6 @@
 <template>
   <div class="c-page-content">
-    <h2 class="c-page-content__title">
+    <h2 class="c-page-content__title" v-if="title">
       {{ title }}
     </h2>
     <div
@@ -15,12 +15,11 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 export default class PageContent extends Vue {
-  @Prop({ required: true }) title!: string;
+  @Prop({ required: false }) title!: string;
   @Prop({ default: "full" }) height!: "small" | "large";
 }
 </script>
@@ -46,7 +45,7 @@ export default class PageContent extends Vue {
 .c-page-content__body {
   display: flex;
 
-  backdrop-filter: blur(10px);
+  backdrop-filter: $background-blur;
   background-color: $colour-background-secondary--transparent;
   border: 1px solid $colour-background--dark;
   height: 200px;

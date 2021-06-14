@@ -1,11 +1,8 @@
 <template>
   <nav>
-    <Button
-      id="nav__launch-button"
-      text="Launch Game"
-      type="primary"
-      size="large"
-    />
+    <Button id="nav__launch-button" type="primary" size="large"
+      >Launch Game
+    </Button>
     <Select :options="qualityOptions" class="nav__select" placeholder="None" />
     <Select :options="enbOptions" class="nav__select" placeholder="No ENB" />
     <hr />

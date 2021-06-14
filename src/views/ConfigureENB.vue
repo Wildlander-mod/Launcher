@@ -5,12 +5,12 @@
       <p>Current ENB: {{ currentENB.name }}</p>
       <div id="controls__button-wrapper">
         <div id="controls__primary-buttons">
-          <Button text="New ENB Profile" type="primary" size="large" />
+          <Button type="primary" size="large">New ENB Profile</Button>
         </div>
         <div id="controls__secondary-buttons">
-          <Button text="Load" />
-          <Button text="Open" />
-          <Button text="Delete" />
+          <Button>Load</Button>
+          <Button>Open</Button>
+          <Button>Delete</Button>
         </div>
       </div>
     </div>

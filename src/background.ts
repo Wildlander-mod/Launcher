@@ -1,14 +1,15 @@
 "use strict";
 
-// Import modules
-import { app, BrowserWindow, nativeImage, protocol } from "electron";
+import { app, BrowserWindow, ipcMain, nativeImage, protocol } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import path from "path";
 import { initializeConfiguration, isDevelopment } from "./assets/js/config";
 import { toLog } from "./assets/js/log";
 import { fatalError } from "./assets/js/errorHandler";
-import { setWindow } from "./assets/js/ipcHandler";
+import { getWebContents, setWindow } from "./assets/js/ipcHandler";
+import { autoUpdater } from "electron-updater";
+import { IPCEvents } from "@/enums/IPCEvents";
 
 // Electron __static is global to electron apps but there is no type definition for it
 declare const __static: string;
@@ -38,19 +39,53 @@ async function createWindow() {
       width: 1000
     });
 
+    setWindow(win);
+
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
       await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-      if (!process.env.IS_TEST) win.webContents.openDevTools();
+      if (!process.env.IS_TEST) {
+        win.webContents.openDevTools();
+      }
     } else {
       createProtocol("app");
       // Load the index.html when not in development
-      win.loadURL("app://./index.html");
+      await win.loadURL("app://./index.html");
     }
-    setWindow(win);
   } catch (err) {
     fatalError("B00-01-00", "Error while creating BrowserWindow", err);
   }
+}
+
+async function autoUpdate() {
+  autoUpdater.on(IPCEvents.UPDATE_AVAILABLE, () => {
+    toLog(`Update available`);
+    getWebContents().send(IPCEvents.UPDATE_AVAILABLE);
+  });
+
+  autoUpdater.on(IPCEvents.UPDATE_NOT_AVAILABLE, () => {
+    toLog(`No updates available`);
+    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
+  });
+
+  autoUpdater.on(IPCEvents.UPDATE_DOWNLOADED, () => {
+    toLog("Update downloaded");
+  });
+
+  ipcMain.on(IPCEvents.UPDATE_APP, () => {
+    toLog("Quitting and installing new app version");
+    autoUpdater.quitAndInstall();
+  });
+
+  if (isDevelopment) {
+    autoUpdater.updateConfigPath = path.join(
+      __dirname,
+      "../dev-app-update.yml"
+    );
+  }
+
+  toLog("Checking for updates...");
+  await autoUpdater.checkForUpdates();
 }
 
 // This method will be called when Electron has finished
@@ -65,12 +100,18 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  initializeConfiguration().then(() => {
-    toLog("Creating window.");
-    createWindow();
+  await initializeConfiguration();
 
-    toLog("App started!\n" + "=".repeat(80) + "\n");
+  toLog("Creating window");
+
+  // Wait until the application is ready to check for an update
+  ipcMain.on(IPCEvents.CHECK_FOR_UPDATE, () => {
+    autoUpdate();
   });
+
+  await createWindow();
+
+  toLog("App started!\n" + "=".repeat(80) + "\n");
 });
 
 // Exit cleanly on request from parent process in development mode.
