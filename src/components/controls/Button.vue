@@ -1,32 +1,28 @@
 <template>
-  <div :class="[size, type].join(' ')">
-    <p>
-      {{ text }}
-    </p>
+  <div :class="['c-button', `c-button--${size}`, `c-button--${type}`]">
+    <slot />
   </div>
 </template>
 
-<script>
-export default {
-  name: "Button",
-  props: {
-    size: {
-      type: String,
-      default: "small"
-    },
-    text: String,
-    type: {
-      type: String,
-      default: ""
-    }
-  }
-};
+<script lang="ts">
+import { Options as Component, Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+
+export type ButtonSizes = "large" | "small";
+export type ButtonTypes = "primary" | "default";
+
+@Component({})
+export default class Button extends Vue {
+  @Prop({ default: "small" }) size!: ButtonSizes;
+  @Prop() text!: string;
+  @Prop({ default: "default" }) type!: ButtonTypes;
+}
 </script>
 
 <style lang="scss" scoped>
 @import "~@/assets/scss";
 
-div {
+.c-button {
   background-color: $colour-background--dark;
   border: 0;
   border-radius: 2px;
@@ -37,6 +33,13 @@ div {
   padding: 0;
   user-select: none;
 
+  // TODO these shouldn't have to be set specifically here
+  // but they were originally only set on the <p> tag
+  font-weight: 300;
+  line-height: 30px;
+  margin: 0;
+  size: 14px;
+
   &:active,
   &:hover {
     background-color: lighten($colour-background--dark, 10%);
@@ -46,11 +49,11 @@ div {
     cursor: pointer;
   }
 
-  &.large {
+  &--large {
     width: 155px;
   }
 
-  &.primary {
+  &--primary {
     background-color: $colour-primary;
 
     &:active,
@@ -59,7 +62,7 @@ div {
     }
   }
 
-  &.small {
+  &--small {
     width: 85px;
   }
 }

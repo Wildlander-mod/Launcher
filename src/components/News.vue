@@ -80,11 +80,11 @@ export default class News extends Vue {
 @import "~@/assets/scss";
 
 .c-news {
-  margin: $size-margin--large;
+  margin: $size-spacing--large;
 }
 
 .c-news__item {
-  margin-bottom: $size-margin;
+  margin-bottom: $size-spacing;
 }
 
 .c-news__published {
@@ -94,7 +94,7 @@ export default class News extends Vue {
 
 .c-news__content {
   font-size: $font-size--small;
-  margin-top: $size-margin--x-small;
+  margin-top: $size-spacing--x-small;
 }
 
 .c-news__block {
@@ -106,7 +106,7 @@ export default class News extends Vue {
   font-weight: $font-weight--large;
 
   padding: 3px 6px;
-  margin-right: $size-margin--x-small;
+  margin-right: $size-spacing--x-small;
 
   border-radius: 8px;
   background-color: $colour-background--dark;

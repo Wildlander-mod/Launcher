@@ -2,7 +2,7 @@ import { shell } from "electron";
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { sendError } from "./errorHandler";
+import { isDevelopment } from "@/assets/js/config";
 
 const logDirectory = path.join(
   os.homedir(),
@@ -18,17 +18,18 @@ export const getCurrentLogPath = () =>
 
 // Log to the default log path
 export function toLog(log: string) {
-  const logged = `\n ${new Date().toLocaleTimeString()} - ${log}`;
-  fs.appendFile(getCurrentLogPath(), logged, err => {
-    if (err) {
-      sendError(
-        "B05-01-00",
-        "Error while writing to log! Logging has been disabled.",
-        err.message,
-        false
-      );
-    }
-  });
+  console.debug(log);
+  if (!isDevelopment) {
+    fs.appendFile(
+      getCurrentLogPath(),
+      `\n ${new Date().toLocaleTimeString()} - ${log}`,
+      err => {
+        if (err) {
+          console.error(err);
+        }
+      }
+    );
+  }
 }
 
 export async function openLogDirectory() {

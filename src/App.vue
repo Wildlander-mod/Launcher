@@ -1,6 +1,6 @@
 <template>
   <div id="window">
-    <main>
+    <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
       <NavBar />
       <div id="window__content">
         <TitleBar />
@@ -8,6 +8,7 @@
       </div>
     </main>
     <Footer />
+    <AutoUpdate :click-events-enabled="setClickEventsEnabled" />
   </div>
 </template>
 
@@ -17,17 +18,25 @@ import NavBar from "@/components/NavBar.vue";
 import TitleBar from "@/components/TitleBar.vue";
 import { Options as Component, Vue } from "vue-class-component";
 import { registerServices } from "@/services/service-container";
+import AutoUpdate from "@/components/AutoUpdate.vue";
 
 @Component({
   components: {
+    AutoUpdate,
     Footer,
     NavBar,
     TitleBar
   }
 })
 export default class App extends Vue {
+  clickEventsEnabled = false;
+
   async created() {
     registerServices();
+  }
+
+  setClickEventsEnabled(enabled: boolean) {
+    this.clickEventsEnabled = enabled;
   }
 }
 </script>

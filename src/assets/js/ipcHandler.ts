@@ -10,10 +10,10 @@ import { getConfig, resetConfig, saveCurrentConfig } from "./config";
 import { getCurrentLogPath, openLogDirectory, toLog } from "./log";
 import { launchGame } from "./modlists";
 import { sendError } from "./errorHandler";
+import { IPCEvents } from "@/enums/IPCEvents";
 
 const configDirectory = path.join(os.homedir(), "Ultimate Skyrim Launcher");
 
-let webContents: Electron.WebContents;
 let win: Electron.BrowserWindow;
 
 export function getWindow() {
@@ -25,7 +25,7 @@ export function setWindow(window: Electron.BrowserWindow) {
 }
 
 export function getWebContents() {
-  return webContents;
+  return getWindow().webContents;
 }
 
 // Open hyperlinks in the default browser
@@ -87,18 +87,7 @@ ipcMain.on("open-config", async () => {
     sendError("B03-07-00", "Error while opening config file!", err);
   }
 });
-// Stores webContents on app initialization. Error ID: B03-08
-ipcMain.once("initialized", _event => {
-  try {
-    webContents = _event.sender;
-  } catch (err) {
-    sendError(
-      "B03-08-00",
-      "Error while receiving front-end initialization confirmation",
-      err
-    );
-  }
-});
+
 // Get Directory. Error ID: B03-09
 ipcMain.handle("get-directory", async () => {
   try {
@@ -143,7 +132,7 @@ ipcMain.on("update-config", (_event, { newConfig }) => {
   toLog("Received new configuration from front-end");
   saveCurrentConfig(newConfig);
 });
-ipcMain.on("close", () => {
+ipcMain.on(IPCEvents.CLOSE, () => {
   win.close();
   app.quit();
 });
