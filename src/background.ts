@@ -10,6 +10,7 @@ import { fatalError } from "./assets/js/errorHandler";
 import { getWebContents, setWindow } from "./assets/js/ipcHandler";
 import { autoUpdater } from "electron-updater";
 import { IPCEvents } from "@/enums/IPCEvents";
+import fs from "fs";
 
 // Electron __static is global to electron apps but there is no type definition for it
 declare const __static: string;
@@ -77,15 +78,19 @@ async function autoUpdate() {
     autoUpdater.quitAndInstall();
   });
 
-  if (isDevelopment) {
-    autoUpdater.updateConfigPath = path.join(
-      __dirname,
-      "../dev-app-update.yml"
-    );
+  // Only try to update if in production mode or there is a dev update file
+  const devAppUpdatePath = path.join(__dirname, "../dev-app-update.yml");
+  if (isDevelopment && fs.existsSync(devAppUpdatePath)) {
+    autoUpdater.updateConfigPath = devAppUpdatePath;
+    await autoUpdater.checkForUpdates();
+  } else if (!isDevelopment) {
+    await autoUpdater.checkForUpdates();
+  } else {
+    toLog("Skipping app update check because we're in development mode");
+    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
   }
 
   toLog("Checking for updates...");
-  await autoUpdater.checkForUpdates();
 }
 
 // This method will be called when Electron has finished
