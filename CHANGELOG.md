@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.11 (2021-06-14)
+
+
+### Features
+
+* add auto updating ([38def53](https://github.com/UltimateSkyrim/ultskylauncher/commit/38def532d40d47df6f537c7da2e51d95f7816c04)), closes [#31](https://github.com/UltimateSkyrim/ultskylauncher/issues/31)
+
 ### 0.1.10 (2021-05-20)
 
 ### 0.1.9 (2021-05-20)
