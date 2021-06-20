@@ -2,22 +2,22 @@ import path from "path";
 import fs from "fs";
 import childProcess from "child_process";
 import ncp from "ncp";
-import { getConfig } from "./config";
 import { toLog } from "./log";
 import { sendError } from "./errorHandler";
 import { getWebContents, getWindow } from "./ipcHandler";
+import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 
 export function launchGame() {
   try {
     toLog("Launching game..." + "\n" + "=".repeat(80));
-    const currentConfig = getConfig();
-    const modlistPath = currentConfig.Options.ModDirectory;
+    const currentConfig = userPreferences;
+    const modlistPath = currentConfig.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
     toLog("Path: " + modlistPath);
     const exe = "SKSE";
     toLog("Executable: " + exe);
-    const profile = currentConfig.Options.DefaultPreset;
+    const profile = currentConfig.get(USER_PREFERENCE_KEYS.PRESET);
     toLog("MO2 Profile: " + profile);
-    const gamePath = currentConfig.Options.GameDirectory;
+    const gamePath = currentConfig.get(USER_PREFERENCE_KEYS.GAME_DIRECTORY);
     toLog("Game Path: " + gamePath);
     toLog("Moving Game Folder Files");
     toLog("GFF:");

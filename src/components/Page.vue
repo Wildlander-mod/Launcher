@@ -17,7 +17,7 @@ export default class Page extends Vue {}
   display: flex;
   flex-direction: column;
   margin-left: 30px;
-  width: 350px;
+  margin-right: 30px;
 
   font-size: $font-size;
   font-weight: $font-weight;

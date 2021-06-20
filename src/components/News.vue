@@ -1,6 +1,9 @@
 <template>
-  <div class="l-column u-scroll-y" v-if="!failedToGetNews && news.length > 0">
-    <ul class="c-news u-list--bare">
+  <div
+    v-if="!failedToGetNews && news.length > 0"
+    class="c-news l-column u-scroll-y"
+  >
+    <ul class="u-list--bare">
       <li v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
         <ExternalLink
           :href="`https://www.patreon.com${newsItem.url}`"
@@ -9,7 +12,7 @@
           <div class="c-news__published">
             {{ new Date(newsItem.published).toLocaleDateString() }}
           </div>
-          <div class="c-news__block l-column">
+          <div class="c-news__block l-row">
             <div class="c-news__tags l-row">
               <template v-if="newsItem.tags">
                 <div
@@ -80,7 +83,8 @@ export default class News extends Vue {
 @import "~@/assets/scss";
 
 .c-news {
-  margin: $size-spacing--large;
+  width: 100%;
+  padding: $size-spacing--large;
 }
 
 .c-news__item {
@@ -89,16 +93,15 @@ export default class News extends Vue {
 
 .c-news__published {
   color: $colour-text-secondary;
-  flex: 0.2;
+  flex: 0.1;
 }
 
 .c-news__content {
   font-size: $font-size--small;
-  margin-top: $size-spacing--x-small;
 }
 
 .c-news__block {
-  flex: 0.8;
+  flex: 0.9;
 }
 
 .c-news__tag {
