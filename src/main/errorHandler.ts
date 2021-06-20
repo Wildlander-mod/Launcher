@@ -15,9 +15,6 @@ export function sendError(
   }
 }
 
-/**
- * Shows error dialog and quits app on fatal error.
- */
 export function fatalError(code: string, message: string, err: string) {
   toLog(`
     ${"=".repeat(10)}

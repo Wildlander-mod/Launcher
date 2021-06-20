@@ -44,6 +44,8 @@ export default class PageContent extends Vue {
 
 .c-page-content__body {
   display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 
   backdrop-filter: $background-blur;
   background-color: $colour-background-secondary--transparent;

@@ -3,8 +3,13 @@
     <Button id="nav__launch-button" type="primary" size="large"
       >Launch Game
     </Button>
-    <Select :options="qualityOptions" class="nav__select" placeholder="None" />
-    <Select :options="enbOptions" class="nav__select" placeholder="No ENB" />
+    <Select
+      :default="defaultPreset"
+      :on-option-selected="onPresetSelected"
+      :options="qualityOptions"
+      class="nav__select"
+    />
+    <!--    <Select :options="enbOptions" class="nav__select" placeholder="No ENB" />-->
     <hr />
     <div id="nav__tabs">
       <div
@@ -53,47 +58,56 @@
       <p>Launcher Version: {{ launcherVersion }}</p>
       <p>
         Powered by
-        <a
-          href="#"
-          @click="followLink('https://github.com/RingComics/azuras-star')"
-          >Azura's Star</a
+        <ExternalLink
+          :underline="true"
+          href="https://github.com/RingComics/azuras-star"
         >
+          Azura's Star
+        </ExternalLink>
       </p>
     </div>
   </nav>
 </template>
 
-<script>
+<script lang="ts">
 import Button from "./controls/Button.vue";
 import Select from "./controls/Select.vue";
 import { version as launcherVersion } from "../../package.json";
-import { ipcRenderer } from "electron";
+import ExternalLink from "./ExternalLink.vue";
+import { PRESETS, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import { Options as Component, Vue } from "vue-class-component";
+import { SelectOption } from "@/components/controls/Select.vue";
 
-export default {
-  name: "Nav-Bar",
+@Component({
   components: {
+    ExternalLink,
     Button,
     Select
-  },
-  data() {
-    return {
-      activeTab: "home",
-      enbOptions: undefined,
-      gameVersion: "0",
-      launcherVersion,
-      qualityOptions: [
-        { name: "Low Quality" },
-        { name: "Medium Quality" },
-        { name: "High Quality" }
-      ]
-    };
-  },
-  methods: {
-    followLink(link) {
-      ipcRenderer.send("follow-link", link);
-    }
   }
-};
+})
+export default class NavBar extends Vue {
+  activeTab = "home";
+  gameVersion = 0;
+  launcherVersion = launcherVersion;
+  qualityOptions = [
+    { text: "Low Quality", value: PRESETS.LOW },
+    { text: "Medium Quality", value: PRESETS.MEDIUM },
+    { text: "High Quality", value: PRESETS.HIGH }
+  ];
+  defaultPreset!: SelectOption;
+
+  created() {
+    this.defaultPreset =
+      this.qualityOptions.find(
+        preset =>
+          preset.value === userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
+      ) || this.qualityOptions[0];
+  }
+
+  onPresetSelected(option: SelectOption) {
+    userPreferences.set(USER_PREFERENCE_KEYS.PRESET, option.value);
+  }
+}
 </script>
 
 <style lang="scss" scoped>

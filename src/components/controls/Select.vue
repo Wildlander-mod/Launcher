@@ -1,62 +1,86 @@
 <template>
-  <div :class="`c-select c-select${isOpenModifier}`">
+  <div
+    :class="[
+      'c-select',
+      `${isOpen === true ? 'c-select--open' : 'c-select--closed'}`
+    ]"
+  >
     <div
-      :class="`c-select__head u-text c-select__head${isOpenModifier}`"
-      @click="toggle"
+      :class="[
+        'c-select__head',
+        'u-text',
+        `${isOpen === true ? 'c-select__head--open' : 'c-select__head--closed'}`
+      ]"
+      @click="toggleOpenState"
     >
-      {{ currentOption.name }}
+      {{ currentOption.text }}
       <span
-        :class="
-          'material-icons ' + `c-select__icon c-select__icon${isOpenModifier}`
-        "
+        :class="[
+          'material-icons',
+          'c-select__icon',
+          `${
+            isOpen === true ? 'c-select__icon--open' : 'c-select__icon--closed'
+          }`
+        ]"
       >
         expand_more
       </span>
     </div>
-    <div :class="`c-select__options c-select__options${isOpenModifier}`">
+    <div
+      :class="[
+        'c-select__options',
+        `${
+          isOpen === true
+            ? 'c-select__options--open'
+            : 'c-select__options--closed'
+        }`
+      ]"
+    >
       <div
         v-for="option in options"
-        :key="option.name"
+        :key="option.value"
         class="c-select__option"
         @click="select(option)"
       >
-        <div class="u-text">{{ option.name }}</div>
+        <div class="u-text">{{ option.text }}</div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "Select",
-  props: {
-    options: Array,
-    placeholder: String
-  },
-  data() {
-    return {
-      currentOption: this.options
-        ? this.options[0]
-        : { name: this.placeholder },
-      isOpenModifier: "--closed"
-    };
-  },
-  methods: {
-    select(option) {
-      this.currentOption = option;
-      this.isOpenModifier = "--closed";
-    },
-    toggle() {
-      if (this.options) {
-        if (this.isOpenModifier === "--closed") {
-          this.isOpenModifier = "--open";
-        } else {
-          this.isOpenModifier = "--closed";
-        }
-      }
+<script lang="ts">
+import { Options as Component, Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+
+export interface SelectOption {
+  text: string;
+  value: string;
+}
+
+@Component({})
+export default class Select extends Vue {
+  @Prop({ required: true }) options!: SelectOption[];
+  @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
+  @Prop({ required: true }) default!: SelectOption;
+  currentOption!: SelectOption;
+  isOpen = false;
+
+  created() {
+    this.currentOption = this.default;
+  }
+
+  select(option: SelectOption) {
+    this.currentOption = option;
+    this.isOpen = false;
+    if (this.onOptionSelected) {
+      this.onOptionSelected(option);
     }
   }
-};
+
+  toggleOpenState() {
+    this.isOpen = !this.isOpen;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -71,6 +95,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
 
   background-color: $selectBackground;
+
   &:hover {
     cursor: pointer;
     background-color: $colour-background--dark;

@@ -16,11 +16,6 @@
     <div class="c-header__title">
       <Logo fill="#ffffff" height="30px" />
     </div>
-    <p class="c-header__subtext">
-      Choose a performance preset and the click "Launch Game" to play!
-      <br />
-      Use the side navigation to edit or change your ENB and launcher settings.
-    </p>
   </div>
 </template>
 

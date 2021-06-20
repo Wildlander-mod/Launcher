@@ -4,10 +4,10 @@ import { app, BrowserWindow, ipcMain, nativeImage, protocol } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import path from "path";
-import { initializeConfiguration, isDevelopment } from "./assets/js/config";
-import { toLog } from "./assets/js/log";
-import { fatalError } from "./assets/js/errorHandler";
-import { getWebContents, setWindow } from "./assets/js/ipcHandler";
+import { isDevelopment } from "./main/config";
+import { toLog } from "./main/log";
+import { fatalError } from "./main/errorHandler";
+import { getWebContents, setWindow } from "./main/ipcHandler";
 import { autoUpdater } from "electron-updater";
 import { IPCEvents } from "@/enums/IPCEvents";
 import fs from "fs";
@@ -105,8 +105,6 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  await initializeConfiguration();
-
   toLog("Creating window");
 
   // Wait until the application is ready to check for an update

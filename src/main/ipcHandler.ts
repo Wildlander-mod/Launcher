@@ -6,11 +6,11 @@ import { app, dialog, ipcMain, shell } from "electron";
 import path from "path";
 import childProcess from "child_process";
 import os from "os";
-import { getConfig, resetConfig, saveCurrentConfig } from "./config";
 import { getCurrentLogPath, openLogDirectory, toLog } from "./log";
 import { launchGame } from "./modlists";
 import { sendError } from "./errorHandler";
 import { IPCEvents } from "@/enums/IPCEvents";
+import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 
 const configDirectory = path.join(os.homedir(), "Ultimate Skyrim Launcher");
 
@@ -27,16 +27,6 @@ export function setWindow(window: Electron.BrowserWindow) {
 export function getWebContents() {
   return getWindow().webContents;
 }
-
-// Open hyperlinks in the default browser
-ipcMain.on("follow-link", async (_event, { link }) => {
-  try {
-    toLog(`Opening link: ${link}`);
-    await shell.openExternal(link);
-  } catch (err) {
-    sendError("B03-02-00", `Error while opening web link ${link}`, err);
-  }
-});
 
 // Open path to folder
 ipcMain.on("open-modlist-profile", async (_event, { path }) => {
@@ -56,13 +46,13 @@ ipcMain.on("open-logs-directory", () => {
     sendError("B03-04-00", "Error while opening logs folder!", err);
   }
 });
+
 // Launch MO2. Error ID: B03-05
 ipcMain.on("launch-mo2", () => {
   try {
     toLog("Launching MO2");
-    const currentConfig = getConfig();
     const moPath = path.join(
-      currentConfig.Options.ModDirectory,
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       "\\ModOrganizer.exe"
     );
     childProcess.exec('"' + moPath + '"');
@@ -108,30 +98,17 @@ ipcMain.on("error", (_event, { code, message, err, tabbed }) => {
   // tabbed = Number
   sendError(code, message, err, tabbed);
 });
-// Get configuration. No Error ID
-ipcMain.handle("get-config", async () => {
-  toLog("Front-end requesting config");
-  return getConfig();
-});
+
 // Launch modlist. No Error ID
 ipcMain.handle("launch-game", async () => {
   launchGame();
 });
-// Reset config to default. No Error ID
-ipcMain.handle("reset-config", async () => {
-  toLog("Resetting configurations.");
-  return resetConfig();
-});
+
 // Open current log. No Error ID
 ipcMain.on("open-log", async () => {
   await openLogDirectory();
 });
-// Update configuration file. No Error ID.
-ipcMain.on("update-config", (_event, { newConfig }) => {
-  // newConfig = JSON object
-  toLog("Received new configuration from front-end");
-  saveCurrentConfig(newConfig);
-});
+
 ipcMain.on(IPCEvents.CLOSE, () => {
   win.close();
   app.quit();

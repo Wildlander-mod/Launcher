@@ -2,7 +2,7 @@ import { shell } from "electron";
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { isDevelopment } from "@/assets/js/config";
+import { isDevelopment } from "@/main/config";
 
 const logDirectory = path.join(
   os.homedir(),
