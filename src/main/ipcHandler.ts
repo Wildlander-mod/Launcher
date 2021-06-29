@@ -36,14 +36,15 @@ ipcMain.on("open-modlist-profile", async (_event, { path }) => {
 });
 
 // Launch MO2. Error ID: B03-05
-ipcMain.on("launch-mo2", () => {
+ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
   try {
     toLog("Launching MO2");
     const moPath = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      "\\ModOrganizer.exe"
+      "/ModOrganizer.exe"
     );
-    childProcess.exec('"' + moPath + '"');
+    toLog(`MO2 path: ${moPath}`);
+    childProcess.exec(`"${moPath}"`);
   } catch (err) {
     sendError("B03-05-00", "Error while opening MO2!", err);
   }
@@ -70,4 +71,8 @@ ipcMain.on(IPCEvents.MINIMIZE, () => {
 
 ipcMain.handle(IPCEvents.SHOW_OPEN_DIALOG, async () => {
   return dialog.showOpenDialog({ properties: ["openDirectory"] });
+});
+
+ipcMain.handle(IPCEvents.ERROR, async (event, message: string) => {
+  await dialog.showMessageBox({ message, title: "Invalid directory" });
 });

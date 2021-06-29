@@ -1,7 +1,7 @@
 <template>
   <div>
     <Input :label="label" :oninput="onFilePathChange" :value="filePath" />
-    <div class="l-row">
+    <div class="l-row c-file-input__actions">
       <Button
         type="primary"
         @click="openFileSelectDialog"
@@ -60,6 +60,10 @@ export default class FileSelect extends Vue {
 
 <style scoped lang="scss">
 @import "~@/assets/scss";
+
+.c-file-input__actions {
+  margin-top: $size-spacing;
+}
 
 .c-file-input__browse {
   margin-right: $size-spacing;

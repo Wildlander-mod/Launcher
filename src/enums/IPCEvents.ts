@@ -8,5 +8,9 @@ export const enum IPCEvents {
   CLOSE = "close",
   MINIMIZE = "MINIMIZE",
 
-  SHOW_OPEN_DIALOG = "SHOW_OPEN_DIALOG"
+  SHOW_OPEN_DIALOG = "SHOW_OPEN_DIALOG",
+
+  LAUNCH_MO2 = "LAUNCH_MO2",
+
+  ERROR = "ERROR"
 }

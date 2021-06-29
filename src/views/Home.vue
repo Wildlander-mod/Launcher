@@ -4,7 +4,7 @@
       <News />
     </PageContent>
 
-    <PageContent title="Patron Highlight" width="small">
+    <PageContent title="Patron Highlight" width="small" height="large">
       <Patrons />
     </PageContent>
   </Page>
