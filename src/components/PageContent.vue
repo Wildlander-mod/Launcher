@@ -6,7 +6,9 @@
     <div
       class="c-page-content__body"
       v-bind:class="{
-        'c-page-content__body--small-height': height === 'small'
+        'c-page-content__body--small-height': height === 'small',
+        'c-page-content__body--small-width': width === 'small',
+        'c-page-content__body--large-spacing': width !== 'small'
       }"
     >
       <slot></slot>
@@ -20,7 +22,8 @@ import { Prop } from "vue-property-decorator";
 
 export default class PageContent extends Vue {
   @Prop({ required: false }) title!: string;
-  @Prop({ default: "full" }) height!: "small" | "large";
+  @Prop({ default: "large" }) height!: "small" | "large";
+  @Prop({ default: "large" }) width!: "small" | "large";
 }
 </script>
 
@@ -54,7 +57,15 @@ export default class PageContent extends Vue {
   margin-top: 5px;
 }
 
+.c-page-content__body--large-spacing {
+  padding: $size-spacing--x-large;
+}
+
 .c-page-content__body--small-height {
   height: 120px;
+}
+
+.c-page-content__body--small-width {
+  width: 350px;
 }
 </style>

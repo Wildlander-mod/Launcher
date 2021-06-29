@@ -28,16 +28,17 @@ export default class Button extends Vue {
   border-radius: 2px;
   color: $colour-text;
   display: flex;
-  height: 30px;
+  height: $size-height;
   justify-content: center;
   padding: 0;
   user-select: none;
+  margin-top: $size-spacing;
+  margin-bottom: $size-spacing;
 
   // TODO these shouldn't have to be set specifically here
   // but they were originally only set on the <p> tag
   font-weight: 300;
   line-height: 30px;
-  margin: 0;
   size: 14px;
 
   &:active,

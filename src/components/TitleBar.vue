@@ -14,7 +14,7 @@
   </div>
   <div class="c-header">
     <div class="c-header__title">
-      <Logo fill="#ffffff" height="30px" />
+      <Logo fill="#ffffff" :height="30" />
     </div>
   </div>
 </template>

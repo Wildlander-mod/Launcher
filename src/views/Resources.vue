@@ -4,15 +4,15 @@
     <div id="resources__wrapper">
       <div class="resources__row">
         <div class="resources__link-container">
-          <PatreonLogo size="50" />
+          <PatreonLogo :size="50" />
           <p>Patreon</p>
         </div>
         <div class="resources__link-container">
-          <WebsiteLogo size="50" />
+          <WebsiteLogo :size="50" />
           <p>Website</p>
         </div>
         <div class="resources__link-container">
-          <YouTubeLogo size="50" />
+          <YouTubeLogo :size="50" />
           <p>YouTube</p>
         </div>
         <div class="resources__link-container"></div>
@@ -75,7 +75,7 @@ export default {
         width: 150px;
 
         &:hover {
-          background-color: $colour-background-light;
+          background-color: $colour-background--light;
         }
 
         p {

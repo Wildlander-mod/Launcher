@@ -169,7 +169,6 @@ nav {
 
   .nav__select {
     align-self: center;
-    margin-top: 10px;
   }
 
   .nav__tab-highlight {

@@ -86,7 +86,6 @@ export default class Select extends Vue {
 <style lang="scss" scoped>
 @import "~@/assets/scss";
 
-$selectBackground: #767676;
 $selectFocus: rgba(255, 255, 255, 0.1);
 
 .c-select {
@@ -94,7 +93,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   user-select: none;
   border-radius: 2px;
 
-  background-color: $selectBackground;
+  background-color: $colour-background--light;
 
   &:hover {
     cursor: pointer;
@@ -143,7 +142,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 }
 
 .c-select__options {
-  background-color: $selectBackground;
+  background-color: $colour-background--light-solid;
   padding-bottom: 8px;
   padding-top: 8px;
   position: absolute;

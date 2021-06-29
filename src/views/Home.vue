@@ -1,10 +1,10 @@
 <template>
   <Page>
-    <PageContent title="News" height="small">
+    <PageContent title="News" height="small" width="small">
       <News />
     </PageContent>
 
-    <PageContent title="Patron Highlight">
+    <PageContent title="Patron Highlight" width="small">
       <Patrons />
     </PageContent>
   </Page>

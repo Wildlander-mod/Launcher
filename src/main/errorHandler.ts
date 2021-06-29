@@ -2,7 +2,7 @@ import { app, dialog } from "electron";
 import { toLog } from "./log";
 
 /**
- * Sends errors to front-end error modal and log.
+ * Sends errors to log.
  */
 export function sendError(
   code: string,

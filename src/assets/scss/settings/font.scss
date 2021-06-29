@@ -4,8 +4,13 @@ $font-size: 12px;
 $font-size--large: 14px;
 $font-size--x-large: 18px;
 
+$font-size__body: $font-size--large;
+
 $font-weight: 400;
 $font-weight--large: 700;
 $font-weight--x-large: 700;
 
 $line-height: 12px;
+$line-height--large: 20px;
+
+$line-height__body: $line-height--large;
