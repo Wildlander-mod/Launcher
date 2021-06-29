@@ -124,6 +124,7 @@ nav {
   #nav__launch-button {
     align-self: center;
     margin-top: 30px;
+    margin-bottom: $size-spacing;
   }
 
   #nav__launcher-info {

@@ -32,8 +32,6 @@ export default class Button extends Vue {
   justify-content: center;
   padding: 0;
   user-select: none;
-  margin-top: $size-spacing;
-  margin-bottom: $size-spacing;
 
   // TODO these shouldn't have to be set specifically here
   // but they were originally only set on the <p> tag
