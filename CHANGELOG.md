@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.14 (2021-06-29)
+
+
+### Features
+
+* add launch MO2 button ([2358ff6](https://github.com/UltimateSkyrim/ultskylauncher/commit/2358ff61d5af62a6cb79c41f260efa805a477e0a))
+
 ### 0.1.13 (2021-06-20)
 
 ### 0.1.12 (2021-06-14)
