@@ -6,10 +6,11 @@ $colour-text: #ffffff;
 $colour-text--dark: darken($colour-text, 60%);
 $colour-text-secondary: #ffffff66;
 $colour-background: #e1e1e1;
-$colour-background-light: rgba(81, 81, 81, 0.5);
 $colour-background-secondary: #000000;
 
 
+$colour-background--light: rgba(255, 255, 255, 0.2);
+$colour-background--light-solid: rgb(118, 118, 118);
 $colour-background--transparent: transparentize($colour-background, 0.8);
 $colour-background--dark: rgba(132, 132, 132, 0.2);
 $colour-background--darker: transparentize(#1F1F1F, 0.1);

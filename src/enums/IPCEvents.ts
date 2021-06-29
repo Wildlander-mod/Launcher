@@ -5,5 +5,8 @@ export const enum IPCEvents {
   UPDATE_DOWNLOADED = "update-downloaded",
   UPDATE_APP = "update-app",
 
-  CLOSE = "close"
+  CLOSE = "close",
+  MINIMIZE = "MINIMIZE",
+
+  SHOW_OPEN_DIALOG = "SHOW_OPEN_DIALOG"
 }

@@ -12,7 +12,7 @@
           <div class="c-news__published">
             {{ new Date(newsItem.published).toLocaleDateString() }}
           </div>
-          <div class="c-news__block l-row">
+          <div class="c-news__block l-column">
             <div class="c-news__tags l-row">
               <template v-if="newsItem.tags">
                 <div
@@ -93,7 +93,7 @@ export default class News extends Vue {
 
 .c-news__published {
   color: $colour-text-secondary;
-  flex: 0.1;
+  flex: 0.2;
 }
 
 .c-news__content {
@@ -101,7 +101,7 @@ export default class News extends Vue {
 }
 
 .c-news__block {
-  flex: 0.9;
+  flex: 0.8;
 }
 
 .c-news__tag {
