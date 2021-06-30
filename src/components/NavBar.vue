@@ -47,7 +47,6 @@
       </div>
 
       <div class="c-navigation__launcher-info">
-        <p>Game Version: {{ gameVersion }}</p>
         <p>Launcher Version: {{ launcherVersion }}</p>
       </div>
     </div>
