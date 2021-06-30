@@ -1,70 +1,55 @@
 <template>
-  <nav>
-    <Button id="nav__launch-button" type="primary" size="large"
-      >Launch Game
-    </Button>
-    <Select
-      :default="defaultPreset"
-      :on-option-selected="onPresetSelected"
-      :options="qualityOptions"
-      class="nav__select"
-    />
-    <!--    <Select :options="enbOptions" class="nav__select" placeholder="No ENB" />-->
-    <hr />
-    <div id="nav__tabs">
-      <div
-        :class="`nav__tab-highlight--${activeTab}`"
-        id="nav__tab-highlight"
+  <nav class="c-navigation">
+    <div class="c-navigation__actions">
+      <Button type="primary" size="large">Launch Game</Button>
+      <Select
+        :default="defaultPreset"
+        :on-option-selected="onPresetSelected"
+        :options="qualityOptions"
       />
-      <router-link
-        @click="activeTab = 'home'"
-        :class="activeTab === 'home' ? 'nav__tab--selected' : ''"
-        :to="{
-          name: 'Home'
-        }"
-      >
-        Home
-      </router-link>
-      <router-link
-        @click="activeTab = 'enb'"
-        :class="activeTab === 'enb' ? 'nav__tab--selected' : ''"
-        :to="{
-          name: 'ENB'
-        }"
-      >
-        Configure ENB
-      </router-link>
-      <router-link
-        @click="activeTab = 'resources'"
-        :class="activeTab === 'resources' ? 'nav__tab--selected' : ''"
-        :to="{
-          name: 'Resources'
-        }"
-      >
-        Resources
-      </router-link>
-      <router-link
-        @click="activeTab = 'settings'"
-        :class="activeTab === 'settings' ? 'nav__tab--selected' : ''"
-        :to="{
-          name: 'Settings'
-        }"
-      >
-        Settings
-      </router-link>
     </div>
-    <div id="nav__launcher-info">
-      <p>Game Version: {{ gameVersion }}</p>
-      <p>Launcher Version: {{ launcherVersion }}</p>
-      <p>
-        Powered by
-        <ExternalLink
-          :underline="true"
-          href="https://github.com/RingComics/azuras-star"
+
+    <div class="c-navigation__content l-column l-space-between">
+      <div class="l-column">
+        <router-link
+          :to="{
+            name: 'Home'
+          }"
+          custom
+          v-slot="{ href, navigate, isActive }"
         >
-          Azura's Star
-        </ExternalLink>
-      </p>
+          <NavLink :active="isActive" :href="href" @click="navigate">
+            Home
+          </NavLink>
+        </router-link>
+        <router-link
+          :to="{
+            name: 'Resources'
+          }"
+          custom
+          v-slot="{ href, navigate, isActive }"
+        >
+          <NavLink :active="isActive" :href="href" @click="navigate">
+            Resources
+          </NavLink>
+        </router-link>
+        <router-link
+          :to="{
+            name: 'Settings'
+          }"
+          custom
+          v-slot="{ href, navigate, isActive }"
+        >
+          <NavLink :active="isActive" :href="href" @click="navigate">
+            Settings
+          </NavLink>
+        </router-link>
+      </div>
+
+      <div class="c-navigation__launcher-info">
+        <p>Game Version: {{ gameVersion }}</p>
+        <p>Launcher Version: {{ launcherVersion }}</p>
+      </div>
     </div>
   </nav>
 </template>
@@ -77,12 +62,14 @@ import ExternalLink from "./ExternalLink.vue";
 import { PRESETS, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { Options as Component, Vue } from "vue-class-component";
 import { SelectOption } from "@/components/controls/Select.vue";
+import NavLink from "@/components/NavLink.vue";
 
 @Component({
   components: {
     ExternalLink,
     Button,
-    Select
+    Select,
+    NavLink
   }
 })
 export default class NavBar extends Vue {
@@ -113,92 +100,50 @@ export default class NavBar extends Vue {
 <style lang="scss" scoped>
 @import "~@/assets/scss";
 
-nav {
-  backdrop-filter: blur(20px);
+.c-navigation {
+  backdrop-filter: $background-blur--more;
   background: transparentize($colour-background, 0.8);
+
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
   height: $size-window-height - 30px;
+
   width: 225px;
+}
 
-  #nav__launch-button {
-    align-self: center;
-    margin-top: 30px;
-    margin-bottom: $size-spacing;
+.c-navigation__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  padding: $size-spacing--x-large;
+
+  border-bottom: 1px solid $colour-background--light;
+
+  // TODO this shouldn't need to be set everywhere
+  box-sizing: border-box;
+
+  :not(:last-child) {
+    margin-bottom: 10px;
   }
+}
 
-  #nav__launcher-info {
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    margin-top: 80px;
-    width: 150px;
+.c-navigation__content {
+  width: 100%;
+  padding-left: $size-spacing--x-large;
+  padding-top: $size-spacing--x-large;
+  padding-bottom: $size-spacing--x-large;
+  flex: 1;
 
-    p {
-      color: $colour-text-secondary;
-      font-size: 12px;
-      line-height: 15px;
-    }
-  }
+  // TODO this shouldn't need to be set everywhere
+  box-sizing: border-box;
+}
 
-  #nav__tab-highlight {
-    background-color: $colour-primary;
-    height: 50px;
-    left: 220px;
-    position: absolute;
-    width: 5px;
-  }
-
-  #nav__tabs {
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    width: 150px;
-
-    a {
-      color: $colour-text-secondary;
-      font-size: 18px;
-      line-height: 30px;
-      margin-top: 30px;
-      text-decoration: none;
-
-      &.nav__tab--selected {
-        color: $colour-text;
-      }
-    }
-  }
-
-  .nav__select {
-    align-self: center;
-  }
-
-  .nav__tab-highlight {
-    &--enb {
-      top: 252px;
-      transition: top 0.4s;
-    }
-
-    &--home {
-      top: 192px;
-      transition: top 0.4s;
-    }
-
-    &--resources {
-      top: 312px;
-      transition: top 0.4s;
-    }
-
-    &--settings {
-      top: 372px;
-      transition: top 0.4s;
-    }
-  }
-
-  hr {
-    border-color: $colour-background--dark;
-    margin-bottom: 0;
-    margin-top: 30px;
-    width: 223px;
-  }
+.c-navigation__launcher-info {
+  font-size: $font-size;
+  color: $colour-text-secondary;
 }
 </style>

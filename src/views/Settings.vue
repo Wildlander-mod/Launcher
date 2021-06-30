@@ -81,7 +81,7 @@ export default class Settings extends Vue {
       ipcRenderer.invoke(IPCEvents.LAUNCH_MO2);
     } else {
       ipcRenderer.invoke(
-        IPCEvents.ERROR,
+        IPCEvents.MESSAGE,
         "No mod directory specified, please select one on the settings tab."
       );
     }

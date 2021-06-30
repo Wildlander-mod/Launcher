@@ -58,10 +58,9 @@ main {
 }
 
 p {
-  font-weight: 300;
-  line-height: 30px;
+  font-weight: $font-weight--small;
+  size: $font-size--large;
   margin: 0;
-  size: 14px;
 }
 
 #app {

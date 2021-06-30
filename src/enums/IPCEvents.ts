@@ -12,5 +12,6 @@ export const enum IPCEvents {
 
   LAUNCH_MO2 = "LAUNCH_MO2",
 
-  ERROR = "ERROR"
+  ERROR = "ERROR",
+  MESSAGE = "MESSAGE"
 }
