@@ -2,7 +2,7 @@
  * Handles inter process communication
  */
 
-import { app, dialog, ipcMain, shell } from "electron";
+import { app, dialog, ipcMain } from "electron";
 import path from "path";
 import childProcess from "child_process";
 import { toLog } from "./log";
@@ -25,16 +25,6 @@ export function getWebContents() {
   return getWindow().webContents;
 }
 
-// Open path to folder
-ipcMain.on("open-modlist-profile", async (_event, { path }) => {
-  try {
-    toLog("Opening explorer path: " + path);
-    await shell.openPath(path);
-  } catch (err) {
-    sendError("B03-03-00", "Error while opening file path! Path:" + path, err);
-  }
-});
-
 // Launch MO2. Error ID: B03-05
 ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
   try {
@@ -48,11 +38,6 @@ ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
   } catch (err) {
     sendError("B03-05-00", "Error while opening MO2!", err);
   }
-});
-
-// Forwards errors sent from front-end to errorHandler.js. No Error ID
-ipcMain.on("error", (_event, { code, message, err, tabbed }) => {
-  sendError(code, message, err, tabbed);
 });
 
 // Launch modlist. No Error ID
@@ -73,6 +58,10 @@ ipcMain.handle(IPCEvents.SHOW_OPEN_DIALOG, async () => {
   return dialog.showOpenDialog({ properties: ["openDirectory"] });
 });
 
-ipcMain.handle(IPCEvents.ERROR, async (event, message: string) => {
-  await dialog.showMessageBox({ message, title: "Invalid directory" });
+ipcMain.handle(IPCEvents.MESSAGE, async (event, message: string) => {
+  await dialog.showMessageBox({ message });
+});
+
+ipcMain.handle(IPCEvents.ERROR, async (event, { title, error }) => {
+  await dialog.showErrorBox(title, error);
 });

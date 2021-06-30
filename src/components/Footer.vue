@@ -43,12 +43,13 @@ export default class Footer extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "src/assets/scss/settings/colours";
+@import "~@/assets/scss";
 
 .c-footer {
   background-color: $colour-background-secondary;
   display: flex;
   height: 30px;
+  line-height: $line-height--x-large;
 }
 
 .c-footer__text {
