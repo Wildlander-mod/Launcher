@@ -1,7 +1,9 @@
 <template>
   <nav class="c-navigation">
     <div class="c-navigation__actions">
-      <Button type="primary" size="large">Launch Game</Button>
+      <Button type="primary" size="large" @click="launchGame"
+        >Launch Game
+      </Button>
       <Select
         :default="defaultPreset"
         :on-option-selected="onPresetSelected"
@@ -62,6 +64,8 @@ import { PRESETS, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { Options as Component, Vue } from "vue-class-component";
 import { SelectOption } from "@/components/controls/Select.vue";
 import NavLink from "@/components/NavLink.vue";
+import { ipcRenderer } from "electron";
+import { IPCEvents } from "@/enums/IPCEvents";
 
 @Component({
   components: {
@@ -92,6 +96,17 @@ export default class NavBar extends Vue {
 
   onPresetSelected(option: SelectOption) {
     userPreferences.set(USER_PREFERENCE_KEYS.PRESET, option.value);
+  }
+
+  launchGame() {
+    if (!userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)) {
+      ipcRenderer.invoke(
+        IPCEvents.MESSAGE,
+        "No mod directory specified, please select one on the settings page."
+      );
+    } else {
+      ipcRenderer.invoke(IPCEvents.LAUNCH_GAME);
+    }
   }
 }
 </script>
