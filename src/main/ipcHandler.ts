@@ -40,8 +40,7 @@ ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
   }
 });
 
-// Launch modlist. No Error ID
-ipcMain.handle("launch-game", async () => {
+ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
   launchGame();
 });
 
