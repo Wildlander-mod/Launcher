@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.17 (2021-06-30)
+
+
+### Features
+
+* add ability to launch the game ([b07947f](https://github.com/UltimateSkyrim/ultskylauncher/commit/b07947f60c545fcb296bb5907a7688456304b831))
+
 ### 0.1.16 (2021-06-30)
 
 ### 0.1.15 (2021-06-30)
