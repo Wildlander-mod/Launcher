@@ -20,7 +20,7 @@
           <Button size="large" @click="close">Close launcher</Button>
 
           <Button size="large" type="primary" @click="closeAndUpdate"
-            >Close launcher and update
+            >Close and update
           </Button>
         </div>
       </template>
