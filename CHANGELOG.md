@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.18 (2021-07-10)
+
+
+### Bug Fixes
+
+* add correct styling for update modal ([5b9f2e7](https://github.com/UltimateSkyrim/ultskylauncher/commit/5b9f2e7dd703ae32aa0315b6767c8084a4fd51cc))
+
 ### 0.1.17 (2021-06-30)
 
 
