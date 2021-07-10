@@ -2,28 +2,30 @@
   <vue-final-modal
     v-model="showModel"
     classes="l-column l-center"
-    content-class="c-modal l-column l-center"
+    content-class="c-modal"
     overlay-class="c-modal__overlay"
     :fit-parent="true"
     :click-to-close="false"
     :esc-to-close="false"
     :prevent-click="true"
   >
-    <template v-if="updateAvailable"
-      ><p>
-        There is a new version of the launcher available. The application will
-        restart and automatically apply the update before continuing.
-      </p>
+    <div class="l-column l-center">
+      <template v-if="updateAvailable">
+        <p>
+          There is a new version of the launcher available. The application will
+          restart and automatically apply the update before continuing.
+        </p>
 
-      <div class="c-modal__actions">
-        <Button size="large" @click="close">Close </Button>
+        <div class="c-modal__actions">
+          <Button size="large" @click="close">Close launcher</Button>
 
-        <Button size="large" type="primary" @click="closeAndUpdate"
-          >Close and update
-        </Button>
-      </div>
-    </template>
-    <template v-if="!updateAvailable">Checking for update...</template>
+          <Button size="large" type="primary" @click="closeAndUpdate"
+            >Close launcher and update
+          </Button>
+        </div>
+      </template>
+      <template v-if="!updateAvailable">Checking for update...</template>
+    </div>
   </vue-final-modal>
 </template>
 
