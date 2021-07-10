@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.19 (2021-07-10)
+
+
+### Bug Fixes
+
+* prevent close and update text from overflowing ([060171f](https://github.com/UltimateSkyrim/ultskylauncher/commit/060171f584a129ba9333dd41a0015a4491251270))
+
 ### 0.1.18 (2021-07-10)
 
 
