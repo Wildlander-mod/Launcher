@@ -8,7 +8,8 @@
       </div>
     </main>
     <Footer />
-    <AutoUpdate :click-events-enabled="setClickEventsEnabled" />
+
+    <StartupChecks />
   </div>
 </template>
 
@@ -16,13 +17,14 @@
 import Footer from "@/components/Footer.vue";
 import NavBar from "@/components/NavBar.vue";
 import TitleBar from "@/components/TitleBar.vue";
-import { Options as Component, Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 import { registerServices } from "@/services/service-container";
-import AutoUpdate from "@/components/AutoUpdate.vue";
+import StartupChecks from "@/components/StartupChecks.vue";
+import { modalOpenedEvent } from "@/services/modal.service";
 
-@Component({
+@Options({
   components: {
-    AutoUpdate,
+    StartupChecks,
     Footer,
     NavBar,
     TitleBar
@@ -32,7 +34,11 @@ export default class App extends Vue {
   clickEventsEnabled = false;
 
   async created() {
-    registerServices();
+    const { eventService } = registerServices();
+
+    eventService.on(modalOpenedEvent, (opened: unknown) => {
+      this.setClickEventsEnabled(!opened as boolean);
+    });
   }
 
   setClickEventsEnabled(enabled: boolean) {

@@ -3,7 +3,13 @@
     <label class="c-input__label">
       {{ label }}
     </label>
-    <input type="text" class="c-input" :oninput="handleInput" :value="value" />
+    <input
+      type="text"
+      :readonly="readonly"
+      class="c-input"
+      :oninput="handleInput"
+      :value="value"
+    />
   </div>
 </template>
 
@@ -13,8 +19,9 @@ import { Prop } from "vue-property-decorator";
 
 export default class Input extends Vue {
   @Prop() private oninput!: (filepath: string) => void;
-  @Prop() private value!: string;
+  @Prop() private value = "";
   @Prop({ required: true }) private label!: string;
+  @Prop() private readonly = false;
 
   handleInput(event: Event) {
     const target = event.target as HTMLInputElement;
