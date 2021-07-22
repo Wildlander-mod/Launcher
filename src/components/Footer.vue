@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
 import Marquee from "./Marquee.vue";
-import { PatreonService } from "@/services/Patreon.service";
+import { PatreonService } from "@/services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import ExternalLink from "@/components/ExternalLink.vue";
 

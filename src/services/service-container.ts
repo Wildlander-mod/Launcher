@@ -1,6 +1,10 @@
 import { inject, InjectionKey, provide } from "vue";
-import { PatreonService } from "./Patreon.service";
+import { PatreonService } from "./patreon.service";
 import { PostsService } from "@/services/posts.service";
+import mitt, { Emitter, EventType } from "mitt";
+import { ModalService } from "@/services/modal.service";
+
+export type EventService = Emitter<Record<EventType, unknown>>;
 
 /*
  * IoC container to handle injecting services into Vue components
@@ -9,7 +13,7 @@ import { PostsService } from "@/services/posts.service";
 /**
  * Create a new typed binding key
  */
-function createBinding<T>(key: string): InjectionKey<T> {
+export function createBinding<T>(key: string): InjectionKey<T> {
   return Symbol(key);
 }
 
@@ -18,7 +22,9 @@ function createBinding<T>(key: string): InjectionKey<T> {
  */
 export const SERVICE_BINDINGS = {
   PATRON_SERVICE: createBinding<PatreonService>("keys.services.patron"),
-  NEWS_SERVICE: createBinding<PostsService>("keys.services.news")
+  NEWS_SERVICE: createBinding<PostsService>("keys.services.news"),
+  EVENT_SERVICE: createBinding<EventService>("keys.services.event"),
+  MODAL_SERVICE: createBinding<ModalService>("keys.services.modal")
 };
 
 /**
@@ -27,6 +33,15 @@ export const SERVICE_BINDINGS = {
 export function registerServices() {
   provide(SERVICE_BINDINGS.PATRON_SERVICE, new PatreonService());
   provide(SERVICE_BINDINGS.NEWS_SERVICE, new PostsService());
+
+  const eventService = mitt();
+  provide(SERVICE_BINDINGS.EVENT_SERVICE, eventService);
+
+  provide(SERVICE_BINDINGS.MODAL_SERVICE, new ModalService(eventService));
+
+  return {
+    eventService
+  };
 }
 
 /**

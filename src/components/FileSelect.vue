@@ -1,6 +1,11 @@
 <template>
   <div>
-    <Input :label="label" :oninput="onFilePathChange" :value="filePath" />
+    <Input
+      :label="label"
+      :oninput="onFilePathChange"
+      :value="filePath"
+      :readonly="true"
+    />
     <div class="l-row c-file-input__actions">
       <Button
         type="primary"
@@ -8,10 +13,6 @@
         class="c-file-input__browse"
       >
         Browse
-      </Button>
-
-      <Button type="default" @click="clearFilePath" v-if="clearFilePathProp">
-        Clear
       </Button>
     </div>
   </div>
@@ -49,11 +50,6 @@ export default class FileSelect extends Vue {
       this.filePath = dialogResponse.filePaths[0];
       this.onFilePathChange(this.filePath);
     }
-  }
-
-  clearFilePath() {
-    this.filePath = "";
-    this.clearFilePathProp();
   }
 }
 </script>
