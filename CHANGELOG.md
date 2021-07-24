@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.20 (2021-07-24)
+
+
+### Features
+
+* ensure that the mod directory is set on startup ([c521346](https://github.com/UltimateSkyrim/ultskylauncher/commit/c52134625b7d72d19478b992d9b480758a419a1e))
+
 ### 0.1.19 (2021-07-10)
 
 
