@@ -6,10 +6,17 @@
           <ModDirectory />
         </div>
 
-        <div class="l-row c-settings__launchMO">
-          <div class="c-settings__launchMO-label">ModOrganiser 2</div>
+        <div class="l-row c-settings__actions">
+          <div class="c-settings__launchMO-label">Mod Organiser 2</div>
           <Button type="primary" @click="launchMO2">
             Launch
+          </Button>
+        </div>
+
+        <div class="l-row c-settings__actions">
+          <div class="c-settings__launchMO-label">Application logs</div>
+          <Button type="default" @click="openLogPath">
+            Open
           </Button>
         </div>
       </div>
@@ -24,9 +31,11 @@ import PageContent from "@/components/PageContent.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import Button from "@/components/controls/Button.vue";
 import FileSelect from "@/components/FileSelect.vue";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ModDirectory from "@/components/ModDirectory.vue";
+import { logger } from "@/main/logger";
+import path from "path";
 
 @Options({
   components: {
@@ -51,6 +60,11 @@ export default class Settings extends Vue {
       );
     }
   }
+
+  openLogPath() {
+    const logPath = path.parse(logger.transports?.file.findLogPath()).dir;
+    shell.openPath(logPath);
+  }
 }
 </script>
 
@@ -70,11 +84,14 @@ export default class Settings extends Vue {
   padding-bottom: $size-spacing;
 }
 
-.c-settings__launchMO {
+.c-settings__actions {
   flex: 1;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   margin-top: $size-spacing;
+
+  width: 40%;
 }
 
 .c-settings__launchMO-label {

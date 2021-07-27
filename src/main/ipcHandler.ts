@@ -5,11 +5,10 @@
 import { app, dialog, ipcMain } from "electron";
 import path from "path";
 import childProcess from "child_process";
-import { toLog } from "./log";
 import { launchGame } from "./modlists";
-import { sendError } from "./errorHandler";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import { logger } from "@/main/logger";
 
 let win: Electron.BrowserWindow;
 
@@ -28,15 +27,15 @@ export function getWebContents() {
 // Launch MO2. Error ID: B03-05
 ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
   try {
-    toLog("Launching MO2");
+    logger.debug("Launching MO2");
     const moPath = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       "/ModOrganizer.exe"
     );
-    toLog(`MO2 path: ${moPath}`);
+    logger.debug(`MO2 path: ${moPath}`);
     childProcess.exec(`"${moPath}"`);
   } catch (err) {
-    sendError("B03-05-00", "Error while opening MO2!", err);
+    logger.error(`Error while opening MO2 - ${err}`);
   }
 });
 
