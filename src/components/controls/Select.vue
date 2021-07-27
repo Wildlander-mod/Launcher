@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!loadingData"
     :class="[
       'c-select',
       `${isOpen === true ? 'c-select--open' : 'c-select--closed'}`
@@ -13,7 +14,7 @@
       ]"
       @click="toggleOpenState"
     >
-      {{ currentOption.text }}
+      {{ selectedOption.text }}
       <span
         :class="[
           'material-icons',
@@ -50,7 +51,7 @@
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import { Prop, Watch } from "vue-property-decorator";
 
 export interface SelectOption {
   text: string;
@@ -61,16 +62,19 @@ export interface SelectOption {
 export default class Select extends Vue {
   @Prop({ required: true }) options!: SelectOption[];
   @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
-  @Prop({ required: true }) default!: SelectOption;
-  currentOption!: SelectOption;
+  @Prop({ required: true }) initialSelection!: SelectOption;
+  @Prop() loadingData = false;
+
+  selectedOption!: SelectOption;
   isOpen = false;
 
   created() {
-    this.currentOption = this.default;
+    this.selectedOption = this.initialSelection;
   }
 
+  @Watch("initialSelection")
   select(option: SelectOption) {
-    this.currentOption = option;
+    this.selectedOption = option;
     this.isOpen = false;
     if (this.onOptionSelected) {
       this.onOptionSelected(option);
@@ -109,6 +113,9 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-between;
   width: 155px;
+  height: $size-action-height;
+  overflow: hidden;
+  margin-bottom: 0;
 
   .c-select__icon {
     align-self: center;
@@ -144,12 +151,14 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 .c-select__options {
   background-color: $colour-background--light-solid;
   padding-bottom: 8px;
-  padding-top: 8px;
+  padding-top: -8px;
   position: absolute;
   transform-origin: top;
   width: 200px;
   z-index: 1;
   border-radius: 0 4px 4px 4px;
+  max-height: $size-window-height/2;
+  overflow-y: scroll;
 
   &--closed {
     animation: retract 0.2s forwards;

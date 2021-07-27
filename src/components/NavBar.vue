@@ -4,14 +4,11 @@
       <Button type="primary" size="large" @click="launchGame"
         >Launch Game
       </Button>
-      <Select
-        :default="defaultPreset"
-        :on-option-selected="onPresetSelected"
-        :options="qualityOptions"
-      />
+
+      <ProfileSelection />
     </div>
 
-    <div class="c-navigation__content l-column l-space-between">
+    <div class="  c-navigation__content l-column l-space-between">
       <div class="l-column">
         <router-link
           :to="{
@@ -60,15 +57,16 @@ import Button from "./controls/Button.vue";
 import Select from "./controls/Select.vue";
 import { version as launcherVersion } from "../../package.json";
 import ExternalLink from "./ExternalLink.vue";
-import { PRESETS, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { Options as Component, Vue } from "vue-class-component";
-import { SelectOption } from "@/components/controls/Select.vue";
 import NavLink from "@/components/NavLink.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
+import ProfileSelection from "@/components/ProfileSelection.vue";
 
 @Component({
   components: {
+    ProfileSelection,
     ExternalLink,
     Button,
     Select,
@@ -79,24 +77,6 @@ export default class NavBar extends Vue {
   activeTab = "home";
   gameVersion = 0;
   launcherVersion = launcherVersion;
-  qualityOptions = [
-    { text: "Low Quality", value: PRESETS.LOW },
-    { text: "Medium Quality", value: PRESETS.MEDIUM },
-    { text: "High Quality", value: PRESETS.HIGH }
-  ];
-  defaultPreset!: SelectOption;
-
-  created() {
-    this.defaultPreset =
-      this.qualityOptions.find(
-        preset =>
-          preset.value === userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
-      ) || this.qualityOptions[0];
-  }
-
-  onPresetSelected(option: SelectOption) {
-    userPreferences.set(USER_PREFERENCE_KEYS.PRESET, option.value);
-  }
 
   launchGame() {
     if (!userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)) {
@@ -140,8 +120,12 @@ export default class NavBar extends Vue {
   // TODO this shouldn't need to be set everywhere
   box-sizing: border-box;
 
-  :not(:last-child) {
-    margin-bottom: 10px;
+  & * {
+    margin-bottom: $size-spacing;
+  }
+
+  :last-child {
+    margin-bottom: 0;
   }
 }
 

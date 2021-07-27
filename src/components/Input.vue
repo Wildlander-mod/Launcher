@@ -1,6 +1,9 @@
 <template>
   <div class="l-column">
-    <label class="c-input__label">
+    <label
+      class="c-input__label"
+      :class="{ 'c-input__label--centered': centered }"
+    >
       {{ label }}
     </label>
     <input
@@ -22,6 +25,7 @@ export default class Input extends Vue {
   @Prop() private value = "";
   @Prop({ required: true }) private label!: string;
   @Prop() private readonly = false;
+  @Prop() private centered = false;
 
   handleInput(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -37,7 +41,7 @@ export default class Input extends Vue {
 
 .c-input {
   width: 300px;
-  height: $size-height;
+  height: $size-action-height;
   padding: $size-spacing;
 
   box-sizing: border-box;
@@ -52,5 +56,10 @@ export default class Input extends Vue {
   line-height: $line-height__body;
 
   margin-bottom: $size-spacing;
+}
+
+.c-input__label--centered {
+  display: flex;
+  justify-content: center;
 }
 </style>

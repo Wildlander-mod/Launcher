@@ -28,7 +28,7 @@ export default class Button extends Vue {
   border-radius: 2px;
   color: $colour-text;
   display: flex;
-  height: $size-height;
+  height: $size-action-height;
   justify-content: center;
   padding: 0;
   user-select: none;

@@ -1,15 +1,17 @@
 <template>
   <div id="window">
-    <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
-      <NavBar />
-      <div id="window__content">
-        <TitleBar />
-        <router-view />
-      </div>
-    </main>
-    <Footer />
+    <template v-if="renderApp">
+      <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
+        <NavBar />
+        <div id="window__content">
+          <TitleBar />
+          <router-view />
+        </div>
+      </main>
+      <Footer />
+    </template>
 
-    <StartupChecks />
+    <StartupChecks @startupChecksComplete="startupChecksComplete" />
   </div>
 </template>
 
@@ -32,6 +34,7 @@ import { modalOpenedEvent } from "@/services/modal.service";
 })
 export default class App extends Vue {
   clickEventsEnabled = false;
+  renderApp = false;
 
   async created() {
     const { eventService } = registerServices();
@@ -43,6 +46,10 @@ export default class App extends Vue {
 
   setClickEventsEnabled(enabled: boolean) {
     this.clickEventsEnabled = enabled;
+  }
+
+  startupChecksComplete() {
+    this.renderApp = true;
   }
 }
 </script>
