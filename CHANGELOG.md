@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.21 (2021-07-27)
+
+
+### Features
+
+* add button to open log path ([32fd077](https://github.com/UltimateSkyrim/ultskylauncher/commit/32fd077c4cce9aa1430dec172ef0053ddd1f0cec))
+
 ### 0.1.20 (2021-07-24)
 
 
