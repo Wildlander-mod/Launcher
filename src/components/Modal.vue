@@ -69,8 +69,6 @@ export default class Modal extends Vue {
   align-content: center;
   justify-content: center;
 
-  width: $size-window-width/2;
-
   padding: $size-spacing--large;
 
   background-color: $colour-background-secondary--transparent;

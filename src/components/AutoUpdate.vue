@@ -3,8 +3,11 @@
     <div class="l-column l-center">
       <template v-if="updateAvailable">
         <p>
-          There is a new version of the launcher available. The application will
-          restart and automatically apply the update before continuing.
+          There is a new version of the launcher available.
+        </p>
+        <p>
+          The application will restart and automatically apply the update before
+          continuing.
         </p>
 
         <div class="c-modal__actions">
@@ -15,7 +18,9 @@
           </Button>
         </div>
       </template>
-      <template v-if="!updateAvailable">Checking for update...</template>
+      <div class="c-auto-update__loading" v-if="!updateAvailable">
+        Checking for update...
+      </div>
     </div>
   </Modal>
 </template>
@@ -27,6 +32,8 @@ import Button from "@/components/controls/Button.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import Modal from "@/components/Modal.vue";
+
+export const UPDATE_COMPLETE_EVENT = "updateComplete";
 
 @Component({
   components: {
@@ -45,6 +52,7 @@ export default class AutoUpdate extends Vue {
     });
     ipcRenderer.on(IPCEvents.UPDATE_NOT_AVAILABLE, () => {
       this.showAutoUpdate = false;
+      this.$emit(UPDATE_COMPLETE_EVENT);
     });
     ipcRenderer.send(IPCEvents.CHECK_FOR_UPDATE);
   }
@@ -58,3 +66,11 @@ export default class AutoUpdate extends Vue {
   }
 }
 </script>
+
+<style scoped lang="scss">
+@import "~@/assets/scss";
+
+.c-auto-update__loading {
+  margin: $size-spacing--x-large * 2;
+}
+</style>

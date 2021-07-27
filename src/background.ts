@@ -89,7 +89,6 @@ async function autoUpdate() {
     autoUpdater.updateConfigPath = devAppUpdatePath;
     await autoUpdater.checkForUpdates();
   } else if (!isDevelopment) {
-    logger.info("Triggering auto update check");
     const updateCheckResult = await autoUpdater.checkForUpdates();
     logger.debug("Auto update check result");
     logger.debug(updateCheckResult);
@@ -111,7 +110,7 @@ app.on("ready", async () => {
       logger.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  logger.info("Creating window with a test ");
+  logger.debug("Creating window");
 
   // Wait until the application is ready to check for an update
   ipcMain.on(IPCEvents.CHECK_FOR_UPDATE, () => {
@@ -120,7 +119,7 @@ app.on("ready", async () => {
 
   await createWindow();
 
-  logger.info("App started");
+  logger.debug("App started");
 });
 
 // Exit cleanly on request from parent process in development mode.
