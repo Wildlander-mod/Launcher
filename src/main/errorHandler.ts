@@ -1,34 +1,17 @@
 import { app, dialog } from "electron";
-import { toLog } from "./log";
+import { logger } from "@/main/logger";
 
-/**
- * Sends errors to log.
- */
-export function sendError(
-  code: string,
-  message: string,
-  err: string,
-  writeLog = true
-) {
-  if (writeLog) {
-    toLog(`${code} - ${message} - ${err}`);
-  }
-}
-
-export function fatalError(code: string, message: string, err: string) {
-  toLog(`
-    ${"=".repeat(10)}
-    A FATAL ERROR OCCURRED
-    ${"=".repeat(10)}
-    ${message}
-    ${err}
-    EXITING ULTIMATE SKYRIM LAUNCHER
-  `);
+export function fatalError(message: string, err: string) {
+  logger.error(`${message}. ${err}`);
 
   dialog.showMessageBoxSync({
     type: "error",
-    title: "A fatal error occurred! " + code,
-    message: message + "\n" + err
+    title: "A fatal error occurred!",
+    message: `
+    ${message}
+    ${err}
+    `
   });
+
   app.quit();
 }

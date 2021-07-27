@@ -5,15 +5,18 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import path from "path";
 import { isDevelopment } from "./main/config";
-import { toLog } from "./main/log";
 import { fatalError } from "./main/errorHandler";
 import { getWebContents, setWindow } from "./main/ipcHandler";
 import { autoUpdater } from "electron-updater";
 import { IPCEvents } from "@/enums/IPCEvents";
 import fs from "fs";
+import { logger } from "@/main/logger";
 
 // Electron __static is global to electron apps but there is no type definition for it
 declare const __static: string;
+
+// Ensure it's easy to tell where the logs for this application start
+logger.debug("-".repeat(20));
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -28,10 +31,11 @@ async function createWindow() {
       height: 580,
       // TODO this shouldn't allow undefined. In electron __static is undefined
       // eslint-disable-next-line no-undef
-      icon: nativeImage.createFromPath(path.join(__static, "icon.ico")),
+      icon: nativeImage.createFromPath(path.join(__static, "icon.icon")),
       maximizable: false,
       resizable: false,
       webPreferences: {
+        enableRemoteModule: true,
         // Use pluginOptions.nodeIntegration, leave this alone
         // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
         nodeIntegration: (process.env
@@ -54,43 +58,45 @@ async function createWindow() {
       await win.loadURL("app://./index.html");
     }
   } catch (err) {
-    fatalError("B00-01-00", "Error while creating BrowserWindow", err);
+    fatalError("Unable to create browser window", err);
   }
 }
 
 async function autoUpdate() {
   autoUpdater.on(IPCEvents.UPDATE_AVAILABLE, () => {
-    toLog(`Update available`);
+    logger.info(`Update available`);
     getWebContents().send(IPCEvents.UPDATE_AVAILABLE);
   });
 
   autoUpdater.on(IPCEvents.UPDATE_NOT_AVAILABLE, () => {
-    toLog(`No updates available`);
+    logger.info(`No updates available`);
     getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
   });
 
   autoUpdater.on(IPCEvents.UPDATE_DOWNLOADED, () => {
-    toLog("Update downloaded");
+    logger.debug("Update downloaded");
   });
 
   ipcMain.on(IPCEvents.UPDATE_APP, () => {
-    toLog("Quitting and installing new app version");
+    logger.info("Quitting and installing new app version");
     autoUpdater.quitAndInstall();
   });
 
   // Only try to update if in production mode or there is a dev update file
   const devAppUpdatePath = path.join(__dirname, "../dev-app-update.yml");
   if (isDevelopment && fs.existsSync(devAppUpdatePath)) {
+    logger.debug(`Setting auto update path to ${devAppUpdatePath}`);
     autoUpdater.updateConfigPath = devAppUpdatePath;
     await autoUpdater.checkForUpdates();
   } else if (!isDevelopment) {
-    await autoUpdater.checkForUpdates();
+    logger.info("Triggering auto update check");
+    const updateCheckResult = await autoUpdater.checkForUpdates();
+    logger.debug("Auto update check result");
+    logger.debug(updateCheckResult);
   } else {
-    toLog("Skipping app update check because we're in development mode");
+    logger.debug("Skipping app update check because we're in development mode");
     getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
   }
-
-  toLog("Checking for updates...");
 }
 
 // This method will be called when Electron has finished
@@ -102,10 +108,10 @@ app.on("ready", async () => {
     try {
       await installExtension(VUEJS_DEVTOOLS);
     } catch (e) {
-      console.error("Vue Devtools failed to install:", e.toString());
+      logger.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  toLog("Creating window");
+  logger.info("Creating window with a test ");
 
   // Wait until the application is ready to check for an update
   ipcMain.on(IPCEvents.CHECK_FOR_UPDATE, () => {
@@ -114,7 +120,7 @@ app.on("ready", async () => {
 
   await createWindow();
 
-  toLog("App started!\n" + "=".repeat(80) + "\n");
+  logger.info("App started");
 });
 
 // Exit cleanly on request from parent process in development mode.
