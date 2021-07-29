@@ -4,6 +4,7 @@ export const enum IPCEvents {
   UPDATE_NOT_AVAILABLE = "update-not-available",
   UPDATE_DOWNLOADED = "update-downloaded",
   UPDATE_APP = "update-app",
+  DOWNLOAD_PROGRESS = "download-progress",
 
   CLOSE = "close",
   MINIMIZE = "MINIMIZE",

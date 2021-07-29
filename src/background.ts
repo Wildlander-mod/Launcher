@@ -17,6 +17,7 @@ declare const __static: string;
 
 // Ensure it's easy to tell where the logs for this application start
 logger.debug("-".repeat(20));
+autoUpdater.logger = require("electron-log");
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -75,6 +76,12 @@ async function autoUpdate() {
 
   autoUpdater.on(IPCEvents.UPDATE_DOWNLOADED, () => {
     logger.debug("Update downloaded");
+    getWebContents().send(IPCEvents.UPDATE_DOWNLOADED);
+  });
+
+  autoUpdater.on(IPCEvents.DOWNLOAD_PROGRESS, ({ percent }) => {
+    logger.debug(`Download progress ${percent}`);
+    getWebContents().send(IPCEvents.DOWNLOAD_PROGRESS, Math.floor(percent));
   });
 
   ipcMain.on(IPCEvents.UPDATE_APP, () => {
