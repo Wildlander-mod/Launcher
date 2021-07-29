@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.22 (2021-07-29)
+
+
+### Features
+
+* add profile selection ([a92be24](https://github.com/UltimateSkyrim/ultskylauncher/commit/a92be24cc9051e9a6e5b09ef5ea6ae53c321c3b8))
+
 ### 0.1.21 (2021-07-27)
 
 
