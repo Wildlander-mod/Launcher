@@ -14,8 +14,13 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import FileSelect from "@/components/FileSelect.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
+import {
+  EventService,
+  injectStrict,
+  SERVICE_BINDINGS
+} from "@/services/service-container";
 
-export const filepathSetEvent = "filepathSet";
+export const modDirectorySetEvent = "modDirectorySet";
 export const invalidFilepathEvent = "invalidFilepath";
 
 @Options({
@@ -25,7 +30,11 @@ export default class ModDirectory extends Vue {
   private initialModDirectory = "";
   private centered = false;
 
+  private eventService!: EventService;
+
   async created() {
+    this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+
     const currentModDirectory = userPreferences.get(
       USER_PREFERENCE_KEYS.MOD_DIRECTORY
     );
@@ -33,7 +42,6 @@ export default class ModDirectory extends Vue {
     if (currentModDirectory) {
       if (await this.checkModDirectoryIsOkay(currentModDirectory)) {
         this.initialModDirectory = currentModDirectory;
-        this.$emit(filepathSetEvent);
       } else {
         await this.triggerError();
         this.$emit(invalidFilepathEvent);
@@ -52,7 +60,8 @@ export default class ModDirectory extends Vue {
 
   async onModDirectoryChange(filepath: string) {
     userPreferences.set(USER_PREFERENCE_KEYS.MOD_DIRECTORY, filepath);
-    this.$emit(filepathSetEvent);
+    this.$emit(modDirectorySetEvent);
+    this.eventService.emit(modDirectorySetEvent);
   }
 
   async triggerError() {
