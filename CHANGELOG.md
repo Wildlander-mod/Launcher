@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.23 (2021-07-29)
+
+
+### Bug Fixes
+
+* re-render profiles on mod directory change ([6698d0d](https://github.com/UltimateSkyrim/ultskylauncher/commit/6698d0d2553afc45235630b896d8adf61e9c0c62))
+
 ### 0.1.22 (2021-07-29)
 
 
