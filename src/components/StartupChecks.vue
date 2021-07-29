@@ -4,7 +4,7 @@
 
     <Modal :show-modal="showModDirectoryModal" name="modDirectory">
       <ModDirectory
-        @filepathSet="filepathSet"
+        @modDirectorySet="modDirectorySet"
         @invalidFilepath="onInvalidFilepath"
         :centered="true"
       />
@@ -43,7 +43,7 @@ export default class StartupChecks extends Vue {
     this.checkIfShouldRenderWindow();
   }
 
-  filepathSet() {
+  modDirectorySet() {
     this.modDirectorySelected = true;
     this.showModDirectoryModal = false;
 

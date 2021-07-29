@@ -13,6 +13,8 @@ import Select, { SelectOption } from "@/components/controls/Select.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
+import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
+import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
 
 @Options({
   components: { Select }
@@ -23,6 +25,17 @@ export default class ProfileSelection extends Vue {
   loadingData = true;
 
   async created() {
+    const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+    eventService.on(modDirectorySetEvent, this.getPresets);
+
+    await this.getPresets();
+  }
+
+  onPresetSelected(option: SelectOption) {
+    userPreferences.set(USER_PREFERENCE_KEYS.PRESET, option.value);
+  }
+
+  async getPresets() {
     const presets = (await ipcRenderer.invoke(
       IPCEvents.GET_PRESETS
     )) as string[];
@@ -35,10 +48,6 @@ export default class ProfileSelection extends Vue {
       : this.presets[0];
 
     this.loadingData = false;
-  }
-
-  onPresetSelected(option: SelectOption) {
-    userPreferences.set(USER_PREFERENCE_KEYS.PRESET, option.value);
   }
 }
 </script>
