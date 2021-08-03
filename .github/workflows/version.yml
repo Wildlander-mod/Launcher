@@ -1,12 +1,9 @@
 name: Version
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 jobs:
   version-bump:
@@ -15,12 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Configure CI Git User
-        run: |
-          git config user.name 'UltimateSkyrimGitHubCI'
-          git config user.email 'ultimateskyrimgithub@gmail.com'
+          ref: main
+      - uses: fregante/setup-git-user@v1
 
       - name: Use Node.js
         uses: actions/setup-node@v1
