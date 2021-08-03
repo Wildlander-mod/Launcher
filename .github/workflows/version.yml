@@ -1,7 +1,7 @@
 name: Version
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -13,6 +13,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          
       - uses: fregante/setup-git-user@v1
 
       - name: Use Node.js
