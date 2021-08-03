@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.24 (2021-08-03)
+
+
+### Features
+
+* show download progress and prevent user from double clicking ([b280051](https://github.com/UltimateSkyrim/ultskylauncher/commit/b2800513cd7de3bc8aa12de973532051945af13f))
+
 ### 0.1.23 (2021-07-29)
 
 
