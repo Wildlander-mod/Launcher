@@ -9,6 +9,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   create-release:
     runs-on: windows-latest
@@ -26,8 +29,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # When testing or working with forks, electron builder will try and publish to the main repo, not the fork.
+      # This allows it to publish to the forked repo for testing
+      - name: Replace package.json repository
+        shell: bash
+        run: |
+          contents="$(jq --arg repo $GITHUB_SERVER_URL/$GITHUB_REPOSITORY '.repository = $repo' package.json)"
+          echo $contents > package.json
+
       - name: Build app
         run: npm run build -- --publish always
         env:
           CI: true
-          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
