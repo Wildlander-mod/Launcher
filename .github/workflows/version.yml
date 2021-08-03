@@ -12,17 +12,14 @@ jobs:
   version-bump:
     runs-on: ubuntu-latest
     # Prevent the versioning getting stuck in a loop when it pushes back to the main branch
-    if: github.actor != 'UltimateSkyrimGitHub'
+    if: "!contains(toJSON(github.event.commits.*.message), 'chore(release)')"
 
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: Configure CI Git User
-        run: |
-          git config user.name 'UltimateSkyrimGitHubCI'
-          git config user.email 'ultimateskyrimgithub@gmail.com'
+      - uses: fregante/setup-git-user@v1
 
       - name: Use Node.js
         uses: actions/setup-node@v1
