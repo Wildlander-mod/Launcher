@@ -1,24 +1,16 @@
 name: Release
 
 on:
-  push:
-    # Pattern matched against refs/tags
-    tags:
-      - '*'
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  workflow_run:
+    workflows: [ "Version" ]
+    branches: [ main ]
 
 jobs:
   create-release:
     runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: GitHub Environment Variables Action
-        uses: FranzDiebold/github-env-vars-action@v2.1.0
 
       - name: Use Node.js
         uses: actions/setup-node@v1
