@@ -11,8 +11,6 @@ on:
 jobs:
   version-bump:
     runs-on: ubuntu-latest
-    # Prevent the versioning getting stuck in a loop when it pushes back to the main branch
-    if: github.actor != 'UltimateSkyrimGitHub'
 
     steps:
       - uses: actions/checkout@v2
