@@ -1,7 +1,7 @@
 name: Version
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -17,20 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure CI Git User
         run: |
           git config user.name 'UltimateSkyrimGitHubCI'
           git config user.email 'ultimateskyrimgithub@gmail.com'
 
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14'
-
-      - name: bump version
-        run: npx standard-version --no-verify
-
       - name: publish changes
-        run: git push --follow-tags
+        run: |
+          git fetch
+          git checkout main
+          touch test.example
+          git add .
+          git commit -m "testing updating main"
+          git push origin main
