@@ -73,7 +73,7 @@
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.19.0",
     "typescript": "~3.9.3",
-    "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
+    "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-jest": "^5.0.0-0",
     "vue-property-decorator": "^9.1.2"
   },
