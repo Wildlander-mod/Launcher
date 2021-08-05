@@ -22,8 +22,8 @@ export default {
     News,
     Patrons,
     PageContent,
-    Page
-  }
+    Page,
+  },
 };
 </script>
 

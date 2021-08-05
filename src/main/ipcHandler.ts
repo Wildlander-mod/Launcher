@@ -66,14 +66,11 @@ ipcMain.handle(IPCEvents.ERROR, async (event, { title, error }) => {
   await dialog.showErrorBox(title, error);
 });
 
-ipcMain.handle(
-  IPCEvents.GET_PRESETS,
-  async (): Promise<string[]> => {
-    return fs.promises.readdir(
-      `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`
-    );
-  }
-);
+ipcMain.handle(IPCEvents.GET_PRESETS, async (): Promise<string[]> => {
+  return fs.promises.readdir(
+    `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`
+  );
+});
 
 // Ensure that the mod directory contains a valid MO2 installation
 ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) => {

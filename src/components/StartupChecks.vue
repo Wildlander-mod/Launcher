@@ -23,8 +23,8 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
   components: {
     Modal,
     ModDirectory,
-    AutoUpdate
-  }
+    AutoUpdate,
+  },
 })
 export default class StartupChecks extends Vue {
   private showModDirectoryModal = true;

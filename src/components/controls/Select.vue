@@ -3,14 +3,16 @@
     v-if="!loadingData"
     :class="[
       'c-select',
-      `${isOpen === true ? 'c-select--open' : 'c-select--closed'}`
+      `${isOpen === true ? 'c-select--open' : 'c-select--closed'}`,
     ]"
   >
     <div
       :class="[
         'c-select__head',
         'u-text',
-        `${isOpen === true ? 'c-select__head--open' : 'c-select__head--closed'}`
+        `${
+          isOpen === true ? 'c-select__head--open' : 'c-select__head--closed'
+        }`,
       ]"
       @click="toggleOpenState"
     >
@@ -21,7 +23,7 @@
           'c-select__icon',
           `${
             isOpen === true ? 'c-select__icon--open' : 'c-select__icon--closed'
-          }`
+          }`,
         ]"
       >
         expand_more
@@ -34,7 +36,7 @@
           isOpen === true
             ? 'c-select__options--open'
             : 'c-select__options--closed'
-        }`
+        }`,
       ]"
     >
       <div

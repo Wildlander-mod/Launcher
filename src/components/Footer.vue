@@ -27,8 +27,8 @@ import ExternalLink from "@/components/ExternalLink.vue";
 @Component({
   components: {
     Marquee,
-    ExternalLink
-  }
+    ExternalLink,
+  },
 })
 export default class Footer extends Vue {
   patreonService!: PatreonService;
@@ -37,7 +37,7 @@ export default class Footer extends Vue {
   async created() {
     this.patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
     const patrons = await this.patreonService.getPatrons();
-    this.patronNames = patrons.map(patron => patron.name);
+    this.patronNames = patrons.map((patron) => patron.name);
   }
 }
 </script>

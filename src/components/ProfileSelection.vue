@@ -17,7 +17,7 @@ import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
 
 @Options({
-  components: { Select }
+  components: { Select },
 })
 export default class ProfileSelection extends Vue {
   selectedPreset: SelectOption = { text: "", value: "" };
@@ -40,10 +40,10 @@ export default class ProfileSelection extends Vue {
       IPCEvents.GET_PRESETS
     )) as string[];
     const userPreset = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
-    this.presets = presets.map(preset => ({ text: preset, value: preset }));
+    this.presets = presets.map((preset) => ({ text: preset, value: preset }));
 
     this.selectedPreset = userPreset
-      ? this.presets.find(preset => preset.value === userPreset) ??
+      ? this.presets.find((preset) => preset.value === userPreset) ??
         this.presets[0]
       : this.presets[0];
 

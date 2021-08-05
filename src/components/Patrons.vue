@@ -16,9 +16,7 @@
             >
           </div>
         </div>
-        <div class="c-patrons__title-text">
-          Super Patron
-        </div>
+        <div class="c-patrons__title-text">Super Patron</div>
       </div>
     </List>
     <List
@@ -29,9 +27,7 @@
         <div class="c-patrons__star">
           <i class="material-icons c-patrons__star-icon">star_outline</i>
         </div>
-        <div class="c-patrons__title-text">
-          Patron
-        </div>
+        <div class="c-patrons__title-text">Patron</div>
       </div>
     </List>
     <div v-if="failedToGetPatrons">
@@ -58,8 +54,8 @@ import ExternalLink from "@/components/ExternalLink.vue";
 @Component({
   components: {
     List,
-    ExternalLink
-  }
+    ExternalLink,
+  },
 })
 export default class Patrons extends Vue {
   patreonService!: PatreonService;
@@ -73,12 +69,12 @@ export default class Patrons extends Vue {
     try {
       const patrons = await this.patreonService.getPatrons();
       this.superPatrons = patrons
-        .filter(patron => patron.tier === "Super Patron")
-        .map(patron => patron.name);
+        .filter((patron) => patron.tier === "Super Patron")
+        .map((patron) => patron.name);
 
       this.otherPatrons = patrons
-        .filter(patron => patron.tier === "Patron")
-        .map(patron => patron.name);
+        .filter((patron) => patron.tier === "Patron")
+        .map((patron) => patron.name);
     } catch {
       this.failedToGetPatrons = true;
     }

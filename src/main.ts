@@ -4,7 +4,4 @@ import router from "./router";
 import VueFinalModal from "vue-final-modal";
 import "reflect-metadata";
 
-createApp(App)
-  .use(router)
-  .use(VueFinalModal())
-  .mount("#app");
+createApp(App).use(router).use(VueFinalModal()).mount("#app");

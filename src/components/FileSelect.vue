@@ -31,7 +31,7 @@ import Input from "@/components/Input.vue";
 import { Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  components: { Button, Input }
+  components: { Button, Input },
 })
 export default class FileSelect extends Vue {
   @Prop() onFilepathChange!: (filepath: string) => void;

@@ -31,8 +31,8 @@ import Button from "@/components/controls/Button.vue";
 
 @Options({
   components: {
-    Button
-  }
+    Button,
+  },
 })
 export default class Modal extends Vue {
   @Prop({ required: true }) showModal!: boolean;

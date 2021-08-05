@@ -29,8 +29,8 @@ import { modalOpenedEvent } from "@/services/modal.service";
     StartupChecks,
     Footer,
     NavBar,
-    TitleBar
-  }
+    TitleBar,
+  },
 })
 export default class App extends Vue {
   clickEventsEnabled = false;

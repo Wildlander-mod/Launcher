@@ -8,11 +8,11 @@
       <ProfileSelection />
     </div>
 
-    <div class="  c-navigation__content l-column l-space-between">
+    <div class="c-navigation__content l-column l-space-between">
       <div class="l-column">
         <router-link
           :to="{
-            name: 'Home'
+            name: 'Home',
           }"
           custom
           v-slot="{ href, navigate, isActive }"
@@ -23,7 +23,7 @@
         </router-link>
         <router-link
           :to="{
-            name: 'Resources'
+            name: 'Resources',
           }"
           custom
           v-slot="{ href, navigate, isActive }"
@@ -34,7 +34,7 @@
         </router-link>
         <router-link
           :to="{
-            name: 'Settings'
+            name: 'Settings',
           }"
           custom
           v-slot="{ href, navigate, isActive }"
@@ -70,8 +70,8 @@ import ProfileSelection from "@/components/ProfileSelection.vue";
     ExternalLink,
     Button,
     Select,
-    NavLink
-  }
+    NavLink,
+  },
 })
 export default class NavBar extends Vue {
   activeTab = "home";

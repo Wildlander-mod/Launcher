@@ -9,7 +9,7 @@
         'c-page-content__body--small-height': height === 'small',
         'c-page-content__body--auto-height': height === 'auto',
         'c-page-content__body--small-width': width === 'small',
-        'c-page-content__body--large-spacing': width !== 'small'
+        'c-page-content__body--large-spacing': width !== 'small',
       }"
     >
       <slot></slot>
