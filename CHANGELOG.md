@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.34 (2021-08-05)
+
+
+### Bug Fixes
+
+* reduce gap in patreon stars layout ([de0d119](https://github.com/UltimateSkyrim/ultskylauncher/commit/de0d119d3c277dd4eab6a2fd60e3cb2cdbd9b1fc))
+
 ### 0.1.33 (2021-08-05)
 
 ### 0.1.32 (2021-08-05)
