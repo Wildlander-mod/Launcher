@@ -10,7 +10,7 @@ export function fatalError(message: string, err: string) {
     message: `
     ${message}
     ${err}
-    `
+    `,
   });
 
   app.quit();

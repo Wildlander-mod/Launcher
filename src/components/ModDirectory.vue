@@ -17,14 +17,14 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import {
   EventService,
   injectStrict,
-  SERVICE_BINDINGS
+  SERVICE_BINDINGS,
 } from "@/services/service-container";
 
 export const modDirectorySetEvent = "modDirectorySet";
 export const invalidFilepathEvent = "invalidFilepath";
 
 @Options({
-  components: { FileSelect }
+  components: { FileSelect },
 })
 export default class ModDirectory extends Vue {
   private initialModDirectory = "";
@@ -68,7 +68,7 @@ export default class ModDirectory extends Vue {
     await ipcRenderer.invoke(IPCEvents.ERROR, {
       title: "Invalid mod directory selected",
       error:
-        "Please ensure this is a valid MO2 directory. Remember, this is NOT the Skyrim directory, it is the mod's MO2 directory."
+        "Please ensure this is a valid MO2 directory. Remember, this is NOT the Skyrim directory, it is the mod's MO2 directory.",
     });
   }
 

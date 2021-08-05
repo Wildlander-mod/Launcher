@@ -24,7 +24,7 @@ export const SERVICE_BINDINGS = {
   PATRON_SERVICE: createBinding<PatreonService>("keys.services.patron"),
   NEWS_SERVICE: createBinding<PostsService>("keys.services.news"),
   EVENT_SERVICE: createBinding<EventService>("keys.services.event"),
-  MODAL_SERVICE: createBinding<ModalService>("keys.services.modal")
+  MODAL_SERVICE: createBinding<ModalService>("keys.services.modal"),
 };
 
 /**
@@ -40,7 +40,7 @@ export function registerServices() {
   provide(SERVICE_BINDINGS.MODAL_SERVICE, new ModalService(eventService));
 
   return {
-    eventService
+    eventService,
   };
 }
 

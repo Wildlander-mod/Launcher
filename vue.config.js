@@ -7,9 +7,9 @@ module.exports = {
         icon: "public/icon.png",
         publish: {
           provider: "github",
-          releaseType: "release"
-        }
-      }
-    }
-  }
+          releaseType: "release",
+        },
+      },
+    },
+  },
 };

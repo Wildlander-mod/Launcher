@@ -16,8 +16,8 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
   props: {
-    items: Array
-  }
+    items: Array,
+  },
 })
 export default class Marquee extends Vue {
   items: string[] = [];

@@ -18,7 +18,7 @@ export function launchGame() {
     logger.info("Starting MO2");
     const execCMD = `"${MO2Path}" -p "${profile}" "moshortcut://:${MO2exe}"`;
     logger.debug(`Executing MO2 command ${execCMD}`);
-    childProcess.exec(execCMD, error => {
+    childProcess.exec(execCMD, (error) => {
       if (error) {
         logger.error(`Error while executing ModOrganizer - ${error.message}`);
       }

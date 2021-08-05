@@ -2,9 +2,7 @@
   <Modal :show-modal="showAutoUpdate" name="autoUpdate">
     <div class="l-column l-center">
       <template v-if="updateAvailable">
-        <p>
-          There is a new version of the launcher available.
-        </p>
+        <p>There is a new version of the launcher available.</p>
         <p>
           The application will restart and automatically apply the update before
           continuing.
@@ -43,8 +41,8 @@ export const UPDATE_COMPLETE_EVENT = "updateComplete";
   components: {
     Button,
     Modal,
-    PageContent
-  }
+    PageContent,
+  },
 })
 export default class AutoUpdate extends Vue {
   private showAutoUpdate = true;

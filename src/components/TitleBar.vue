@@ -2,14 +2,10 @@
   <div class="c-control-bar l-row l-end">
     <div class="c-navigation-bar"></div>
     <div class="c-control-bar__control" @click="minimize">
-      <span class="material-icons">
-        remove
-      </span>
+      <span class="material-icons"> remove </span>
     </div>
     <div class="c-control-bar__control" @click="close">
-      <span class="material-icons">
-        close
-      </span>
+      <span class="material-icons"> close </span>
     </div>
   </div>
   <div class="c-header">
@@ -26,7 +22,7 @@ import { ipcRenderer } from "electron";
 export default {
   name: "TitleBar",
   components: {
-    Logo
+    Logo,
   },
   methods: {
     close() {
@@ -34,8 +30,8 @@ export default {
     },
     minimize() {
       ipcRenderer.send("minimize");
-    }
-  }
+    },
+  },
 };
 </script>
 

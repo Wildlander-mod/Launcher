@@ -21,7 +21,7 @@
                   :class="[
                     tag.toUpperCase() === 'NEWS' && 'c-news__tag--news',
                     tag.toUpperCase() === 'DEVSTREAM' &&
-                      'c-news__tag--devstream'
+                      'c-news__tag--devstream',
                   ]"
                   class="c-news__tag"
                 >
@@ -29,9 +29,7 @@
                 </div>
               </template>
               <template v-else>
-                <div class="c-news__tag c-news__tag--news">
-                  News
-                </div>
+                <div class="c-news__tag c-news__tag--news">News</div>
               </template>
             </div>
             <div class="c-news__content">
@@ -60,8 +58,8 @@ import ExternalLink from "@/components/ExternalLink.vue";
 @Component({
   components: {
     List,
-    ExternalLink
-  }
+    ExternalLink,
+  },
 })
 export default class News extends Vue {
   newsService!: PostsService;

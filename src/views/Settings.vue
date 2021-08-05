@@ -8,16 +8,12 @@
 
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Mod Organiser 2</div>
-          <Button type="primary" @click="launchMO2">
-            Launch
-          </Button>
+          <Button type="primary" @click="launchMO2"> Launch </Button>
         </div>
 
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Application logs</div>
-          <Button type="default" @click="openLogPath">
-            Open
-          </Button>
+          <Button type="default" @click="openLogPath"> Open </Button>
         </div>
       </div>
     </PageContent>
@@ -43,8 +39,8 @@ import path from "path";
     FileSelect,
     Page,
     PageContent,
-    Button
-  }
+    Button,
+  },
 })
 export default class Settings extends Vue {
   launchMO2() {

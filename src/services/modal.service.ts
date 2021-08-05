@@ -24,7 +24,7 @@ export class ModalService {
 
   public closeModal(name: string, vfm: VueFinalModalProperty) {
     vfm.hide(name);
-    this.modalQueue = this.modalQueue.filter(modal => modal !== name);
+    this.modalQueue = this.modalQueue.filter((modal) => modal !== name);
     this.eventService.emit(modalOpenedEvent, false);
     if (this.modalQueue.length > 0) {
       // There are still modals waiting to be opened, open the next one
