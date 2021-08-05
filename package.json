@@ -19,7 +19,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "core-js": "^3.6.5",
+    "core-js": "^3.16.0",
     "electron-log": "^4.4.0",
     "electron-store": "^8.0.0",
     "mitt": "^3.0.0",
