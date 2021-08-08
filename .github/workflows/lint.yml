@@ -22,6 +22,8 @@ jobs:
 
   # Validate that commits are following the conventional commit format
   commit-validate:
+    #  Don't run for dependabot updates
+    if: contains(github.head_ref, 'dependabot/') == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

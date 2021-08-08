@@ -35,7 +35,7 @@
     "@commitlint/config-conventional": "^12.0.1",
     "@octokit/request": "^5.4.14",
     "@types/electron-devtools-installer": "^2.2.0",
-    "@types/jest": "^24.0.19",
+    "@types/jest": "^26.0.24",
     "@types/ncp": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
