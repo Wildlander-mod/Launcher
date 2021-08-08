@@ -3,17 +3,17 @@
   "version": "0.1.42",
   "description": "A launcher for the Ultimate Skyrim modpack",
   "author": "Ultimate Skyrim",
-  "repository": "https://github.com/UltimateSkyrim/ultskylauncher",
   "scripts": {
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
-    "test:unit": "vue-cli-service test:unit",
     "lint": "npm run lint:typescript && npm run lint:eslint && npm run lint:styles",
-    "lint:styles": "stylelint **/*.scss",
-    "lint:typescript": "tsc --noEmit",
-    "lint:eslint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
     "electron:debug:main": "electron --remote-debugging-port=9223 ./dist_electron",
     "electron:debug:renderer": "npm run serve -- --debug",
+    "electron:serve": "vue-cli-service electron:serve",
+    "lint:eslint": "vue-cli-service lint",
+    "lint:styles": "stylelint **/*.scss",
+    "lint:typescript": "tsc --noEmit",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
@@ -33,9 +33,7 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.14.5",
     "@commitlint/config-conventional": "^12.0.1",
-    "@octokit/request": "^5.4.14",
     "@types/electron-devtools-installer": "^2.2.0",
-    "@types/jest": "^26.0.24",
     "@types/ncp": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
@@ -43,14 +41,11 @@
     "@vue/cli-plugin-eslint": "^4.5.11",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "^4.5.11",
-    "@vue/cli-plugin-unit-jest": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.1.5",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "@vue/test-utils": "^2.0.0-0",
     "babel-eslint": "^10.1.0",
     "commitlint": "^12.0.1",
     "electron": "^13.1.8",
@@ -68,13 +63,11 @@
     "prettier": "^2.3.2",
     "reflect-metadata": "^0.1.13",
     "sass-loader": "^10.2.0",
-    "spectron": "15.0.0",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.19.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.1.1",
-    "vue-jest": "^5.0.0-0",
     "vue-property-decorator": "^9.1.2"
   },
   "commitlint": {
@@ -108,5 +101,6 @@
       "npm run lint:styles",
       "git add"
     ]
-  }
+  },
+  "repository": "https://github.com/UltimateSkyrim/ultskylauncher"
 }
