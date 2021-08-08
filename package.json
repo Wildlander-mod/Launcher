@@ -94,12 +94,10 @@
   },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
-      "vue-cli-service lint",
-      "git add"
+      "vue-cli-service lint"
     ],
     "*.{scss}": [
-      "npm run lint:styles",
-      "git add"
+      "npm run lint:styles"
     ]
   },
   "repository": "https://github.com/UltimateSkyrim/ultskylauncher"
