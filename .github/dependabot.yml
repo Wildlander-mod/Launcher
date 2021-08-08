@@ -23,7 +23,7 @@ updates:
       interval: "daily"
     assignees:
       - "MattLish"
-      labels:
-        - "dependencies"
-      reviewers:
-        - "MattLish"
+    labels:
+      - "dependencies"
+    reviewers:
+      - "MattLish"
