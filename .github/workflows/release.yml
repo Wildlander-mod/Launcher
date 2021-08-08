@@ -41,4 +41,4 @@ jobs:
         run: npm run build -- --publish always
         env:
           CI: true
-          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
