@@ -12,15 +12,11 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-@Options({
-  props: {
-    items: Array,
-  },
-})
 export default class Marquee extends Vue {
-  items: string[] = [];
+  @Prop() items!: string[];
 
   getAnimationLength(): number {
     // The length of the animation should depend on the amount of items in the marquee
