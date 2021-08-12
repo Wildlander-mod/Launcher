@@ -10,7 +10,7 @@
       type="text"
       :readonly="readonly"
       class="c-input"
-      :oninput="handleInput"
+      v-on:input="handleInput"
       :value="value"
     />
   </div>
@@ -22,10 +22,10 @@ import { Prop } from "vue-property-decorator";
 
 export default class Input extends Vue {
   @Prop() private oninput!: (filepath: string) => void;
-  @Prop() private value = "";
   @Prop({ required: true }) private label!: string;
   @Prop() private readonly = false;
   @Prop() private centered = false;
+  @Prop() private value!: string;
 
   handleInput(event: Event) {
     const target = event.target as HTMLInputElement;

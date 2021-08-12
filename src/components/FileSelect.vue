@@ -34,14 +34,12 @@ import { Prop, Watch } from "vue-property-decorator";
   components: { Button, Input },
 })
 export default class FileSelect extends Vue {
-  @Prop() onFilepathChange!: (filepath: string) => void;
-  @Prop() clearFilepathProp!: () => void;
   @Prop({ required: true }) private label!: string;
+  @Prop() onFilepathChange!: (filepath: string) => void;
   @Prop() private preFilepathChange!: (filepath: string) => Promise<boolean>;
-  @Prop() initialFilepath!: string;
-  @Prop() private centered = false;
-
-  private filepath = "";
+  @Prop({ default: false }) private centered!: boolean;
+  @Prop() private initialFilepath!: string;
+  private filepath!: string;
 
   created() {
     this.filepath = this.initialFilepath;

@@ -2,7 +2,7 @@
   <FileSelect
     :on-filepath-change="onModDirectoryChange"
     :pre-filepath-change="preModDirectoryChange"
-    :initial-filepath="initialModDirectory"
+    :initial-filepath="modDirectory"
     label="Ultimate Skyrim Directory"
     :centered="centered"
   />
@@ -14,11 +14,8 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import FileSelect from "@/components/FileSelect.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
-import {
-  EventService,
-  injectStrict,
-  SERVICE_BINDINGS,
-} from "@/services/service-container";
+import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
+import { Prop, Watch } from "vue-property-decorator";
 
 export const modDirectorySetEvent = "modDirectorySet";
 export const invalidFilepathEvent = "invalidFilepath";
@@ -27,25 +24,21 @@ export const invalidFilepathEvent = "invalidFilepath";
   components: { FileSelect },
 })
 export default class ModDirectory extends Vue {
-  private initialModDirectory = "";
-  private centered = false;
+  private modDirectory = "";
+  @Prop({ default: false }) private centered!: boolean;
 
-  private eventService!: EventService;
+  private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
 
   async created() {
-    this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-
     const currentModDirectory = userPreferences.get(
       USER_PREFERENCE_KEYS.MOD_DIRECTORY
     );
 
-    if (currentModDirectory) {
-      if (await this.checkModDirectoryIsOkay(currentModDirectory)) {
-        this.initialModDirectory = currentModDirectory;
-      } else {
-        await this.triggerError();
-        this.$emit(invalidFilepathEvent);
-      }
+    if (
+      currentModDirectory &&
+      (await this.preModDirectoryChange(currentModDirectory))
+    ) {
+      this.modDirectory = currentModDirectory;
     }
   }
 
@@ -54,12 +47,19 @@ export default class ModDirectory extends Vue {
 
     if (!modDirectoryOkay) {
       await this.triggerError();
+      this.$emit(invalidFilepathEvent);
     }
     return modDirectoryOkay;
   }
 
-  async onModDirectoryChange(filepath: string) {
+  onModDirectoryChange(filepath: string) {
+    this.modDirectory = filepath;
     userPreferences.set(USER_PREFERENCE_KEYS.MOD_DIRECTORY, filepath);
+    this.modDirectorySet();
+  }
+
+  @Watch("modDirectory")
+  modDirectorySet() {
     this.$emit(modDirectorySetEvent);
     this.eventService.emit(modDirectorySetEvent);
   }
