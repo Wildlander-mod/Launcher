@@ -24,7 +24,7 @@
     "electron-store": "^8.0.0",
     "mitt": "^3.0.0",
     "ncp": "^2.0.0",
-    "vue": "^3.2.2",
+    "vue": "^3.2.4",
     "vue-class-component": "^8.0.0-0",
     "vue-final-modal": "^3.4.0",
     "vue-router": "^4.0.11"
