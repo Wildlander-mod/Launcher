@@ -1,3 +1,5 @@
+export const MO2EXE = "ModOrganizer.exe";
+
 import path from "path";
 import childProcess from "child_process";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
