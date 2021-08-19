@@ -1,5 +1,5 @@
 <template>
-  <FileSelect
+  <AppFileSelect
     :on-filepath-change="onModDirectoryChange"
     :pre-filepath-change="preModDirectoryChange"
     :initial-filepath="modDirectory"
@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
-import FileSelect from "@/components/FileSelect.vue";
+import AppFileSelect from "@/components/AppFileSelect.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
@@ -21,7 +21,7 @@ export const modDirectorySetEvent = "modDirectorySet";
 export const invalidFilepathEvent = "invalidFilepath";
 
 @Options({
-  components: { FileSelect },
+  components: { AppFileSelect },
 })
 export default class ModDirectory extends Vue {
   private modDirectory = "";

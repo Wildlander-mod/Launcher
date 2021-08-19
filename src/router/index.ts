@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import Home from "@/views/Home.vue";
-import Resources from "@/views/Resources.vue";
-import Settings from "@/views/Settings.vue";
+import Home from "@/views/ViewHome.vue";
+import Resources from "@/views/ViewResources.vue";
+import Settings from "@/views/ViewSettings.vue";
 
 const routes = [
   {

@@ -8,12 +8,12 @@
 
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Mod Organiser 2</div>
-          <Button type="primary" @click="launchMO2"> Launch </Button>
+          <BaseButton type="primary" @click="launchMO2"> Launch </BaseButton>
         </div>
 
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Application logs</div>
-          <Button type="default" @click="openLogPath"> Open </Button>
+          <BaseButton type="default" @click="openLogPath"> Open </BaseButton>
         </div>
       </div>
     </PageContent>
@@ -25,8 +25,8 @@ import { Options, Vue } from "vue-class-component";
 import Page from "@/components/Page.vue";
 import PageContent from "@/components/PageContent.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
-import Button from "@/components/controls/Button.vue";
-import FileSelect from "@/components/FileSelect.vue";
+import BaseButton from "@/components/BaseButton.vue";
+import AppFileSelect from "@/components/AppFileSelect.vue";
 import { ipcRenderer, shell } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ModDirectory from "@/components/ModDirectory.vue";
@@ -36,10 +36,10 @@ import path from "path";
 @Options({
   components: {
     ModDirectory,
-    FileSelect,
+    FileSelect: AppFileSelect,
     Page,
     PageContent,
-    Button,
+    BaseButton,
   },
 })
 export default class Settings extends Vue {

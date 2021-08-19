@@ -1,5 +1,5 @@
 <template>
-  <Select
+  <BaseDropdown
     :initial-selection="selectedPreset"
     :on-option-selected="onPresetSelected"
     :options="presets"
@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Select, { SelectOption } from "@/components/controls/Select.vue";
+import BaseDropdown, { SelectOption } from "@/components/BaseDropdown.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
@@ -17,7 +17,7 @@ import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
 
 @Options({
-  components: { Select },
+  components: { BaseDropdown },
 })
 export default class ProfileSelection extends Vue {
   selectedPreset: SelectOption = { text: "", value: "" };

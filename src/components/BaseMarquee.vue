@@ -15,7 +15,7 @@
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export default class Marquee extends Vue {
+export default class BaseMarquee extends Vue {
   @Prop() items!: string[];
 
   getAnimationLength(): number {

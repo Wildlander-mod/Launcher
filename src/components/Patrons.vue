@@ -1,6 +1,6 @@
 <template>
   <div class="c-patrons">
-    <List
+    <BaseList
       v-if="!failedToGetPatrons && superPatrons.length !== 0"
       :items="superPatrons"
     >
@@ -18,8 +18,8 @@
         </div>
         <div class="c-patrons__title-text">Super Patron</div>
       </div>
-    </List>
-    <List
+    </BaseList>
+    <BaseList
       v-if="!failedToGetPatrons && otherPatrons.length !== 0"
       :items="otherPatrons"
     >
@@ -29,15 +29,15 @@
         </div>
         <div class="c-patrons__title-text">Patron</div>
       </div>
-    </List>
+    </BaseList>
     <div v-if="failedToGetPatrons">
       <div>
         Could not retrieve Patron list. Please report this error in the
-        <ExternalLink
+        <BaseLink
           href="https://discordapp.com/invite/8VkDrfq"
           :underline="true"
         >
-          Ultimate Skyrim Discord </ExternalLink
+          Ultimate Skyrim Discord </BaseLink
         >.
       </div>
     </div>
@@ -46,15 +46,15 @@
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import List from "./List.vue";
+import BaseList from "./BaseList.vue";
 import { PatreonService } from "@/services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
-import ExternalLink from "@/components/ExternalLink.vue";
+import BaseLink from "@/components/BaseLink.vue";
 
 @Component({
   components: {
-    List,
-    ExternalLink,
+    BaseList,
+    BaseLink,
   },
 })
 export default class Patrons extends Vue {

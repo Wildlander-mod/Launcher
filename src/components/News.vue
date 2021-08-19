@@ -5,7 +5,7 @@
   >
     <ul class="u-list--bare">
       <li v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
-        <ExternalLink
+        <BaseLink
           :href="`https://www.patreon.com${newsItem.url}`"
           class="l-row"
         >
@@ -36,29 +36,29 @@
               {{ newsItem.title }}
             </div>
           </div>
-        </ExternalLink>
+        </BaseLink>
       </li>
     </ul>
   </div>
   <div v-if="failedToGetNews && news.length === 0">
     Cannot load latest news. Please report this error in the
-    <ExternalLink href="https://discordapp.com/invite/8VkDrfq" :underline="true"
-      >Ultimate Skyrim Discord</ExternalLink
+    <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true"
+      >Ultimate Skyrim Discord</BaseLink
     >.
   </div>
 </template>
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import List from "./List.vue";
+import BaseList from "./BaseList.vue";
 import { Posts, PostsService } from "@/services/posts.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
-import ExternalLink from "@/components/ExternalLink.vue";
+import BaseLink from "@/components/BaseLink.vue";
 
 @Component({
   components: {
-    List,
-    ExternalLink,
+    BaseList,
+    BaseLink,
   },
 })
 export default class News extends Vue {

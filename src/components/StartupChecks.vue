@@ -2,26 +2,26 @@
   <div>
     <AutoUpdate @updateComplete="updateCompleteHandler" />
 
-    <Modal :show-modal="showModDirectoryModal" name="modDirectory">
+    <AppModal :show-modal="showModDirectoryModal" name="modDirectory">
       <ModDirectory
         @modDirectorySet="modDirectorySet"
         @invalidFilepath="onInvalidFilepath"
         :centered="true"
       />
-    </Modal>
+    </AppModal>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Modal from "@/components/Modal.vue";
+import AppModal from "@/components/AppModal.vue";
 import ModDirectory from "@/components/ModDirectory.vue";
 import AutoUpdate from "@/components/AutoUpdate.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 
 @Options({
   components: {
-    Modal,
+    AppModal,
     ModDirectory,
     AutoUpdate,
   },

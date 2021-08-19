@@ -61,7 +61,7 @@ export interface SelectOption {
 }
 
 @Component({})
-export default class Select extends Vue {
+export default class BaseDropdown extends Vue {
   @Prop({ required: true }) options!: SelectOption[];
   @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
   @Prop({ required: true }) initialSelection!: SelectOption;

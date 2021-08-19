@@ -1,16 +1,14 @@
 "use strict";
 
-import { app, BrowserWindow, ipcMain, nativeImage, protocol } from "electron";
+import { app, BrowserWindow, nativeImage, protocol } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import path from "path";
 import { isDevelopment } from "./main/config";
 import { fatalError } from "./main/errorHandler";
-import { getWebContents, setWindow } from "./main/ipcHandler";
 import { autoUpdater } from "electron-updater";
-import { IPCEvents } from "@/enums/IPCEvents";
-import fs from "fs";
 import { logger } from "@/main/logger";
+import { registerHandlers } from "@/main/ipcHandler";
 
 // Electron __static is global to electron apps but there is no type definition for it
 declare const __static: string;
@@ -24,14 +22,24 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
+let window: Electron.BrowserWindow;
+
+export function getWindow() {
+  return window;
+}
+
+export function getWebContents() {
+  return getWindow().webContents;
+}
+
 async function createWindow() {
-  // Create the browser window.
+  logger.debug("Creating window");
+
   try {
-    const win = new BrowserWindow({
+    // Create the browser window.
+    window = new BrowserWindow({
       frame: false,
       height: 580,
-      // TODO this shouldn't allow undefined. In electron __static is undefined
-      // eslint-disable-next-line no-undef
       icon: nativeImage.createFromPath(path.join(__static, "icon.icon")),
       maximizable: false,
       resizable: false,
@@ -46,63 +54,19 @@ async function createWindow() {
       width: 1000,
     });
 
-    setWindow(win);
-
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
-      await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+      await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
       if (!process.env.IS_TEST) {
-        win.webContents.openDevTools();
+        window.webContents.openDevTools();
       }
     } else {
       createProtocol("app");
       // Load the index.html when not in development
-      await win.loadURL("app://./index.html");
+      await window.loadURL("app://./index.html");
     }
   } catch (err) {
     fatalError("Unable to create browser window", err);
-  }
-}
-
-async function autoUpdate() {
-  autoUpdater.on(IPCEvents.UPDATE_AVAILABLE, () => {
-    logger.info(`Update available`);
-    getWebContents().send(IPCEvents.UPDATE_AVAILABLE);
-  });
-
-  autoUpdater.on(IPCEvents.UPDATE_NOT_AVAILABLE, () => {
-    logger.info(`No updates available`);
-    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
-  });
-
-  autoUpdater.on(IPCEvents.UPDATE_DOWNLOADED, () => {
-    logger.debug("Update downloaded");
-    getWebContents().send(IPCEvents.UPDATE_DOWNLOADED);
-  });
-
-  autoUpdater.on(IPCEvents.DOWNLOAD_PROGRESS, ({ percent }) => {
-    logger.debug(`Download progress ${percent}`);
-    getWebContents().send(IPCEvents.DOWNLOAD_PROGRESS, Math.floor(percent));
-  });
-
-  ipcMain.on(IPCEvents.UPDATE_APP, () => {
-    logger.info("Quitting and installing new app version");
-    autoUpdater.quitAndInstall();
-  });
-
-  // Only try to update if in production mode or there is a dev update file
-  const devAppUpdatePath = path.join(__dirname, "../dev-app-update.yml");
-  if (isDevelopment && fs.existsSync(devAppUpdatePath)) {
-    logger.debug(`Setting auto update path to ${devAppUpdatePath}`);
-    autoUpdater.updateConfigPath = devAppUpdatePath;
-    await autoUpdater.checkForUpdates();
-  } else if (!isDevelopment) {
-    const updateCheckResult = await autoUpdater.checkForUpdates();
-    logger.debug("Auto update check result");
-    logger.debug(updateCheckResult);
-  } else {
-    logger.debug("Skipping app update check because we're in development mode");
-    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
   }
 }
 
@@ -118,12 +82,8 @@ app.on("ready", async () => {
       logger.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  logger.debug("Creating window");
 
-  // Wait until the application is ready to check for an update
-  ipcMain.on(IPCEvents.CHECK_FOR_UPDATE, () => {
-    autoUpdate();
-  });
+  registerHandlers();
 
   await createWindow();
 

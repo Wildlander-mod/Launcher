@@ -5,87 +5,80 @@
 import { app, dialog, ipcMain } from "electron";
 import path from "path";
 import childProcess from "child_process";
-import { launchGame } from "./modlists";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
 import fs from "fs";
-import { MO2EXE } from "@/main/modOrganiser";
+import { launchGame, MO2EXE } from "@/main/modOrganizer";
+import { autoUpdate } from "@/main/autoUpdate";
+import { getWindow } from "@/background";
 
-let win: Electron.BrowserWindow;
+export function registerHandlers() {
+  ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
+    try {
+      logger.info("Launching MO2");
+      const moPath = path.join(
+        userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+        MO2EXE
+      );
+      logger.debug(`MO2 path: ${moPath}`);
+      childProcess.exec(`"${moPath}"`);
+    } catch (err) {
+      logger.error(`Error while opening MO2 - ${err}`);
+    }
+  });
 
-export function getWindow() {
-  return win;
-}
+  ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
+    launchGame();
+  });
 
-export function setWindow(window: Electron.BrowserWindow) {
-  win = window;
-}
+  // Wait until the application is ready to check for an update
+  ipcMain.on(IPCEvents.CHECK_FOR_UPDATE, () => {
+    return autoUpdate();
+  });
 
-export function getWebContents() {
-  return getWindow().webContents;
-}
+  ipcMain.on(IPCEvents.CLOSE, () => {
+    getWindow().close();
+    app.quit();
+  });
 
-// Launch MO2. Error ID: B03-05
-ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
-  try {
-    logger.info("Launching MO2");
-    const moPath = path.join(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      MO2EXE
+  ipcMain.on(IPCEvents.MINIMIZE, () => {
+    getWindow().minimize();
+  });
+
+  ipcMain.handle(IPCEvents.SHOW_OPEN_DIALOG, async () => {
+    return dialog.showOpenDialog({ properties: ["openDirectory"] });
+  });
+
+  ipcMain.handle(IPCEvents.MESSAGE, async (event, message: string) => {
+    await dialog.showMessageBox({ message });
+  });
+
+  ipcMain.handle(IPCEvents.ERROR, async (event, { title, error }) => {
+    await dialog.showErrorBox(title, error);
+  });
+
+  ipcMain.handle(IPCEvents.GET_PRESETS, async (): Promise<string[]> => {
+    return fs.promises.readdir(
+      `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`
     );
-    logger.debug(`MO2 path: ${moPath}`);
-    childProcess.exec(`"${moPath}"`);
-  } catch (err) {
-    logger.error(`Error while opening MO2 - ${err}`);
-  }
-});
+  });
 
-ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
-  launchGame();
-});
+  // Ensure that the mod directory contains a valid MO2 installation
+  ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) => {
+    if (!fs.existsSync(`${filepath}/${MO2EXE}`)) {
+      logger.warn(
+        `Selected mod directory "${filepath}" doesn't contain a valid ${MO2EXE}`
+      );
+      return false;
+    }
 
-ipcMain.on(IPCEvents.CLOSE, () => {
-  win.close();
-  app.quit();
-});
-
-ipcMain.on(IPCEvents.MINIMIZE, () => {
-  win.minimize();
-});
-
-ipcMain.handle(IPCEvents.SHOW_OPEN_DIALOG, async () => {
-  return dialog.showOpenDialog({ properties: ["openDirectory"] });
-});
-
-ipcMain.handle(IPCEvents.MESSAGE, async (event, message: string) => {
-  await dialog.showMessageBox({ message });
-});
-
-ipcMain.handle(IPCEvents.ERROR, async (event, { title, error }) => {
-  await dialog.showErrorBox(title, error);
-});
-
-ipcMain.handle(IPCEvents.GET_PRESETS, async (): Promise<string[]> => {
-  return fs.promises.readdir(
-    `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`
-  );
-});
-
-// Ensure that the mod directory contains a valid MO2 installation
-ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) => {
-  if (!fs.existsSync(`${filepath}/${MO2EXE}`)) {
-    logger.warn(
-      `Selected mod directory "${filepath}" doesn't contain a valid ${MO2EXE}`
-    );
-    return false;
-  }
-
-  if (!fs.existsSync(`${filepath}/profiles`)) {
-    logger.warn(
-      `Selected mod directory "${filepath}" doesn't contain a valid profiles directory`
-    );
-    return false;
-  }
-  return true;
-});
+    if (!fs.existsSync(`${filepath}/profiles`)) {
+      logger.warn(
+        `Selected mod directory "${filepath}" doesn't contain a valid profiles directory`
+      );
+      return false;
+    }
+    return true;
+  });
+}
