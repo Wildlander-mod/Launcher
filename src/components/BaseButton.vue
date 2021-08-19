@@ -12,7 +12,7 @@ export type ButtonSizes = "large" | "small";
 export type ButtonTypes = "primary" | "default";
 
 @Component({})
-export default class Button extends Vue {
+export default class BaseButton extends Vue {
   @Prop({ default: "small" }) size!: ButtonSizes;
   @Prop() text!: string;
   @Prop({ default: "default" }) type!: ButtonTypes;

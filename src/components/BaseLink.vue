@@ -13,7 +13,7 @@ import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import { shell } from "electron";
 
-export default class ExternalLink extends Vue {
+export default class BaseLink extends Vue {
   @Prop({ required: true }) href!: string;
   @Prop() underline!: boolean;
 

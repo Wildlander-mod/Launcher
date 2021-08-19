@@ -20,7 +20,7 @@
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export default class Input extends Vue {
+export default class BaseInput extends Vue {
   @Prop() private oninput!: (filepath: string) => void;
   @Prop({ required: true }) private label!: string;
   @Prop() private readonly = false;

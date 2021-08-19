@@ -1,17 +1,14 @@
 <template>
   <footer class="c-footer">
     <p class="c-footer__text">Thanks to all the Patrons!</p>
-    <Marquee
+    <BaseMarquee
       v-if="patronNames && patronNames.length > 0"
       :items="patronNames"
     />
     <p v-else class="c-footer__text">
       Could not retrieve Patron list. Please report this error in the
-      <ExternalLink
-        href="https://discordapp.com/invite/8VkDrfq"
-        :underline="true"
-      >
-        Ultimate Skyrim Discord </ExternalLink
+      <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true">
+        Ultimate Skyrim Discord </BaseLink
       >.
     </p>
   </footer>
@@ -19,15 +16,15 @@
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import Marquee from "./Marquee.vue";
+import BaseMarquee from "./BaseMarquee.vue";
 import { PatreonService } from "@/services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
-import ExternalLink from "@/components/ExternalLink.vue";
+import BaseLink from "@/components/BaseLink.vue";
 
 @Component({
   components: {
-    Marquee,
-    ExternalLink,
+    BaseMarquee,
+    BaseLink,
   },
 })
 export default class Footer extends Vue {

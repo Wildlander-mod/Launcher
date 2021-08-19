@@ -1,5 +1,5 @@
 <template>
-  <Modal :show-modal="showAutoUpdate" name="autoUpdate">
+  <AppModal :show-modal="showAutoUpdate" name="autoUpdate">
     <div class="l-column l-center">
       <template v-if="updateAvailable">
         <p>There is a new version of the launcher available.</p>
@@ -13,34 +13,34 @@
         </p>
 
         <div class="c-modal__actions" v-if="!updateClicked">
-          <Button size="large" @click="close">Close launcher</Button>
+          <BaseButton size="large" @click="close">Close launcher</BaseButton>
 
-          <Button size="large" type="primary" @click="closeAndUpdate">
+          <BaseButton size="large" type="primary" @click="closeAndUpdate">
             Close and update
-          </Button>
+          </BaseButton>
         </div>
       </template>
       <div class="c-auto-update__loading" v-if="!updateAvailable">
         Checking for update...
       </div>
     </div>
-  </Modal>
+  </AppModal>
 </template>
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
 import PageContent from "@/components/PageContent.vue";
-import Button from "@/components/controls/Button.vue";
+import BaseButton from "@/components/BaseButton.vue";
 import { ipcRenderer, IpcRendererEvent } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
-import Modal from "@/components/Modal.vue";
+import AppModal from "@/components/AppModal.vue";
 
 export const UPDATE_COMPLETE_EVENT = "updateComplete";
 
 @Component({
   components: {
-    Button,
-    Modal,
+    BaseButton,
+    AppModal,
     PageContent,
   },
 })

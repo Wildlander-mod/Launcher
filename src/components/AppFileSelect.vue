@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Input
+    <BaseInput
       :label="label"
       :oninput="onFilepathChange"
       :value="filepath"
@@ -11,29 +11,29 @@
       class="l-row c-file-input__actions"
       :class="{ 'c-file-input__actions--centered': centered }"
     >
-      <Button
+      <BaseButton
         type="primary"
         @click="openFileSelectDialog"
         class="c-file-input__browse"
       >
         Browse
-      </Button>
+      </BaseButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import Button from "@/components/controls/Button.vue";
+import BaseButton from "@/components/BaseButton.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
-import Input from "@/components/Input.vue";
+import BaseInput from "@/components/BaseInput.vue";
 import { Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  components: { Button, Input },
+  components: { BaseButton, BaseInput },
 })
-export default class FileSelect extends Vue {
+export default class AppFileSelect extends Vue {
   @Prop({ required: true }) private label!: string;
   @Prop() onFilepathChange!: (filepath: string) => void;
   @Prop() private preFilepathChange!: (filepath: string) => Promise<boolean>;

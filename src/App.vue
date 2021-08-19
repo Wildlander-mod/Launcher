@@ -1,9 +1,9 @@
 <template>
-  <div id="window">
+  <div class="window">
     <template v-if="renderApp">
       <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
         <NavBar />
-        <div id="window__content">
+        <div class="window__content">
           <TitleBar />
           <router-view />
         </div>
@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-import Footer from "@/components/Footer.vue";
-import NavBar from "@/components/NavBar.vue";
-import TitleBar from "@/components/TitleBar.vue";
+import Footer from "@/components/TheFooter.vue";
+import NavBar from "@/components/TheNavBar.vue";
+import TitleBar from "@/components/TheTitleBar.vue";
 import { Options, Vue } from "vue-class-component";
 import { registerServices } from "@/services/service-container";
 import StartupChecks from "@/components/StartupChecks.vue";
@@ -76,11 +76,8 @@ p {
   margin: 0;
 }
 
-#app {
+.window {
   color: $colour-text;
-}
-
-#window {
   // The url below is a placeholder until we get a system for user generated images
   background-image: linear-gradient(90deg, #000000aa 20%, #00000000 70%),
     url(https://picsum.photos/1200/600);
@@ -90,7 +87,7 @@ p {
   width: $size-window-width;
 }
 
-#window__content {
+.window__content {
   display: flex;
   flex-direction: column;
   width: 100%;

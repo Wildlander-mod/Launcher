@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import Logo from "@/components/svgs/Logo.vue";
+import Logo from "@/components/LogoUltSky.vue";
 import { ipcRenderer } from "electron";
 
 export default {

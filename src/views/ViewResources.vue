@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import PatreonLogo from "@/components/svgs/PatreonLogo.vue";
-import WebsiteLogo from "@/components/svgs/WebsiteLogo.vue";
-import YouTubeLogo from "@/components/svgs/YouTubeLogo.vue";
+import PatreonLogo from "@/components/LogoPatreon.vue";
+import WebsiteLogo from "@/components/LogoWebsite.vue";
+import YouTubeLogo from "@/components/LogoYouTube.vue";
 
 export default {
   name: "Resources",

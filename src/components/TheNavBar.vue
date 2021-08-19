@@ -1,9 +1,9 @@
 <template>
   <nav class="c-navigation">
     <div class="c-navigation__actions">
-      <Button type="primary" size="large" @click="launchGame"
+      <BaseButton type="primary" size="large" @click="launchGame"
         >Launch Game
-      </Button>
+      </BaseButton>
 
       <ProfileSelection />
     </div>
@@ -53,10 +53,10 @@
 </template>
 
 <script lang="ts">
-import Button from "./controls/Button.vue";
-import Select from "./controls/Select.vue";
+import BaseButton from "./BaseButton.vue";
+import BaseDropdown from "./BaseDropdown.vue";
 import { version as launcherVersion } from "../../package.json";
-import ExternalLink from "./ExternalLink.vue";
+import BaseLink from "./BaseLink.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { Options as Component, Vue } from "vue-class-component";
 import NavLink from "@/components/NavLink.vue";
@@ -67,9 +67,9 @@ import ProfileSelection from "@/components/ProfileSelection.vue";
 @Component({
   components: {
     ProfileSelection,
-    ExternalLink,
-    Button,
-    Select,
+    BaseLink,
+    BaseButton,
+    BaseDropdown,
     NavLink,
   },
 })

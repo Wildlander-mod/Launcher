@@ -14,9 +14,9 @@
       <slot />
 
       <div class="c-modal__actions c-modal__actions--right">
-        <Button @click="toggleModal(false)" v-if="includeCloseButton"
+        <BaseButton @click="toggleModal(false)" v-if="includeCloseButton"
           >Close
-        </Button>
+        </BaseButton>
       </div>
     </div>
   </vue-final-modal>
@@ -27,14 +27,14 @@ import { Options, Vue } from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { ModalService } from "@/services/modal.service";
-import Button from "@/components/controls/Button.vue";
+import BaseButton from "@/components/BaseButton.vue";
 
 @Options({
   components: {
-    Button,
+    BaseButton,
   },
 })
-export default class Modal extends Vue {
+export default class AppModal extends Vue {
   @Prop({ required: true }) showModal!: boolean;
   @Prop({ required: true }) name!: string;
   @Prop() includeCloseButton = false;

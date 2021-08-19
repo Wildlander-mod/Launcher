@@ -13,7 +13,7 @@
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export default class List extends Vue {
+export default class BaseList extends Vue {
   @Prop() title!: string;
   @Prop({ required: true }) items!: string[];
 }
