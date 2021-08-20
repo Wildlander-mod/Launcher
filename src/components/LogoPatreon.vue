@@ -61,11 +61,11 @@
   </svg>
 </template>
 
-<script>
-export default {
-  name: "PatreonLogo",
-  props: {
-    size: Number,
-  },
-};
+<script lang="ts">
+import { Prop } from "vue-property-decorator";
+import { Vue } from "vue-class-component";
+
+export default class LogoPatreon extends Vue {
+  @Prop() size!: number;
+}
 </script>

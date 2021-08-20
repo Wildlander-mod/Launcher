@@ -10,29 +10,30 @@
   </div>
   <div class="c-header">
     <div class="c-header__title">
-      <Logo fill="#ffffff" :height="30" />
+      <LogoUltSky fill="#ffffff" :height="30" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Logo from "@/components/LogoUltSky.vue";
 import { ipcRenderer } from "electron";
+import { Options, Vue } from "vue-class-component";
+import LogoUltSky from "@/components/LogoUltSky.vue";
 
-export default {
-  name: "TitleBar",
+@Options({
   components: {
-    Logo,
+    LogoUltSky,
   },
-  methods: {
-    close() {
-      ipcRenderer.send("close");
-    },
-    minimize() {
-      ipcRenderer.send("minimize");
-    },
-  },
-};
+})
+export default class TheTitleBar extends Vue {
+  close() {
+    ipcRenderer.send("close");
+  }
+
+  minimize() {
+    ipcRenderer.send("minimize");
+  }
+}
 </script>
 
 <style lang="scss" scoped>

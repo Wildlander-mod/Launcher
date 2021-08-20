@@ -27,7 +27,7 @@ import BaseLink from "@/components/BaseLink.vue";
     BaseLink,
   },
 })
-export default class Footer extends Vue {
+export default class TheFooter extends Vue {
   patreonService!: PatreonService;
   patronNames: string[] = [];
 

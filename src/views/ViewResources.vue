@@ -1,94 +1,19 @@
 <template>
-  <div id="resources">
-    <p id="resources__title">Resources</p>
-    <div id="resources__wrapper">
-      <div class="resources__row">
-        <div class="resources__link-container">
-          <PatreonLogo :size="50" />
-          <p>Patreon</p>
-        </div>
-        <div class="resources__link-container">
-          <WebsiteLogo :size="50" />
-          <p>Website</p>
-        </div>
-        <div class="resources__link-container">
-          <YouTubeLogo :size="50" />
-          <p>YouTube</p>
-        </div>
-        <div class="resources__link-container"></div>
-      </div>
-      <div class="resources__row">
-        <div class="resources__link-container"></div>
-        <div class="resources__link-container"></div>
-        <div class="resources__link-container"></div>
-        <div class="resources__link-container"></div>
-      </div>
-    </div>
-  </div>
+  <AppPage>
+    <AppPageContent title="Resources">
+      <Resources />
+    </AppPageContent>
+  </AppPage>
 </template>
 
-<script>
-import PatreonLogo from "@/components/LogoPatreon.vue";
-import WebsiteLogo from "@/components/LogoWebsite.vue";
-import YouTubeLogo from "@/components/LogoYouTube.vue";
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import AppPage from "@/components/AppPage.vue";
+import AppPageContent from "@/components/AppPageContent.vue";
+import Resources from "@/components/Resources.vue";
 
-export default {
-  name: "Resources",
-  components: {
-    PatreonLogo,
-    WebsiteLogo,
-    YouTubeLogo,
-  },
-};
+@Options({
+  components: { Resources, AppPageContent, AppPage },
+})
+export default class ViewResources extends Vue {}
 </script>
-
-<style lang="scss" scoped>
-@import "~@/assets/scss";
-
-#resources {
-  display: flex;
-  flex-direction: column;
-  margin-left: 30px;
-  margin-right: 30px;
-  margin-top: 20px;
-
-  #resources__wrapper {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid $colour-background--dark;
-    height: 350px;
-
-    .resources__row {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin-left: 30px;
-      margin-right: 30px;
-      margin-top: 30px;
-
-      .resources__link-container {
-        align-items: center;
-        border: 1px solid $colour-background--dark;
-        display: flex;
-        flex-direction: column;
-        height: 125px;
-        justify-content: center;
-        width: 150px;
-
-        &:hover {
-          background-color: $colour-background--light;
-        }
-
-        p {
-          font-size: 12px;
-          font-weight: 300;
-        }
-      }
-    }
-  }
-
-  #resources__title {
-    font-size: 18px;
-    font-weight: 700;
-  }
-}
-</style>

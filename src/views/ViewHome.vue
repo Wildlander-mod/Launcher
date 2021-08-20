@@ -1,30 +1,26 @@
 <template>
-  <Page>
-    <PageContent title="News" height="small" width="small">
+  <AppPage>
+    <AppPageContent title="News" height="small" width="small">
       <News />
-    </PageContent>
+    </AppPageContent>
 
-    <PageContent title="Patron Highlight" width="small" height="large">
+    <AppPageContent title="Patron Highlight" width="small" height="large">
       <Patrons />
-    </PageContent>
-  </Page>
+    </AppPageContent>
+  </AppPage>
 </template>
 
-<script>
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import AppPage from "@/components/AppPage.vue";
+import AppPageContent from "@/components/AppPageContent.vue";
 import News from "@/components/News.vue";
 import Patrons from "@/components/Patrons.vue";
-import PageContent from "@/components/PageContent";
-import Page from "@/components/Page";
 
-export default {
-  name: "Home",
-  components: {
-    News,
-    Patrons,
-    PageContent,
-    Page,
-  },
-};
+@Options({
+  components: { Patrons, News, AppPageContent, AppPage },
+})
+export default class ViewHome extends Vue {}
 </script>
 
 <style lang="scss" scoped></style>

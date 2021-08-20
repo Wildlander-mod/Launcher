@@ -21,7 +21,7 @@
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export default class PageContent extends Vue {
+export default class AppPageContent extends Vue {
   @Prop({ required: false }) title!: string;
   @Prop({ default: "auto" }) height!: "small" | "large" | "auto";
   @Prop({ default: "large" }) width!: "small" | "large";
