@@ -2,34 +2,34 @@
   <div class="window">
     <template v-if="renderApp">
       <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
-        <NavBar />
+        <TheNavBar />
         <div class="window__content">
-          <TitleBar />
+          <TheTitleBar />
           <router-view />
         </div>
       </main>
-      <Footer />
+      <TheFooter />
     </template>
 
-    <StartupChecks @startupChecksComplete="startupChecksComplete" />
+    <TheStartupChecks @startupChecksComplete="startupChecksComplete" />
   </div>
 </template>
 
 <script lang="ts">
-import Footer from "@/components/TheFooter.vue";
-import NavBar from "@/components/TheNavBar.vue";
-import TitleBar from "@/components/TheTitleBar.vue";
+import TheFooter from "@/components/TheFooter.vue";
+import TheNavBar from "@/components/TheNavBar.vue";
+import TheTitleBar from "@/components/TheTitleBar.vue";
 import { Options, Vue } from "vue-class-component";
 import { registerServices } from "@/services/service-container";
-import StartupChecks from "@/components/StartupChecks.vue";
+import TheStartupChecks from "@/components/TheStartupChecks.vue";
 import { modalOpenedEvent } from "@/services/modal.service";
 
 @Options({
   components: {
-    StartupChecks,
-    Footer,
-    NavBar,
-    TitleBar,
+    TheStartupChecks,
+    TheFooter,
+    TheNavBar,
+    TheTitleBar,
   },
 })
 export default class App extends Vue {

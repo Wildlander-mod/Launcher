@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import PageContent from "@/components/PageContent.vue";
+import AppPageContent from "@/components/AppPageContent.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import { ipcRenderer, IpcRendererEvent } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
@@ -41,7 +41,7 @@ export const UPDATE_COMPLETE_EVENT = "updateComplete";
   components: {
     BaseButton,
     AppModal,
-    PageContent,
+    PageContent: AppPageContent,
   },
 })
 export default class AutoUpdate extends Vue {

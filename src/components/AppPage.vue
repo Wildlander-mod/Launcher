@@ -7,7 +7,7 @@
 <script>
 import { Vue } from "vue-class-component";
 
-export default class Page extends Vue {}
+export default class AppPage extends Vue {}
 </script>
 
 <style lang="scss" scoped>

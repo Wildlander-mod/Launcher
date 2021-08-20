@@ -73,7 +73,7 @@ import ProfileSelection from "@/components/ProfileSelection.vue";
     NavLink,
   },
 })
-export default class NavBar extends Vue {
+export default class TheNavBar extends Vue {
   activeTab = "home";
   gameVersion = 0;
   launcherVersion = launcherVersion;

@@ -1,6 +1,6 @@
 <template>
-  <Page>
-    <PageContent title="Settings" width="large">
+  <AppPage>
+    <AppPageContent title="Settings" width="large">
       <div class="c-settings l-column">
         <div class="c-settings__directories l-row l-space-between">
           <ModDirectory />
@@ -16,14 +16,14 @@
           <BaseButton type="default" @click="openLogPath"> Open </BaseButton>
         </div>
       </div>
-    </PageContent>
-  </Page>
+    </AppPageContent>
+  </AppPage>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Page from "@/components/Page.vue";
-import PageContent from "@/components/PageContent.vue";
+import AppPage from "@/components/AppPage.vue";
+import AppPageContent from "@/components/AppPageContent.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import BaseButton from "@/components/BaseButton.vue";
 import AppFileSelect from "@/components/AppFileSelect.vue";
@@ -36,9 +36,9 @@ import path from "path";
 @Options({
   components: {
     ModDirectory,
-    FileSelect: AppFileSelect,
-    Page,
-    PageContent,
+    AppFileSelect,
+    AppPage,
+    AppPageContent,
     BaseButton,
   },
 })

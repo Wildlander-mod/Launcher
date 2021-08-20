@@ -26,7 +26,7 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
     AutoUpdate,
   },
 })
-export default class StartupChecks extends Vue {
+export default class TheStartupChecks extends Vue {
   private showModDirectoryModal = true;
 
   updateComplete = false;

@@ -61,11 +61,11 @@
   </svg>
 </template>
 
-<script>
-export default {
-  name: "YouTubeLogo",
-  props: {
-    size: Number,
-  },
-};
+<script lang="ts">
+import { Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+
+export default class LogoYouTube extends Vue {
+  @Prop() size!: number;
+}
 </script>
