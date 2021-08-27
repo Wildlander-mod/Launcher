@@ -65,8 +65,12 @@ async function createWindow() {
       // Load the index.html when not in development
       await window.loadURL("app://./index.html");
     }
-  } catch (err) {
-    fatalError("Unable to create browser window", err);
+  } catch (error) {
+    if (error instanceof Error) {
+      fatalError("Unable to create browser window", error);
+    } else {
+      fatalError("Unable to create browser window with unknown error", "");
+    }
   }
 }
 
@@ -78,8 +82,12 @@ app.on("ready", async () => {
     // Install Vue Devtools
     try {
       await installExtension(VUEJS_DEVTOOLS);
-    } catch (e) {
-      logger.error("Vue Devtools failed to install:", e.toString());
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error("Vue Devtools failed to install:", error);
+      } else {
+        throw new Error("Vue Devtools failed to install with unknown error");
+      }
     }
   }
 
