@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.93 (2021-08-31)
+
+
+### Bug Fixes
+
+* update mod directory selection instructions ([2d6027b](https://github.com/UltimateSkyrim/ultskylauncher/commit/2d6027ba1d60392b6f1cde725d61a14d5496b02b))
+
 ### 0.1.92 (2021-08-31)
 
 ### 0.1.91 (2021-08-31)
