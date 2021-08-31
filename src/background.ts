@@ -2,7 +2,6 @@
 
 import { app, BrowserWindow, nativeImage, protocol } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import path from "path";
 import { isDevelopment } from "./main/config";
 import { fatalError } from "./main/errorHandler";
