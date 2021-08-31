@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 <template>
   <AppFileSelect
     :on-filepath-change="onModDirectoryChange"
     :pre-filepath-change="preModDirectoryChange"
     :initial-filepath="modDirectory"
-    label="Ultimate Skyrim Directory"
+    label="Select Your Content Folder"
     :centered="centered"
   />
 </template>
