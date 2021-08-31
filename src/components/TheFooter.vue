@@ -1,9 +1,9 @@
 <template>
   <footer class="c-footer">
     <p class="c-footer__text">
-      <BaseLink href="https://www.patreon.com/dylanbperry"
-        >Thanks to all the Patrons!</BaseLink
-      >
+      <BaseLink href="https://www.patreon.com/dylanbperry">
+        Thanks to all the Patrons!
+      </BaseLink>
     </p>
     <BaseMarquee
       v-if="patronNames && patronNames.length > 0"
