@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.95 (2021-08-31)
+
+
+### Features
+
+* link footer to patreon page ([#175](https://github.com/UltimateSkyrim/ultskylauncher/issues/175)) ([3acbf00](https://github.com/UltimateSkyrim/ultskylauncher/commit/3acbf00fc6b934e6b2fe5609dbe3a87291c7f0f0)), closes [#90](https://github.com/UltimateSkyrim/ultskylauncher/issues/90)
+
 ### 0.1.94 (2021-08-31)
 
 ### 0.1.93 (2021-08-31)
