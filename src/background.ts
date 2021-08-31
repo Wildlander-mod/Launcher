@@ -77,19 +77,6 @@ async function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS);
-    } catch (error) {
-      if (error instanceof Error) {
-        logger.error("Vue Devtools failed to install:", error);
-      } else {
-        throw new Error("Vue Devtools failed to install with unknown error");
-      }
-    }
-  }
-
   registerHandlers();
 
   await createWindow();
