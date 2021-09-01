@@ -9,12 +9,11 @@ import { Options as Component, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 export type ButtonSizes = "large" | "small";
-export type ButtonTypes = "primary" | "default";
+export type ButtonTypes = "primary" | "default" | "warning";
 
 @Component({})
 export default class BaseButton extends Vue {
   @Prop({ default: "small" }) size!: ButtonSizes;
-  @Prop() text!: string;
   @Prop({ default: "default" }) type!: ButtonTypes;
 }
 </script>
@@ -58,6 +57,15 @@ export default class BaseButton extends Vue {
     &:active,
     &:hover {
       background-color: $colour-primary--light;
+    }
+  }
+
+  &--warning {
+    background-color: $color-warning;
+
+    &active,
+    &:hover {
+      background-color: $color-warning--light;
     }
   }
 

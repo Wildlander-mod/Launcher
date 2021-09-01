@@ -21,6 +21,19 @@
             Home
           </NavLink>
         </router-link>
+
+        <router-link
+          :to="{
+            name: 'GameFiles',
+          }"
+          custom
+          v-slot="{ href, navigate, isActive }"
+        >
+          <NavLink :active="isActive" :href="href" @click="navigate">
+            Game files
+          </NavLink>
+        </router-link>
+
         <router-link
           :to="{
             name: 'Resources',
@@ -32,6 +45,7 @@
             Resources
           </NavLink>
         </router-link>
+
         <router-link
           :to="{
             name: 'Settings',
