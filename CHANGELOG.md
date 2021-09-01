@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.97 (2021-09-01)
+
+
+### Features
+
+* add file select for Skyrim directory ([bcd6a7a](https://github.com/UltimateSkyrim/ultskylauncher/commit/bcd6a7ae2f28e02baeca3b22836e6c1b6439c3c6))
+
 ### 0.1.96 (2021-09-01)
 
 ### 0.1.95 (2021-08-31)
