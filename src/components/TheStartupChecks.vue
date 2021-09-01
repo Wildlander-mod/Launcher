@@ -5,7 +5,15 @@
     <AppModal :show-modal="showModDirectoryModal" name="modDirectory">
       <ModDirectory
         @modDirectorySet="modDirectorySet"
-        @invalidFilepath="onInvalidFilepath"
+        @invalidFilepath="onInvalidModDirectory"
+        :centered="true"
+      />
+    </AppModal>
+
+    <AppModal :show-modal="showSkyrimDirectoryModal" name="skyrimDirectory">
+      <SkyrimDirectory
+        @skyrimDirectorySet="skyrimDirectorySet"
+        @invalidFilepath="onInvalidSkyrimDirectory"
         :centered="true"
       />
     </AppModal>
@@ -18,9 +26,11 @@ import AppModal from "@/components/AppModal.vue";
 import ModDirectory from "@/components/ModDirectory.vue";
 import AutoUpdate from "@/components/AutoUpdate.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import SkyrimDirectory from "@/components/SkyrimDirectory.vue";
 
 @Options({
   components: {
+    SkyrimDirectory,
     AppModal,
     ModDirectory,
     AutoUpdate,
@@ -28,9 +38,11 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 })
 export default class TheStartupChecks extends Vue {
   private showModDirectoryModal = true;
+  private showSkyrimDirectoryModal = true;
 
   updateComplete = false;
   modDirectorySelected = false;
+  skyrimDirectorySelected = false;
 
   created() {
     this.showModDirectoryModal = !userPreferences.get(
@@ -50,12 +62,27 @@ export default class TheStartupChecks extends Vue {
     this.checkIfShouldRenderWindow();
   }
 
-  onInvalidFilepath() {
+  skyrimDirectorySet() {
+    this.skyrimDirectorySelected = true;
+    this.showSkyrimDirectoryModal = false;
+
+    this.checkIfShouldRenderWindow();
+  }
+
+  onInvalidModDirectory() {
     this.showModDirectoryModal = true;
   }
 
+  onInvalidSkyrimDirectory() {
+    this.showSkyrimDirectoryModal = true;
+  }
+
   checkIfShouldRenderWindow() {
-    if (this.updateComplete && this.modDirectorySelected) {
+    if (
+      this.updateComplete &&
+      this.modDirectorySelected &&
+      this.skyrimDirectorySelected
+    ) {
       this.$emit("startupChecksComplete");
     }
   }

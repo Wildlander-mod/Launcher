@@ -4,6 +4,7 @@
       <div class="c-settings l-column">
         <div class="c-settings__directories l-row l-space-between">
           <ModDirectory />
+          <SkyrimDirectory />
         </div>
 
         <div class="l-row c-settings__actions">
@@ -32,9 +33,11 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import ModDirectory from "@/components/ModDirectory.vue";
 import { logger } from "@/main/logger";
 import path from "path";
+import SkyrimDirectory from "@/components/SkyrimDirectory.vue";
 
 @Options({
   components: {
+    SkyrimDirectory,
     ModDirectory,
     AppFileSelect,
     AppPage,
