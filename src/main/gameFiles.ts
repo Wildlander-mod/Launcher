@@ -1,20 +1,22 @@
 import fse from "fs-extra";
 import fs from "fs";
 import { logger } from "@/main/logger";
+import { enbFiles } from "@/main/enb";
 
-export function copyGameFiles(modDirectory: string, skyrimDirectory: string) {
+export async function copyGameFiles(
+  modDirectory: string,
+  skyrimDirectory: string
+) {
   logger.info("Copying game files");
-  const gameFiles = [
-    "skse_loader.exe",
-    "skse_steam_loader.dll",
-    "skse_1_9_32.dll",
-  ];
-  for (const file of gameFiles) {
-    if (!fs.existsSync(`${skyrimDirectory}/${file}`)) {
-      fse.copySync(
-        `${modDirectory}/Game Folder Files/${file}`,
-        `${skyrimDirectory}/${file}`
-      );
-    }
-  }
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFiles = await fs.promises.readdir(gameFolderFilesDirectory);
+  const gameFilesWithoutEnb = gameFiles.filter(
+    (file) => !enbFiles.includes(file)
+  );
+  gameFilesWithoutEnb.forEach((file) =>
+    fse.copySync(
+      `${gameFolderFilesDirectory}/${file}`,
+      `${skyrimDirectory}/${file}`
+    )
+  );
 }
