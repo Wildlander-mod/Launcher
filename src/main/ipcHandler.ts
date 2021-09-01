@@ -12,6 +12,7 @@ import fs from "fs";
 import { launchGame, MO2EXE } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
+import { copyGameFiles } from "@/main/gameFiles";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
@@ -94,5 +95,12 @@ export function registerHandlers() {
       return false;
     }
     return true;
+  });
+
+  ipcMain.handle(IPCEvents.COPY_GAME_FILES, async () => {
+    copyGameFiles(
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
+    );
   });
 }
