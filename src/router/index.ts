@@ -1,24 +1,30 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import Home from "@/views/ViewHome.vue";
-import Resources from "@/views/ViewResources.vue";
-import Settings from "@/views/ViewSettings.vue";
+import ViewHome from "@/views/ViewHome.vue";
+import ViewResources from "@/views/ViewResources.vue";
+import ViewSettings from "@/views/ViewSettings.vue";
+import ViewGameFiles from "@/views/ViewGameFiles.vue";
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: ViewHome,
+  },
+  {
+    path: "/game-files",
+    name: "GameFiles",
+    component: ViewGameFiles,
   },
   {
     path: "/resources",
     name: "Resources",
-    component: Resources,
+    component: ViewResources,
   },
   {
     path: "/settings",
     name: "Settings",
-    component: Settings,
+    component: ViewSettings,
   },
 ];
 
