@@ -1,7 +1,7 @@
 <template>
   <AppFileSelect
     :on-filepath-change="onModDirectoryChange"
-    :pre-filepath-change="preModDirectoryChange"
+    :pre-filepath-change="checkModDirectoryIsValid"
     :initial-filepath="modDirectory"
     label="Ultimate Skyrim Content Folder"
     :centered="centered"
@@ -36,13 +36,13 @@ export default class ModDirectory extends Vue {
 
     if (
       currentModDirectory &&
-      (await this.preModDirectoryChange(currentModDirectory))
+      (await this.checkModDirectoryIsValid(currentModDirectory))
     ) {
       this.modDirectory = currentModDirectory;
     }
   }
 
-  async preModDirectoryChange(filepath: string) {
+  async checkModDirectoryIsValid(filepath: string) {
     const modDirectoryOkay = await this.checkModDirectoryIsOkay(filepath);
 
     if (!modDirectoryOkay) {
