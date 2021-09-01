@@ -22,6 +22,7 @@
           class="c-game-folder-files__action"
           size="large"
           type="warning"
+          @click="handleDeleteGameFiles"
         >
           Delete game files
         </BaseButton>
@@ -65,7 +66,6 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import BaseButton from "@/components/BaseButton.vue";
-import { userPreferences, USER_PREFERENCE_KEYS } from "@/main/config";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { ipcRenderer } from "electron";
 
@@ -75,6 +75,9 @@ import { ipcRenderer } from "electron";
 export default class GameFolderFiles extends Vue {
   async handleCopyGameFiles() {
     await ipcRenderer.invoke(IPCEvents.COPY_GAME_FILES);
+  }
+  async handleDeleteGameFiles() {
+    await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
   }
 }
 </script>
