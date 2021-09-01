@@ -6,6 +6,7 @@
           class="c-game-folder-files__action"
           size="large"
           type="primary"
+          @click="handleCopyGameFiles"
         >
           Copy game files
         </BaseButton>
@@ -64,11 +65,18 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import BaseButton from "@/components/BaseButton.vue";
+import { userPreferences, USER_PREFERENCE_KEYS } from "@/main/config";
+import { IPCEvents } from "@/enums/IPCEvents";
+import { ipcRenderer } from "electron";
 
 @Options({
   components: { BaseButton },
 })
-export default class GameFolderFiles extends Vue {}
+export default class GameFolderFiles extends Vue {
+  async handleCopyGameFiles() {
+    await ipcRenderer.invoke(IPCEvents.COPY_GAME_FILES);
+  }
+}
 </script>
 
 <style scoped lang="scss">
