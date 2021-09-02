@@ -13,6 +13,7 @@ import { launchGame, MO2EXE } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyGameFiles, deleteGameFiles } from "@/main/gameFiles";
+import { copyEnbFiles } from "@/main/enb";
 import { deleteEnbFiles } from "@/main/enb";
 
 export function registerHandlers() {
@@ -114,5 +115,12 @@ export function registerHandlers() {
 
   ipcMain.handle(IPCEvents.DELETE_ENB_FILES, async () => {
     deleteEnbFiles(userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY));
+  });
+
+  ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () => {
+    copyEnbFiles(
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
+    );
   });
 }
