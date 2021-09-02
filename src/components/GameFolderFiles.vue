@@ -52,6 +52,7 @@
           class="c-game-folder-files__action"
           size="large"
           type="warning"
+          @click="handleDeleteEnbFiles"
         >
           Delete enb files
         </BaseButton>
@@ -78,6 +79,9 @@ export default class GameFolderFiles extends Vue {
   }
   async handleDeleteGameFiles() {
     await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
+  }
+  async handleDeleteEnbFiles() {
+    await ipcRenderer.invoke(IPCEvents.DELETE_ENB_FILES);
   }
 }
 </script>
