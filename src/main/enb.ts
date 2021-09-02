@@ -42,8 +42,8 @@ export async function deleteEnbFiles(skyrimDirectory: string) {
   const enbFilesWithoutEnbseries = existingEnbFiles.filter(
     (file) => file !== "enbseries"
   );
-  enbFilesWithoutEnbseries.forEach((file) =>
-    fs.promises.unlink(`${skyrimDirectory}/${file}`)
-  );
+  for (const file of enbFilesWithoutEnbseries) {
+    await fs.promises.unlink(`${skyrimDirectory}/${file}`);
+  }
   fs.rmdirSync(`${skyrimDirectory}/enbseries`, { recursive: true });
 }
