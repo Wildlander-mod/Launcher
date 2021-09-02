@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.99 (2021-09-02)
+
+
+### Bug Fixes
+
+* fix error on attempting to delete existing files ([2c1c089](https://github.com/UltimateSkyrim/ultskylauncher/commit/2c1c089bc114f015573f5aa66c80c661941221b6))
+
 ### 0.1.98 (2021-09-02)
 
 ### 0.1.97 (2021-09-01)
