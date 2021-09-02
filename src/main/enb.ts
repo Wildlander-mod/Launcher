@@ -1,5 +1,5 @@
 import fs from "fs";
-import copydir from "copy-dir";
+import { copy } from "fs-extra";
 import { logger } from "@/main/logger";
 
 export const enbFiles = [
@@ -20,13 +20,14 @@ export async function copyEnbFiles(
   const enbFilesWithoutEnbseries = enbFiles.filter(
     (file) => file !== "enbseries"
   );
-  enbFilesWithoutEnbseries.forEach((file) =>
-    fs.promises.copyFile(
+
+  for (const file of enbFilesWithoutEnbseries) {
+    await fs.promises.copyFile(
       `${gameFolderFilesDirectory}/${file}`,
       `${skyrimDirectory}/${file}`
-    )
-  );
-  copydir.sync(
+    );
+  }
+  await copy(
     `${gameFolderFilesDirectory}/enbseries`,
     `${skyrimDirectory}/enbseries`
   );

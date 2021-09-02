@@ -13,12 +13,15 @@ export async function copyGameFiles(
 ) {
   logger.info("Copying game files");
   const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
-  (await getFilesWithoutEnb(gameFolderFilesDirectory)).forEach((file) =>
-    fs.promises.copyFile(
+  const gameFilesWithoutEnb = await getFilesWithoutEnb(
+    gameFolderFilesDirectory
+  );
+  for (const file of gameFilesWithoutEnb) {
+    await fs.promises.copyFile(
       `${gameFolderFilesDirectory}/${file}`,
       `${skyrimDirectory}/${file}`
-    )
-  );
+    );
+  }
 }
 
 export async function deleteGameFiles(
@@ -30,7 +33,7 @@ export async function deleteGameFiles(
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
-  gameFilesWithoutEnb.forEach((file) =>
-    fs.promises.unlink(`${skyrimDirectory}/${file}`)
-  );
+  for (const file of gameFilesWithoutEnb) {
+    await fs.promises.unlink(`${skyrimDirectory}/${file}`);
+  }
 }

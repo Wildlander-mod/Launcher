@@ -76,16 +76,47 @@ import { ipcRenderer } from "electron";
 })
 export default class GameFolderFiles extends Vue {
   async handleCopyGameFiles() {
-    await ipcRenderer.invoke(IPCEvents.COPY_GAME_FILES);
+    try {
+      await ipcRenderer.invoke(IPCEvents.COPY_GAME_FILES);
+    } catch (error) {
+      await ipcRenderer.invoke(IPCEvents.ERROR, {
+        title: "Error copying game files",
+        error: (error as Error).message,
+      });
+    }
   }
+
   async handleDeleteGameFiles() {
-    await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
+    try {
+      await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
+    } catch (error) {
+      await ipcRenderer.invoke(IPCEvents.ERROR, {
+        title: "Error deleting game files",
+        error: (error as Error).message,
+      });
+    }
   }
+
   async handleCopyEnbFiles() {
-    await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
+    try {
+      await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
+    } catch (error) {
+      await ipcRenderer.invoke(IPCEvents.ERROR, {
+        title: "Error copying enb files",
+        error: (error as Error).message,
+      });
+    }
   }
+
   async handleDeleteEnbFiles() {
-    await ipcRenderer.invoke(IPCEvents.DELETE_ENB_FILES);
+    try {
+      await ipcRenderer.invoke(IPCEvents.DELETE_ENB_FILES);
+    } catch (error) {
+      await ipcRenderer.invoke(IPCEvents.ERROR, {
+        title: "Error deleting enb files",
+        error: (error as Error).message,
+      });
+    }
   }
 }
 </script>

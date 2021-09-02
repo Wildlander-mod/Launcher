@@ -13,8 +13,7 @@ import { launchGame, MO2EXE } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyGameFiles, deleteGameFiles } from "@/main/gameFiles";
-import { copyEnbFiles } from "@/main/enb";
-import { deleteEnbFiles } from "@/main/enb";
+import { copyEnbFiles, deleteEnbFiles } from "@/main/enb";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
@@ -58,6 +57,7 @@ export function registerHandlers() {
   });
 
   ipcMain.handle(IPCEvents.ERROR, async (event, { title, error }) => {
+    logger.error(error);
     await dialog.showErrorBox(title, error);
   });
 
@@ -100,26 +100,28 @@ export function registerHandlers() {
   });
 
   ipcMain.handle(IPCEvents.COPY_GAME_FILES, async () => {
-    copyGameFiles(
+    return copyGameFiles(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
   });
 
   ipcMain.handle(IPCEvents.DELETE_GAME_FILES, async () => {
-    deleteGameFiles(
+    return deleteGameFiles(
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
+    );
+  });
+
+  ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () => {
+    return copyEnbFiles(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
   });
 
   ipcMain.handle(IPCEvents.DELETE_ENB_FILES, async () => {
-    deleteEnbFiles(userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY));
-  });
-
-  ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () => {
-    copyEnbFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+    return deleteEnbFiles(
       userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
   });
