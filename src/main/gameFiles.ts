@@ -33,7 +33,10 @@ export async function deleteGameFiles(
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
-  for (const file of gameFilesWithoutEnb) {
+  const existingGameFilesWithoutEnb = gameFilesWithoutEnb.filter((file) =>
+    fs.existsSync(`${skyrimDirectory}/${file}`)
+  );
+  for (const file of existingGameFilesWithoutEnb) {
     await fs.promises.unlink(`${skyrimDirectory}/${file}`);
   }
 }
