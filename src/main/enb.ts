@@ -1,4 +1,5 @@
 import fs from "fs";
+import copydir from "copy-dir";
 import { logger } from "@/main/logger";
 
 export const enbFiles = [
@@ -9,6 +10,27 @@ export const enbFiles = [
   "d3dx9_42.dll",
   "enbhost.exe",
 ];
+
+export async function copyEnbFiles(
+  modDirectory: string,
+  skyrimDirectory: string
+) {
+  logger.info("Copying ENB Files");
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const enbFilesWithoutEnbseries = enbFiles.filter(
+    (file) => file !== "enbseries"
+  );
+  enbFilesWithoutEnbseries.forEach((file) =>
+    fs.promises.copyFile(
+      `${gameFolderFilesDirectory}/${file}`,
+      `${skyrimDirectory}/${file}`
+    )
+  );
+  copydir.sync(
+    `${gameFolderFilesDirectory}/enbseries`,
+    `${skyrimDirectory}/enbseries`
+  );
+}
 
 export async function deleteEnbFiles(skyrimDirectory: string) {
   logger.info("Deleting ENB Files");

@@ -40,6 +40,7 @@
           class="c-game-folder-files__action"
           size="large"
           type="primary"
+          @click="handleCopyEnbFiles"
         >
           Copy enb files
         </BaseButton>
@@ -79,6 +80,9 @@ export default class GameFolderFiles extends Vue {
   }
   async handleDeleteGameFiles() {
     await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
+  }
+  async handleCopyEnbFiles() {
+    await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
   }
   async handleDeleteEnbFiles() {
     await ipcRenderer.invoke(IPCEvents.DELETE_ENB_FILES);
