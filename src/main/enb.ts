@@ -47,3 +47,15 @@ export async function deleteEnbFiles(skyrimDirectory: string) {
   }
   fs.rmdirSync(`${skyrimDirectory}/enbseries`, { recursive: true });
 }
+
+export async function checkEnbFiles(skyrimDirectory: string) {
+  logger.info("Checking ENB Files");
+  const existingEnbFiles = enbFiles.filter((file) =>
+    fs.existsSync(`${skyrimDirectory}/${file}`)
+  );
+  if (existingEnbFiles === enbFiles) {
+    return true;
+  } else {
+    return false;
+  }
+}

@@ -40,3 +40,22 @@ export async function deleteGameFiles(
     await fs.promises.unlink(`${skyrimDirectory}/${file}`);
   }
 }
+
+export async function checkGameFiles(
+  modDirectory: string,
+  skyrimDirectory: string
+) {
+  logger.info("Checking game files");
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFilesWithoutEnb = await getFilesWithoutEnb(
+    gameFolderFilesDirectory
+  );
+  const existingGameFilesWithoutEnb = gameFilesWithoutEnb.filter((file) =>
+    fs.existsSync(`${skyrimDirectory}/${file}`)
+  );
+  if (existingGameFilesWithoutEnb === gameFilesWithoutEnb) {
+    return true;
+  } else {
+    return false;
+  }
+}
