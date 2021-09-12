@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.101 (2021-09-12)
+
+
+### Features
+
+* add button to open Skyrim and US directories ([607ba4b](https://github.com/UltimateSkyrim/ultskylauncher/commit/607ba4b5cc36cc373bf988546ec57a4edbdc11b0))
+
 ### 0.1.100 (2021-09-12)
 
 ### 0.1.99 (2021-09-02)
