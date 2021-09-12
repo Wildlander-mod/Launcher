@@ -9,11 +9,12 @@ export const MO2EXE = "ModOrganizer.exe";
 
 export async function launchGame() {
   try {
+    logger.info('Copying game files on launch');
     const gameFilesExist = await checkGameFiles(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
-    logger.info(gameFilesExist);
+    logger.debug(`Game files exist on launch: ${gameFilesExist}`);
     if (!gameFilesExist) {
       copyGameFiles(
         userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
