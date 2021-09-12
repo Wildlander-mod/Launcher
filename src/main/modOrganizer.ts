@@ -7,30 +7,33 @@ import { copyEnbFiles, checkEnbFiles } from "@/main/enb";
 
 export const MO2EXE = "ModOrganizer.exe";
 
-export async function launchGame() {
-  try {
-    logger.info('Copying game files on launch');
-    const gameFilesExist = await checkGameFiles(
+async function copyGameFolderFiles() {
+  logger.info("Copying game files on launch");
+  const gameFilesExist = await checkGameFiles(
+    userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+    userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
+  );
+  logger.debug(`Game files exist on launch: ${gameFilesExist}`);
+  if (!gameFilesExist) {
+    copyGameFiles(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
-    logger.debug(`Game files exist on launch: ${gameFilesExist}`);
-    if (!gameFilesExist) {
-      copyGameFiles(
-        userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-      );
-    }
-    const enbFilesExist = await checkEnbFiles(
-      USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY
+  }
+  const enbFilesExist = await checkEnbFiles(
+    USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY
+  );
+  if (!enbFilesExist) {
+    copyEnbFiles(
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
-    if (!enbFilesExist) {
-      copyEnbFiles(
-        userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-      );
-    }
+  }
+}
 
+export async function launchGame() {
+  try {
+    copyGameFolderFiles();
     logger.info("Launching game");
     logger.debug(
       `User configuration: ${JSON.stringify(userPreferences.store)}`

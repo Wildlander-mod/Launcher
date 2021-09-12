@@ -54,3 +54,4 @@ export async function checkEnbFiles(skyrimDirectory: string) {
     fs.existsSync(`${skyrimDirectory}/${file}`)
   );
   return existingEnbFiles === enbFiles;
+}
