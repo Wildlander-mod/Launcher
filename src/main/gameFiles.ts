@@ -54,3 +54,4 @@ export async function checkGameFiles(
     fs.existsSync(`${skyrimDirectory}/${file}`)
   );
   return existingGameFilesWithoutEnb === gameFilesWithoutEnb;
+}
