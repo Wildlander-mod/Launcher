@@ -19,7 +19,6 @@
   },
   "main": "background.js",
   "dependencies": {
-    "core-js": "^3.16.4",
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.0",
     "fs-extra": "^10.0.0",
