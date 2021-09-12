@@ -18,6 +18,13 @@
       >
         Browse
       </BaseButton>
+      <BaseButton
+        type="default"
+        @click="openDirectory"
+        class="c-file-input__browse"
+      >
+        Open
+      </BaseButton>
     </div>
   </div>
 </template>
@@ -25,7 +32,7 @@
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
 import BaseButton from "@/components/BaseButton.vue";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import BaseInput from "@/components/BaseInput.vue";
 import { Prop, Watch } from "vue-property-decorator";
@@ -61,6 +68,10 @@ export default class AppFileSelect extends Vue {
         this.setNewFilepath(newFilepath);
       }
     }
+  }
+
+  async openDirectory() {
+    await shell.openPath(this.filepath);
   }
 
   @Watch("initialFilepath")
