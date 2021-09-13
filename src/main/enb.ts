@@ -48,10 +48,10 @@ export async function deleteEnbFiles(skyrimDirectory: string) {
   fs.rmdirSync(`${skyrimDirectory}/enbseries`, { recursive: true });
 }
 
-export async function checkEnbFiles(skyrimDirectory: string) {
-  logger.info("Checking ENB Files");
+export async function checkEnbFilesExist(directory: string) {
+  logger.info(`Checking which ENB files exist in ${directory}`);
   const existingEnbFiles = enbFiles.filter((file) =>
-    fs.existsSync(`${skyrimDirectory}/${file}`)
+    fs.existsSync(`${directory}/${file}`)
   );
   return existingEnbFiles === enbFiles;
 }
