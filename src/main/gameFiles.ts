@@ -41,11 +41,11 @@ export async function deleteGameFiles(
   }
 }
 
-export async function checkGameFiles(
+export async function checkGameFilesExist(
   modDirectory: string,
   skyrimDirectory: string
 ) {
-  logger.info("Checking game files");
+  logger.info(`Checking which game files exist in ${skyrimDirectory}`);
   const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
