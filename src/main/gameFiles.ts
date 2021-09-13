@@ -12,7 +12,7 @@ export async function copyGameFiles(
   skyrimDirectory: string
 ) {
   logger.info("Copying game files");
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
@@ -29,7 +29,7 @@ export async function deleteGameFiles(
   skyrimDirectory: string
 ) {
   logger.info("Deleting game files");
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
@@ -39,4 +39,19 @@ export async function deleteGameFiles(
   for (const file of existingGameFilesWithoutEnb) {
     await fs.promises.unlink(`${skyrimDirectory}/${file}`);
   }
+}
+
+export async function checkGameFilesExist(
+  modDirectory: string,
+  skyrimDirectory: string
+) {
+  logger.info(`Checking which game files exist in ${skyrimDirectory}`);
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
+  const gameFilesWithoutEnb = await getFilesWithoutEnb(
+    gameFolderFilesDirectory
+  );
+  const existingGameFilesWithoutEnb = gameFilesWithoutEnb.filter((file) =>
+    fs.existsSync(`${skyrimDirectory}/${file}`)
+  );
+  return existingGameFilesWithoutEnb === gameFilesWithoutEnb;
 }

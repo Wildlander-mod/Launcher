@@ -16,7 +16,7 @@ export async function copyEnbFiles(
   skyrimDirectory: string
 ) {
   logger.info("Copying ENB Files");
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const enbFilesWithoutEnbseries = enbFiles.filter(
     (file) => file !== "enbseries"
   );
@@ -46,4 +46,12 @@ export async function deleteEnbFiles(skyrimDirectory: string) {
     await fs.promises.unlink(`${skyrimDirectory}/${file}`);
   }
   fs.rmdirSync(`${skyrimDirectory}/enbseries`, { recursive: true });
+}
+
+export async function checkEnbFilesExist(directory: string) {
+  logger.info(`Checking which ENB files exist in ${directory}`);
+  const existingEnbFiles = enbFiles.filter((file) =>
+    fs.existsSync(`${directory}/${file}`)
+  );
+  return existingEnbFiles === enbFiles;
 }
