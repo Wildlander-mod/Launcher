@@ -16,7 +16,7 @@ export async function copyEnbFiles(
   skyrimDirectory: string
 ) {
   logger.info("Copying ENB Files");
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const enbFilesWithoutEnbseries = enbFiles.filter(
     (file) => file !== "enbseries"
   );

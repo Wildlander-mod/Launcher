@@ -14,6 +14,7 @@ import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyGameFiles, deleteGameFiles } from "@/main/gameFiles";
 import { copyEnbFiles, deleteEnbFiles } from "@/main/enb";
+import { handleError } from "./errorHandler";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
@@ -31,7 +32,7 @@ export function registerHandlers() {
   });
 
   ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
-    launchGame();
+    await launchGame();
   });
 
   // Wait until the application is ready to check for an update
@@ -57,8 +58,7 @@ export function registerHandlers() {
   });
 
   ipcMain.handle(IPCEvents.ERROR, async (event, { title, error }) => {
-    logger.error(error);
-    await dialog.showErrorBox(title, error);
+    await handleError(title, error);
   });
 
   ipcMain.handle(IPCEvents.GET_PRESETS, async (): Promise<string[]> => {

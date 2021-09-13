@@ -12,7 +12,7 @@ export async function copyGameFiles(
   skyrimDirectory: string
 ) {
   logger.info("Copying game files");
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
@@ -29,7 +29,7 @@ export async function deleteGameFiles(
   skyrimDirectory: string
 ) {
   logger.info("Deleting game files");
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
@@ -46,7 +46,7 @@ export async function checkGameFilesExist(
   skyrimDirectory: string
 ) {
   logger.info(`Checking which game files exist in ${skyrimDirectory}`);
-  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files/`;
+  const gameFolderFilesDirectory = `${modDirectory}/Game Folder Files`;
   const gameFilesWithoutEnb = await getFilesWithoutEnb(
     gameFolderFilesDirectory
   );
