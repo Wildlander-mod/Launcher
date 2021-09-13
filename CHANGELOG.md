@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.105 (2021-09-13)
+
+
+### Features
+
+* copy game folder files on game launch ([#214](https://github.com/UltimateSkyrim/ultskylauncher/issues/214)) ([700cd01](https://github.com/UltimateSkyrim/ultskylauncher/commit/700cd01c59b5a3ab03a8071c5d273d614d5b0809)), closes [#70](https://github.com/UltimateSkyrim/ultskylauncher/issues/70)
+
 ### 0.1.104 (2021-09-12)
 
 ### 0.1.103 (2021-09-12)
