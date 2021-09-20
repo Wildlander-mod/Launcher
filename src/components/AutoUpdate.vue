@@ -8,17 +8,9 @@
           continuing.
         </p>
 
-        <p v-if="updateClicked && !updateDownloaded">
+        <p v-if="!updateDownloaded">
           Download progress {{ downloadProgress }}%
         </p>
-
-        <div class="c-modal__actions" v-if="!updateClicked">
-          <BaseButton size="large" @click="close">Close launcher</BaseButton>
-
-          <BaseButton size="large" type="primary" @click="closeAndUpdate">
-            Close and update
-          </BaseButton>
-        </div>
       </template>
       <div class="c-auto-update__loading" v-if="!updateAvailable">
         Checking for update...
@@ -49,41 +41,37 @@ export default class AutoUpdate extends Vue {
   private updateAvailable = false;
   private downloadProgress = 0;
   private updateDownloaded = false;
-  private updateClicked = false;
 
   created() {
     ipcRenderer.on(IPCEvents.UPDATE_AVAILABLE, () => {
       this.updateAvailable = true;
+
+      if (this.updateDownloaded) {
+        ipcRenderer.send(IPCEvents.UPDATE_APP);
+      } else {
+        ipcRenderer.on(IPCEvents.UPDATE_DOWNLOADED, () => {
+          ipcRenderer.send(IPCEvents.UPDATE_APP);
+        });
+      }
     });
+
     ipcRenderer.on(IPCEvents.UPDATE_NOT_AVAILABLE, () => {
       this.showAutoUpdate = false;
       this.$emit(UPDATE_COMPLETE_EVENT);
     });
+
     ipcRenderer.on(
       IPCEvents.DOWNLOAD_PROGRESS,
       (_event: IpcRendererEvent, progress: number) => {
         this.downloadProgress = progress;
       }
     );
+
     ipcRenderer.on(IPCEvents.UPDATE_DOWNLOADED, () => {
       this.updateDownloaded = true;
     });
+
     ipcRenderer.send(IPCEvents.CHECK_FOR_UPDATE);
-  }
-
-  closeAndUpdate() {
-    this.updateClicked = true;
-    if (this.updateDownloaded) {
-      ipcRenderer.send(IPCEvents.UPDATE_APP);
-    } else {
-      ipcRenderer.on(IPCEvents.UPDATE_DOWNLOADED, () => {
-        ipcRenderer.send(IPCEvents.UPDATE_APP);
-      });
-    }
-  }
-
-  close() {
-    ipcRenderer.send(IPCEvents.CLOSE);
   }
 }
 </script>
