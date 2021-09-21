@@ -17,9 +17,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavLink :active="isActive" :href="href" @click="navigate">
+          <NavigationLink :active="isActive" :href="href" @click="navigate">
             Home
-          </NavLink>
+          </NavigationLink>
         </router-link>
 
         <router-link
@@ -29,9 +29,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavLink :active="isActive" :href="href" @click="navigate">
+          <NavigationLink :active="isActive" :href="href" @click="navigate">
             Game files
-          </NavLink>
+          </NavigationLink>
         </router-link>
 
         <router-link
@@ -41,9 +41,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavLink :active="isActive" :href="href" @click="navigate">
+          <NavigationLink :active="isActive" :href="href" @click="navigate">
             Resources
-          </NavLink>
+          </NavigationLink>
         </router-link>
 
         <router-link
@@ -53,9 +53,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavLink :active="isActive" :href="href" @click="navigate">
+          <NavigationLink :active="isActive" :href="href" @click="navigate">
             Settings
-          </NavLink>
+          </NavigationLink>
         </router-link>
       </div>
 
@@ -73,7 +73,7 @@ import { version as launcherVersion } from "../../package.json";
 import BaseLink from "./BaseLink.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { Options as Component, Vue } from "vue-class-component";
-import NavLink from "@/components/NavLink.vue";
+import NavigationLink from "@/components/NavigationLink.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ProfileSelection from "@/components/ProfileSelection.vue";
@@ -84,11 +84,10 @@ import ProfileSelection from "@/components/ProfileSelection.vue";
     BaseLink,
     BaseButton,
     BaseDropdown,
-    NavLink,
+    NavigationLink,
   },
 })
 export default class TheNavigation extends Vue {
-  activeTab = "home";
   gameVersion = 0;
   launcherVersion = launcherVersion;
 
@@ -116,7 +115,6 @@ export default class TheNavigation extends Vue {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  height: $size-window-height - 30px;
 
   width: 225px;
 }
