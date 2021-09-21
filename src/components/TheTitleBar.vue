@@ -1,10 +1,10 @@
 <template>
-  <div class="c-control-bar l-row l-end">
-    <div class="c-navigation-bar"></div>
-    <div class="c-control-bar__control" @click="minimize">
+  <div class="c-title-bar l-row l-end">
+    <div class="c-title-bar__navigation-bar"></div>
+    <div class="c-title-bar__control" @click="minimize">
       <span class="material-icons"> remove </span>
     </div>
-    <div class="c-control-bar__control" @click="close">
+    <div class="c-title-bar__control" @click="close">
       <span class="material-icons"> close </span>
     </div>
   </div>
@@ -14,6 +14,7 @@
 import { ipcRenderer } from "electron";
 import { Options, Vue } from "vue-class-component";
 import LogoUltSky from "@/components/LogoUltSky.vue";
+import { IPCEvents } from "@/enums/IPCEvents";
 
 @Options({
   components: {
@@ -22,11 +23,11 @@ import LogoUltSky from "@/components/LogoUltSky.vue";
 })
 export default class TheTitleBar extends Vue {
   close() {
-    ipcRenderer.send("close");
+    ipcRenderer.send(IPCEvents.CLOSE);
   }
 
   minimize() {
-    ipcRenderer.send("minimize");
+    ipcRenderer.send(IPCEvents.MINIMIZE);
   }
 }
 </script>
@@ -34,20 +35,23 @@ export default class TheTitleBar extends Vue {
 <style lang="scss" scoped>
 @import "~@/assets/scss";
 
-.c-navigation-bar {
-  // Allow the whole window to be dragged by the navigation bar
-  -webkit-app-region: drag;
-  -webkit-user-select: none;
-  flex-grow: 1;
-}
-
-.c-control-bar {
+.c-title-bar {
   height: 24px;
   background-color: $colour-background--darker-solid;
 }
 
-.c-control-bar__control {
-  cursor: pointer;
+.c-title-bar__control {
   -webkit-app-region: no-drag;
+
+  &:hover {
+    background-color: $colour-background--dark;
+  }
+}
+
+.c-title-bar__navigation-bar {
+  // Allow the whole window to be dragged by the navigation bar
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+  flex-grow: 1;
 }
 </style>
