@@ -2,7 +2,7 @@
   <div class="window">
     <template v-if="renderApp">
       <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
-        <TheNavBar />
+        <TheNavigation />
         <div class="window__content">
           <TheTitleBar />
           <router-view />
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import TheFooter from "@/components/TheFooter.vue";
-import TheNavBar from "@/components/TheNavBar.vue";
+import TheNavigation from "@/components/TheNavigation.vue";
 import TheTitleBar from "@/components/TheTitleBar.vue";
 import { Options, Vue } from "vue-class-component";
 import { registerServices } from "@/services/service-container";
@@ -28,7 +28,7 @@ import { modalOpenedEvent } from "@/services/modal.service";
   components: {
     TheStartupChecks,
     TheFooter,
-    TheNavBar,
+    TheNavigation,
     TheTitleBar,
   },
 })
