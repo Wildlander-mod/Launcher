@@ -42,6 +42,7 @@ export default class TheTitleBar extends Vue {
 
 .c-title-bar__control {
   -webkit-app-region: no-drag;
+  cursor: pointer;
 
   &:hover {
     background-color: $colour-background--dark;
