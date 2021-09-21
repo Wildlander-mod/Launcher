@@ -3,7 +3,7 @@
     :on-filepath-change="onModDirectoryChange"
     :pre-filepath-change="checkModDirectoryIsValid"
     :initial-filepath="modDirectory"
-    label="Ultimate Skyrim Content Folder"
+    label="Ultimate Skyrim MO2 Folder"
     :centered="centered"
   />
 </template>
