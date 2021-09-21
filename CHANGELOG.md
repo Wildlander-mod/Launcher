@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.117 (2021-09-21)
+
+
+### Bug Fixes
+
+* fix minimize button ([fd145aa](https://github.com/UltimateSkyrim/ultskylauncher/commit/fd145aa579ab0876a1d0470e5b5cff562f4a9aca))
+
 ### 0.1.116 (2021-09-21)
 
 
