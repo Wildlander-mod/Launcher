@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.116 (2021-09-21)
+
+
+### Features
+
+* add proper title bar ([9940a77](https://github.com/UltimateSkyrim/ultskylauncher/commit/9940a77a53e1c1e44b8e1457eb08a7c2e4e7da2e))
+
 ### 0.1.115 (2021-09-21)
 
 ### 0.1.114 (2021-09-20)
