@@ -8,11 +8,6 @@
       <span class="material-icons"> close </span>
     </div>
   </div>
-  <div class="c-header">
-    <div class="c-header__title">
-      <LogoUltSky fill="#ffffff" :height="30" />
-    </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -46,20 +41,13 @@ export default class TheTitleBar extends Vue {
   flex-grow: 1;
 }
 
+.c-control-bar {
+  height: 24px;
+  background-color: $colour-background--darker-solid;
+}
+
 .c-control-bar__control {
   cursor: pointer;
   -webkit-app-region: no-drag;
-}
-
-.c-header {
-  margin-left: 30px;
-}
-
-.c-header__subtext {
-  color: $colour-text;
-  font-size: 12px;
-  line-height: 15px;
-  margin-top: 8px;
-  width: 450px;
 }
 </style>

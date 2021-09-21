@@ -8,7 +8,7 @@
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export default class NavLink extends Vue {
+export default class NavigationLink extends Vue {
   @Prop() private active!: boolean;
 }
 </script>
@@ -22,8 +22,8 @@ export default class NavLink extends Vue {
   margin-bottom: $size-spacing--x-large;
   font-size: $font-size-subtitle-alt;
 
-  padding-top: $size-spacing;
-  padding-bottom: $size-spacing;
+  padding-top: $size-spacing--small;
+  padding-bottom: $size-spacing--small;
 
   &.c-nav-link--active {
     color: $colour-text;

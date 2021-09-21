@@ -1,16 +1,21 @@
 <template>
   <div class="window">
     <template v-if="renderApp">
-      <main :class="{ 'u-disable-click-events': !clickEventsEnabled }">
-        <TheNavigation />
-        <div class="window__content">
-          <TheTitleBar />
-          <router-view />
+      <main
+        class="l-column l-grow"
+        :class="{ 'u-disable-click-events': !clickEventsEnabled }"
+      >
+        <TheTitleBar />
+        <div class="l-row l-grow">
+          <TheNavigation />
+          <div class="l-column">
+            <TheHeader />
+            <router-view />
+          </div>
         </div>
       </main>
-      <TheFooter />
+      <TheFooter class="l-end-self" />
     </template>
-
     <TheStartupChecks @startupChecksComplete="startupChecksComplete" />
   </div>
 </template>
@@ -23,9 +28,11 @@ import { Options, Vue } from "vue-class-component";
 import { registerServices } from "@/services/service-container";
 import TheStartupChecks from "@/components/TheStartupChecks.vue";
 import { modalOpenedEvent } from "@/services/modal.service";
+import TheHeader from "@/components/TheHeader.vue";
 
 @Options({
   components: {
+    TheHeader,
     TheStartupChecks,
     TheFooter,
     TheNavigation,
@@ -64,12 +71,6 @@ body {
   margin: 0;
 }
 
-main {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-}
-
 p {
   font-weight: $font-weight--small;
   size: $font-size--large;
@@ -85,12 +86,6 @@ p {
   flex-direction: column;
   height: $size-window-height;
   width: $size-window-width;
-}
-
-.window__content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
 }
 
 // Custom scrollbars
