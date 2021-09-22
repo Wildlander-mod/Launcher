@@ -24,7 +24,7 @@
     "fs-extra": "^10.0.0",
     "mitt": "^3.0.0",
     "ncp": "^2.0.0",
-    "vue": "^3.2.12",
+    "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-final-modal": "^3.4.1",
     "vue-router": "^4.0.11"
