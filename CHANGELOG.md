@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.122 (2021-09-23)
+
+
+### Bug Fixes
+
+* prevent showing the open button with startup checks ([458f232](https://github.com/UltimateSkyrim/ultskylauncher/commit/458f232a91210794ee4b3ebbc1600f984b33b8e2))
+
 ### 0.1.121 (2021-09-23)
 
 ### 0.1.120 (2021-09-22)
