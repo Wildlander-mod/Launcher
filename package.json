@@ -33,7 +33,7 @@
     "@babel/preset-typescript": "^7.15.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@types/electron-devtools-installer": "^2.2.0",
-    "@types/fs-extra": "^9.0.12",
+    "@types/fs-extra": "^9.0.13",
     "@types/ncp": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
