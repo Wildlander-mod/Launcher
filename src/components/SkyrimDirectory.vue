@@ -5,6 +5,7 @@
     :initial-filepath="skyrimDirectory"
     label="Skyrim Game Folder"
     :centered="centered"
+    :hide-open="hideOpen"
   />
 </template>
 
@@ -26,6 +27,7 @@ export const invalidFilepathEvent = "invalidFilepath";
 export default class SkyrimDirectory extends Vue {
   private skyrimDirectory = "";
   @Prop({ default: false }) private centered!: boolean;
+  @Prop({ default: false }) private hideOpen!: boolean;
 
   private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
 
