@@ -86,7 +86,7 @@ export default class Resources extends Vue {}
   flex-direction: row;
   flex-wrap: wrap;
 
-  :nth-child(4),
+  :nth-child(4n),
   :last-child {
     margin-right: 0;
   }
