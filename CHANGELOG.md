@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.123 (2021-09-23)
+
+
+### Features
+
+* add confirmation when actioning game files ([48ef824](https://github.com/UltimateSkyrim/ultskylauncher/commit/48ef824c5b61076700eb2d144ebb88dc6184c1ec))
+
 ### 0.1.122 (2021-09-23)
 
 
