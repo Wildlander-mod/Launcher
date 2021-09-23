@@ -81,6 +81,10 @@ export default class Settings extends Vue {
   border-bottom: 1px solid $colour-background--light;
   margin-bottom: $size-spacing;
   padding-bottom: $size-spacing;
+
+  :first-child {
+    margin-right: $size-spacing;
+  }
 }
 
 .c-settings__actions {

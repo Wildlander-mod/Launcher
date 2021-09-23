@@ -7,6 +7,7 @@
         @modDirectorySet="modDirectorySet"
         @invalidFilepath="onInvalidModDirectory"
         :centered="true"
+        :hide-open="true"
       />
     </AppModal>
 
@@ -15,6 +16,7 @@
         @skyrimDirectorySet="skyrimDirectorySet"
         @invalidFilepath="onInvalidSkyrimDirectory"
         :centered="true"
+        :hide-open="true"
       />
     </AppModal>
   </div>

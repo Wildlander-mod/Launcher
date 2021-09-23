@@ -22,6 +22,7 @@
         type="default"
         @click="openDirectory"
         class="c-file-input__browse"
+        v-if="!hideOpen"
       >
         Open
       </BaseButton>
@@ -46,6 +47,7 @@ export default class AppFileSelect extends Vue {
   @Prop() private preFilepathChange!: (filepath: string) => Promise<boolean>;
   @Prop({ default: false }) private centered!: boolean;
   @Prop() private initialFilepath!: string;
+  @Prop() private hideOpen!: boolean;
   private filepath!: string;
 
   created() {
