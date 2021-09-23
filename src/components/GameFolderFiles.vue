@@ -76,46 +76,78 @@ import { ipcRenderer } from "electron";
 })
 export default class GameFolderFiles extends Vue {
   async handleCopyGameFiles() {
-    try {
-      await ipcRenderer.invoke(IPCEvents.COPY_GAME_FILES);
-    } catch (error) {
-      await ipcRenderer.invoke(IPCEvents.ERROR, {
-        title: "Error copying game files",
-        error: (error as Error).message,
-      });
+    const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
+      message:
+        "Copying game files will overwrite any game files in the Skyrim directory. Are you sure?",
+      buttons: ["Cancel", "Copy game files"],
+    });
+
+    if (response === 1) {
+      try {
+        await ipcRenderer.invoke(IPCEvents.COPY_GAME_FILES);
+      } catch (error) {
+        await ipcRenderer.invoke(IPCEvents.ERROR, {
+          title: "Error copying game files",
+          error: (error as Error).message,
+        });
+      }
     }
   }
 
   async handleDeleteGameFiles() {
-    try {
-      await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
-    } catch (error) {
-      await ipcRenderer.invoke(IPCEvents.ERROR, {
-        title: "Error deleting game files",
-        error: (error as Error).message,
-      });
+    const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
+      message:
+        "Deleting game files will delete any game files in the Skyrim directory. Are you sure?",
+      buttons: ["Cancel", "Delete game files"],
+    });
+
+    if (response === 1) {
+      try {
+        await ipcRenderer.invoke(IPCEvents.DELETE_GAME_FILES);
+      } catch (error) {
+        await ipcRenderer.invoke(IPCEvents.ERROR, {
+          title: "Error deleting game files",
+          error: (error as Error).message,
+        });
+      }
     }
   }
 
   async handleCopyEnbFiles() {
-    try {
-      await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
-    } catch (error) {
-      await ipcRenderer.invoke(IPCEvents.ERROR, {
-        title: "Error copying enb files",
-        error: (error as Error).message,
-      });
+    const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
+      message:
+        "Copying enb files will overwrite any enb files in the Skyrim directory. Are you sure?",
+      buttons: ["Cancel", "Copy enb files"],
+    });
+
+    if (response === 1) {
+      try {
+        await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
+      } catch (error) {
+        await ipcRenderer.invoke(IPCEvents.ERROR, {
+          title: "Error copying enb files",
+          error: (error as Error).message,
+        });
+      }
     }
   }
 
   async handleDeleteEnbFiles() {
-    try {
-      await ipcRenderer.invoke(IPCEvents.DELETE_ENB_FILES);
-    } catch (error) {
-      await ipcRenderer.invoke(IPCEvents.ERROR, {
-        title: "Error deleting enb files",
-        error: (error as Error).message,
-      });
+    const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
+      message:
+        "Deleting enb files will delete any enb files in the Skyrim directory. Are you sure?",
+      buttons: ["Cancel", "Delete enb files"],
+    });
+
+    if (response === 1) {
+      try {
+        await ipcRenderer.invoke(IPCEvents.DELETE_ENB_FILES);
+      } catch (error) {
+        await ipcRenderer.invoke(IPCEvents.ERROR, {
+          title: "Error deleting enb files",
+          error: (error as Error).message,
+        });
+      }
     }
   }
 }

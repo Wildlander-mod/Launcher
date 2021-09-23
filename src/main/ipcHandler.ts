@@ -53,6 +53,14 @@ export function registerHandlers() {
     return dialog.showOpenDialog({ properties: ["openDirectory"] });
   });
 
+  // Returns the index of the button pressed
+  ipcMain.handle(
+    IPCEvents.CONFIRMATION,
+    async (event, { message, buttons }) => {
+      return await dialog.showMessageBox({ message, buttons });
+    }
+  );
+
   ipcMain.handle(IPCEvents.MESSAGE, async (event, message: string) => {
     await dialog.showMessageBox({ message });
   });
