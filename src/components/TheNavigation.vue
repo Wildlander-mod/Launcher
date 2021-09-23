@@ -17,9 +17,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavigationLink :active="isActive" :href="href" @click="navigate">
+          <NavigationItem :active="isActive" :href="href" @click="navigate">
             Home
-          </NavigationLink>
+          </NavigationItem>
         </router-link>
 
         <router-link
@@ -29,9 +29,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavigationLink :active="isActive" :href="href" @click="navigate">
+          <NavigationItem :active="isActive" :href="href" @click="navigate">
             Game files
-          </NavigationLink>
+          </NavigationItem>
         </router-link>
 
         <router-link
@@ -41,9 +41,9 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavigationLink :active="isActive" :href="href" @click="navigate">
+          <NavigationItem :active="isActive" :href="href" @click="navigate">
             Resources
-          </NavigationLink>
+          </NavigationItem>
         </router-link>
 
         <router-link
@@ -53,14 +53,19 @@
           custom
           v-slot="{ href, navigate, isActive }"
         >
-          <NavigationLink :active="isActive" :href="href" @click="navigate">
+          <NavigationItem :active="isActive" :href="href" @click="navigate">
             Settings
-          </NavigationLink>
+          </NavigationItem>
         </router-link>
       </div>
 
       <div class="c-navigation__launcher-info">
         <p>Launcher Version: {{ launcherVersion }}</p>
+        <BaseLink
+          href="https://github.com/UltimateSkyrim/ultimate-skyrim-launcher"
+          :underline="true"
+          >Help contribute
+        </BaseLink>
       </div>
     </div>
   </nav>
@@ -73,7 +78,7 @@ import { version as launcherVersion } from "../../package.json";
 import BaseLink from "./BaseLink.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { Options as Component, Vue } from "vue-class-component";
-import NavigationLink from "@/components/NavigationLink.vue";
+import NavigationItem from "@/components/NavigationItem.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ProfileSelection from "@/components/ProfileSelection.vue";
@@ -84,7 +89,7 @@ import ProfileSelection from "@/components/ProfileSelection.vue";
     BaseLink,
     BaseButton,
     BaseDropdown,
-    NavigationLink,
+    NavigationItem,
   },
 })
 export default class TheNavigation extends Vue {
