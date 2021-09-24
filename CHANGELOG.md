@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.128 (2021-09-24)
+
+
+### Bug Fixes
+
+* fix app not being draggable on Windows ([b71ddeb](https://github.com/UltimateSkyrim/ultskylauncher/commit/b71ddeb9b716727f0f9cae52cdfc1825088ec075)), closes [#229](https://github.com/UltimateSkyrim/ultskylauncher/issues/229)
+
 ### 0.1.127 (2021-09-24)
 
 ### 0.1.126 (2021-09-24)
