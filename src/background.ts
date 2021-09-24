@@ -38,10 +38,19 @@ async function createWindow() {
     // Create the browser window.
     window = new BrowserWindow({
       frame: false,
+      /**
+       * Set window max height and width to prevent bug with dragging the window on Windows
+       * TODO when https://github.com/electron/electron/issues/30788 is resolved, set resizable to false and remove max width and height
+       */
       height: 580,
+      maxHeight: 580,
+      minHeight: 580,
+      width: 1000,
+      minWidth: 1000,
+      maxWidth: 1000,
+      resizable: true,
       icon: nativeImage.createFromPath(path.join(__static, "icon.icon")),
       maximizable: false,
-      resizable: false,
       webPreferences: {
         // Use pluginOptions.nodeIntegration, leave this alone
         // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -49,7 +58,6 @@ async function createWindow() {
           .ELECTRON_NODE_INTEGRATION as unknown as boolean,
         contextIsolation: false,
       },
-      width: 1000,
     });
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
