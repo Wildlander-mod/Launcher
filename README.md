@@ -1,6 +1,8 @@
 # UltSkyLauncher
 
-A launcher for Ultimate Skyrim.
+A launcher for the [Ultimate Skyrim](https://www.ultimateskyrim.com/) modpack.
+
+[Install the latest release from the releases page](https://github.com/UltimateSkyrim/ultimate-skyrim-launcher/releases/latest).
 
 # Contributing
 

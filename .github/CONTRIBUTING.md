@@ -21,6 +21,14 @@ However, if you want to build locally then you can run
 npm run build
 ```
 
+## Linting
+
+All files will be automatically linted when committing. However, if you want to manually lint you can run
+
+```
+npm run lint
+```
+
 ## Commit validation
 
 This repository uses [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). All commits must follow this format.
