@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.15.0",
-    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/config-conventional": "^13.2.0",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/fs-extra": "^9.0.13",
     "@types/ncp": "^2.0.5",
