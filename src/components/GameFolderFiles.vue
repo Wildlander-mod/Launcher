@@ -78,7 +78,7 @@ export default class GameFolderFiles extends Vue {
   async handleCopyGameFiles() {
     const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
       message:
-        "Copying game files will overwrite any game files in the Skyrim directory. Are you sure?",
+        "Copying game files will overwrite any additional game files in the Skyrim directory. Are you sure?",
       buttons: ["Cancel", "Copy game files"],
     });
 
@@ -97,7 +97,7 @@ export default class GameFolderFiles extends Vue {
   async handleDeleteGameFiles() {
     const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
       message:
-        "Deleting game files will delete any game files in the Skyrim directory. Are you sure?",
+        "Deleting game files will delete any additional game files  in the Skyrim directory. Are you sure?",
       buttons: ["Cancel", "Delete game files"],
     });
 
