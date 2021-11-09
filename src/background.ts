@@ -38,17 +38,9 @@ async function createWindow() {
     // Create the browser window.
     window = new BrowserWindow({
       frame: false,
-      /**
-       * Set window max height and width to prevent bug with dragging the window on Windows
-       * TODO when https://github.com/electron/electron/issues/30788 is resolved, set resizable to false and remove max width and height
-       */
       height: 580,
-      maxHeight: 580,
-      minHeight: 580,
       width: 1000,
-      minWidth: 1000,
-      maxWidth: 1000,
-      resizable: true,
+      resizable: false,
       icon: nativeImage.createFromPath(path.join(__static, "icon.icon")),
       maximizable: false,
       webPreferences: {
