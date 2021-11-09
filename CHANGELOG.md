@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.140 (2021-11-09)
+
+
+### Bug Fixes
+
+* improve warning message when handling game files ([03a2481](https://github.com/UltimateSkyrim/ultskylauncher/commit/03a248197611071d49317ee893f437d49d57111f))
+
 ### 0.1.139 (2021-11-09)
 
 ### 0.1.138 (2021-11-09)
