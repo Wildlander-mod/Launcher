@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.137 (2021-11-09)
+
+
+### Bug Fixes
+
+* set resizeable to be false again ([566b4f3](https://github.com/UltimateSkyrim/ultskylauncher/commit/566b4f337c0783e56d69b5821e4e7e01246e2b6c))
+
 ### 0.1.136 (2021-11-09)
 
 ### 0.1.135 (2021-11-09)
