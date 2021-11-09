@@ -47,7 +47,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.2",
     "babel-eslint": "^10.1.0",
-    "commitlint": "^13.1.0",
+    "commitlint": "^14.1.0",
     "electron": "^14.0.1",
     "electron-devtools-installer": "^3.1.0",
     "electron-updater": "^4.3.9",
