@@ -40,7 +40,9 @@ export default class ProfileSelection extends Vue {
       IPCEvents.GET_PRESETS
     )) as string[];
     const userPreset = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
-    this.presets = presets.map((preset) => ({ text: preset, value: preset }));
+    this.presets = presets
+      .map((preset) => ({ text: preset, value: preset }))
+      .filter((preset) => preset.text !== ".DS_Store");
 
     this.selectedPreset = userPreset
       ? this.presets.find((preset) => preset.value === userPreset) ??
