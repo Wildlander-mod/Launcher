@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.142 (2021-11-11)
+
+
+### Bug Fixes
+
+* prevent profile select showing .DS_Store ([e1b1012](https://github.com/UltimateSkyrim/ultskylauncher/commit/e1b10128c397c19baf5679da4b95a78c8d27f12f))
+
 ### 0.1.141 (2021-11-11)
 
 ### 0.1.140 (2021-11-09)
