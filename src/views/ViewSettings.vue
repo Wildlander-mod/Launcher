@@ -5,21 +5,19 @@
         <div class="c-settings__directories l-row l-space-between">
           <ModDirectory />
         </div>
-
         <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Mod Organiser 2</div>
-          <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
-        </div>
-
-        <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Application logs</div>
-          <BaseButton type="default" @click="openLogPath"> Open</BaseButton>
+          <ButtonWithDescription
+            :action="openLogPath"
+            button-text="Open"
+            description="Application logs"
+          />
         </div>
         <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Skyrim crash logs</div>
-          <BaseButton type="default" @click="openCrashLogPath">
-            Open
-          </BaseButton>
+          <ButtonWithDescription
+            :action="openCrashLogPath"
+            button-text="Open"
+            description="Skyrim crash logs"
+          />
         </div>
       </div>
     </AppPageContent>
@@ -38,20 +36,11 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import ModDirectory from "@/components/ModDirectory.vue";
 import { logger } from "@/main/logger";
 import path from "path";
-import {
-  DISABLE_ACTIONS_EVENT,
-  DISABLE_LOADING_EVENT,
-  ENABLE_ACTIONS_EVENT,
-  ENABLE_LOADING_EVENT,
-} from "@/App.vue";
-import {
-  EventService,
-  injectStrict,
-  SERVICE_BINDINGS,
-} from "@/services/service-container";
+import ButtonWithDescription from "@/components/ButtonWithDescription.vue";
 
 @Options({
   components: {
+    ButtonWithDescription,
     ModDirectory,
     AppFileSelect,
     AppPage,
@@ -60,32 +49,6 @@ import {
   },
 })
 export default class Settings extends Vue {
-  private eventService!: EventService;
-
-  created() {
-    this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-  }
-
-  async launchMO2() {
-    if (
-      userPreferences.has(USER_PREFERENCE_KEYS.MOD_DIRECTORY) &&
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY) !== ""
-    ) {
-      this.eventService.emit(DISABLE_ACTIONS_EVENT);
-      this.eventService.emit(ENABLE_LOADING_EVENT);
-
-      await ipcRenderer.invoke(IPCEvents.LAUNCH_MO2);
-
-      this.eventService.emit(ENABLE_ACTIONS_EVENT);
-      this.eventService.emit(DISABLE_LOADING_EVENT);
-    } else {
-      await ipcRenderer.invoke(
-        IPCEvents.MESSAGE,
-        "No mod directory specified, please select one on the settings tab."
-      );
-    }
-  }
-
   openLogPath() {
     const logPath = path.parse(logger.transports?.file.findLogPath()).dir;
     shell.openPath(logPath);

@@ -8,8 +8,8 @@
       <ProfileSelection />
     </div>
 
-    <div class="c-navigation__content l-column l-space-between">
-      <div class="l-column">
+    <div class="c-navigation__content l-column">
+      <div class="l-column l-grow l-space-around">
         <router-link
           :to="{
             name: 'Home',
@@ -43,6 +43,18 @@
         >
           <NavigationItem :active="isActive" :href="href" @click="navigate">
             Resources
+          </NavigationItem>
+        </router-link>
+
+        <router-link
+          :to="{
+            name: 'Tools',
+          }"
+          custom
+          v-slot="{ href, navigate, isActive }"
+        >
+          <NavigationItem :active="isActive" :href="href" @click="navigate">
+            Tools
           </NavigationItem>
         </router-link>
 
@@ -151,6 +163,7 @@ export default class TheNavigation extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
 
   width: 100%;
   padding: $size-spacing--x-large;

@@ -1,5 +1,5 @@
 <template>
-  <a class="c-nav-link" :class="{ 'c-nav-link--active': active }">
+  <a class="c-nav-item" :class="{ 'c-nav-link--active': active }">
     <slot />
   </a>
 </template>
@@ -16,10 +16,10 @@ export default class NavigationItem extends Vue {
 <style scoped lang="scss">
 @import "~@/assets/scss";
 
-.c-nav-link {
+.c-nav-item {
   text-decoration: none;
   color: $colour-text-secondary;
-  margin-bottom: $size-spacing--x-large;
+  margin-bottom: $size-spacing--large;
   font-size: $font-size-subtitle-alt;
 
   &.c-nav-link--active {

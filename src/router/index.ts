@@ -4,6 +4,7 @@ import ViewHome from "@/views/ViewHome.vue";
 import ViewResources from "@/views/ViewResources.vue";
 import ViewSettings from "@/views/ViewSettings.vue";
 import ViewGraphics from "@/views/ViewGraphics.vue";
+import ViewTools from "@/views/ViewTools.vue";
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     path: "/resources",
     name: "Resources",
     component: ViewResources,
+  },
+  {
+    path: "/tools",
+    name: "Tools",
+    component: ViewTools,
   },
   {
     path: "/settings",

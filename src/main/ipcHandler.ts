@@ -13,6 +13,7 @@ import { getWindow } from "@/background";
 import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/graphics";
+import { runWabbajack } from "@/main/wabbajack";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, async () => await launchMO2());
@@ -108,4 +109,8 @@ export function registerHandlers() {
   );
 
   ipcMain.handle(IPCEvents.GET_RESOLUTIONS, async () => getResolutions());
+
+  ipcMain.handle(IPCEvents.RUN_WABBAJACK, async () => {
+    runWabbajack();
+  });
 }

@@ -13,7 +13,7 @@
       >
         <div class="l-row">
           <TheNavigation />
-          <div class="l-column">
+          <div class="l-column l-grow">
             <TheHeader />
             <router-view />
           </div>
