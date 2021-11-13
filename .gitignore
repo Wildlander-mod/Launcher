@@ -25,3 +25,8 @@ pnpm-debug.log*
 /dist_electron
 
 dev-app-update.yml
+
+
+# Wabbajack downloads
+src/assets/wabbajack/*
+!src/assets/wabbajack/Wabbajack.zip
