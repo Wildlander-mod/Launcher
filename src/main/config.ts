@@ -6,6 +6,7 @@ export enum USER_PREFERENCE_KEYS {
   SKYRIM_DIRECTORY = "SKYRIM_DIRECTORY",
   MOD_DIRECTORY = "MOD_DIRECTORY",
   PRESET = "PRESET",
+  ENB_PROFILE = "ENB_PROFILE",
 }
 
 export interface UserPreferences {
@@ -22,3 +23,6 @@ export const userPreferences = new Store<UserPreferences>({
     [USER_PREFERENCE_KEYS.PRESET]: "",
   },
 });
+
+export const skyrimDirectory = () =>
+  `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/Stock Game`;

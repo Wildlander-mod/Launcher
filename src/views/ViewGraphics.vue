@@ -1,7 +1,7 @@
 <template>
   <AppPage>
-    <AppPageContent title="Game files">
-      <GameFiles />
+    <AppPageContent title="Graphics settings">
+      <ENB />
     </AppPageContent>
   </AppPage>
 </template>
@@ -10,10 +10,10 @@
 import { Options, Vue } from "vue-class-component";
 import AppPage from "@/components/AppPage.vue";
 import AppPageContent from "@/components/AppPageContent.vue";
-import GameFolderFiles from "@/components/GameFolderFiles.vue";
+import ENB from "@/components/ENB.vue";
 
 @Options({
-  components: { GameFiles: GameFolderFiles, AppPageContent, AppPage },
+  components: { ENB, AppPageContent, AppPage },
 })
-export default class ViewGameFiles extends Vue {}
+export default class ViewGraphics extends Vue {}
 </script>

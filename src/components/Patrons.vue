@@ -5,7 +5,7 @@
       :items="superPatrons"
     >
       <div class="c-patrons__title">
-        <div class="l-column l-center--text">
+        <div class="l-column l-center-text">
           <div class="c-patrons__star--stacked">
             <i class="material-icons c-patrons__star-icon">star_outline</i>
           </div>
@@ -16,7 +16,7 @@
             >
           </div>
         </div>
-        <div class="c-patrons__title-text">Super Patron</div>
+        <div class="c-patrons__title-text l-flex-grow">Super Patron</div>
       </div>
     </BaseList>
     <BaseList

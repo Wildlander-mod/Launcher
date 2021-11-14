@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import ViewHome from "@/views/ViewHome.vue";
 import ViewResources from "@/views/ViewResources.vue";
 import ViewSettings from "@/views/ViewSettings.vue";
-import ViewGameFiles from "@/views/ViewGameFiles.vue";
+import ViewGraphics from "@/views/ViewGraphics.vue";
 
 const routes = [
   {
@@ -12,9 +12,9 @@ const routes = [
     component: ViewHome,
   },
   {
-    path: "/game-files",
-    name: "GameFiles",
-    component: ViewGameFiles,
+    path: "/graphics",
+    name: "Graphics",
+    component: ViewGraphics,
   },
   {
     path: "/resources",

@@ -3,33 +3,18 @@
  */
 
 import { app, dialog, ipcMain } from "electron";
-import path from "path";
-import childProcess from "child_process";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
 import fs from "fs";
-import { launchGame, MO2EXE } from "@/main/modOrganizer";
+import { launchGame, launchMO2, MO2EXE } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
-import { copyGameFiles, deleteGameFiles } from "@/main/gameFiles";
-import { copyEnbFiles, deleteEnbFiles } from "@/main/enb";
+import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 
 export function registerHandlers() {
-  ipcMain.handle(IPCEvents.LAUNCH_MO2, () => {
-    try {
-      logger.info("Launching MO2");
-      const moPath = path.join(
-        userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        MO2EXE
-      );
-      logger.debug(`MO2 path: ${moPath}`);
-      childProcess.exec(`"${moPath}"`);
-    } catch (err) {
-      logger.error(`Error while opening MO2 - ${err}`);
-    }
-  });
+  ipcMain.handle(IPCEvents.LAUNCH_MO2, () => launchMO2());
 
   ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
     await launchGame();
@@ -107,34 +92,17 @@ export function registerHandlers() {
     return true;
   });
 
-  ipcMain.handle(IPCEvents.COPY_GAME_FILES, async () => {
-    return copyGameFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-    );
-  });
+  ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () =>
+    copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
+  );
 
-  ipcMain.handle(IPCEvents.DELETE_GAME_FILES, async () => {
-    return deleteGameFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-    );
-  });
+  ipcMain.handle(IPCEvents.DELETE_ALL_ENB_FILES, async () =>
+    deleteAllENBFiles()
+  );
 
-  ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () => {
-    return copyEnbFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-    );
-  });
+  ipcMain.handle(IPCEvents.GET_ENB_PRESETS, async () => getENBPresets());
 
-  ipcMain.handle(IPCEvents.DELETE_ENB_FILES, async () => {
-    return deleteEnbFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-    );
-  });
-
-  ipcMain.handle(IPCEvents.CHECK_IF_FILE_EXISTS, async (_event, filepath) => {
-    return fs.existsSync(filepath);
-  });
+  ipcMain.handle(IPCEvents.CHECK_IF_FILE_EXISTS, async (_event, filepath) =>
+    fs.existsSync(filepath)
+  );
 }
