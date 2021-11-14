@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.154 (2021-11-14)
+
+
+### Features
+
+* added button to open crash logs folder ([#295](https://github.com/UltimateSkyrim/ultskylauncher/issues/295)) ([0e617bd](https://github.com/UltimateSkyrim/ultskylauncher/commit/0e617bd35a8611a4a71a1e89209ba9bc3736fc21))
+
 ### 0.1.153 (2021-11-12)
 
 ### 0.1.152 (2021-11-12)
