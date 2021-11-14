@@ -6,6 +6,8 @@
     label="Ultimate Skyrim MO2 Folder"
     :centered="centered"
     :hide-open="hideOpen"
+    file-select-button="Select mod directory"
+    file-select-title="Select mod directory"
   />
 </template>
 

@@ -49,9 +49,16 @@ export function registerHandlers() {
     getWindow().minimize();
   });
 
-  ipcMain.handle(IPCEvents.SHOW_OPEN_DIALOG, async () => {
-    return dialog.showOpenDialog({ properties: ["openDirectory"] });
-  });
+  ipcMain.handle(
+    IPCEvents.SHOW_OPEN_DIALOG,
+    async (event, { title, button }) => {
+      return dialog.showOpenDialog({
+        title: title || "",
+        buttonLabel: button || "",
+        properties: ["openDirectory"],
+      });
+    }
+  );
 
   // Returns the index of the button pressed
   ipcMain.handle(

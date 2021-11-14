@@ -6,6 +6,8 @@
     label="Skyrim Game Folder"
     :centered="centered"
     :hide-open="hideOpen"
+    file-select-button="Select Skyrim directory"
+    file-select-title="Select Skyrim directory"
   />
 </template>
 

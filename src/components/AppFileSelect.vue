@@ -48,6 +48,8 @@ export default class AppFileSelect extends Vue {
   @Prop({ default: false }) private centered!: boolean;
   @Prop() private initialFilepath!: string;
   @Prop() private hideOpen!: boolean;
+  @Prop() private fileSelectTitle!: string;
+  @Prop() private fileSelectButton!: string;
   private filepath!: string;
 
   created() {
@@ -56,7 +58,8 @@ export default class AppFileSelect extends Vue {
 
   async openFileSelectDialog() {
     const dialogResponse = (await ipcRenderer.invoke(
-      IPCEvents.SHOW_OPEN_DIALOG
+      IPCEvents.SHOW_OPEN_DIALOG,
+      { title: this.fileSelectTitle, button: this.fileSelectButton }
     )) as Electron.OpenDialogReturnValue;
     if (!dialogResponse.canceled) {
       // Only one directory is allowed to be selected so use the first filepath
