@@ -24,13 +24,13 @@
 
         <router-link
           :to="{
-            name: 'GameFiles',
+            name: 'Graphics',
           }"
           custom
           v-slot="{ href, navigate, isActive }"
         >
           <NavigationItem :active="isActive" :href="href" @click="navigate">
-            Game files
+            Graphics
           </NavigationItem>
         </router-link>
 

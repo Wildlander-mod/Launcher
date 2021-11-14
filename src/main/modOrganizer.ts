@@ -2,39 +2,38 @@ import path from "path";
 import childProcess from "child_process";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
-import { checkGameFilesExist, copyGameFiles } from "@/main/gameFiles";
-import { checkEnbFilesExist, copyEnbFiles } from "@/main/enb";
+import { checkENBFilesExist, copyENBFiles } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 
 export const MO2EXE = "ModOrganizer.exe";
 
-async function copyGameFolderFiles() {
-  logger.info("Copying game files on launch");
-  const gameFilesExist = await checkGameFilesExist(
-    userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-    userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-  );
-  logger.debug(`Game files exist on launch: ${gameFilesExist}`);
-  if (!gameFilesExist) {
-    await copyGameFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-    );
-  }
-  const enbFilesExist = await checkEnbFilesExist(
-    USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY
-  );
-  if (!enbFilesExist) {
-    await copyEnbFiles(
-      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-      userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
-    );
+async function copyENBFilesOnLaunch() {
+  logger.info("Copying ENB files on launch");
+
+  const ENBFilesExist = await checkENBFilesExist();
+  logger.debug(`ENB files exist on launch: ${ENBFilesExist}`);
+  if (!ENBFilesExist) {
+    await copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE));
   }
 }
 
+export const launchMO2 = () => {
+  try {
+    logger.info("Launching MO2");
+    const moPath = path.join(
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+      MO2EXE
+    );
+    logger.debug(`MO2 path: ${moPath}`);
+    childProcess.exec(`"${moPath}"`);
+  } catch (err) {
+    logger.error(`Error while opening MO2 - ${err}`);
+  }
+};
+
 export async function launchGame() {
   try {
-    await copyGameFolderFiles();
+    await copyENBFilesOnLaunch();
 
     logger.info("Launching game");
     logger.debug(

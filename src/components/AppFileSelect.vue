@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="l-row l-row--bottom">
     <BaseInput
       :label="label"
       :oninput="onFilepathChange"

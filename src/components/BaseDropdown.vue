@@ -96,6 +96,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
 .c-select {
   height: 30px;
+  width: 155px;
   user-select: none;
   border-radius: 2px;
 
@@ -114,8 +115,8 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 .c-select__head {
   display: flex;
   justify-content: space-between;
-  width: 155px;
   height: $size-action-height;
+  width: 100%;
   overflow: hidden;
   margin-bottom: 0;
 

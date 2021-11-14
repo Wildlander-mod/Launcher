@@ -2,11 +2,13 @@
   <div class="window">
     <template v-if="renderApp">
       <main
-        class="l-column l-grow"
-        :class="{ 'u-disable-click-events': !clickEventsEnabled }"
+        class="l-column"
+        :class="{
+          'u-disable-click-events': !clickEventsEnabled,
+        }"
       >
         <TheTitleBar />
-        <div class="l-row l-grow">
+        <div class="l-row">
           <TheNavigation />
           <div class="l-column">
             <TheHeader />
@@ -30,6 +32,11 @@ import TheStartupChecks from "@/components/TheStartupChecks.vue";
 import { modalOpenedEvent } from "@/services/modal.service";
 import TheHeader from "@/components/TheHeader.vue";
 
+export const ENABLE_ACTIONS_EVENT = "ENABLE_ACTIONS_EVENT";
+export const DISABLE_ACTIONS_EVENT = "DISABLE_ACTIONS_EVENT";
+export const ENABLE_LOADING_EVENT = "ENABLE_LOADING_EVENT";
+export const DISABLE_LOADING_EVENT = "DISABLE_LOADING_EVENT";
+
 @Options({
   components: {
     TheHeader,
@@ -49,10 +56,30 @@ export default class App extends Vue {
     eventService.on(modalOpenedEvent, (opened: unknown) => {
       this.setClickEventsEnabled(!opened as boolean);
     });
+
+    eventService.on(ENABLE_ACTIONS_EVENT, () => {
+      this.setClickEventsEnabled(true);
+    });
+
+    eventService.on(DISABLE_ACTIONS_EVENT, () => {
+      this.setClickEventsEnabled(false);
+    });
+
+    eventService.on(ENABLE_LOADING_EVENT, () => {
+      this.setLoading(true);
+    });
+
+    eventService.on(DISABLE_LOADING_EVENT, () => {
+      this.setLoading(false);
+    });
   }
 
   setClickEventsEnabled(enabled: boolean) {
     this.clickEventsEnabled = enabled;
+  }
+
+  setLoading(loading: boolean) {
+    document.body.style.cursor = loading ? "progress" : "default";
   }
 
   startupChecksComplete() {

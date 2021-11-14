@@ -81,7 +81,6 @@ export default class News extends Vue {
 @import "~@/assets/scss";
 
 .c-news {
-  width: 100%;
   padding: $size-spacing--large;
 }
 
