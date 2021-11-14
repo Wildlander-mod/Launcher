@@ -133,4 +133,8 @@ export function registerHandlers() {
       userPreferences.get(USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY)
     );
   });
+
+  ipcMain.handle(IPCEvents.CHECK_IF_FILE_EXISTS, async (_event, filepath) => {
+    return fs.existsSync(filepath);
+  });
 }

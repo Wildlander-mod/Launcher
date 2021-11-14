@@ -16,6 +16,12 @@
           <div class="c-settings__launchMO-label">Application logs</div>
           <BaseButton type="default" @click="openLogPath"> Open </BaseButton>
         </div>
+        <div class="l-row c-settings__actions">
+          <div class="c-settings__launchMO-label">Crash logs</div>
+          <BaseButton type="default" @click="openCrashLogPath">
+            Open
+          </BaseButton>
+        </div>
       </div>
     </AppPageContent>
   </AppPage>
@@ -63,6 +69,23 @@ export default class Settings extends Vue {
   openLogPath() {
     const logPath = path.parse(logger.transports?.file.findLogPath()).dir;
     shell.openPath(logPath);
+  }
+
+  async openCrashLogPath() {
+    const crashLogPath = path.join(
+      userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
+      "/overwrite/NetScriptFramework/Crash"
+    );
+    if (
+      await ipcRenderer.invoke(IPCEvents.CHECK_IF_FILE_EXISTS, crashLogPath)
+    ) {
+      shell.openPath(crashLogPath);
+    } else {
+      await ipcRenderer.invoke(IPCEvents.ERROR, {
+        title: "Error while opening crash logs folder",
+        error: `Crash logs directory at ${crashLogPath} does not exist. This likely means you do not have any crash logs.`,
+      });
+    }
   }
 }
 </script>
