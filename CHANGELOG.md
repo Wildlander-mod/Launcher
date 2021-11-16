@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.158 (2021-11-16)
+
+
+### Features
+
+* use Wabbajack's Stock Game structure ([17284f6](https://github.com/UltimateSkyrim/ultskylauncher/commit/17284f64c815630d11758c87cf593d81aa359566))
+
 ### 0.1.157 (2021-11-15)
 
 ### 0.1.156 (2021-11-15)
