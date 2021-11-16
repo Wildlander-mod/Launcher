@@ -37,6 +37,17 @@ import { ipcRenderer, shell } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import BaseInput from "@/components/BaseInput.vue";
 import { Prop, Watch } from "vue-property-decorator";
+import {
+  EventService,
+  injectStrict,
+  SERVICE_BINDINGS,
+} from "@/services/service-container";
+import {
+  DISABLE_ACTIONS_EVENT,
+  DISABLE_LOADING_EVENT,
+  ENABLE_ACTIONS_EVENT,
+  ENABLE_LOADING_EVENT,
+} from "@/App.vue";
 
 @Component({
   components: { BaseButton, BaseInput },
@@ -50,11 +61,17 @@ export default class AppFileSelect extends Vue {
   @Prop() private hideOpen!: boolean;
   private filepath!: string;
 
+  private eventService!: EventService;
+
   created() {
+    this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
     this.filepath = this.initialFilepath;
   }
 
   async openFileSelectDialog() {
+    this.eventService.emit(DISABLE_ACTIONS_EVENT);
+    this.eventService.emit(ENABLE_LOADING_EVENT);
+
     const dialogResponse = (await ipcRenderer.invoke(
       IPCEvents.SHOW_OPEN_DIALOG
     )) as Electron.OpenDialogReturnValue;
@@ -70,6 +87,9 @@ export default class AppFileSelect extends Vue {
         this.setNewFilepath(newFilepath);
       }
     }
+
+    this.eventService.emit(ENABLE_ACTIONS_EVENT);
+    this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
   async openDirectory() {
