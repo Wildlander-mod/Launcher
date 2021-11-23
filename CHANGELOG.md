@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.166 (2021-11-23)
+
+
+### Bug Fixes
+
+* prevent user from opening multiple MO2 instances ([5271198](https://github.com/UltimateSkyrim/ultskylauncher/commit/5271198c20181957cad22a16c765f2269cf8ee20)), closes [#303](https://github.com/UltimateSkyrim/ultskylauncher/issues/303)
+
 ### 0.1.165 (2021-11-23)
 
 ### 0.1.164 (2021-11-23)
