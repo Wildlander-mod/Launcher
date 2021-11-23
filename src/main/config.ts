@@ -3,14 +3,12 @@ import Store from "electron-store";
 export const isDevelopment = process.env.NODE_ENV !== "production";
 
 export enum USER_PREFERENCE_KEYS {
-  SKYRIM_DIRECTORY = "SKYRIM_DIRECTORY",
   MOD_DIRECTORY = "MOD_DIRECTORY",
   PRESET = "PRESET",
   ENB_PROFILE = "ENB_PROFILE",
 }
 
 export interface UserPreferences {
-  [USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY]: string;
   [USER_PREFERENCE_KEYS.MOD_DIRECTORY]: string;
   [USER_PREFERENCE_KEYS.PRESET]: string;
 }
@@ -18,7 +16,6 @@ export interface UserPreferences {
 export const userPreferences = new Store<UserPreferences>({
   name: "userPreferences",
   defaults: {
-    [USER_PREFERENCE_KEYS.SKYRIM_DIRECTORY]: "",
     [USER_PREFERENCE_KEYS.MOD_DIRECTORY]: "",
     [USER_PREFERENCE_KEYS.PRESET]: "",
   },
@@ -26,3 +23,6 @@ export const userPreferences = new Store<UserPreferences>({
 
 export const skyrimDirectory = () =>
   `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/Stock Game`;
+
+export const modDirectory = () =>
+  userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
