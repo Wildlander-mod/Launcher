@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.168 (2021-11-23)
+
+
+### Bug Fixes
+
+* prevent launcher from opening MO2 with the wrong profile ([614c91c](https://github.com/UltimateSkyrim/ultskylauncher/commit/614c91c3bb250324d034218bcd86aab51b8eb25e))
+
 ### 0.1.167 (2021-11-23)
 
 ### 0.1.166 (2021-11-23)
