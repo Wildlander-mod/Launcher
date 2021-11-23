@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.164 (2021-11-23)
+
+
+### Bug Fixes
+
+* prevent the user from clicking if file dialog is open ([c56dda3](https://github.com/UltimateSkyrim/ultskylauncher/commit/c56dda3a4f13ced668ca1fe8a577757b93a99548))
+
 ### 0.1.163 (2021-11-23)
 
 ### 0.1.162 (2021-11-23)
