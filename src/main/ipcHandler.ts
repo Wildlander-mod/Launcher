@@ -14,7 +14,7 @@ import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 
 export function registerHandlers() {
-  ipcMain.handle(IPCEvents.LAUNCH_MO2, () => launchMO2());
+  ipcMain.handle(IPCEvents.LAUNCH_MO2, async () => await launchMO2());
 
   ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
     await launchGame();
