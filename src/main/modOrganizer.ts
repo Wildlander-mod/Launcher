@@ -1,13 +1,20 @@
 import path from "path";
 import childProcess from "child_process";
-import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import {
+  modDirectory,
+  USER_PREFERENCE_KEYS,
+  userPreferences,
+} from "@/main/config";
 import { logger } from "@/main/logger";
 import { checkENBFilesExist, copyENBFiles } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
+import fs from "fs";
+import { parse, encode } from "ini";
 
 export const MO2EXE = "ModOrganizer.exe";
+const MO2Settings = "ModOrganizer.ini";
 
 const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
 
@@ -26,6 +33,21 @@ const handleRunning = async (): Promise<boolean> => {
   } else {
     return false;
   }
+};
+
+const readSettings = async () =>
+  parse(
+    await fs.promises.readFile(`${modDirectory()}/${MO2Settings}`, "utf-8")
+  );
+
+const updateSelectedProfile = async (profile: string) => {
+  logger.info(`Updating selected profile to ${profile}`);
+  const settings = await readSettings();
+  settings.General["selected_profile"] = `@ByteArray(${profile})`;
+  await fs.promises.writeFile(
+    `${modDirectory()}/${MO2Settings}`,
+    encode(settings)
+  );
 };
 
 async function copyENBFilesOnLaunch() {
@@ -48,6 +70,12 @@ export const launchMO2 = async () => {
     }
 
     logger.info("Launching MO2");
+
+    // MO2 will not respect the profile set in the launcher until the config is edited
+    await updateSelectedProfile(
+      userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
+    );
+
     const moPath = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       MO2EXE
