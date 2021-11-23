@@ -4,8 +4,29 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
 import { checkENBFilesExist, copyENBFiles } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
+import find from "find-process";
+import { dialog } from "electron";
 
 export const MO2EXE = "ModOrganizer.exe";
+
+const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
+
+const handleRunning = async (): Promise<boolean> => {
+  const buttonSelectionIndex = await dialog.showMessageBox({
+    title: "Mod Organizer running",
+    message:
+      "Mod Organizer 2 is already running. This could launch the wrong mod list. Would you like to close it first?",
+    buttons: ["Cancel", "Close MO2 and continue"],
+  });
+  if (buttonSelectionIndex.response === 1) {
+    (await find("name", "ModOrganizer")).forEach((mo2Instance) => {
+      process.kill(mo2Instance.pid);
+    });
+    return true;
+  } else {
+    return false;
+  }
+};
 
 async function copyENBFilesOnLaunch() {
   logger.info("Copying ENB files on launch");
@@ -17,8 +38,15 @@ async function copyENBFilesOnLaunch() {
   }
 }
 
-export const launchMO2 = () => {
+export const launchMO2 = async () => {
   try {
+    if (await isRunning()) {
+      const continueLaunching = await handleRunning();
+      if (!continueLaunching) {
+        return;
+      }
+    }
+
     logger.info("Launching MO2");
     const moPath = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
@@ -33,6 +61,13 @@ export const launchMO2 = () => {
 
 export async function launchGame() {
   try {
+    if (await isRunning()) {
+      const continueLaunching = await handleRunning();
+      if (!continueLaunching) {
+        return;
+      }
+    }
+
     await copyENBFilesOnLaunch();
 
     logger.info("Launching game");
