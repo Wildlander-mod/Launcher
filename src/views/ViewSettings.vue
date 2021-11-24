@@ -16,7 +16,7 @@
           <BaseButton type="default" @click="openLogPath"> Open</BaseButton>
         </div>
         <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Crash logs</div>
+          <div class="c-settings__launchMO-label">Skyrim crash logs</div>
           <BaseButton type="default" @click="openCrashLogPath">
             Open
           </BaseButton>

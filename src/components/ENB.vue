@@ -1,12 +1,12 @@
 <template>
   <div class="l-column">
-    <div class="l-row c-ENB-files__actions">
+    <div class="l-row l-spacing-rights">
       <BaseDropdown
-        class="c-ENB-files__action"
-        :initial-selection="this.initialENBSelection"
+        class="l-spacing-right"
+        :current-selection="this.initialENBSelection"
         :options="ENBPresets"
         :on-option-selected="handleENBPresetChanged"
-        :loading-data="loadingENBPresets"
+        v-if="!loadingENBPresets"
       />
 
       <div class="l-center-vertically">
@@ -14,9 +14,9 @@
       </div>
     </div>
 
-    <div class="l-row c-ENB-files__actions">
+    <div class="l-row l-spacing-rights">
       <BaseButton
-        class="c-ENB-files__action"
+        class="l-spacing-right"
         size="large"
         type="primary"
         @click="handleCopyENBFiles"
@@ -30,9 +30,9 @@
       </div>
     </div>
 
-    <div class="l-row c-ENB-files__actions">
+    <div class="l-row l-spacing-rights">
       <BaseButton
-        class="c-ENB-files__action"
+        class="l-spacing-right"
         size="large"
         type="warning"
         @click="handleDeleteENBFiles"
@@ -175,11 +175,7 @@ export default class ENB extends Vue {
 <style scoped lang="scss">
 @import "~@/assets/scss";
 
-.c-ENB-files__actions:not(:last-child) {
+.l-spacing-rights:not(:last-child) {
   margin-bottom: $size-spacing--large;
-}
-
-.c-ENB-files__action {
-  margin-right: $size-spacing;
 }
 </style>

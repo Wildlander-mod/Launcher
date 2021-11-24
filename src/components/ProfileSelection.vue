@@ -1,9 +1,9 @@
 <template>
   <BaseDropdown
-    :initial-selection="selectedPreset"
+    :current-selection="selectedPreset"
     :on-option-selected="onPresetSelected"
     :options="presets"
-    :loading-data="loadingData"
+    v-if="!loadingData"
   />
 </template>
 

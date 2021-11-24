@@ -11,14 +11,17 @@ import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
 import fs from "fs";
-import { encode, parse } from "ini";
+import { setResolution } from "@/main/graphics";
+import { parse, stringify } from "js-ini";
+import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
 
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
 
 const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
 
-const handleRunning = async (): Promise<boolean> => {
+const handleMO2Running = async (): Promise<boolean> => {
+  logger.info("MO2 already running. Giving user option to cancel or continue");
   const buttonSelectionIndex = await dialog.showMessageBox({
     title: "Mod Organizer running",
     message:
@@ -43,10 +46,14 @@ const readSettings = async () =>
 const updateSelectedProfile = async (profile: string) => {
   logger.info(`Updating selected profile to ${profile}`);
   const settings = await readSettings();
-  settings.General["selected_profile"] = `@ByteArray(${profile})`;
+
+  (settings.General as IIniObjectSection)[
+    "selected_profile"
+  ] = `@ByteArray(${profile})`;
+
   await fs.promises.writeFile(
     `${modDirectory()}/${MO2Settings}`,
-    encode(settings)
+    stringify(settings)
   );
 };
 
@@ -64,10 +71,13 @@ async function copyENBFilesOnLaunch() {
 }
 
 export const launchMO2 = async () => {
+  logger.info("Launch MO2 prerequisites");
+
   try {
     if (await isRunning()) {
-      const continueLaunching = await handleRunning();
+      const continueLaunching = await handleMO2Running();
       if (!continueLaunching) {
+        logger.info("MO2 already running, user chose to abort");
         return;
       }
     }
@@ -78,6 +88,8 @@ export const launchMO2 = async () => {
     await updateSelectedProfile(
       userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
     );
+
+    await setResolution();
 
     const moPath = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
@@ -91,15 +103,20 @@ export const launchMO2 = async () => {
 };
 
 export async function launchGame() {
+  logger.info("Launch game prerequisites");
+
   try {
     if (await isRunning()) {
-      const continueLaunching = await handleRunning();
+      const continueLaunching = await handleMO2Running();
       if (!continueLaunching) {
+        logger.info("MO2 already running, user chose to abort");
         return;
       }
     }
 
     await copyENBFilesOnLaunch();
+
+    await setResolution();
 
     logger.info("Launching game");
     logger.debug(

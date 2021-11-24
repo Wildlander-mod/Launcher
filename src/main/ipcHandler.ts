@@ -12,6 +12,7 @@ import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
+import { getResolutions } from "@/main/graphics";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, async () => await launchMO2());
@@ -105,4 +106,6 @@ export function registerHandlers() {
   ipcMain.handle(IPCEvents.CHECK_IF_FILE_EXISTS, async (_event, filepath) =>
     fs.existsSync(filepath)
   );
+
+  ipcMain.handle(IPCEvents.GET_RESOLUTIONS, async () => getResolutions());
 }
