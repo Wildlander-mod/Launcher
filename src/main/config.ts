@@ -16,6 +16,8 @@ export enum USER_PREFERENCE_KEYS {
   MOD_DIRECTORY = "MOD_DIRECTORY",
   PRESET = "PRESET",
   ENB_PROFILE = "ENB_PROFILE",
+  WIDTH = "WIDTH",
+  HEIGHT = "HEIGHT",
 }
 
 export interface UserPreferences {

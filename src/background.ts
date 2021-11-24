@@ -39,7 +39,11 @@ async function createWindow() {
     window = new BrowserWindow({
       frame: false,
       height: 580,
+      minHeight: 580,
+      maxHeight: 580,
       width: 1000,
+      minWidth: 1000,
+      maxWidth: 1000,
       resizable: false,
       icon: nativeImage.createFromPath(path.join(__static, "icon.icon")),
       maximizable: false,

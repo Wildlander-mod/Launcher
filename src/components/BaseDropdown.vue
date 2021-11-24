@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="!loadingData"
     :class="[
       'c-select',
       `${isOpen === true ? 'c-select--open' : 'c-select--closed'}`,
@@ -57,21 +56,20 @@ import { Prop, Watch } from "vue-property-decorator";
 
 export interface SelectOption {
   text: string;
-  value: string;
+  value: unknown;
 }
 
 @Component({})
 export default class BaseDropdown extends Vue {
   @Prop({ required: true }) options!: SelectOption[];
   @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
-  @Prop({ required: true }) initialSelection!: SelectOption;
-  @Prop() loadingData = false;
+  @Prop({ required: true }) currentSelection!: SelectOption;
 
   selectedOption!: SelectOption;
   isOpen = false;
 
   created() {
-    this.selectedOption = this.initialSelection;
+    this.selectedOption = this.currentSelection;
   }
 
   @Watch("initialSelection")
@@ -153,14 +151,12 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
 .c-select__options {
   background-color: $colour-background--light-solid;
-  padding-bottom: 8px;
-  padding-top: -8px;
   position: absolute;
   transform-origin: top;
   width: 200px;
   z-index: 1;
   border-radius: 0 4px 4px 4px;
-  max-height: $size-window-height/2;
+  max-height: 200px;
   overflow-y: scroll;
 
   &--closed {
