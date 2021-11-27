@@ -6,6 +6,7 @@ import path from "path";
 import { isDevelopment } from "@/main/config";
 import fs from "fs";
 import { getWebContents } from "@/background";
+import { app } from "electron";
 
 export async function autoUpdate() {
   autoUpdater.on(IPCEvents.UPDATE_AVAILABLE, () => {
@@ -39,12 +40,17 @@ export async function autoUpdate() {
     logger.debug(`Setting auto update path to ${devAppUpdatePath}`);
     autoUpdater.updateConfigPath = devAppUpdatePath;
     await autoUpdater.checkForUpdates();
-  } else if (!isDevelopment) {
+  } else if (isDevelopment) {
+    logger.debug("Skipping app update check because we're in development mode");
+    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
+  } else if (app.getVersion().includes("-")) {
+    logger.debug(
+      "Skipping app update check because this is a pre-release version"
+    );
+    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
+  } else {
     const updateCheckResult = await autoUpdater.checkForUpdates();
     logger.debug("Auto update check result");
     logger.debug(updateCheckResult);
-  } else {
-    logger.debug("Skipping app update check because we're in development mode");
-    getWebContents().send(IPCEvents.UPDATE_NOT_AVAILABLE);
   }
 }
