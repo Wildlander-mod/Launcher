@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.173 (2021-11-29)
+
+
+### Bug Fixes
+
+* add loading spinner when MO2 is launching ([198295c](https://github.com/UltimateSkyrim/ultskylauncher/commit/198295cd36a4bf269357ff9349593e1d8bab19ed))
+
 ### 0.1.172 (2021-11-29)
 
 ### 0.1.171 (2021-11-29)
