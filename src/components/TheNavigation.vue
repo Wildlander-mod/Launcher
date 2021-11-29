@@ -82,6 +82,17 @@ import NavigationItem from "@/components/NavigationItem.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ProfileSelection from "@/components/ProfileSelection.vue";
+import {
+  DISABLE_ACTIONS_EVENT,
+  DISABLE_LOADING_EVENT,
+  ENABLE_ACTIONS_EVENT,
+  ENABLE_LOADING_EVENT,
+} from "@/App.vue";
+import {
+  EventService,
+  injectStrict,
+  SERVICE_BINDINGS,
+} from "@/services/service-container";
 
 @Component({
   components: {
@@ -96,14 +107,26 @@ export default class TheNavigation extends Vue {
   gameVersion = 0;
   launcherVersion = launcherVersion;
 
-  launchGame() {
+  private eventService!: EventService;
+
+  created() {
+    this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+  }
+
+  async launchGame() {
     if (!userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)) {
-      ipcRenderer.invoke(
+      await ipcRenderer.invoke(
         IPCEvents.MESSAGE,
         "No mod directory specified, please select one on the settings page."
       );
     } else {
-      ipcRenderer.invoke(IPCEvents.LAUNCH_GAME);
+      this.eventService.emit(DISABLE_ACTIONS_EVENT);
+      this.eventService.emit(ENABLE_LOADING_EVENT);
+
+      await ipcRenderer.invoke(IPCEvents.LAUNCH_GAME);
+
+      this.eventService.emit(ENABLE_ACTIONS_EVENT);
+      this.eventService.emit(DISABLE_LOADING_EVENT);
     }
   }
 }

@@ -8,12 +8,12 @@
 
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Mod Organiser 2</div>
-          <BaseButton type="primary" @click="launchMO2"> Launch </BaseButton>
+          <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
         </div>
 
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Application logs</div>
-          <BaseButton type="default" @click="openLogPath"> Open </BaseButton>
+          <BaseButton type="default" @click="openLogPath"> Open</BaseButton>
         </div>
         <div class="l-row c-settings__actions">
           <div class="c-settings__launchMO-label">Crash logs</div>
@@ -38,6 +38,17 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import ModDirectory from "@/components/ModDirectory.vue";
 import { logger } from "@/main/logger";
 import path from "path";
+import {
+  DISABLE_ACTIONS_EVENT,
+  DISABLE_LOADING_EVENT,
+  ENABLE_ACTIONS_EVENT,
+  ENABLE_LOADING_EVENT,
+} from "@/App.vue";
+import {
+  EventService,
+  injectStrict,
+  SERVICE_BINDINGS,
+} from "@/services/service-container";
 
 @Options({
   components: {
@@ -49,14 +60,26 @@ import path from "path";
   },
 })
 export default class Settings extends Vue {
-  launchMO2() {
+  private eventService!: EventService;
+
+  created() {
+    this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+  }
+
+  async launchMO2() {
     if (
       userPreferences.has(USER_PREFERENCE_KEYS.MOD_DIRECTORY) &&
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY) !== ""
     ) {
-      ipcRenderer.invoke(IPCEvents.LAUNCH_MO2);
+      this.eventService.emit(DISABLE_ACTIONS_EVENT);
+      this.eventService.emit(ENABLE_LOADING_EVENT);
+
+      await ipcRenderer.invoke(IPCEvents.LAUNCH_MO2);
+
+      this.eventService.emit(ENABLE_ACTIONS_EVENT);
+      this.eventService.emit(DISABLE_LOADING_EVENT);
     } else {
-      ipcRenderer.invoke(
+      await ipcRenderer.invoke(
         IPCEvents.MESSAGE,
         "No mod directory specified, please select one on the settings tab."
       );
