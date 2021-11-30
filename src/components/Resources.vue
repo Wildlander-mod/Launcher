@@ -2,45 +2,65 @@
   <div>
     <div class="c-resources">
       <BaseLink href="https://www.patreon.com/dylanbperry" class="c-resource">
-        <LogoPatreon :size="50" />
-        <div class="c-resource__text">Patreon</div>
+        <ImageWithText
+          image-source="images/logos/patreon.svg"
+          alt=""
+          text="Patreon"
+        />
       </BaseLink>
       <BaseLink href="https://www.ultimateskyrim.com/" class="c-resource">
-        <LogoWebsite :size="50" />
-        <div class="c-resource__text">Website</div>
+        <ImageWithText
+          image-source="images/logos/website.svg"
+          alt=""
+          text="Website"
+        />
       </BaseLink>
       <BaseLink
         href="https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww"
         class="c-resource"
       >
-        <LogoYouTube :size="50" />
-        <div class="c-resource__text">YouTube</div>
+        <ImageWithText
+          image-source="images/logos/youtube.svg"
+          alt=""
+          text="YouTube"
+        />
       </BaseLink>
       <BaseLink href="https://www.twitch.tv/dylanbperry" class="c-resource">
-        <LogoTwitch size="50" />
-        <div class="c-resource__text">Twitch</div>
+        <ImageWithText
+          image-source="images/logos/twitch.svg"
+          alt=""
+          text="Twitch"
+        />
       </BaseLink>
       <BaseLink href="https://discord.gg/8VkDrfq" class="c-resource">
-        <LogoDiscord size="50" />
-        <div class="c-resource__text">Discord</div>
+        <ImageWithText
+          image-source="images/logos/discord.svg"
+          alt=""
+          text="Discord"
+        />
       </BaseLink>
       <BaseLink href="https://reddit.com/r/ultimateskyrim" class="c-resource">
-        <LogoReddit size="50" />
-        <div class="c-resource__text">Reddit</div>
+        <ImageWithText
+          image-source="images/logos/reddit.svg"
+          alt=""
+          text="Reddit"
+        />
       </BaseLink>
       <BaseLink
         href="https://github.com/UltimateSkyrim/UltimateSkyrim/blob/master/Docs/FAQ.md"
         class="c-resource"
       >
-        <LogoFAQ size="50" />
-        <div class="c-resource__text">FAQ</div>
+        <ImageWithText image-source="images/logos/faq.svg" alt="" text="FAQ" />
       </BaseLink>
       <BaseLink
         href="https://docs.google.com/document/d/1zLMnRAsaELhxB4wuzgRIWXhaVa8M-lPbbKotJHSCbH0/preview"
         class="c-resource"
       >
-        <LogoNewPlayerGuide size="50" />
-        <div class="c-resource__text">New player guide</div>
+        <ImageWithText
+          image-source="images/logos/new-player-guide.svg"
+          alt=""
+          text="New player guide"
+        />
       </BaseLink>
     </div>
   </div>
@@ -50,29 +70,15 @@
 import { Options, Vue } from "vue-class-component";
 import AppPageContent from "@/components/AppPageContent.vue";
 import AppPage from "@/components/AppPage.vue";
-import LogoYouTube from "@/components/LogoYouTube.vue";
-import LogoWebsite from "@/components/LogoWebsite.vue";
-import LogoPatreon from "@/components/LogoPatreon.vue";
-import LogoTwitch from "@/components/LogoTwitch.vue";
-import LogoDiscord from "@/components/LogoDiscord.vue";
-import LogoReddit from "@/components/LogoReddit.vue";
-import LogoFAQ from "@/components/LogoFAQ.vue";
-import LogoNewPlayerGuide from "@/components/LogoNewPlayerGuide.vue";
 import BaseLink from "@/components/BaseLink.vue";
+import ImageWithText from "@/components/ImageWithText.vue";
 
 @Options({
   components: {
+    ImageWithText,
     BaseLink,
-    LogoNewPlayerGuide,
-    LogoFAQ,
-    LogoReddit,
-    LogoDiscord,
-    LogoTwitch,
     AppPageContent,
     AppPage,
-    LogoYouTube,
-    LogoWebsite,
-    LogoPatreon,
   },
 })
 export default class Resources extends Vue {}
@@ -94,9 +100,6 @@ export default class Resources extends Vue {}
 
 .c-resource {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 
   width: 150px;
   height: 120px;
