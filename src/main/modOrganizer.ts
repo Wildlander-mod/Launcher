@@ -6,12 +6,12 @@ import {
   userPreferences,
 } from "@/main/config";
 import { logger } from "@/main/logger";
-import { checkENBFilesExist, copyENBFiles } from "@/main/ENB";
+import { checkENBFilesExist, copyENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
 import fs from "fs";
-import { parse, encode } from "ini";
+import { encode, parse } from "ini";
 
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
@@ -56,7 +56,10 @@ async function copyENBFilesOnLaunch() {
   const ENBFilesExist = await checkENBFilesExist();
   logger.debug(`ENB files exist on launch: ${ENBFilesExist}`);
   if (!ENBFilesExist) {
-    await copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE));
+    const currentProfile =
+      (userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) as string) ||
+      (await getENBPresets())[0];
+    await copyENBFiles(currentProfile);
   }
 }
 
