@@ -1,5 +1,9 @@
 <template>
-  <div class="window">
+  <div
+    class="c-app"
+    :style="{ 'background-image': `url(${modpackInfo.backgroundImage})` }"
+  >
+    <TheTitleBar />
     <template v-if="renderApp">
       <main
         class="l-column"
@@ -7,7 +11,6 @@
           'u-disable-click-events': !clickEventsEnabled,
         }"
       >
-        <TheTitleBar />
         <div class="l-row">
           <TheNavigation />
           <div class="l-column">
@@ -31,6 +34,7 @@ import { registerServices } from "@/services/service-container";
 import TheStartupChecks from "@/components/TheStartupChecks.vue";
 import { modalOpenedEvent } from "@/services/modal.service";
 import TheHeader from "@/components/TheHeader.vue";
+import { Modpack, modpack } from "@/main/config";
 
 export const ENABLE_ACTIONS_EVENT = "ENABLE_ACTIONS_EVENT";
 export const DISABLE_ACTIONS_EVENT = "DISABLE_ACTIONS_EVENT";
@@ -50,7 +54,11 @@ export default class App extends Vue {
   clickEventsEnabled = false;
   renderApp = false;
 
+  private modpackInfo!: Modpack;
+
   async created() {
+    this.modpackInfo = modpack;
+
     const { eventService } = registerServices();
 
     eventService.on(modalOpenedEvent, (opened: unknown) => {
@@ -104,11 +112,9 @@ p {
   margin: 0;
 }
 
-.window {
+.c-app {
   color: $colour-text;
   // The url below is a placeholder until we get a system for user generated images
-  background-image: linear-gradient(90deg, #000000aa 20%, #00000000 70%),
-    url(https://picsum.photos/1200/600);
   display: flex;
   flex-direction: column;
   height: $size-window-height;

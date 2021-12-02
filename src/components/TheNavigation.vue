@@ -62,7 +62,7 @@
       <div class="c-navigation__launcher-info">
         <p>Launcher Version: {{ launcherVersion }}</p>
         <BaseLink
-          href="https://github.com/UltimateSkyrim/ultimate-skyrim-launcher"
+          href="https://github.com/Wildlander-mod/Launcher"
           :underline="true"
           >Help contribute
         </BaseLink>

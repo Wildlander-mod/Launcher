@@ -10,10 +10,11 @@
       :items="patronNames"
     />
     <p v-else class="c-footer__text">
-      Could not retrieve Patron list. Please report this error in the
+      Could not retrieve Patron list. Please report this error in the modpack
       <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true">
-        Ultimate Skyrim Discord </BaseLink
-      >.
+        Discord
+      </BaseLink>
+      .
     </p>
   </footer>
 </template>

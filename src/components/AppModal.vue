@@ -2,8 +2,8 @@
   <vue-final-modal
     :name="name"
     v-model="model"
-    classes="l-column l-center"
-    content-class="c-modal"
+    classes="l-flex l-center"
+    content-class="c-modal l-flex"
     overlay-class="c-modal__overlay"
     :fit-parent="true"
     :click-to-close="false"
@@ -70,6 +70,7 @@ export default class AppModal extends Vue {
   justify-content: center;
 
   padding: $size-spacing--large;
+  margin: $size-spacing--x-large;
 
   background-color: $colour-background-secondary--transparent;
   border: 1px solid $colour-background--dark;

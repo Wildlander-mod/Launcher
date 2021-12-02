@@ -10,7 +10,8 @@
       type="text"
       :readonly="readonly"
       class="c-input"
-      v-on:input="handleInput"
+      @input="handleInput"
+      @click="handleClick"
       :value="value"
     />
   </div>
@@ -22,10 +23,17 @@ import { Prop } from "vue-property-decorator";
 
 export default class BaseInput extends Vue {
   @Prop() private oninput!: (filepath: string) => void;
+  @Prop() private onclick!: () => void;
   @Prop({ required: true }) private label!: string;
-  @Prop() private readonly = false;
-  @Prop() private centered = false;
+  @Prop({ default: false }) private readonly!: boolean;
+  @Prop({ default: false }) private centered!: boolean;
   @Prop() private value!: string;
+
+  handleClick() {
+    if (this.onclick) {
+      this.onclick();
+    }
+  }
 
   handleInput(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -40,9 +48,10 @@ export default class BaseInput extends Vue {
 @import "~@/assets/scss";
 
 .c-input {
-  width: 300px;
   height: $size-action-height;
   padding: $size-spacing;
+
+  margin-right: $size-spacing;
 
   box-sizing: border-box;
   color: #ffffff;
@@ -61,5 +70,6 @@ export default class BaseInput extends Vue {
 .c-input__label--centered {
   display: flex;
   justify-content: center;
+  text-align: center;
 }
 </style>

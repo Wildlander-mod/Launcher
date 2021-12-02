@@ -3,7 +3,7 @@
     :on-filepath-change="onModDirectoryChange"
     :pre-filepath-change="checkModDirectoryIsValid"
     :initial-filepath="modDirectory"
-    label="Ultimate Skyrim MO2 Folder"
+    :label="`${modpack.name} installation folder`"
     :centered="centered"
     :hide-open="hideOpen"
   />
@@ -11,7 +11,12 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import {
+  Modpack,
+  modpack,
+  USER_PREFERENCE_KEYS,
+  userPreferences,
+} from "@/main/config";
 import AppFileSelect from "@/components/AppFileSelect.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
@@ -28,10 +33,13 @@ export default class ModDirectory extends Vue {
   private modDirectory = "";
   @Prop({ default: false }) private centered!: boolean;
   @Prop({ default: false }) private hideOpen!: boolean;
+  private modpack!: Modpack;
 
   private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
 
   async created() {
+    this.modpack = modpack;
+
     const currentModDirectory = userPreferences.get(
       USER_PREFERENCE_KEYS.MOD_DIRECTORY
     );
@@ -68,9 +76,9 @@ export default class ModDirectory extends Vue {
 
   async triggerError() {
     await ipcRenderer.invoke(IPCEvents.ERROR, {
-      title: "Invalid mod directory selected",
+      title: "Invalid modpack directory selected",
       error:
-        "Please ensure this is a valid MO2 directory. Remember, this is NOT the Skyrim directory, it is the mod's MO2 directory.",
+        "Please ensure this is a valid mockpack installation directory. Remember, this is NOT the Skyrim directory, it is the mod's installation directory (containing the ModOrganizer.exe/profiles/etc.).",
     });
   }
 

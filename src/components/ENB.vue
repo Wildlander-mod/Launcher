@@ -24,7 +24,9 @@
         Copy ENB files
       </BaseButton>
       <div class="l-center-vertically">
-        <p>Copy all Ultimate Skyrim ENB files to the local Skyrim directory</p>
+        <p>
+          Copy all {{ modpack.name }} ENB files to the local Skyrim directory
+        </p>
       </div>
     </div>
 
@@ -39,7 +41,8 @@
       </BaseButton>
       <div class="l-center-vertically">
         <p>
-          Delete all Ultimate Skyrim ENB files from the local Skyrim directory
+          Delete all {{ modpack.name }} ENB files from the local Skyrim
+          directory
         </p>
       </div>
     </div>
@@ -52,7 +55,12 @@ import BaseButton from "@/components/BaseButton.vue";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { ipcRenderer } from "electron";
 import BaseDropdown, { SelectOption } from "@/components/BaseDropdown.vue";
-import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import {
+  modpack,
+  Modpack,
+  USER_PREFERENCE_KEYS,
+  userPreferences,
+} from "@/main/config";
 import BaseLink from "@/components/BaseLink.vue";
 import {
   EventService,
@@ -73,11 +81,14 @@ export default class ENB extends Vue {
   private initialENBSelection: SelectOption = { text: "", value: "" };
   private ENBPresets = [this.initialENBSelection];
   private loadingENBPresets = true;
+  private modpack!: Modpack;
 
   eventService!: EventService;
 
   async created() {
     this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+
+    this.modpack = modpack;
 
     await this.getENBPresets();
   }

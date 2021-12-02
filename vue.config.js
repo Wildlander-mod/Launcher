@@ -3,11 +3,14 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       builderOptions: {
-        productName: "Ultimate Skyrim Launcher",
+        productName: "Wildlander Launcher",
         icon: "public/icon.png",
         publish: {
           provider: "github",
           releaseType: "release",
+        },
+        extraMetadata: {
+          name: "Wildlander Launcher",
         },
       },
     },
