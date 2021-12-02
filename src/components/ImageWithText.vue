@@ -1,6 +1,11 @@
 <template>
   <div class="l-column l-center">
-    <BaseImage :image-source="imageSource" :alt="alt" />
+    <BaseImage
+      :image-source="imageSource"
+      :alt="alt"
+      :height="50"
+      :width="50"
+    />
     <div class="c-svg-with-text__text">{{ text }}</div>
   </div>
 </template>

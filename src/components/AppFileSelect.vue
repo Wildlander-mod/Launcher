@@ -1,14 +1,15 @@
 <template>
-  <div class="l-row l-row--bottom">
+  <div :class="{ 'l-row l-row--bottom': !centered, 'l-column': centered }">
     <BaseInput
       :label="label"
       :oninput="onFilepathChange"
       :value="filepath"
       :readonly="true"
       :centered="centered"
+      :onclick="openFileSelectDialog"
     />
     <div
-      class="l-row c-file-input__actions"
+      class="l-row l-no-flex c-file-input__actions"
       :class="{ 'c-file-input__actions--centered': centered }"
     >
       <BaseButton

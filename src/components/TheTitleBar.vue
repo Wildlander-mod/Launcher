@@ -12,15 +12,9 @@
 
 <script lang="ts">
 import { ipcRenderer } from "electron";
-import { Options, Vue } from "vue-class-component";
-import LogoUltSky from "@/components/LogoUltSky.vue";
+import { Vue } from "vue-class-component";
 import { IPCEvents } from "@/enums/IPCEvents";
 
-@Options({
-  components: {
-    LogoUltSky,
-  },
-})
 export default class TheTitleBar extends Vue {
   close() {
     ipcRenderer.send(IPCEvents.CLOSE);
@@ -38,6 +32,8 @@ export default class TheTitleBar extends Vue {
 .c-title-bar {
   height: 24px;
   background-color: $colour-background--darker-solid;
+  // The modal used sets its background-blur z-index to 1000. The title bar needs to be able to go over the top.
+  z-index: 2000;
 }
 
 .c-title-bar__control {

@@ -1,8 +1,8 @@
 {
-  "name": "ultimate-skyrim-launcher",
+  "name": "wildlander-launcher",
   "version": "0.1.173",
-  "description": "A launcher for the Ultimate Skyrim modpack",
-  "author": "Ultimate Skyrim",
+  "description": "A launcher for the Wabbajack modpacks",
+  "author": "Wildlander",
   "scripts": {
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
@@ -104,5 +104,5 @@
       "npm run lint:styles"
     ]
   },
-  "repository": "https://github.com/UltimateSkyrim/ultskylauncher"
+  "repository": "https://github.com/Wildlander-mod/Launcher"
 }

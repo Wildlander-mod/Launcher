@@ -1,4 +1,14 @@
 import Store from "electron-store";
+import { default as modpackConfig } from "../metadata.json";
+
+export interface Modpack {
+  name: string;
+  logo: string;
+  backgroundImage: string;
+  website: string;
+}
+
+export const modpack: Modpack = modpackConfig;
 
 export const isDevelopment = process.env.NODE_ENV !== "production";
 

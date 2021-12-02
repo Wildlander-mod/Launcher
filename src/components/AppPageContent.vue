@@ -34,6 +34,10 @@ export default class AppPageContent extends Vue {
 .c-page-content {
   margin-top: 10px;
 
+  &:first-of-type {
+    margin-top: 0;
+  }
+
   &:last-of-type {
     margin-bottom: 10px;
   }

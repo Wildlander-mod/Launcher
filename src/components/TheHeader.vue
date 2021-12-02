@@ -2,7 +2,7 @@
   <div>
     <div class="c-header">
       <div class="c-header__title">
-        <LogoUltSky fill="#ffffff" :height="30" />
+        <BaseImage :image-source="modpack.logo" :alt="modpack.name" />
       </div>
     </div>
   </div>
@@ -10,12 +10,19 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import LogoUltSky from "@/components/LogoUltSky.vue";
+import BaseImage from "@/components/BaseImage.vue";
+import { Modpack, modpack } from "@/main/config";
 
 @Options({
-  components: { LogoUltSky },
+  components: { BaseImage },
 })
-export default class TheHeader extends Vue {}
+export default class TheHeader extends Vue {
+  private modpack!: Modpack;
+
+  created() {
+    this.modpack = modpack;
+  }
+}
 </script>
 
 <style scoped lang="scss">

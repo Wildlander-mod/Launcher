@@ -8,7 +8,7 @@
           text="Patreon"
         />
       </BaseLink>
-      <BaseLink href="https://www.ultimateskyrim.com/" class="c-resource">
+      <BaseLink :href="modpack.website" class="c-resource">
         <ImageWithText
           image-source="images/logos/website.svg"
           alt=""
@@ -39,7 +39,7 @@
           text="Discord"
         />
       </BaseLink>
-      <BaseLink href="https://reddit.com/r/ultimateskyrim" class="c-resource">
+      <BaseLink href="https://reddit.com/r/wildlander" class="c-resource">
         <ImageWithText
           image-source="images/logos/reddit.svg"
           alt=""
@@ -47,7 +47,7 @@
         />
       </BaseLink>
       <BaseLink
-        href="https://github.com/UltimateSkyrim/UltimateSkyrim/blob/master/Docs/FAQ.md"
+        href="https://github.com/Wildlander-mod/Support/blob/master/Docs/SSEFAQ.md"
         class="c-resource"
       >
         <ImageWithText image-source="images/logos/faq.svg" alt="" text="FAQ" />
@@ -72,6 +72,7 @@ import AppPageContent from "@/components/AppPageContent.vue";
 import AppPage from "@/components/AppPage.vue";
 import BaseLink from "@/components/BaseLink.vue";
 import ImageWithText from "@/components/ImageWithText.vue";
+import { modpack, Modpack } from "@/main/config";
 
 @Options({
   components: {
@@ -81,7 +82,13 @@ import ImageWithText from "@/components/ImageWithText.vue";
     AppPage,
   },
 })
-export default class Resources extends Vue {}
+export default class Resources extends Vue {
+  private modpack!: Modpack;
+
+  created() {
+    this.modpack = modpack;
+  }
+}
 </script>
 
 <style scoped lang="scss">

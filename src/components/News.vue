@@ -41,9 +41,9 @@
     </ul>
   </div>
   <div v-if="failedToGetNews && news.length === 0">
-    Cannot load latest news. Please report this error in the
+    Cannot load latest news. Please report this error in the modpack
     <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true"
-      >Ultimate Skyrim Discord</BaseLink
+      >Discord</BaseLink
     >.
   </div>
 </template>
