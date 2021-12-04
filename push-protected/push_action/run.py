@@ -242,6 +242,8 @@ def main() -> None:
 
     IN_MEMORY_CACHE["args"] = parser.parse_args()
 
+    print("in debugging")
+
     fail = ""
     try:
         if IN_MEMORY_CACHE["args"].ACTION == "wait_for_checks":
