@@ -41,3 +41,4 @@ jobs:
           git reset --hard $TEMP_BRANCH
           git push origin main
           git push --tags
+          git push -d origin $TEMP_BRANCH
