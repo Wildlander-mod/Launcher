@@ -1,6 +1,9 @@
 name: Pre-merge
 
 on:
+  push:
+    branches:
+      - 'release-temp/**'
   pull_request:
     branches:
       - main
@@ -39,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: lint commits
-        run: npx commitlint --from origin/$GITHUB_BASE_REF
+        run: npx commitlint --from origin/main
 
   version-dry-run:
     runs-on: ubuntu-latest
