@@ -181,6 +181,8 @@ def protected_branch(branch: str) -> str:
     try:
         api_request(url)
     except RuntimeError:
+        print ("got an error")
+        print (RuntimeError)
         # Expected not to be protected
         return ""
     else:
