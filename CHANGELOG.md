@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.176 (2021-12-04)
+
+
+### Bug Fixes
+
+* if no enb has been selected, just copy the first one ([a86ca0a](https://github.com/Wildlander-mod/Launcher/commit/a86ca0a8b6d140e10eb98d92bb83239be2ee495e))
+
 ### 0.1.175 (2021-12-04)
 
 ### 0.1.174 (2021-12-04)
