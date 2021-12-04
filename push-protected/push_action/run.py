@@ -243,6 +243,7 @@ def main() -> None:
     IN_MEMORY_CACHE["args"] = parser.parse_args()
 
     print("in debugging")
+    print(IN_MEMORY_CACHE)
 
     fail = ""
     try:
