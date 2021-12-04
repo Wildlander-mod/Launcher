@@ -1,0 +1,21 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: monday
+    time: "05:00"
+  target-branch: ci/dependabot-updates
+  labels:
+    - dependencies
+    - python
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "05:00"
+  target-branch: ci/dependabot-updates
+  labels:
+    - dependencies
+    - github_actions
