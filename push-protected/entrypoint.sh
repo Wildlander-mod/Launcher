@@ -82,6 +82,11 @@ PUSH_PROTECTED_PROTECTED_BRANCH=$(push-action --token "${INPUT_TOKEN}" --ref "${
 
 # Create new temporary branch
 PUSH_PROTECTED_TEMPORARY_BRANCH="push-action/${GITHUB_RUN_ID}/${RANDOM}-${RANDOM}-${RANDOM}"
+
+echo "protected branch debug?"
+echo $PUSH_PROTECTED_CHANGED_BRANCH
+echo "${PUSH_PROTECTED_PROTECTED_BRANCH}"
+
 echo -e "\nCreating temporary branch '${PUSH_PROTECTED_TEMPORARY_BRANCH}' ..."
 git checkout -f -b ${PUSH_PROTECTED_TEMPORARY_BRANCH}  # throws away any local un-committed changes
 if [ -n "${PUSH_PROTECTED_CHANGED_BRANCH}" ] && [ -n "${PUSH_PROTECTED_PROTECTED_BRANCH}" ]; then
