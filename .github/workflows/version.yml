@@ -30,4 +30,14 @@ jobs:
         run: npx standard-version --no-verify
 
       - name: publish changes
-        run: git push --follow-tags
+        run: |
+          TEMP_BRANCH=release-temp/$(cat /proc/sys/kernel/random/uuid)
+          git checkout -b $TEMP_BRANCH
+          git push -f origin $TEMP_BRANCH
+
+          sleep 120
+
+          git checkout main
+          git reset --hard $TEMP_BRANCH
+          git push origin main
+          git push --tags
