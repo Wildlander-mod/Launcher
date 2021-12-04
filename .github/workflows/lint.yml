@@ -1,10 +1,12 @@
 name: Pre-merge
 
 on:
+  push:
+    branches:
+      - 'push-action/**'
   pull_request:
     branches:
       - main
-      - 'push-action/**'
 
 jobs:
   lint:
