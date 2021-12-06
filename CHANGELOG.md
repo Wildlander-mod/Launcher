@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.177 (2021-12-06)
+
+
+### Features
+
+* allow user to set resolution before launching game ([413abb3](https://github.com/Wildlander-mod/Launcher/commit/413abb321613ece2749c48aa925eea51ce652a80))
+
 ### 0.1.176 (2021-12-04)
 
 
