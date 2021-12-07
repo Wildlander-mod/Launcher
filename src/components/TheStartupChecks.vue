@@ -3,11 +3,17 @@
     <AutoUpdate @updateComplete="updateCompleteHandler" />
 
     <AppModal :show-modal="showModDirectoryModal" name="modDirectory">
+      <BaseImage
+        :image-source="modpack.logo"
+        :alt="modpack.name"
+        class="c-startup__logo"
+      />
+
       <ModDirectory
         @modDirectorySet="modDirectorySet"
         @invalidFilepath="onInvalidModDirectory"
-        :centered="true"
         :hide-open="true"
+        :label="`To get started, select your ${modpack.name} installation directory:`"
       />
     </AppModal>
   </div>
@@ -18,10 +24,17 @@ import { Options, Vue } from "vue-class-component";
 import AppModal from "@/components/AppModal.vue";
 import ModDirectory from "@/components/ModDirectory.vue";
 import AutoUpdate from "@/components/AutoUpdate.vue";
-import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
+import {
+  Modpack,
+  modpack,
+  USER_PREFERENCE_KEYS,
+  userPreferences,
+} from "@/main/config";
+import BaseImage from "@/components/BaseImage.vue";
 
 @Options({
   components: {
+    BaseImage,
     AppModal,
     ModDirectory,
     AutoUpdate,
@@ -29,12 +42,15 @@ import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 })
 export default class TheStartupChecks extends Vue {
   private showModDirectoryModal = true;
-  private showSkyrimDirectoryModal = true;
 
   updateComplete = false;
   modDirectorySelected = false;
 
+  private modpack!: Modpack;
+
   created() {
+    this.modpack = modpack;
+
     this.showModDirectoryModal = !userPreferences.get(
       USER_PREFERENCE_KEYS.MOD_DIRECTORY
     );
@@ -63,3 +79,11 @@ export default class TheStartupChecks extends Vue {
   }
 }
 </script>
+
+<style scoped lang="scss">
+@import "~@/assets/scss";
+
+.c-startup__logo {
+  margin-bottom: $size-spacing--x-large;
+}
+</style>
