@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.184 (2021-12-07)
+
+
+### Features
+
+* add message to note what directories shouldn't be used ([c7cccfc](https://github.com/Wildlander-mod/Launcher/commit/c7cccfc55d3b94ba99222b72c42397b296eacbf0))
+
 ### 0.1.183 (2021-12-07)
 
 
