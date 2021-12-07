@@ -79,20 +79,6 @@ export function registerHandlers() {
     return true;
   });
 
-  // Ensure the skyrim directory contains a valid TESV.exe (Legacy edition) or SkyrimSE.exe (Special edition)
-  ipcMain.handle(IPCEvents.CHECK_SKYRIM_DIRECTORY, (_event, filepath) => {
-    if (
-      !fs.existsSync(`${filepath}/TESV.exe`) &&
-      !fs.existsSync(`${filepath}/SkyrimSE.exe`)
-    ) {
-      logger.warn(
-        `Selected Skyrim directory "${filepath}" doesn't contain a valid TESV.exe or SkyrimSE.exe`
-      );
-      return false;
-    }
-    return true;
-  });
-
   ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () =>
     copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
   );

@@ -3,7 +3,7 @@
     :on-filepath-change="onModDirectoryChange"
     :pre-filepath-change="checkModDirectoryIsValid"
     :initial-filepath="modDirectory"
-    :label="`${modpack.name} installation folder`"
+    :label="label"
     :centered="centered"
     :hide-open="hideOpen"
   />
@@ -33,6 +33,8 @@ export default class ModDirectory extends Vue {
   private modDirectory = "";
   @Prop({ default: false }) private centered!: boolean;
   @Prop({ default: false }) private hideOpen!: boolean;
+  @Prop({ default: `${modpack.name} installation folder` })
+  private label!: string;
   private modpack!: Modpack;
 
   private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
