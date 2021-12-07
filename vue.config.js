@@ -4,7 +4,7 @@ module.exports = {
       nodeIntegration: true,
       builderOptions: {
         productName: "Wildlander Launcher",
-        icon: "public/icon.png",
+        icon: "public/images/logos/wildlander-icon-light.png",
         publish: {
           provider: "github",
           releaseType: "release",
