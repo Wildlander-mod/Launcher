@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.180 (2021-12-07)
+
+
+### Features
+
+* change brand colours to match wildlander website ([3ed5e70](https://github.com/Wildlander-mod/Launcher/commit/3ed5e7012515a8b45469da1e038184d3d5b2facd))
+
 ### 0.1.179 (2021-12-06)
 
 ### 0.1.178 (2021-12-06)
