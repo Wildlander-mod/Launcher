@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.183 (2021-12-07)
+
+
+### Features
+
+* improve startup mod directory screen ([b8e3cd3](https://github.com/Wildlander-mod/Launcher/commit/b8e3cd3c467331b3056b0fcbe7466ca0dfdc5dd2))
+
 ### 0.1.182 (2021-12-07)
 
 
