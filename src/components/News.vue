@@ -3,48 +3,27 @@
     v-if="!failedToGetNews && news.length > 0"
     class="c-news l-column u-scroll-y"
   >
-    <ul class="u-list--bare">
-      <li v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
-        <BaseLink
-          :href="`https://www.patreon.com${newsItem.url}`"
-          class="l-row"
-        >
+    <div v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
+      <BaseLink :href="`https://www.patreon.com${newsItem.url}`" class="l-row">
+        <div class="c-news__meta">
           <div class="c-news__published">
             {{ new Date(newsItem.published).toLocaleDateString() }}
           </div>
-          <div class="c-news__block l-column">
-            <div class="c-news__tags l-row">
-              <template v-if="newsItem.tags">
-                <div
-                  v-for="tag in newsItem.tags.slice(0, 4)"
-                  :key="tag.key"
-                  :class="[
-                    tag.toUpperCase() === 'NEWS' && 'c-news__tag--news',
-                    tag.toUpperCase() === 'DEVSTREAM' &&
-                      'c-news__tag--devstream',
-                  ]"
-                  class="c-news__tag"
-                >
-                  {{ tag.toUpperCase() }}
-                </div>
-              </template>
-              <template v-else>
-                <div class="c-news__tag c-news__tag--news">News</div>
-              </template>
-            </div>
-            <div class="c-news__content">
-              {{ newsItem.title }}
-            </div>
-          </div>
-        </BaseLink>
-      </li>
-    </ul>
+
+          <div class="c-news__tag">News</div>
+        </div>
+        <div class="c-news__title">
+          {{ newsItem.title }}
+        </div>
+      </BaseLink>
+    </div>
   </div>
   <div v-if="failedToGetNews && news.length === 0">
     Cannot load latest news. Please report this error in the modpack
     <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true"
-      >Discord</BaseLink
-    >.
+      >Discord
+    </BaseLink>
+    .
   </div>
 </template>
 
@@ -84,6 +63,19 @@ export default class News extends Vue {
   padding: $size-spacing--large;
 }
 
+.c-news__meta {
+  margin-right: $size-spacing;
+  flex: 0.3;
+}
+
+.c-news__title {
+  flex: 1;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .c-news__item {
   margin-bottom: $size-spacing;
 }
@@ -93,30 +85,15 @@ export default class News extends Vue {
   flex: 0.2;
 }
 
-.c-news__content {
-  font-size: $font-size--small;
-}
-
-.c-news__block {
-  flex: 0.8;
-}
-
 .c-news__tag {
   font-size: $font-size--x-small;
   font-weight: $font-weight--large;
 
   padding: 3px 6px;
-  margin-right: $size-spacing--x-small;
 
   border-radius: 8px;
-  background-color: $colour-background--dark;
-}
-
-.c-news__tag--news {
   background-color: $colour-primary;
-}
 
-.c-news__tag--devstream {
-  background-color: $colour-alternate;
+  text-align: center;
 }
 </style>
