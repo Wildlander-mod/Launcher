@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.182 (2021-12-07)
+
+
+### Bug Fixes
+
+* prevent showing patreon error message if it's loading ([ab17f18](https://github.com/Wildlander-mod/Launcher/commit/ab17f18d8c0d08f2b4a3296f2e293335ab697eda))
+
 ### 0.1.181 (2021-12-07)
 
 ### 0.1.180 (2021-12-07)
