@@ -45,7 +45,6 @@ async function createWindow() {
       minWidth: 1000,
       maxWidth: 1000,
       resizable: false,
-      icon: nativeImage.createFromPath(path.join(__static, "icon.icon")),
       maximizable: false,
       webPreferences: {
         // Use pluginOptions.nodeIntegration, leave this alone

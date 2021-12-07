@@ -33,6 +33,8 @@ export default class BaseMarquee extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "~@/assets/scss";
+
 .marquee {
   position: relative;
   overflow: hidden;
@@ -52,8 +54,8 @@ export default class BaseMarquee extends Vue {
     &:before {
       background: linear-gradient(
         to right,
-        rgba(0, 0, 0, 1) 0%,
-        rgba(0, 0, 0, 0) 100%
+        rgba($colour-background--darker-solid, 1) 0%,
+        rgba($colour-background--darker-solid, 0) 100%
       );
       position: absolute;
       left: 0;
@@ -64,8 +66,8 @@ export default class BaseMarquee extends Vue {
     &:after {
       background: linear-gradient(
         to right,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 1) 100%
+        rgba($colour-background--darker-solid, 0) 0%,
+        rgba($colour-background--darker-solid, 1) 100%
       );
       position: absolute;
       right: 0;

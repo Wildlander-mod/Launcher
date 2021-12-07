@@ -52,7 +52,7 @@ export default class TheFooter extends Vue {
 @import "~@/assets/scss";
 
 .c-footer {
-  background-color: $colour-background-secondary;
+  background-color: $colour-background--darker-solid;
   display: flex;
   height: 30px;
   line-height: $line-height--x-large;
