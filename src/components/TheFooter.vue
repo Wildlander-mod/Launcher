@@ -9,12 +9,8 @@
       v-if="patronNames && patronNames.length > 0"
       :items="patronNames"
     />
-    <p v-else class="c-footer__text">
-      Could not retrieve Patron list. Please report this error in the modpack
-      <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true">
-        Discord
-      </BaseLink>
-      .
+    <p v-else-if="cannotGetPatrons" class="c-footer__text">
+      Could not retrieve Patron list.
     </p>
   </footer>
 </template>
@@ -25,6 +21,7 @@ import BaseMarquee from "./BaseMarquee.vue";
 import { PatreonService } from "@/services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import BaseLink from "@/components/BaseLink.vue";
+import { logger } from "@/main/logger";
 
 @Component({
   components: {
@@ -35,11 +32,18 @@ import BaseLink from "@/components/BaseLink.vue";
 export default class TheFooter extends Vue {
   patreonService!: PatreonService;
   patronNames: string[] = [];
+  cannotGetPatrons = false;
 
   async created() {
     this.patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
-    const patrons = await this.patreonService.getPatrons();
-    this.patronNames = patrons.map((patron) => patron.name);
+
+    try {
+      const patrons = await this.patreonService.getPatrons();
+      this.patronNames = patrons.map((patron) => patron.name);
+    } catch (error) {
+      logger.error(`Cannot get Patrons ${error}`);
+      this.cannotGetPatrons = true;
+    }
   }
 }
 </script>
