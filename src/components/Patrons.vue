@@ -30,17 +30,7 @@
         <div class="c-patrons__title-text">Patron</div>
       </div>
     </BaseList>
-    <div v-if="failedToGetPatrons">
-      <div>
-        Could not retrieve Patron list. Please report this error in the modpack
-        <BaseLink
-          href="https://discordapp.com/invite/8VkDrfq"
-          :underline="true"
-        >
-          Discord </BaseLink
-        >.
-      </div>
-    </div>
+    <div v-if="failedToGetPatrons">Could not retrieve Patron list.</div>
   </div>
 </template>
 
