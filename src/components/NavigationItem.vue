@@ -22,7 +22,8 @@ export default class NavigationItem extends Vue {
   margin-bottom: $size-spacing--x-large;
   font-size: $font-size-subtitle-alt;
 
-  &.c-nav-link--active {
+  &.c-nav-link--active,
+  &:hover {
     color: $colour-text;
 
     border-right: 6px solid $colour-primary;
