@@ -1,5 +1,5 @@
 <template>
-  <div class="l-row">
+  <div class="l-row l-no-flex-grow">
     <BaseDropdown
       :options="resolutionsToSelectOptions(resolutions)"
       :current-selection="resolutionsToSelectOptions([selectedResolution])[0]"

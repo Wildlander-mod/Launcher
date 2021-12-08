@@ -1,42 +1,37 @@
 <template>
   <div
-    :class="[
-      'c-select',
-      `${isOpen === true ? 'c-select--open' : 'c-select--closed'}`,
-    ]"
+    class="c-select"
+    :class="{
+      'c-select--open': isOpen && !loading,
+      'c-select--closed': !isOpen && !loading,
+    }"
   >
     <div
-      :class="[
-        'c-select__head',
-        'u-text',
-        `${
-          isOpen === true ? 'c-select__head--open' : 'c-select__head--closed'
-        }`,
-      ]"
+      class="c-select__head u-text"
+      :class="{
+        'c-select__head--open': isOpen && !loading,
+        'c-select__head--closed': !isOpen && !loading,
+      }"
       @click="toggleOpenState"
     >
       {{ selectedOption.text }}
       <span
-        :class="[
-          'material-icons',
-          'c-select__icon',
-          `${
-            isOpen === true ? 'c-select__icon--open' : 'c-select__icon--closed'
-          }`,
-        ]"
+        class="material-icons c-select__icon"
+        :class="{
+          'c-select__icon--open': isOpen && !loading,
+          'c-select__icon--closed': !isOpen && !loading,
+        }"
       >
         expand_more
       </span>
     </div>
     <div
-      :class="[
-        'c-select__options',
-        `${
-          isOpen === true
-            ? 'c-select__options--open'
-            : 'c-select__options--closed'
-        }`,
-      ]"
+      class="c-select__options"
+      :class="{
+        'c-select__options--open': isOpen && !loading,
+        'c-select__options--closed': !isOpen && !loading,
+        'c-select__options--loading': loading,
+      }"
     >
       <div
         v-for="option in options"
@@ -52,7 +47,7 @@
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
-import { Prop, Watch } from "vue-property-decorator";
+import { Prop } from "vue-property-decorator";
 
 export interface SelectOption {
   text: string;
@@ -67,12 +62,12 @@ export default class BaseDropdown extends Vue {
 
   selectedOption!: SelectOption;
   isOpen = false;
+  loading = true;
 
   created() {
     this.selectedOption = this.currentSelection;
   }
 
-  @Watch("initialSelection")
   select(option: SelectOption) {
     this.selectedOption = option;
     this.isOpen = false;
@@ -82,6 +77,7 @@ export default class BaseDropdown extends Vue {
   }
 
   toggleOpenState() {
+    this.loading = false;
     this.isOpen = !this.isOpen;
   }
 }
@@ -110,6 +106,10 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   }
 }
 
+.c-select--loading {
+  display: none;
+}
+
 .c-select__head {
   display: flex;
   justify-content: space-between;
@@ -126,10 +126,10 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
       @keyframes rotate-reverse {
         from {
-          transform: rotate(180deg);
+          transform: rotate(-180deg);
         }
         to {
-          transform: rotate(360deg);
+          transform: rotate(0deg);
         }
       }
     }
@@ -142,7 +142,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
           transform: rotate(0deg);
         }
         to {
-          transform: rotate(180deg);
+          transform: rotate(-180deg);
         }
       }
     }
@@ -165,6 +165,10 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
   &--open {
     animation: expand 0.2s forwards;
+  }
+
+  &--loading {
+    display: none;
   }
 
   @keyframes expand {
