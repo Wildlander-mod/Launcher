@@ -9,7 +9,7 @@
       :onclick="openFileSelectDialog"
     />
     <div
-      class="l-row l-no-flex c-file-input__actions"
+      class="l-row l-no-flex-grow c-file-input__actions"
       :class="{ 'c-file-input__actions--centered': centered }"
     >
       <BaseButton

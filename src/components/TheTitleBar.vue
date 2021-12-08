@@ -1,5 +1,5 @@
 <template>
-  <div class="c-title-bar l-row l-end l-no-flex">
+  <div class="c-title-bar l-row l-end l-no-flex-grow">
     <div class="c-title-bar__navigation-bar"></div>
     <div class="c-title-bar__control" @click="minimize">
       <span class="material-icons"> remove </span>

@@ -113,6 +113,9 @@ p {
 }
 
 .c-app {
+  background-repeat: no-repeat;
+  background-size: cover;
+
   color: $colour-text;
   // The url below is a placeholder until we get a system for user generated images
   display: flex;

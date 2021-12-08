@@ -16,6 +16,10 @@
   overflow-y: scroll;
 }
 
+.u-scroll-y-auto {
+  overflow-y: auto;
+}
+
 .u-small-scrollbar {
   &::-webkit-scrollbar {
     width: 2px;
