@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="!failedToGetNews && news.length > 0"
-    class="c-news l-column u-scroll-y"
-  >
+  <div v-if="!failedToGetNews && news.length > 0" class="c-news l-column">
     <div v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
       <BaseLink :href="`https://www.patreon.com${newsItem.url}`" class="l-row">
         <div class="c-news__meta">

@@ -1,5 +1,5 @@
 import Store from "electron-store";
-import { default as modpackConfig } from "../metadata.json";
+import { default as modpackConfig } from "../branding.json";
 
 export interface Modpack {
   name: string;
