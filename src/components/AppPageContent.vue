@@ -1,6 +1,10 @@
 <template>
   <div class="c-page-content l-column">
-    <h2 class="c-page-content__title l-center-text" v-if="title">
+    <h2
+      class="c-page-content__title"
+      :class="{ 'l-center-text': center }"
+      v-if="title"
+    >
       {{ title }}
     </h2>
     <div
@@ -19,6 +23,7 @@ import { Prop } from "vue-property-decorator";
 export default class AppPageContent extends Vue {
   @Prop({ required: false }) title!: string;
   @Prop({ default: true }) private spacing!: boolean;
+  @Prop({ default: false }) private center!: boolean;
 }
 </script>
 

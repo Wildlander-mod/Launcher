@@ -1,10 +1,10 @@
 <template>
   <AppPage layout="row">
-    <AppPageContent title="News" :spacing="false">
+    <AppPageContent title="News" :spacing="false" :center="true">
       <News />
     </AppPageContent>
 
-    <AppPageContent title="Patron Highlight" :spacing="false">
+    <AppPageContent title="Patron Highlight" :spacing="false" :center="true">
       <Patrons />
     </AppPageContent>
   </AppPage>
