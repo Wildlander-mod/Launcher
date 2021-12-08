@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="c-header">
+    <div class="c-header l-center">
       <div class="c-header__title">
         <BaseImage :image-source="modpack.logo" :alt="modpack.name" />
       </div>
