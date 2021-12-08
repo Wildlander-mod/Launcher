@@ -29,13 +29,16 @@ jobs:
       - name: bump version
         run: npx standard-version --no-verify
 
+      # Inspired by https://github.com/CasperWA/push-protected but unable to get it working with this repository.
+      # Instead, we just wait a set amount of time and hope the status checks complete.
+      # Eventually this will need revisiting to ensure status checks pass before continuing
       - name: publish changes
         run: |
           TEMP_BRANCH=release-temp/$(cat /proc/sys/kernel/random/uuid)
           git checkout -b $TEMP_BRANCH
           git push -f origin $TEMP_BRANCH
 
-          sleep 120
+          sleep 200
 
           git checkout main
           git reset --hard $TEMP_BRANCH
