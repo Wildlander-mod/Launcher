@@ -8,7 +8,7 @@
       {{ title }}
     </h2>
     <div
-      class="c-page-content__body u-scroll-y-auto"
+      class="c-page-content__body l-flex u-scroll-y-auto"
       :class="{ 'c-page-content__body--large-spacing': spacing }"
     >
       <slot></slot>
