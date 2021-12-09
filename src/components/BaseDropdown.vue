@@ -13,7 +13,8 @@
         'c-select__head--open': isOpen && !loading,
         'c-select__head--closed': !isOpen && !loading,
       }"
-      @click="toggleOpenState"
+      @click="() => toggleOpenState()"
+      v-click-away="() => toggleOpenState(false)"
     >
       {{ selectedOption.text }}
       <span
@@ -27,7 +28,7 @@
       </span>
     </div>
     <div
-      class="c-select__options"
+      class="c-select__options u-scroll-y-auto"
       :class="{
         'c-select__options--open': isOpen && !loading,
         'c-select__options--closed': !isOpen && !loading,
@@ -78,9 +79,13 @@ export default class BaseDropdown extends Vue {
     }
   }
 
-  toggleOpenState() {
-    this.loading = false;
-    this.isOpen = !this.isOpen;
+  toggleOpenState(open?: boolean) {
+    this.isOpen = open !== undefined ? open : !this.isOpen;
+    // To prevent the closing class from playing the animation on load, a loading class is used to hide the options.
+    // Once the dialog has been opened, it can be removed.
+    if (this.isOpen) {
+      this.loading = false;
+    }
   }
 }
 </script>
@@ -162,7 +167,6 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   z-index: 1;
   border-radius: 0 4px 4px 4px;
   max-height: 200px;
-  overflow-y: scroll;
 
   &--closed {
     animation: retract 0.2s forwards;
