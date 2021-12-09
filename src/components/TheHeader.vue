@@ -4,7 +4,7 @@
 
     <div class="l-row l-no-flex-grow">
       <div v-if="modpack.website" class="c-header__link l-center-vertically">
-        <BaseLink :href="modpack.patreon" :hover-style="true"
+        <BaseLink :href="modpack.website" :hover-style="true"
           >Website
         </BaseLink>
       </div>
