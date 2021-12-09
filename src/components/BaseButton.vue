@@ -1,5 +1,11 @@
 <template>
-  <div :class="['c-button', `c-button--${size}`, `c-button--${type}`]">
+  <div
+    :class="[
+      'c-button',
+      { [`c-button--${size}`]: size !== 'grow' },
+      `c-button--${type}`,
+    ]"
+  >
     <slot />
   </div>
 </template>
@@ -8,7 +14,7 @@
 import { Options as Component, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export type ButtonSizes = "large" | "small";
+export type ButtonSizes = "large" | "small" | "grow";
 export type ButtonTypes = "primary" | "default" | "warning";
 
 @Component({})

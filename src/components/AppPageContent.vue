@@ -1,15 +1,11 @@
 <template>
   <div class="c-page-content l-column">
-    <h2
-      class="c-page-content__title"
-      :class="{ 'l-center-text': center }"
-      v-if="title"
-    >
-      {{ title }}
-    </h2>
     <div
-      class="c-page-content__body l-flex u-scroll-y-auto"
-      :class="{ 'c-page-content__body--large-spacing': spacing }"
+      class="c-page-content__body"
+      :class="{
+        'c-page-content__body--large-spacing': spacing,
+        'u-scroll-y-auto': scrollable,
+      }"
     >
       <slot></slot>
     </div>
@@ -24,6 +20,7 @@ export default class AppPageContent extends Vue {
   @Prop({ required: false }) title!: string;
   @Prop({ default: true }) private spacing!: boolean;
   @Prop({ default: false }) private center!: boolean;
+  @Prop({ default: false }) private scrollable!: boolean;
 }
 </script>
 
@@ -49,8 +46,6 @@ export default class AppPageContent extends Vue {
   backdrop-filter: $background-blur;
   background-color: $colour-background-secondary--transparent;
   border: 1px solid $colour-background--dark;
-
-  margin-top: 5px;
 }
 
 .c-page-content__body--large-spacing {

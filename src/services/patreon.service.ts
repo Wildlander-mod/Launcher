@@ -1,14 +1,5 @@
 export class PatreonService {
-  public async getPatrons(shuffle = true): Promise<Patron[]> {
-    try {
-      const response = await fetch("https://ultsky.phinocio.com/api/patreon");
-      const data = (await response.json()) as { patrons: Patron[] };
-      // Shuffle the array to show different Patrons each time
-      return shuffle ? PatreonService.shuffleArray(data.patrons) : data.patrons;
-    } catch (error) {
-      throw new Error(`Failed to get Patrons: ${error}`);
-    }
-  }
+  private patrons: Patron[] = [];
 
   /**
    * Taken from https://stackoverflow.com/a/12646864/3379536
@@ -19,6 +10,24 @@ export class PatreonService {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
+  }
+
+  public async getPatrons(shuffle = true): Promise<Patron[]> {
+    try {
+      if (this.patrons.length > 0) {
+        return this.patrons;
+      }
+
+      const response = await fetch("https://ultsky.phinocio.com/api/patreon");
+      const data = (await response.json()) as { patrons: Patron[] };
+      // Shuffle the array to show different Patrons each time
+      this.patrons = shuffle
+        ? PatreonService.shuffleArray(data.patrons)
+        : data.patrons;
+      return this.patrons;
+    } catch (error) {
+      throw new Error(`Failed to get Patrons: ${error}`);
+    }
   }
 }
 

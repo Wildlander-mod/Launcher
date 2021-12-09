@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import ViewHome from "@/views/ViewHome.vue";
-import ViewResources from "@/views/ViewResources.vue";
+import ViewCommunity from "@/views/ViewCommunity.vue";
 import ViewSettings from "@/views/ViewSettings.vue";
 import ViewGraphics from "@/views/ViewGraphics.vue";
 
@@ -17,9 +17,9 @@ const routes = [
     component: ViewGraphics,
   },
   {
-    path: "/resources",
-    name: "Resources",
-    component: ViewResources,
+    path: "/community",
+    name: "Community",
+    component: ViewCommunity,
   },
   {
     path: "/settings",

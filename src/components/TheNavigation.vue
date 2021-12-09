@@ -1,7 +1,7 @@
 <template>
   <nav class="c-navigation">
     <div class="c-navigation__actions">
-      <BaseButton type="primary" size="large" @click="launchGame"
+      <BaseButton type="primary" size="grow" @click="launchGame"
         >Launch Game
       </BaseButton>
 
@@ -36,13 +36,13 @@
 
         <router-link
           :to="{
-            name: 'Resources',
+            name: 'Community',
           }"
           custom
           v-slot="{ href, navigate, isActive }"
         >
           <NavigationItem :active="isActive" :href="href" @click="navigate">
-            Resources
+            Community
           </NavigationItem>
         </router-link>
 
@@ -150,10 +150,10 @@ export default class TheNavigation extends Vue {
 .c-navigation__actions {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 
   width: 100%;
-  padding: $size-spacing--x-large;
+  padding: 30px;
 
   border-bottom: 1px solid $colour-background--light;
 

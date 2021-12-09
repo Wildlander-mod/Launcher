@@ -1,6 +1,6 @@
 <template>
   <AppPage>
-    <AppPageContent title="Graphics settings">
+    <AppPageContent>
       <div class="l-column">
         <ENB class="c-graphics__enb" />
         <Resolution />

@@ -1,7 +1,7 @@
 <template>
   <AppPage>
-    <AppPageContent title="Resources">
-      <Resources />
+    <AppPageContent>
+      <Community />
     </AppPageContent>
   </AppPage>
 </template>
@@ -10,10 +10,10 @@
 import { Options, Vue } from "vue-class-component";
 import AppPage from "@/components/AppPage.vue";
 import AppPageContent from "@/components/AppPageContent.vue";
-import Resources from "@/components/Resources.vue";
+import Community from "@/components/Community.vue";
 
 @Options({
-  components: { Resources, AppPageContent, AppPage },
+  components: { Community, AppPageContent, AppPage },
 })
-export default class ViewResources extends Vue {}
+export default class ViewCommunity extends Vue {}
 </script>

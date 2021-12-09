@@ -1,9 +1,7 @@
 <template>
   <footer class="c-footer">
     <p class="c-footer__text">
-      <BaseLink href="https://www.patreon.com/dylanbperry">
-        Thanks to all the Patrons!
-      </BaseLink>
+      <BaseLink :href="modpack.patreon"> Thanks to all the Patrons!</BaseLink>
     </p>
     <BaseMarquee
       v-if="patronNames && patronNames.length > 0"
@@ -22,6 +20,7 @@ import { PatreonService } from "@/services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import BaseLink from "@/components/BaseLink.vue";
 import { logger } from "@/main/logger";
+import { Modpack, modpack } from "@/main/config";
 
 @Component({
   components: {
@@ -33,9 +32,12 @@ export default class TheFooter extends Vue {
   patreonService!: PatreonService;
   patronNames: string[] = [];
   cannotGetPatrons = false;
+  private modpack!: Modpack;
 
   async created() {
     this.patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
+
+    this.modpack = modpack;
 
     try {
       const patrons = await this.patreonService.getPatrons();

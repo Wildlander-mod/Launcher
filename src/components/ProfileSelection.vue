@@ -4,6 +4,7 @@
     :on-option-selected="onPresetSelected"
     :options="presets"
     v-if="!loadingData"
+    :grow="true"
   />
 </template>
 

@@ -3,7 +3,6 @@
     class="c-app"
     :style="{ 'background-image': `url(${modpackInfo.backgroundImage})` }"
   >
-    <TheTitleBar />
     <template v-if="renderApp">
       <main
         class="l-column"
@@ -14,7 +13,8 @@
         <div class="l-row">
           <TheNavigation />
           <div class="l-column">
-            <TheHeader />
+            <TheTitleBar />
+            <TheHeader class="l-no-flex-grow" />
             <router-view />
           </div>
         </div>
@@ -122,6 +122,8 @@ p {
   flex-direction: column;
   height: $size-window-height;
   width: $size-window-width;
+
+  font-size: $font-size;
 }
 
 // Custom scrollbars

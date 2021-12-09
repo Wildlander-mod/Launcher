@@ -1,6 +1,6 @@
 <template>
   <AppPage>
-    <AppPageContent title="Settings" width="large">
+    <AppPageContent width="large">
       <div class="c-settings l-column">
         <div class="c-settings__directories l-row l-space-between">
           <ModDirectory />
@@ -114,7 +114,6 @@ export default class Settings extends Vue {
 @import "~@/assets/scss";
 
 .c-settings {
-  font-size: $font-size--body;
   line-height: $line-height__body;
 }
 

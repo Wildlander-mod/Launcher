@@ -2,6 +2,7 @@
   <div
     class="c-select"
     :class="{
+      'c-select--fixed-width': !grow,
       'c-select--open': isOpen && !loading,
       'c-select--closed': !isOpen && !loading,
     }"
@@ -59,6 +60,7 @@ export default class BaseDropdown extends Vue {
   @Prop({ required: true }) options!: SelectOption[];
   @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
   @Prop({ required: true }) currentSelection!: SelectOption;
+  @Prop({ default: false }) grow!: boolean;
 
   selectedOption!: SelectOption;
   isOpen = false;
@@ -90,11 +92,14 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
 .c-select {
   height: 30px;
-  width: 155px;
   user-select: none;
   border-radius: 2px;
 
   background-color: $colour-background--light;
+
+  &--fixed-width {
+    width: 155px;
+  }
 
   &:hover {
     cursor: pointer;
