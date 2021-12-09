@@ -31,12 +31,12 @@ export const getResolutions = async (): Promise<Resolution[]> => {
   if (os.platform() !== "win32") {
     return [
       {
-        width: 1980,
-        height: 1080,
-      },
-      {
         width: 3080,
         height: 2040,
+      },
+      {
+        width: 1980,
+        height: 1080,
       },
     ];
   } else {
