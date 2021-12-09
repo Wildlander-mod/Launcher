@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.190 (2021-12-09)
+
+
+### Features
+
+* move resolution dropdown into navigation ([68019eb](https://github.com/Wildlander-mod/Launcher/commit/68019ebf76c6b63f3d272625b7dc267c1b8867c5))
+
 ### 0.1.189 (2021-12-09)
 
 
