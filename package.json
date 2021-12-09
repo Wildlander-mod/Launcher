@@ -30,7 +30,8 @@
     "vue": "^3.2.23",
     "vue-class-component": "^8.0.0-0",
     "vue-final-modal": "^3.4.3",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue3-click-away": "^1.2.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.0",

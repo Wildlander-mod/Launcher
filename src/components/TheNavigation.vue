@@ -6,6 +6,8 @@
       </BaseButton>
 
       <ProfileSelection />
+
+      <Resolution />
     </div>
 
     <div class="c-navigation__content l-column l-space-between">
@@ -93,9 +95,11 @@ import {
   injectStrict,
   SERVICE_BINDINGS,
 } from "@/services/service-container";
+import Resolution from "@/components/Resolution.vue";
 
 @Component({
   components: {
+    Resolution,
     ProfileSelection,
     BaseLink,
     BaseButton,

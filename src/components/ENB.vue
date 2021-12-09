@@ -1,6 +1,6 @@
 <template>
-  <div class="l-column l-no-flex-grow">
-    <div class="l-row l-no-flex-grow l-spacing-rights">
+  <div class="l-column">
+    <div class="l-row l-spacing-rights">
       <BaseDropdown
         class="l-spacing-right"
         :current-selection="this.initialENBSelection"

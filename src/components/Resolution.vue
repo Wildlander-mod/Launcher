@@ -1,17 +1,11 @@
 <template>
-  <div class="l-row l-no-flex-grow">
-    <BaseDropdown
-      :options="resolutionsToSelectOptions(resolutions)"
-      :current-selection="resolutionsToSelectOptions([selectedResolution])[0]"
-      :on-option-selected="handleResolutionSelected"
-      v-if="!loadingResolutions"
-      class="l-spacing-right"
-    />
-    <div class="l-center-vertically">
-      Game resolution (this will update Skyrim's settings when launching the
-      game)
-    </div>
-  </div>
+  <BaseDropdown
+    :options="resolutionsToSelectOptions(resolutions)"
+    :current-selection="resolutionsToSelectOptions([selectedResolution])[0]"
+    :on-option-selected="handleResolutionSelected"
+    v-if="!loadingResolutions"
+    :grow="true"
+  />
 </template>
 
 <script lang="ts">
