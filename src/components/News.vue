@@ -58,6 +58,7 @@ export default class News extends Vue {
 
 .c-news {
   padding: $size-spacing--large;
+  font-size: $font-size--small;
 }
 
 .c-news__meta {

@@ -20,11 +20,11 @@ export default class AppPage extends Vue {
 @import "~@/assets/scss";
 
 .c-page {
-  margin: 0 $size-spacing--x-large $size-spacing--x-large;
+  margin: $size-spacing--large $size-spacing--x-large;
 
   max-height: 400px;
 
-  font-size: $font-size;
+  font-size: $font-size--body;
   font-weight: $font-weight;
 }
 </style>

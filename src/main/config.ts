@@ -1,11 +1,13 @@
 import Store from "electron-store";
-import { default as modpackConfig } from "../branding.json";
+import { default as modpackConfig } from "../modpack.json";
 
 export interface Modpack {
   name: string;
   logo: string;
   backgroundImage: string;
   website: string;
+  wiki: string;
+  patreon: string;
 }
 
 export const modpack: Modpack = modpackConfig;

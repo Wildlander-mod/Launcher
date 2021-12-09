@@ -31,7 +31,7 @@ export default class TheTitleBar extends Vue {
 
 .c-title-bar {
   height: 24px;
-  background-color: $colour-background--darker-solid;
+
   // The modal used sets its background-blur z-index to 1000. The title bar needs to be able to go over the top.
   z-index: 2000;
 }

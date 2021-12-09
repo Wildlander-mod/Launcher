@@ -16,7 +16,7 @@
             >
           </div>
         </div>
-        <div class="c-patrons__title-text l-flex-grow">Super Patron</div>
+        <div class="c-patrons__title-text l-flex-grow">Super Patrons</div>
       </div>
     </BaseList>
     <BaseList
@@ -27,7 +27,7 @@
         <div class="c-patrons__star">
           <i class="material-icons c-patrons__star-icon">star_outline</i>
         </div>
-        <div class="c-patrons__title-text">Patron</div>
+        <div class="c-patrons__title-text">Patrons</div>
       </div>
     </BaseList>
     <div v-if="failedToGetPatrons">Could not retrieve Patron list.</div>
