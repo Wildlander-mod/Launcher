@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.189 (2021-12-09)
+
+
+### Bug Fixes
+
+* point website link to the correct location ([2247d34](https://github.com/Wildlander-mod/Launcher/commit/2247d34d6b10bfe01637aebf3acb6e05415becd4))
+
 ### 0.1.188 (2021-12-09)
 
 ### 0.1.187 (2021-12-08)
