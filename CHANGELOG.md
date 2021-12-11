@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.193 (2021-12-11)
+
+
+### Bug Fixes
+
+* ensure filepath to SSEDisplayTweaks uses the mod name ([c620443](https://github.com/Wildlander-mod/Launcher/commit/c6204439452666a855863f94f21142af2a5674b5))
+
 ### 0.1.192 (2021-12-09)
 
 ### 0.1.191 (2021-12-09)
