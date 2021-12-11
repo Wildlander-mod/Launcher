@@ -4,6 +4,7 @@ import childProcess from "child_process";
 import { logger } from "@/main/logger";
 import {
   modDirectory,
+  modpack,
   USER_PREFERENCE_KEYS,
   userPreferences,
 } from "@/main/config";
@@ -119,7 +120,7 @@ export const getResolutions = async (): Promise<Resolution[]> => {
 };
 
 const skyrimGraphicsSettingsPath = () =>
-  `${modDirectory()}/mods/UltSky/SKSE/Plugins/SSEDisplayTweaks.ini`;
+  `${modDirectory()}/mods/${modpack.name}/SKSE/Plugins/SSEDisplayTweaks.ini`;
 
 export const setResolution = async () => {
   const widthPreference = userPreferences.get(USER_PREFERENCE_KEYS.WIDTH);
