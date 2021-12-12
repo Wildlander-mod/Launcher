@@ -2,13 +2,10 @@
   <div v-if="!failedToGetNews && news.length > 0" class="c-news l-column">
     <div v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
       <BaseLink :href="`https://www.patreon.com${newsItem.url}`" class="l-row">
-        <div class="c-news__meta">
-          <div class="c-news__published">
-            {{ new Date(newsItem.published).toLocaleDateString() }}
-          </div>
-
-          <div class="c-news__tag">News</div>
+        <div class="c-news__published l-center-vertically">
+          {{ new Date(newsItem.published).toLocaleDateString() }}
         </div>
+
         <div class="c-news__title">
           {{ newsItem.title }}
         </div>
@@ -57,13 +54,8 @@ export default class News extends Vue {
 @import "~@/assets/scss";
 
 .c-news {
-  padding: $size-spacing--large;
   font-size: $font-size--small;
-}
-
-.c-news__meta {
-  margin-right: $size-spacing;
-  flex: 0.3;
+  padding-top: $size-spacing--large;
 }
 
 .c-news__title {
@@ -76,22 +68,17 @@ export default class News extends Vue {
 
 .c-news__item {
   margin-bottom: $size-spacing;
+  padding-left: $size-spacing--large;
+  padding-right: $size-spacing--large;
+
+  &:hover {
+    background-color: $colour-background--dark;
+  }
 }
 
 .c-news__published {
   color: $colour-text-secondary;
-  flex: 0.2;
-}
 
-.c-news__tag {
-  font-size: $font-size--x-small;
-  font-weight: $font-weight--large;
-
-  padding: 3px 6px;
-
-  border-radius: 8px;
-  background-color: $colour-primary;
-
-  text-align: center;
+  flex: 0.3;
 }
 </style>
