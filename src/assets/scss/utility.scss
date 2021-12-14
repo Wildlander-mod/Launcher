@@ -1,6 +1,11 @@
 @import "./settings/colours";
+@import "./settings/sizes";
 
 // Utility classes not tied to a component
+
+.u-spacing {
+  padding: $size-spacing;
+}
 
 .u-list--bare {
   list-style: none;

@@ -71,6 +71,18 @@
       </div>
     </div>
   </nav>
+
+  <AppModal :show-modal="gameRunning" name="gameRunning">
+    <div class="l-column l-center">
+      <div class="u-spacing">
+        Skyrim is currently launching/running. To use the launcher, please close
+        it first.
+      </div>
+      <BaseButton type="primary" size="large" @click="closeGame"
+        >Close Skyrim
+      </BaseButton>
+    </div>
+  </AppModal>
 </template>
 
 <script lang="ts">
@@ -85,20 +97,16 @@ import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ProfileSelection from "@/components/ProfileSelection.vue";
 import {
-  DISABLE_ACTIONS_EVENT,
-  DISABLE_LOADING_EVENT,
-  ENABLE_ACTIONS_EVENT,
-  ENABLE_LOADING_EVENT,
-} from "@/App.vue";
-import {
   EventService,
   injectStrict,
   SERVICE_BINDINGS,
 } from "@/services/service-container";
 import Resolution from "@/components/Resolution.vue";
+import AppModal from "@/components/AppModal.vue";
 
 @Component({
   components: {
+    AppModal,
     Resolution,
     ProfileSelection,
     BaseLink,
@@ -108,10 +116,10 @@ import Resolution from "@/components/Resolution.vue";
   },
 })
 export default class TheNavigation extends Vue {
-  gameVersion = 0;
-  launcherVersion = launcherVersion;
-
   private eventService!: EventService;
+  private gameRunning = false;
+
+  launcherVersion = launcherVersion;
 
   created() {
     this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
@@ -124,14 +132,14 @@ export default class TheNavigation extends Vue {
         "No mod directory specified, please select one on the settings page."
       );
     } else {
-      this.eventService.emit(DISABLE_ACTIONS_EVENT);
-      this.eventService.emit(ENABLE_LOADING_EVENT);
-
+      this.gameRunning = true;
       await ipcRenderer.invoke(IPCEvents.LAUNCH_GAME);
-
-      this.eventService.emit(ENABLE_ACTIONS_EVENT);
-      this.eventService.emit(DISABLE_LOADING_EVENT);
+      this.gameRunning = false;
     }
+  }
+
+  async closeGame() {
+    await ipcRenderer.invoke(IPCEvents.CLOSE_GAME);
   }
 }
 </script>

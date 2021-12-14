@@ -7,15 +7,20 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
 import fs from "fs";
-import { launchGame, launchMO2, MO2EXE } from "@/main/modOrganizer";
+import { closeMO2, launchGame, launchMO2, MO2EXE } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/graphics";
+import { closeGame } from "@/main/game";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, async () => await launchMO2());
+  ipcMain.handle(IPCEvents.CLOSE_GAME, async () => {
+    await closeGame();
+    await closeMO2();
+  });
 
   ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
     await launchGame();
