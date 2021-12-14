@@ -24,6 +24,8 @@ export default class AppPage extends Vue {
 
   max-height: 400px;
 
+  z-index: 0;
+
   font-size: $font-size--body;
   font-weight: $font-weight;
 }

@@ -32,7 +32,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $colour-text-secondary;
+    background-color: $colour-text--secondary;
     border-radius: 1px;
   }
 
@@ -41,6 +41,14 @@
     height: 0;
     width: 0;
   }
+}
+
+// TODO this should be globally applied as a default
+.u-text {
+  font-weight: 300;
+  line-height: 30px;
+  size: 14px;
+  box-sizing: border-box;
 }
 
 .u-disable-click-events {

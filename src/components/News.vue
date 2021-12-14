@@ -77,7 +77,7 @@ export default class News extends Vue {
 }
 
 .c-news__published {
-  color: $colour-text-secondary;
+  color: $colour-text--secondary;
 
   flex: 0.3;
 }

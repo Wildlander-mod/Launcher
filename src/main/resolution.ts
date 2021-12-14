@@ -12,6 +12,7 @@ import { parse, stringify } from "js-ini";
 import fs from "fs";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
 import { getResourcePath } from "@/main/resources";
+import { screen } from "electron";
 
 export interface Resolution {
   height: number;
@@ -19,6 +20,11 @@ export interface Resolution {
 }
 
 let resolutionsCache: Resolution[];
+
+export const isUnsupportedResolution = (width: number, height: number) =>
+  // Anything above this is an unsupported resolution. Most 16:9 resolutions are 1.7777777777777777.
+  // There are some legacy resolutions that aren't quite 16:9.
+  width / height > 1.78;
 
 export const getResolutions = async (): Promise<Resolution[]> => {
   logger.info("Getting resolutions");
@@ -33,11 +39,15 @@ export const getResolutions = async (): Promise<Resolution[]> => {
   if (os.platform() !== "win32") {
     return [
       {
+        width: 5120,
+        height: 1440,
+      },
+      {
         width: 3080,
         height: 2040,
       },
       {
-        width: 1980,
+        width: 1920,
         height: 1080,
       },
     ];
@@ -72,11 +82,18 @@ export const getResolutions = async (): Promise<Resolution[]> => {
         width: Number(resolution.split("x")[0]),
         height: Number(resolution.split("x")[1]),
       }))
-      .sort((resolution, previousResolution) =>
-        resolution.width > previousResolution.width ? -1 : 1
-      );
+      .sort((resolution, previousResolution) => {
+        return (
+          previousResolution.width - resolution.width ||
+          previousResolution.height - resolution.height
+        );
+      });
 
-    logger.debug(`Resolutions: ${JSON.stringify(uniqueResolutions)}`);
+    logger.debug(
+      `Resolutions: ${uniqueResolutions.map(
+        ({ width, height }) => `${width}x${height}`
+      )}`
+    );
 
     resolutionsCache = uniqueResolutions;
 
@@ -88,8 +105,12 @@ const skyrimGraphicsSettingsPath = () =>
   `${modDirectory()}/mods/${modpack.name}/SKSE/Plugins/SSEDisplayTweaks.ini`;
 
 export const setResolution = async () => {
-  const widthPreference = userPreferences.get(USER_PREFERENCE_KEYS.WIDTH);
-  const heightPreference = userPreferences.get(USER_PREFERENCE_KEYS.HEIGHT);
+  const widthPreference = userPreferences.get(
+    USER_PREFERENCE_KEYS.WIDTH
+  ) as number;
+  const heightPreference = userPreferences.get(
+    USER_PREFERENCE_KEYS.HEIGHT
+  ) as number;
 
   // Only change the resolution in the ini if it has been set in the launcher
   if (widthPreference && heightPreference) {
@@ -104,6 +125,26 @@ export const setResolution = async () => {
     (
       SkyrimGraphicSettings.Render as IIniObjectSection
     ).Resolution = `${widthPreference}x${heightPreference}`;
+
+    const {
+      size: { width, height },
+      scaleFactor,
+    } = screen.getPrimaryDisplay();
+
+    const borderlessUpscale = !isUnsupportedResolution(
+      width * scaleFactor,
+      height * scaleFactor
+    );
+
+    logger.debug(
+      `Enabling borderless upscale for ${width * scaleFactor}x${
+        height * scaleFactor
+      }: ${borderlessUpscale}`
+    );
+
+    // If the selected resolution is ultra-widescreen, don't upscale the image otherwise it gets stretched
+    (SkyrimGraphicSettings.Render as IIniObjectSection).BorderlessUpscale =
+      borderlessUpscale;
 
     await fs.promises.writeFile(
       skyrimGraphicsSettingsPath(),

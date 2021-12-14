@@ -18,7 +18,7 @@ export default class NavigationItem extends Vue {
 
 .c-nav-link {
   text-decoration: none;
-  color: $colour-text-secondary;
+  color: $colour-text--secondary;
   margin-bottom: $size-spacing--x-large;
   font-size: $font-size-subtitle-alt;
 

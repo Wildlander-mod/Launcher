@@ -22,7 +22,8 @@
     ],
     "paths": {
       "@/*": [
-        "src/*"
+        "src/*",
+        "src/typings/*"
       ]
     },
     "lib": [
