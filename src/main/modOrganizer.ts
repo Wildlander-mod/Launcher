@@ -14,11 +14,17 @@ import fs from "fs";
 import { setResolution } from "@/main/graphics";
 import { parse, stringify } from "js-ini";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
+import { promisify } from "util";
 
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
 
 const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
+
+export const closeMO2 = async () =>
+  (await find("name", "ModOrganizer")).forEach((mo2Instance) => {
+    process.kill(mo2Instance.pid);
+  });
 
 const handleMO2Running = async (): Promise<boolean> => {
   logger.info("MO2 already running. Giving user option to cancel or continue");
@@ -29,9 +35,7 @@ const handleMO2Running = async (): Promise<boolean> => {
     buttons: ["Cancel", "Close MO2 and continue"],
   });
   if (buttonSelectionIndex.response === 1) {
-    (await find("name", "ModOrganizer")).forEach((mo2Instance) => {
-      process.kill(mo2Instance.pid);
-    });
+    await closeMO2();
     return true;
   } else {
     return false;
@@ -131,11 +135,11 @@ export async function launchGame() {
     logger.info("Starting MO2");
     const execCMD = `"${MO2Path}" -p "${profile}" "moshortcut://:SKSE"`;
     logger.debug(`Executing MO2 command ${execCMD}`);
-    childProcess.exec(execCMD, (error) => {
-      if (error) {
-        logger.error(`Error while executing ModOrganizer - ${error.message}`);
-      }
-    });
+
+    const { stderr } = await promisify(childProcess.exec)(execCMD);
+    if (stderr) {
+      logger.error(`Error while executing ModOrganizer - ${stderr}`);
+    }
   } catch (err) {
     await handleError(
       "Error while launching modlist",
