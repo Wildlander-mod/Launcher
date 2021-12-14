@@ -11,7 +11,7 @@ import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
 import fs from "fs";
-import { setResolution } from "@/main/graphics";
+import { setResolution } from "@/main/resolution";
 import { parse, stringify } from "js-ini";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
 import { not as isNotJunk } from "junk";

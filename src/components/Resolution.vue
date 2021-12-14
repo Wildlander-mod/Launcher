@@ -14,7 +14,7 @@ import BaseInput from "@/components/BaseInput.vue";
 import BaseDropdown, { SelectOption } from "@/components/BaseDropdown.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
-import { Resolution as ResolutionType } from "../main/graphics";
+import { Resolution as ResolutionType } from "../main/resolution";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
 

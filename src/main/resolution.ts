@@ -11,6 +11,7 @@ import {
 import { parse, stringify } from "js-ini";
 import fs from "fs";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
+import { getResourcePath } from "@/main/resources";
 
 export interface Resolution {
   height: number;
@@ -43,79 +44,43 @@ export const getResolutions = async (): Promise<Resolution[]> => {
   } else {
     const { stdout: resolutionOutput, stderr } = await promisify(
       childProcess.exec
-    )(
-      "wmic /namespace:\\\\root\\wmi path wmimonitorlistedsupportedsourcemodes  get * /format:list | findstr ActivePixels"
-    );
+    )(`"${getResourcePath()}/tools/QRes.exe" /L`);
     if (stderr) {
       logger.error(`Error getting resolutions ${stderr}`);
       throw new Error(stderr);
     }
 
-    /** The output of the above command for each resolution is
-     * HorizontalActivePixels=1920
-     * VerticalActivePixels=1080
+    /**
+     * The above command outputs resolutions in the format:
+     * 640x480, 32 bits @ 60 Hz.
+     * 720x480, 32 bits @ 60 Hz.
      */
 
     const resolutions = resolutionOutput
       .split(/\r*\n/)
-      .filter((resolution) => resolution !== "")
-      .reduce<Resolution[]>(
-        (previous, current, index) => {
-          // The output of the resolution command returns the width on one line and height on the next.
-          // The heights and widths need to be combined so every second item,
-          // add the height to the previous height
-          if (index % 2 === 0) {
-            return [
-              ...previous,
-              {
-                width: Number(current.split("HorizontalActivePixels=")[1]),
-                // Add a null height so that TypeScript doesn't complain.
-                // This is about to be overridden anyway. TypeScript struggles here
-                // because the data from Windows is not good
-                height: 0,
-              },
-            ];
-          } else {
-            const previousResolution = previous.pop();
-            return [
-              ...previous,
-              {
-                height: Number(current.split("VerticalActivePixels=")[1]),
-                width: (previousResolution as Resolution).width,
-              },
-            ];
-          }
-        },
-        [{ height: 0, width: 0 }]
-      )
+      // The first 2 items in the array will contain copyright and version information
+      .slice(2)
       // Remove empty entries
-      .filter((resolution) => resolution.height !== 0)
-      // Remove duplicates
-      .filter(
-        (currentResolution, index, self) =>
-          index ===
-          self.findIndex(
-            (comparedResolution) =>
-              comparedResolution.height === currentResolution.height &&
-              comparedResolution.width === currentResolution.width
-          )
-      )
+      .filter((resolution) => resolution !== "")
+      // Only save the resolution
+      .map((resolution) => resolution.split(",")[0]);
+
+    // Remove duplicates
+    const uniqueResolutions = [...new Set(resolutions)]
+      // Save the height and width separately
+      .map((resolution) => ({
+        width: Number(resolution.split("x")[0]),
+        height: Number(resolution.split("x")[1]),
+      }))
       .sort((resolution, previousResolution) =>
-        (resolution as Resolution).width >
-        (previousResolution as Resolution).width
-          ? -1
-          : 1
+        resolution.width > previousResolution.width ? -1 : 1
       );
 
-    logger.debug(
-      `Found resolutions: ${resolutions.map(
-        ({ width, height }) => `${width} x ${height}`
-      )}`
-    );
+    logger.debug(`Resolutions: ${JSON.stringify(uniqueResolutions)}`);
 
-    resolutionsCache = resolutions;
+    resolutionsCache = uniqueResolutions;
 
-    return resolutions;
+    return uniqueResolutions;
   }
 };
 
