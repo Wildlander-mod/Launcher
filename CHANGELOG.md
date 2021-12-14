@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.198 (2021-12-14)
+
+
+### Features
+
+* prevent user from interacting when game is running ([446d817](https://github.com/Wildlander-mod/Launcher/commit/446d817f63aa2db8a5ab7d926cf0508ef5a52605))
+
 ### 0.1.197 (2021-12-14)
 
 ### 0.1.196 (2021-12-14)
