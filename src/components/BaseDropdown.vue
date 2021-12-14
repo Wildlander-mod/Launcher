@@ -1,67 +1,86 @@
 <template>
-  <div
-    class="c-select"
-    :class="{
-      'c-select--fixed-width': !grow,
-      'c-select--open': isOpen && !loading,
-      'c-select--closed': !isOpen && !loading,
-    }"
+  <Popper
+    :arrow="true"
+    :interactive="false"
+    placement="right"
+    :show="showTooltip && isOpen"
   >
+    <template #content>
+      <slot />
+    </template>
+
     <div
-      class="c-select__head u-text"
+      class="c-select"
       :class="{
-        'c-select__head--open': isOpen && !loading,
-        'c-select__head--closed': !isOpen && !loading,
+        'c-select--fixed-width': !grow,
+        'c-select--open': isOpen && !loading,
+        'c-select--closed': !isOpen && !loading,
       }"
-      @click="() => toggleOpenState()"
       v-click-away="() => toggleOpenState(false)"
     >
-      {{ selectedOption.text }}
-      <span
-        class="material-icons c-select__icon"
+      <div
+        class="c-select__head u-text"
         :class="{
-          'c-select__icon--open': isOpen && !loading,
-          'c-select__icon--closed': !isOpen && !loading,
+          'c-select__head--open': isOpen && !loading,
+          'c-select__head--closed': !isOpen && !loading,
+        }"
+        @click="() => toggleOpenState()"
+      >
+        {{ selectedOption.text }}
+        <span
+          class="material-icons c-select__icon"
+          :class="{
+            'c-select__icon--open': isOpen && !loading,
+            'c-select__icon--closed': !isOpen && !loading,
+          }"
+        >
+          expand_more
+        </span>
+      </div>
+      <div
+        class="c-select__options u-scroll-y-auto"
+        :class="{
+          'c-select__options--open': isOpen && !loading,
+          'c-select__options--closed': !isOpen && !loading,
+          'c-select__options--loading': loading,
         }"
       >
-        expand_more
-      </span>
-    </div>
-    <div
-      class="c-select__options u-scroll-y-auto"
-      :class="{
-        'c-select__options--open': isOpen && !loading,
-        'c-select__options--closed': !isOpen && !loading,
-        'c-select__options--loading': loading,
-      }"
-    >
-      <div
-        v-for="option in options"
-        :key="option.value"
-        class="c-select__option"
-        @click="select(option)"
-      >
-        <div class="u-text">{{ option.text }}</div>
+        <div
+          v-for="option in options"
+          :key="option.value"
+          class="c-select__option"
+          :class="{
+            'c-select__option--disabled': option.disabled,
+          }"
+          @click="!option.disabled && select(option)"
+        >
+          <div class="u-text">{{ option.text }}</div>
+        </div>
       </div>
     </div>
-  </div>
+  </Popper>
 </template>
 
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
+import Popper from "vue3-popper";
 
 export interface SelectOption {
   text: string;
   value: unknown;
+  disabled?: boolean;
 }
 
-@Component({})
+@Component({
+  components: { Popper },
+})
 export default class BaseDropdown extends Vue {
   @Prop({ required: true }) options!: SelectOption[];
   @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
   @Prop({ required: true }) currentSelection!: SelectOption;
   @Prop({ default: false }) grow!: boolean;
+  @Prop({ default: false }) showTooltip!: boolean;
 
   selectedOption!: SelectOption;
   isOpen = false;
@@ -127,6 +146,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   width: 100%;
   overflow: hidden;
   margin-bottom: 0;
+  padding-left: 8px;
 
   .c-select__icon {
     align-self: center;
@@ -167,6 +187,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   z-index: 1;
   border-radius: 0 4px 4px 4px;
   max-height: 200px;
+  padding-left: 8px;
 
   &--closed {
     animation: retract 0.2s forwards;
@@ -199,17 +220,31 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   }
 }
 
-.c-select__option:hover {
-  background-color: $selectFocus;
-  cursor: pointer;
+.c-select__option {
+  cursor: default;
+
+  &--disabled {
+    background-color: $colour-background--dark;
+    color: $colour-text--secondary;
+  }
+
+  &:not(&--disabled):hover {
+    background-color: $selectFocus;
+    cursor: pointer;
+  }
 }
 
-// TODO this should be globally applied as a default
-.u-text {
-  padding-left: 8px;
-  font-weight: 300;
-  line-height: 30px;
-  size: 14px;
-  box-sizing: border-box;
+:deep(.popper) {
+  background-color: $colour-background--darker-solid;
+  padding: $size-spacing;
+}
+
+:deep(.popper #arrow::before) {
+  background-color: $colour-background--darker-solid;
+}
+
+:deep(.popper:hover),
+:deep(.popper:hover > #arrow::before) {
+  background-color: $colour-background--darker-solid;
 }
 </style>

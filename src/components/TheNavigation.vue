@@ -56,7 +56,7 @@
           v-slot="{ href, navigate, isActive }"
         >
           <NavigationItem :active="isActive" :href="href" @click="navigate">
-            Settings
+            Advanced
           </NavigationItem>
         </router-link>
       </div>
@@ -151,6 +151,8 @@ export default class TheNavigation extends Vue {
   backdrop-filter: $background-blur--more;
   background: transparentize($colour-background, 0.8);
 
+  z-index: 1;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,6 +196,6 @@ export default class TheNavigation extends Vue {
 
 .c-navigation__launcher-info {
   font-size: $font-size;
-  color: $colour-text-secondary;
+  color: $colour-text--secondary;
 }
 </style>
