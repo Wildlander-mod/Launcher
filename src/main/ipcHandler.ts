@@ -18,7 +18,7 @@ import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
-import { getResolutions } from "@/main/graphics";
+import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
 
 export function registerHandlers() {

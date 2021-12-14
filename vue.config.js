@@ -12,6 +12,13 @@ module.exports = {
         extraMetadata: {
           name: "Wildlander Launcher",
         },
+        extraResources: [
+          {
+            from: "./src/assets/tools",
+            to: "tools",
+            filter: ["**/*"],
+          },
+        ],
       },
     },
   },
