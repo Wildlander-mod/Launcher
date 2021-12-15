@@ -18,6 +18,11 @@ import { not as isNotJunk } from "junk";
 import { promisify } from "util";
 import { IIniObject } from "js-ini/lib/interfaces/ini-object";
 
+export interface FriendlyDirectoryMap {
+  real: string;
+  friendly: string;
+}
+
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
 
@@ -187,8 +192,19 @@ export async function launchGame() {
   }
 }
 
-export const getProfiles = async (): Promise<string[]> =>
-  (
+export async function getProfiles(): Promise<string[]> {
+  // Get mapped profile names that have a mapping
+  const mappedNames = JSON.parse(
+    await fs.promises.readFile(
+      `${userPreferences.get(
+        USER_PREFERENCE_KEYS.MOD_DIRECTORY
+      )}/profiles/namesMO2.json`,
+      "utf-8"
+    )
+  );
+
+  // Get any profiles that don't have a mapping
+  const unmappedNames = (
     await fs.promises.readdir(
       `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`,
       { withFileTypes: true }
@@ -196,4 +212,15 @@ export const getProfiles = async (): Promise<string[]> =>
   )
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name)
-    .filter(isNotJunk);
+    .filter(isNotJunk)
+    .map((preset) => ({ real: preset, friendly: preset }))
+    .filter(
+      (unmappedPreset) =>
+        !mappedNames.find(
+          (mappedPreset: FriendlyDirectoryMap) =>
+            mappedPreset.real === unmappedPreset.real
+        )
+    );
+
+  return [...mappedNames, ...unmappedNames];
+}
