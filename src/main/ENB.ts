@@ -11,8 +11,11 @@ import { not as isNotJunk } from "junk";
 const ENBDirectory = () =>
   `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/ENB Presets`;
 
-export const getENBPresets = async () =>
-  (await fs.promises.readdir(ENBDirectory())).filter(isNotJunk);
+export const getENBPresets = async (): Promise<string[]> =>
+  (await fs.promises.readdir(ENBDirectory(), { withFileTypes: true }))
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name)
+    .filter(isNotJunk);
 
 /**
  * Get all ENB files from all presets.

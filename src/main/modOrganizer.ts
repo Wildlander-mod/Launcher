@@ -14,6 +14,7 @@ import fs from "fs";
 import { setResolution } from "@/main/graphics";
 import { parse, stringify } from "js-ini";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
+import { not as isNotJunk } from "junk";
 import { promisify } from "util";
 
 export const MO2EXE = "ModOrganizer.exe";
@@ -147,3 +148,14 @@ export async function launchGame() {
     );
   }
 }
+
+export const getProfiles = async (): Promise<string[]> =>
+  (
+    await fs.promises.readdir(
+      `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`,
+      { withFileTypes: true }
+    )
+  )
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name)
+    .filter(isNotJunk);

@@ -7,7 +7,13 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { logger } from "@/main/logger";
 import fs from "fs";
-import { closeMO2, launchGame, launchMO2, MO2EXE } from "@/main/modOrganizer";
+import {
+  closeMO2,
+  getProfiles,
+  launchGame,
+  launchMO2,
+  MO2EXE,
+} from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
@@ -61,9 +67,7 @@ export function registerHandlers() {
   });
 
   ipcMain.handle(IPCEvents.GET_PRESETS, async (): Promise<string[]> => {
-    return fs.promises.readdir(
-      `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`
-    );
+    return getProfiles();
   });
 
   // Ensure that the mod directory contains a valid MO2 installation
