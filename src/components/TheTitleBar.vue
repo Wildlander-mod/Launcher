@@ -1,5 +1,5 @@
 <template>
-  <div class="c-title-bar l-row l-end l-no-flex-grow">
+  <div class="c-title-bar l-row l-end" :class="{ 'l-no-flex-grow': !grow }">
     <div class="c-title-bar__navigation-bar"></div>
     <div class="c-title-bar__control" @click="minimize">
       <span class="material-icons"> remove </span>
@@ -14,8 +14,11 @@
 import { ipcRenderer } from "electron";
 import { Vue } from "vue-class-component";
 import { IPCEvents } from "@/enums/IPCEvents";
+import { Prop } from "vue-property-decorator";
 
 export default class TheTitleBar extends Vue {
+  @Prop({ default: false }) private grow!: boolean;
+
   close() {
     ipcRenderer.send(IPCEvents.CLOSE);
   }
