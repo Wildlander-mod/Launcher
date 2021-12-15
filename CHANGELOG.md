@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.199 (2021-12-15)
+
+
+### Bug Fixes
+
+* ignore files in ENB presets and profiles ([b649583](https://github.com/Wildlander-mod/Launcher/commit/b649583355a17a6923688649ddc7099893dcd130))
+
 ### 0.1.198 (2021-12-14)
 
 
