@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.200 (2021-12-15)
+
+
+### Bug Fixes
+
+* ensure close button is clickable on startup ([02a58e4](https://github.com/Wildlander-mod/Launcher/commit/02a58e43756b1cbe4317c99833d05ac5acc14e60))
+
 ### 0.1.199 (2021-12-15)
 
 
