@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.201 (2021-12-15)
+
+
+### Bug Fixes
+
+* disable borderless upscale for widescreen ([b002121](https://github.com/Wildlander-mod/Launcher/commit/b002121844c4b8b311e05ef4035ba920c56b7717))
+
 ### 0.1.200 (2021-12-15)
 
 
