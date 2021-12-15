@@ -1,8 +1,12 @@
 <template>
   <div class="c-header l-row l-space-between">
-    <BaseImage :image-source="modpack.logo" :alt="modpack.name" />
+    <BaseImage
+      :image-source="modpack.logo"
+      :alt="modpack.name"
+      class="c-header__image"
+    />
 
-    <div class="l-row l-no-flex-grow">
+    <div class="c-header__links l-row l-no-flex-grow">
       <div v-if="modpack.website" class="c-header__link l-center-vertically">
         <BaseLink :href="modpack.website" :hover-style="true"
           >Website
@@ -41,15 +45,26 @@ export default class TheHeader extends Vue {
 <style scoped lang="scss">
 @import "~@/assets/scss";
 
+// Specific margin to enable the logo to sit more visually aligned with the links
+// This is due to the logo having a heavily weighted top compared to the bottom
+$logoMargin: 2px;
+
 .c-header {
   // The head links need a bit more space than normal due to their sizing
   margin-left: $size-spacing--x-large;
   margin-right: $size-spacing--x-large;
-  margin-top: $size-spacing--large;
 }
 
 .c-header__link {
   margin-left: $size-spacing--large + $size-spacing--x-small;
   font-size: $font-size--large;
+}
+
+.c-header__image {
+  margin-top: $logoMargin;
+}
+
+.c-header__links {
+  margin-top: -$logoMargin;
 }
 </style>

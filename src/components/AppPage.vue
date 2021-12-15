@@ -20,9 +20,13 @@ export default class AppPage extends Vue {
 @import "~@/assets/scss";
 
 .c-page {
-  margin: $size-spacing--large $size-spacing--x-large;
+  margin-top: $size-spacing--titlebar;
+  margin-left: $size-spacing--x-large;
+  margin-right: $size-spacing--x-large;
 
-  max-height: 400px;
+  // Awkward height because the layout engine doesn't allow the page to grow naturally
+  // Needs replacing when there is a better layout engine
+  max-height: 408px;
 
   z-index: 0;
 
