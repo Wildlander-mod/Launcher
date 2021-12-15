@@ -76,7 +76,7 @@
     <div class="l-column l-center">
       <div class="u-spacing">
         Skyrim is currently launching/running. To use the launcher, please close
-        it first.
+        Skyrim first.
       </div>
       <BaseButton type="primary" size="large" @click="closeGame"
         >Close Skyrim
