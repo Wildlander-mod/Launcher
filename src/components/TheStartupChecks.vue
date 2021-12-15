@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div :class="{ 'l-flex': showTitleBar }">
+    <TheTitleBar :grow="true" v-if="showTitleBar" />
+
     <AutoUpdate @updateComplete="updateCompleteHandler" />
 
     <AppModal :show-modal="showModDirectoryModal" name="modDirectory">
@@ -41,9 +43,11 @@ import {
   USER_PREFERENCE_KEYS,
   userPreferences,
 } from "@/main/config";
+import TheTitleBar from "@/components/TheTitleBar.vue";
 
 @Options({
   components: {
+    TheTitleBar,
     BaseLink,
     BaseImage,
     AppModal,
@@ -53,6 +57,7 @@ import {
 })
 export default class TheStartupChecks extends Vue {
   private showModDirectoryModal = true;
+  private showTitleBar = true;
 
   updateComplete = false;
   modDirectorySelected = false;
@@ -85,6 +90,7 @@ export default class TheStartupChecks extends Vue {
 
   checkIfShouldRenderWindow() {
     if (this.updateComplete && this.modDirectorySelected) {
+      this.showTitleBar = false;
       this.$emit("startupChecksComplete");
     }
   }
