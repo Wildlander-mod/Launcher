@@ -16,6 +16,7 @@ import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
+import { FriendlyDirectoryMap } from "@/main/modOrganizer";
 import { logger } from "@/main/logger";
 
 @Options({
@@ -55,9 +56,14 @@ export default class ProfileSelection extends Vue {
   }
 
   async getPresets() {
-    return ((await ipcRenderer.invoke(IPCEvents.GET_PRESETS)) as string[]).map(
-      (preset) => ({ text: preset, value: preset })
-    );
+    return (
+      (await ipcRenderer.invoke(
+        IPCEvents.GET_PRESETS
+      )) as FriendlyDirectoryMap[]
+    ).map(({ friendly, real }) => ({
+      text: friendly,
+      value: real,
+    }));
   }
 }
 </script>
