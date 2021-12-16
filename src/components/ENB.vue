@@ -110,15 +110,21 @@ export default class ENB extends Vue {
     );
   }
 
-  async getENBPresets() {
-    return (
-      (await ipcRenderer.invoke(
-        IPCEvents.GET_ENB_PRESETS
-      )) as FriendlyDirectoryMap[]
-    ).map(({ friendly, real }) => ({
-      text: friendly,
-      value: real,
-    }));
+  async getENBPresets(): Promise<SelectOption[]> {
+    return [
+      ...(
+        (await ipcRenderer.invoke(
+          IPCEvents.GET_ENB_PRESETS
+        )) as FriendlyDirectoryMap[]
+      ).map(({ friendly, real }) => ({
+        text: friendly,
+        value: real,
+      })),
+      {
+        text: "No ENB",
+        value: "noENB",
+      },
+    ];
   }
 
   async handleENBPresetChanged(profile: SelectOption) {
