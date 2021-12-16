@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import ViewHome from "@/views/ViewHome.vue";
 import ViewCommunity from "@/views/ViewCommunity.vue";
-import ViewSettings from "@/views/ViewSettings.vue";
+import ViewAdvanced from "@/views/ViewAdvanced.vue";
 
 const routes = [
   {
@@ -16,9 +16,9 @@ const routes = [
     component: ViewCommunity,
   },
   {
-    path: "/settings",
-    name: "Settings",
-    component: ViewSettings,
+    path: "/advanced",
+    name: "Advanced",
+    component: ViewAdvanced,
   },
 ];
 

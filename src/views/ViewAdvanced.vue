@@ -7,16 +7,22 @@
         </div>
 
         <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Mod Organiser 2</div>
+          <div class="c-settings__label">Mod Organiser 2</div>
           <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
         </div>
 
         <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Application logs</div>
+          <div class="c-settings__label">Restore ENB presets</div>
+          <BaseButton type="warning" @click="restoreENBPresets"
+            >Restore
+          </BaseButton>
+        </div>
+        <div class="l-row c-settings__actions">
+          <div class="c-settings__label">Application logs</div>
           <BaseButton type="default" @click="openLogPath"> Open</BaseButton>
         </div>
         <div class="l-row c-settings__actions">
-          <div class="c-settings__launchMO-label">Skyrim crash logs</div>
+          <div class="c-settings__label">Skyrim crash logs</div>
           <BaseButton type="default" @click="openCrashLogPath">
             Open
           </BaseButton>
@@ -86,6 +92,25 @@ export default class Settings extends Vue {
     }
   }
 
+  async restoreENBPresets() {
+    const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
+      message:
+        "Restoring ENB presets will reset any changes you have made to any ENBs. This cannot be undone. Are you sure?",
+      buttons: ["Cancel", "Restore ENB presets"],
+    });
+
+    if (response === 1) {
+      try {
+        await ipcRenderer.invoke(IPCEvents.RESTORE_ENB_PRESETS);
+      } catch (error) {
+        await ipcRenderer.invoke(IPCEvents.ERROR, {
+          title: "Error restoring ENB files",
+          error: (error as Error).message,
+        });
+      }
+    }
+  }
+
   openLogPath() {
     const logPath = path.parse(logger.transports?.file.findLogPath()).dir;
     shell.openPath(logPath);
@@ -99,7 +124,7 @@ export default class Settings extends Vue {
     if (
       await ipcRenderer.invoke(IPCEvents.CHECK_IF_FILE_EXISTS, crashLogPath)
     ) {
-      shell.openPath(crashLogPath);
+      await shell.openPath(crashLogPath);
     } else {
       await ipcRenderer.invoke(IPCEvents.ERROR, {
         title: "Error while opening crash logs folder",
@@ -137,7 +162,7 @@ export default class Settings extends Vue {
   width: 40%;
 }
 
-.c-settings__launchMO-label {
+.c-settings__label {
   margin-right: $size-spacing;
 }
 </style>
