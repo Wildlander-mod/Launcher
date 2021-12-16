@@ -1,13 +1,16 @@
 import fs from "fs";
 import { logger } from "@/main/logger";
 import {
+  backupDirectory,
   skyrimDirectory,
   USER_PREFERENCE_KEYS,
   userPreferences,
 } from "@/main/config";
-import { copy } from "fs-extra";
+import { copy, existsSync } from "fs-extra";
 import { not as isNotJunk } from "junk";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
+
+const ENBNameMappingFile = "namesENB.json";
 
 const ENBDirectory = () =>
   `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/ENB Presets`;
@@ -17,7 +20,7 @@ export const getENBPresets = async (): Promise<FriendlyDirectoryMap[]> => {
     await fs.promises.readFile(
       `${userPreferences.get(
         USER_PREFERENCE_KEYS.MOD_DIRECTORY
-      )}/ENB Presets/namesENB.json`,
+      )}/ENB Presets/${ENBNameMappingFile}`,
       "utf-8"
     )
   ) as FriendlyDirectoryMap[];
@@ -39,6 +42,21 @@ export const getENBPresets = async (): Promise<FriendlyDirectoryMap[]> => {
     );
 
   return [...mappedENBs, ...unmappedENBs];
+};
+
+export const backupOriginalENBs = async () => {
+  const ENBBackupDirectory = `${backupDirectory()}/ENB Presets`;
+  const backupExists = existsSync(ENBBackupDirectory);
+  logger.debug(`Backup for ENBs exists: ${backupExists}`);
+
+  if (!backupExists) {
+    logger.info("No ENB backup exists. Backing up...");
+    await fs.promises.mkdir(backupDirectory(), {
+      recursive: true,
+    });
+
+    await copy(ENBDirectory(), ENBBackupDirectory);
+  }
 };
 
 /**

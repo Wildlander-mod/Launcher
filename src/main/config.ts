@@ -28,3 +28,5 @@ export const skyrimDirectory = () =>
 
 export const modDirectory = () =>
   userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
+
+export const backupDirectory = () => `${modDirectory()}/.launcher_backups`;
