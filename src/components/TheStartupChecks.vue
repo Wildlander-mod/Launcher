@@ -37,13 +37,9 @@ import ModDirectory from "@/components/ModDirectory.vue";
 import AutoUpdate from "@/components/AutoUpdate.vue";
 import BaseImage from "@/components/BaseImage.vue";
 import BaseLink from "@/components/BaseLink.vue";
-import {
-  Modpack,
-  modpack,
-  USER_PREFERENCE_KEYS,
-  userPreferences,
-} from "@/main/config";
+import { modpack, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import TheTitleBar from "@/components/TheTitleBar.vue";
+import { Modpack } from "@/modpack-metadata";
 
 @Options({
   components: {

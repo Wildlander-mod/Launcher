@@ -43,7 +43,8 @@ import AppPageContent from "@/components/AppPageContent.vue";
 import AppPage from "@/components/AppPage.vue";
 import BaseLink from "@/components/BaseLink.vue";
 import ImageWithText from "@/components/ImageWithText.vue";
-import { modpack, Modpack } from "@/main/config";
+import { modpack } from "@/main/config";
+import { Modpack } from "@/modpack-metadata";
 
 @Options({
   components: {

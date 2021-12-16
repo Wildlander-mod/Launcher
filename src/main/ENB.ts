@@ -7,15 +7,39 @@ import {
 } from "@/main/config";
 import { copy } from "fs-extra";
 import { not as isNotJunk } from "junk";
+import { FriendlyDirectoryMap } from "@/modpack-metadata";
 
 const ENBDirectory = () =>
   `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/ENB Presets`;
 
-export const getENBPresets = async (): Promise<string[]> =>
-  (await fs.promises.readdir(ENBDirectory(), { withFileTypes: true }))
+export const getENBPresets = async (): Promise<FriendlyDirectoryMap[]> => {
+  const mappedENBs = JSON.parse(
+    await fs.promises.readFile(
+      `${userPreferences.get(
+        USER_PREFERENCE_KEYS.MOD_DIRECTORY
+      )}/ENB Presets/namesENB.json`,
+      "utf-8"
+    )
+  ) as FriendlyDirectoryMap[];
+
+  const unmappedENBs = (
+    await fs.promises.readdir(ENBDirectory(), { withFileTypes: true })
+  )
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name)
-    .filter(isNotJunk);
+    .filter(isNotJunk)
+    .map((ENB): FriendlyDirectoryMap => ({ real: ENB, friendly: ENB }))
+    // Remove any ENBs that have a mapping
+    .filter(
+      (unmappedENB) =>
+        !mappedENBs.find(
+          (mappedENB: FriendlyDirectoryMap) =>
+            mappedENB.real === unmappedENB.real
+        )
+    );
+
+  return [...mappedENBs, ...unmappedENBs];
+};
 
 /**
  * Get all ENB files from all presets.
@@ -24,8 +48,8 @@ export const getENBPresets = async (): Promise<string[]> =>
  */
 const getAllPossibleENBFiles = async () => {
   const files = [];
-  for (const preset of await getENBPresets()) {
-    files.push(await fs.promises.readdir(`${ENBDirectory()}/${preset}`));
+  for (const ENB of await getENBPresets()) {
+    files.push(await fs.promises.readdir(`${ENBDirectory()}/${ENB.real}`));
   }
   // Flatten and remove duplicates
   return new Set([...files.flat().filter(isNotJunk)]);

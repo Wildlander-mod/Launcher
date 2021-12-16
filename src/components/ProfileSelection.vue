@@ -3,7 +3,7 @@
     :current-selection="selectedPreset"
     :on-option-selected="onPresetSelected"
     :options="presets"
-    v-if="!loadingData"
+    v-if="!loadingPresets"
     :grow="true"
   />
 </template>
@@ -16,8 +16,8 @@ import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
-import { FriendlyDirectoryMap } from "@/main/modOrganizer";
 import { logger } from "@/main/logger";
+import { FriendlyDirectoryMap } from "@/modpack-metadata";
 
 @Options({
   components: { BaseDropdown },
@@ -25,7 +25,7 @@ import { logger } from "@/main/logger";
 export default class ProfileSelection extends Vue {
   selectedPreset: SelectOption = { text: "", value: "" };
   presets: SelectOption[] = [this.selectedPreset];
-  loadingData = true;
+  loadingPresets = true;
 
   async created() {
     const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
@@ -35,7 +35,7 @@ export default class ProfileSelection extends Vue {
 
     this.setInitialPreset();
 
-    this.loadingData = false;
+    this.loadingPresets = false;
   }
 
   onPresetSelected(option: SelectOption) {
@@ -43,10 +43,10 @@ export default class ProfileSelection extends Vue {
   }
 
   setInitialPreset() {
-    const userPreset = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
+    const presetPreference = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
 
-    this.selectedPreset = userPreset
-      ? this.presets.find((preset) => preset.value === userPreset) ??
+    this.selectedPreset = presetPreference
+      ? this.presets.find((preset) => preset.value === presetPreference) ??
         this.presets[0]
       : this.presets[0];
 

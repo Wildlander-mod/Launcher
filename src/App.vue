@@ -34,7 +34,8 @@ import { registerServices } from "@/services/service-container";
 import TheStartupChecks from "@/components/TheStartupChecks.vue";
 import { modalOpenedEvent } from "@/services/modal.service";
 import TheHeader from "@/components/TheHeader.vue";
-import { Modpack, modpack } from "@/main/config";
+import { modpack } from "@/main/config";
+import { Modpack } from "@/modpack-metadata";
 
 export const ENABLE_ACTIONS_EVENT = "ENABLE_ACTIONS_EVENT";
 export const DISABLE_ACTIONS_EVENT = "DISABLE_ACTIONS_EVENT";

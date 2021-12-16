@@ -27,8 +27,9 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import BaseImage from "@/components/BaseImage.vue";
-import { Modpack, modpack } from "@/main/config";
+import { modpack } from "@/main/config";
 import BaseLink from "@/components/BaseLink.vue";
+import { Modpack } from "@/modpack-metadata";
 
 @Options({
   components: { BaseLink, BaseImage },

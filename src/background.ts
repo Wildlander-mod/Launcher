@@ -1,8 +1,7 @@
 "use strict";
 
-import { app, BrowserWindow, nativeImage, protocol } from "electron";
+import { app, BrowserWindow, protocol } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import path from "path";
 import { isDevelopment } from "./main/config";
 import { fatalError } from "./main/errorHandler";
 import { autoUpdater } from "electron-updater";

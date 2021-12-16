@@ -3,7 +3,7 @@
     <div class="l-row l-spacing-rights">
       <BaseDropdown
         class="l-spacing-right"
-        :current-selection="this.initialENBSelection"
+        :current-selection="this.selectedENB"
         :options="ENBPresets"
         :on-option-selected="handleENBPresetChanged"
         v-if="!loadingENBPresets"
@@ -55,12 +55,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { ipcRenderer } from "electron";
 import BaseDropdown, { SelectOption } from "@/components/BaseDropdown.vue";
-import {
-  modpack,
-  Modpack,
-  USER_PREFERENCE_KEYS,
-  userPreferences,
-} from "@/main/config";
+import { modpack, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import BaseLink from "@/components/BaseLink.vue";
 import {
   EventService,
@@ -73,13 +68,15 @@ import {
   ENABLE_ACTIONS_EVENT,
   ENABLE_LOADING_EVENT,
 } from "@/App.vue";
+import { FriendlyDirectoryMap, Modpack } from "@/modpack-metadata";
+import { logger } from "@/main/logger";
 
 @Options({
   components: { BaseLink, BaseDropdown, BaseButton },
 })
 export default class ENB extends Vue {
-  private initialENBSelection: SelectOption = { text: "", value: "" };
-  private ENBPresets = [this.initialENBSelection];
+  private selectedENB: SelectOption = { text: "", value: "" };
+  private ENBPresets = [this.selectedENB];
   private loadingENBPresets = true;
   private modpack!: Modpack;
 
@@ -90,30 +87,38 @@ export default class ENB extends Vue {
 
     this.modpack = modpack;
 
-    await this.getENBPresets();
+    this.ENBPresets = await this.getENBPresets();
+
+    this.setInitialENB();
+
+    this.loadingENBPresets = false;
+  }
+
+  setInitialENB() {
+    const ENBPreference = userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE);
+
+    this.selectedENB = ENBPreference
+      ? this.ENBPresets.find((ENB) => ENB.value === ENBPreference) ??
+        this.ENBPresets[0]
+      : this.ENBPresets[0];
+
+    logger.debug(`Setting initial ENB to ${this.selectedENB.text}`);
+
+    userPreferences.set(
+      USER_PREFERENCE_KEYS.ENB_PROFILE,
+      this.selectedENB.value
+    );
   }
 
   async getENBPresets() {
-    this.ENBPresets = (
-      (await ipcRenderer.invoke(IPCEvents.GET_ENB_PRESETS)) as string[]
-    ).map(
-      (profile) =>
-        ({
-          value: profile,
-          text: profile,
-        } as SelectOption)
-    );
-
-    const initialSelection =
-      (userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) as string) ??
-      this.ENBPresets[0].value;
-
-    this.initialENBSelection = {
-      value: initialSelection,
-      text: initialSelection,
-    };
-
-    this.loadingENBPresets = false;
+    return (
+      (await ipcRenderer.invoke(
+        IPCEvents.GET_ENB_PRESETS
+      )) as FriendlyDirectoryMap[]
+    ).map(({ friendly, real }) => ({
+      text: friendly,
+      value: real,
+    }));
   }
 
   async handleENBPresetChanged(profile: SelectOption) {
