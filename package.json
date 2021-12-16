@@ -19,7 +19,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "electron-log": "^4.4.1",
+    "electron-log": "^4.4.2",
     "electron-store": "^8.0.1",
     "find-process": "^1.4.7",
     "fs-extra": "^10.0.0",
