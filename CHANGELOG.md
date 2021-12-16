@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.204 (2021-12-16)
+
+
+### Features
+
+* prevent showing the MO2 GUI when launching game ([35013e2](https://github.com/Wildlander-mod/Launcher/commit/35013e2ae7e09d682fa5c1bdd46359de25bbc2ea))
+
 ### 0.1.203 (2021-12-15)
 
 ### 0.1.202 (2021-12-15)
