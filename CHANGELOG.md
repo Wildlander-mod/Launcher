@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.207 (2021-12-16)
+
+
+### Features
+
+* backup ENB files before launching MO2/game ([3ff5525](https://github.com/Wildlander-mod/Launcher/commit/3ff5525ebc9f41af321e69ef4fe9697966198ea9))
+
 ### 0.1.206 (2021-12-16)
 
 
