@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.205 (2021-12-16)
+
+
+### Features
+
+* add friendly naming for MO2 profiles ([d47e4f7](https://github.com/Wildlander-mod/Launcher/commit/d47e4f7f16b3b22caac4a461338e0120f5397372))
+
 ### 0.1.204 (2021-12-16)
 
 
