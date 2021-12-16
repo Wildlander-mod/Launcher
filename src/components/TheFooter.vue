@@ -20,7 +20,8 @@ import { PatreonService } from "@/services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import BaseLink from "@/components/BaseLink.vue";
 import { logger } from "@/main/logger";
-import { Modpack, modpack } from "@/main/config";
+import { modpack } from "@/main/config";
+import { Modpack } from "@/modpack-metadata";
 
 @Component({
   components: {

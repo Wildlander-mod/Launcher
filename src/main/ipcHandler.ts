@@ -20,6 +20,7 @@ import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
+import { FriendlyDirectoryMap } from "@/modpack-metadata";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.LAUNCH_MO2, async () => await launchMO2());
@@ -66,9 +67,10 @@ export function registerHandlers() {
     await handleError(title, error);
   });
 
-  ipcMain.handle(IPCEvents.GET_PRESETS, async (): Promise<string[]> => {
-    return getProfiles();
-  });
+  ipcMain.handle(
+    IPCEvents.GET_PRESETS,
+    async (): Promise<FriendlyDirectoryMap[]> => getProfiles()
+  );
 
   // Ensure that the mod directory contains a valid MO2 installation
   ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) => {
@@ -96,7 +98,10 @@ export function registerHandlers() {
     deleteAllENBFiles()
   );
 
-  ipcMain.handle(IPCEvents.GET_ENB_PRESETS, async () => getENBPresets());
+  ipcMain.handle(
+    IPCEvents.GET_ENB_PRESETS,
+    async (): Promise<FriendlyDirectoryMap[]> => getENBPresets()
+  );
 
   ipcMain.handle(IPCEvents.CHECK_IF_FILE_EXISTS, async (_event, filepath) =>
     fs.existsSync(filepath)

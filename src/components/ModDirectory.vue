@@ -11,17 +11,13 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import {
-  Modpack,
-  modpack,
-  USER_PREFERENCE_KEYS,
-  userPreferences,
-} from "@/main/config";
+import { modpack, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import AppFileSelect from "@/components/AppFileSelect.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { Prop, Watch } from "vue-property-decorator";
+import { Modpack } from "@/modpack-metadata";
 
 export const modDirectorySetEvent = "modDirectorySet";
 export const invalidFilepathEvent = "invalidFilepath";

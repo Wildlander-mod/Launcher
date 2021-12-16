@@ -17,11 +17,7 @@ import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
 import { not as isNotJunk } from "junk";
 import { promisify } from "util";
 import { IIniObject } from "js-ini/lib/interfaces/ini-object";
-
-export interface FriendlyDirectoryMap {
-  real: string;
-  friendly: string;
-}
+import { FriendlyDirectoryMap } from "@/modpack-metadata";
 
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
@@ -29,6 +25,40 @@ const MO2Settings = "ModOrganizer.ini";
 let previousMO2Settings: IIniObject | null = null;
 
 const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
+
+export const getProfiles = async (): Promise<FriendlyDirectoryMap[]> => {
+  // Get mapped profile names that have a mapping
+  const mappedProfiles = JSON.parse(
+    await fs.promises.readFile(
+      `${userPreferences.get(
+        USER_PREFERENCE_KEYS.MOD_DIRECTORY
+      )}/profiles/namesMO2.json`,
+      "utf-8"
+    )
+  ) as FriendlyDirectoryMap[];
+
+  // Get any profiles that don't have a mapping
+  const unmappedProfiles = (
+    await fs.promises.readdir(
+      `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`,
+      { withFileTypes: true }
+    )
+  )
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name)
+    .filter(isNotJunk)
+    .map((preset): FriendlyDirectoryMap => ({ real: preset, friendly: preset }))
+    // Remove any profiles that have a mapping
+    .filter(
+      (unmappedPreset) =>
+        !mappedProfiles.find(
+          (mappedPreset: FriendlyDirectoryMap) =>
+            mappedPreset.real === unmappedPreset.real
+        )
+    );
+
+  return [...mappedProfiles, ...unmappedProfiles];
+};
 
 export const closeMO2 = async () =>
   (await find("name", "ModOrganizer")).forEach((mo2Instance) => {
@@ -76,10 +106,10 @@ async function copyENBFilesIfNotExist() {
   const ENBFilesExist = await checkENBFilesExist();
   logger.debug(`ENB files exist on launch: ${ENBFilesExist}`);
   if (!ENBFilesExist) {
-    const currentProfile =
+    const currentENB =
       (userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) as string) ||
-      (await getENBPresets())[0];
-    await copyENBFiles(currentProfile);
+      (await getENBPresets())[0].real;
+    await copyENBFiles(currentENB);
   }
 }
 
@@ -190,37 +220,4 @@ export async function launchGame() {
       `Note: if you just forcefully closed Skyrim, you can ignore this error. ${err}`
     );
   }
-}
-
-export async function getProfiles(): Promise<string[]> {
-  // Get mapped profile names that have a mapping
-  const mappedNames = JSON.parse(
-    await fs.promises.readFile(
-      `${userPreferences.get(
-        USER_PREFERENCE_KEYS.MOD_DIRECTORY
-      )}/profiles/namesMO2.json`,
-      "utf-8"
-    )
-  );
-
-  // Get any profiles that don't have a mapping
-  const unmappedNames = (
-    await fs.promises.readdir(
-      `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`,
-      { withFileTypes: true }
-    )
-  )
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name)
-    .filter(isNotJunk)
-    .map((preset) => ({ real: preset, friendly: preset }))
-    .filter(
-      (unmappedPreset) =>
-        !mappedNames.find(
-          (mappedPreset: FriendlyDirectoryMap) =>
-            mappedPreset.real === unmappedPreset.real
-        )
-    );
-
-  return [...mappedNames, ...unmappedNames];
 }
