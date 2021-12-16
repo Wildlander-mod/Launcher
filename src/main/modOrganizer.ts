@@ -6,7 +6,12 @@ import {
   userPreferences,
 } from "@/main/config";
 import { logger } from "@/main/logger";
-import { checkENBFilesExist, copyENBFiles, getENBPresets } from "@/main/ENB";
+import {
+  backupOriginalENBs,
+  checkENBFilesExist,
+  copyENBFiles,
+  getENBPresets,
+} from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
@@ -150,6 +155,8 @@ const prepareForLaunch = async (): Promise<boolean> => {
       return false;
     }
   }
+
+  await backupOriginalENBs();
 
   await copyENBFilesIfNotExist();
 
