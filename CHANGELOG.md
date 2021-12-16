@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.206 (2021-12-16)
+
+
+### Features
+
+* allow naming ENBs with a namesENB.json ([8e756fa](https://github.com/Wildlander-mod/Launcher/commit/8e756fa3fe39a023f91d3476109128631b77c7f0))
+
 ### 0.1.205 (2021-12-16)
 
 
