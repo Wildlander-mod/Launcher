@@ -101,23 +101,30 @@ export const deleteAllENBFiles = async () => {
   }
 };
 
-export const copyENBFiles = async (profile: string) => {
+/**
+ * Copy all ENB files from an ENB preset
+ * @param profile - Must be the actual ENB profile name, not the friendly name. noENB will remove all ENB files.
+ */
+export const copyENBFiles = async (profile: string | "noENB") => {
   await deleteAllENBFiles();
 
   logger.info(`Copying ${profile} ENB Files`);
 
-  const ENBFiles = await getENBFilesForPreset(profile);
+  // All ENB files have been deleted already so nothing to do if the preset is noENB
+  if (profile !== "noENB") {
+    const ENBFiles = await getENBFilesForPreset(profile);
 
-  for (const file of ENBFiles) {
-    const fileWithPath = `${ENBDirectory()}/${profile}/${file}`;
-    const fileDestination = `${skyrimDirectory()}/${file}`;
-    logger.debug(`Copy ENB file ${file} with path ${fileWithPath}`);
-    const isDirectory = (await fs.promises.lstat(fileWithPath)).isDirectory();
+    for (const file of ENBFiles) {
+      const fileWithPath = `${ENBDirectory()}/${profile}/${file}`;
+      const fileDestination = `${skyrimDirectory()}/${file}`;
+      logger.debug(`Copy ENB file ${file} with path ${fileWithPath}`);
+      const isDirectory = (await fs.promises.lstat(fileWithPath)).isDirectory();
 
-    if (isDirectory) {
-      await copy(fileWithPath, fileDestination);
-    } else {
-      await fs.promises.copyFile(fileWithPath, fileDestination);
+      if (isDirectory) {
+        await copy(fileWithPath, fileDestination);
+      } else {
+        await fs.promises.copyFile(fileWithPath, fileDestination);
+      }
     }
   }
 };
