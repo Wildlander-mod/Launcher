@@ -68,12 +68,7 @@ export default class ENB extends Vue {
 
     logger.debug(`Setting initial ENB to ${this.selectedENB.text}`);
 
-    userPreferences.set(
-      USER_PREFERENCE_KEYS.ENB_PROFILE,
-      this.selectedENB.value
-    );
-
-    await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES_IF_NOT_EXIST);
+    await this.handleENBPresetChanged(this.selectedENB);
   }
 
   async getENBPresets(): Promise<SelectOption[]> {
@@ -87,7 +82,7 @@ export default class ENB extends Vue {
         value: real,
       })),
       {
-        text: "No ENB",
+        text: "No Shaders",
         value: "noENB",
       },
     ];
@@ -97,6 +92,10 @@ export default class ENB extends Vue {
     this.eventService.emit(DISABLE_ACTIONS_EVENT);
     this.eventService.emit(ENABLE_LOADING_EVENT);
 
+    userPreferences.set(
+      USER_PREFERENCE_KEYS.PREVIOUS_ENB_PROFILE,
+      userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) ?? ""
+    );
     userPreferences.set(USER_PREFERENCE_KEYS.ENB_PROFILE, profile.value);
     await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
 

@@ -197,12 +197,17 @@ export async function launchGame() {
 
     const { stderr } = await promisify(childProcess.exec)(execCMD);
     await restoreMO2Settings();
-    await syncENBFromGameToPresets();
+    await syncENBFromGameToPresets(
+      userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
+    );
     if (stderr) {
       logger.error(`Error while executing ModOrganizer - ${stderr}`);
     }
   } catch (err) {
     await restoreMO2Settings();
+    await syncENBFromGameToPresets(
+      userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
+    );
     await handleError(
       "Error launching modlist",
       `Note: if you just forcefully closed Skyrim, you can ignore this error. ${err}`

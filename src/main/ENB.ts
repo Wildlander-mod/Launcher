@@ -59,6 +59,12 @@ export const backupOriginalENBs = async () => {
   }
 };
 
+export const restoreENBPresets = async () => {
+  logger.info("Restoring ENB presets");
+  const ENBBackupDirectory = `${backupDirectory()}/ENB Presets`;
+  await copy(ENBBackupDirectory, ENBDirectory(), { overwrite: true });
+};
+
 /**
  * Get all ENB files from all presets.
  * Different presets can have different files,
@@ -101,16 +107,13 @@ export const deleteAllENBFiles = async () => {
   }
 };
 
-export const syncENBFromGameToPresets = async () => {
+export const syncENBFromGameToPresets = async (preset: string) => {
   logger.info("Syncing ENB changes back to presets");
-  const profile = userPreferences.get(
-    USER_PREFERENCE_KEYS.ENB_PROFILE
-  ) as string;
-  const enbFiles = await getENBFilesForPreset(profile);
+  const enbFiles = await getENBFilesForPreset(preset);
 
   for (const file of enbFiles) {
     const fileWithPath = `${skyrimDirectory()}/${file}`;
-    const fileDestination = `${ENBDirectory()}/${profile}/${file}`;
+    const fileDestination = `${ENBDirectory()}/${preset}/${file}`;
     logger.debug(`Copying ${file} to ${fileDestination}`);
     await copy(fileWithPath, fileDestination, { overwrite: true });
   }
@@ -120,7 +123,16 @@ export const syncENBFromGameToPresets = async () => {
  * Copy all ENB files from an ENB preset
  * @param profile - Must be the actual ENB profile name, not the friendly name. noENB will remove all ENB files.
  */
-export const copyENBFiles = async (profile: string | "noENB") => {
+export const copyENBFiles = async (profile: string | "noENB", sync = true) => {
+  const previousProfile =
+    (userPreferences.get(
+      USER_PREFERENCE_KEYS.PREVIOUS_ENB_PROFILE
+    ) as string) || "";
+  if (sync && previousProfile && previousProfile !== "noENB") {
+    // Sync the previous profile first so changes are not lost
+    await syncENBFromGameToPresets(previousProfile);
+  }
+
   await deleteAllENBFiles();
 
   logger.info(`Copying ${profile} ENB Files`);
@@ -136,11 +148,4 @@ export const copyENBFiles = async (profile: string | "noENB") => {
       await copy(fileWithPath, fileDestination);
     }
   }
-};
-
-export const checkENBFilesExist = async () => {
-  logger.debug(`Checking if ENB files exist in ${ENBDirectory()}`);
-  const existingENBFiles = await getExistingENBFiles();
-  logger.debug(`Existing ENB files ${JSON.stringify(existingENBFiles)}`);
-  return existingENBFiles.length > 0;
 };

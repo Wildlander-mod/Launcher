@@ -40,7 +40,7 @@
 
         <router-link
           :to="{
-            name: 'Settings',
+            name: 'Advanced',
           }"
           custom
           v-slot="{ href, navigate, isActive }"

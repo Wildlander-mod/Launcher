@@ -17,10 +17,10 @@ import {
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
 import {
-  checkENBFilesExist,
   copyENBFiles,
   deleteAllENBFiles,
   getENBPresets,
+  restoreENBPresets,
 } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/resolution";
@@ -99,12 +99,13 @@ export function registerHandlers() {
     copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
   );
 
-  ipcMain.handle(
-    IPCEvents.COPY_ENB_FILES_IF_NOT_EXIST,
-    async () =>
-      !(await checkENBFilesExist()) &&
-      copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
-  );
+  ipcMain.handle(IPCEvents.RESTORE_ENB_PRESETS, async () => {
+    await restoreENBPresets();
+    await copyENBFiles(
+      userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE),
+      false
+    );
+  });
 
   ipcMain.handle(IPCEvents.DELETE_ALL_ENB_FILES, async () =>
     deleteAllENBFiles()
