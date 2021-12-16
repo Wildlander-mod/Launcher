@@ -62,7 +62,7 @@ export const deleteAllENBFiles = async () => {
 export const copyENBFiles = async (profile: string) => {
   await deleteAllENBFiles();
 
-  logger.info("Copying ENB Files");
+  logger.info(`Copying ${profile} ENB Files`);
 
   const ENBFiles = await getENBFilesForPreset(profile);
 
@@ -81,7 +81,8 @@ export const copyENBFiles = async (profile: string) => {
 };
 
 export const checkENBFilesExist = async () => {
-  logger.info(`Checking if ENB files exist in ${ENBDirectory()}`);
+  logger.debug(`Checking if ENB files exist in ${ENBDirectory()}`);
   const existingENBFiles = await getExistingENBFiles();
+  logger.debug(`Existing ENB files ${JSON.stringify(existingENBFiles)}`);
   return existingENBFiles.length > 0;
 };

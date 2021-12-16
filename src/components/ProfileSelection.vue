@@ -16,6 +16,7 @@ import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
+import { logger } from "@/main/logger";
 
 @Options({
   components: { BaseDropdown },
@@ -29,28 +30,34 @@ export default class ProfileSelection extends Vue {
     const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
     eventService.on(modDirectorySetEvent, this.getPresets);
 
-    await this.getPresets();
+    this.presets = await this.getPresets();
+
+    this.setInitialPreset();
+
+    this.loadingData = false;
   }
 
   onPresetSelected(option: SelectOption) {
     userPreferences.set(USER_PREFERENCE_KEYS.PRESET, option.value);
   }
 
-  async getPresets() {
-    const presets = (await ipcRenderer.invoke(
-      IPCEvents.GET_PRESETS
-    )) as string[];
+  setInitialPreset() {
     const userPreset = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
-    this.presets = presets
-      .map((preset) => ({ text: preset, value: preset }))
-      .filter((preset) => preset.text !== ".DS_Store");
 
     this.selectedPreset = userPreset
       ? this.presets.find((preset) => preset.value === userPreset) ??
         this.presets[0]
       : this.presets[0];
 
-    this.loadingData = false;
+    logger.debug(`Setting initial preset to ${this.selectedPreset.text}`);
+
+    userPreferences.set(USER_PREFERENCE_KEYS.PRESET, this.selectedPreset.value);
+  }
+
+  async getPresets() {
+    return ((await ipcRenderer.invoke(IPCEvents.GET_PRESETS)) as string[]).map(
+      (preset) => ({ text: preset, value: preset })
+    );
   }
 }
 </script>

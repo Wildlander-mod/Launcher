@@ -16,9 +16,12 @@ import { parse, stringify } from "js-ini";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
 import { not as isNotJunk } from "junk";
 import { promisify } from "util";
+import { IIniObject } from "js-ini/lib/interfaces/ini-object";
 
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
+
+let previousMO2Settings: IIniObject | null = null;
 
 const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
 
@@ -62,8 +65,8 @@ const updateSelectedProfile = async (profile: string) => {
   );
 };
 
-async function copyENBFilesOnLaunch() {
-  logger.info("Copying ENB files on launch");
+async function copyENBFilesIfNotExist() {
+  logger.info("Ensuring ENB files exist on launch");
 
   const ENBFilesExist = await checkENBFilesExist();
   logger.debug(`ENB files exist on launch: ${ENBFilesExist}`);
@@ -75,16 +78,60 @@ async function copyENBFilesOnLaunch() {
   }
 }
 
+const preventMO2GUIFromShowing = async () => {
+  logger.info(`Preventing the MO2 GUI from showing`);
+  const settings = await readSettings();
+  // Copy the object so changes don't mutate it
+  previousMO2Settings = JSON.parse(JSON.stringify(settings)) as IIniObject;
+
+  (settings.Settings as IIniObjectSection)["lock_gui"] = false;
+
+  await fs.promises.writeFile(
+    `${modDirectory()}/${MO2Settings}`,
+    stringify(settings)
+  );
+};
+
+const restoreMO2Settings = async () => {
+  // If we have some previous settings saved, restore them
+  if (previousMO2Settings) {
+    await fs.promises.writeFile(
+      `${modDirectory()}/${MO2Settings}`,
+      stringify(previousMO2Settings)
+    );
+    previousMO2Settings = null;
+  }
+};
+
+/**
+ * Prepare MO2/Skyrim for launch.
+ * Return true if the operation should continue and false if it should be aborted
+ */
+const prepareForLaunch = async (): Promise<boolean> => {
+  if (await isRunning()) {
+    const continueLaunching = await handleMO2Running();
+    if (!continueLaunching) {
+      logger.info("MO2 already running, user chose to abort");
+      return false;
+    }
+  }
+
+  await copyENBFilesIfNotExist();
+
+  await setResolution();
+
+  logger.debug(`User configuration: ${JSON.stringify(userPreferences.store)}`);
+
+  return true;
+};
+
 export const launchMO2 = async () => {
-  logger.info("Launch MO2 prerequisites");
+  logger.info("Preparing MO2 for launch");
 
   try {
-    if (await isRunning()) {
-      const continueLaunching = await handleMO2Running();
-      if (!continueLaunching) {
-        logger.info("MO2 already running, user chose to abort");
-        return;
-      }
+    const continueLaunch = await prepareForLaunch();
+    if (!continueLaunch) {
+      return;
     }
 
     logger.info("Launching MO2");
@@ -94,57 +141,48 @@ export const launchMO2 = async () => {
       userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
     );
 
-    await setResolution();
-
-    const moPath = path.join(
+    const MO2Path = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       MO2EXE
     );
-    logger.debug(`MO2 path: ${moPath}`);
-    childProcess.exec(`"${moPath}"`);
+    childProcess.exec(`"${MO2Path}"`);
   } catch (err) {
     logger.error(`Error while opening MO2 - ${err}`);
   }
 };
 
 export async function launchGame() {
-  logger.info("Launch game prerequisites");
+  logger.info("Preparing game for launch");
 
   try {
-    if (await isRunning()) {
-      const continueLaunching = await handleMO2Running();
-      if (!continueLaunching) {
-        logger.info("MO2 already running, user chose to abort");
-        return;
-      }
+    const continueLaunch = await prepareForLaunch();
+    if (!continueLaunch) {
+      return;
     }
 
-    await copyENBFilesOnLaunch();
-
-    await setResolution();
+    await preventMO2GUIFromShowing();
 
     logger.info("Launching game");
-    logger.debug(
-      `User configuration: ${JSON.stringify(userPreferences.store)}`
-    );
+
     const MO2Path = path.join(
       userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
       MO2EXE
     );
     const profile = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
 
-    logger.info("Starting MO2");
     const execCMD = `"${MO2Path}" -p "${profile}" "moshortcut://:SKSE"`;
-    logger.debug(`Executing MO2 command ${execCMD}`);
+    logger.debug(`Executing MO2 command: ${execCMD}`);
 
     const { stderr } = await promisify(childProcess.exec)(execCMD);
+    await restoreMO2Settings();
     if (stderr) {
       logger.error(`Error while executing ModOrganizer - ${stderr}`);
     }
   } catch (err) {
+    await restoreMO2Settings();
     await handleError(
-      "Error while launching modlist",
-      `Error while launching modlist - ${err}`
+      "Error launching modlist",
+      `Note: if you just forcefully closed Skyrim, you can ignore this error. ${err}`
     );
   }
 }
