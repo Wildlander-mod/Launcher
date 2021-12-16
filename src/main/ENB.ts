@@ -101,6 +101,21 @@ export const deleteAllENBFiles = async () => {
   }
 };
 
+export const syncENBFromGameToPresets = async () => {
+  logger.info("Syncing ENB changes back to presets");
+  const profile = userPreferences.get(
+    USER_PREFERENCE_KEYS.ENB_PROFILE
+  ) as string;
+  const enbFiles = await getENBFilesForPreset(profile);
+
+  for (const file of enbFiles) {
+    const fileWithPath = `${skyrimDirectory()}/${file}`;
+    const fileDestination = `${ENBDirectory()}/${profile}/${file}`;
+    logger.debug(`Copying ${file} to ${fileDestination}`);
+    await copy(fileWithPath, fileDestination, { overwrite: true });
+  }
+};
+
 /**
  * Copy all ENB files from an ENB preset
  * @param profile - Must be the actual ENB profile name, not the friendly name. noENB will remove all ENB files.
@@ -118,13 +133,7 @@ export const copyENBFiles = async (profile: string | "noENB") => {
       const fileWithPath = `${ENBDirectory()}/${profile}/${file}`;
       const fileDestination = `${skyrimDirectory()}/${file}`;
       logger.debug(`Copy ENB file ${file} with path ${fileWithPath}`);
-      const isDirectory = (await fs.promises.lstat(fileWithPath)).isDirectory();
-
-      if (isDirectory) {
-        await copy(fileWithPath, fileDestination);
-      } else {
-        await fs.promises.copyFile(fileWithPath, fileDestination);
-      }
+      await copy(fileWithPath, fileDestination);
     }
   }
 };
