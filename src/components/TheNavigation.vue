@@ -7,6 +7,8 @@
 
       <ProfileSelection />
 
+      <ENB />
+
       <Resolution />
     </div>
 
@@ -21,18 +23,6 @@
         >
           <NavigationItem :active="isActive" :href="href" @click="navigate">
             Home
-          </NavigationItem>
-        </router-link>
-
-        <router-link
-          :to="{
-            name: 'Graphics',
-          }"
-          custom
-          v-slot="{ href, navigate, isActive }"
-        >
-          <NavigationItem :active="isActive" :href="href" @click="navigate">
-            Graphics
           </NavigationItem>
         </router-link>
 
@@ -103,9 +93,11 @@ import {
 } from "@/services/service-container";
 import Resolution from "@/components/Resolution.vue";
 import AppModal from "@/components/AppModal.vue";
+import ENB from "@/components/ENB.vue";
 
 @Component({
   components: {
+    ENB,
     AppModal,
     Resolution,
     ProfileSelection,
