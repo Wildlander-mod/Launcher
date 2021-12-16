@@ -11,6 +11,7 @@ import {
   checkENBFilesExist,
   copyENBFiles,
   getENBPresets,
+  syncENBFromGameToPresets,
 } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 import find from "find-process";
@@ -209,6 +210,7 @@ export async function launchGame() {
 
     const { stderr } = await promisify(childProcess.exec)(execCMD);
     await restoreMO2Settings();
+    await syncENBFromGameToPresets();
     if (stderr) {
       logger.error(`Error while executing ModOrganizer - ${stderr}`);
     }
