@@ -52,6 +52,8 @@ export default class Resolution extends Vue {
     this.containsUltrawide = !!this.resolutions.find(({ width, height }) => {
       return isUnsupportedResolution(width, height);
     });
+
+    this.loadingResolutions = false;
   }
 
   setInitialResolution() {
@@ -85,7 +87,6 @@ export default class Resolution extends Vue {
       USER_PREFERENCE_KEYS.WIDTH,
       this.selectedResolution.width
     );
-    this.loadingResolutions = false;
   }
 
   getFirstSupportedResolution() {

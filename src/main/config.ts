@@ -29,10 +29,6 @@ export interface UserPreferences {
 
 export const userPreferences = new Store<UserPreferences>({
   name: "userPreferences",
-  defaults: {
-    [USER_PREFERENCE_KEYS.MOD_DIRECTORY]: "",
-    [USER_PREFERENCE_KEYS.PRESET]: "",
-  },
 });
 
 export const skyrimDirectory = () =>
