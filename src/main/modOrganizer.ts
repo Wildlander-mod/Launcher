@@ -105,19 +105,6 @@ const updateSelectedProfile = async (profile: string) => {
   );
 };
 
-async function copyENBFilesIfNotExist() {
-  logger.info("Ensuring ENB files exist on launch");
-
-  const ENBFilesExist = await checkENBFilesExist();
-  logger.debug(`ENB files exist on launch: ${ENBFilesExist}`);
-  if (!ENBFilesExist) {
-    const currentENB =
-      (userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) as string) ||
-      (await getENBPresets())[0].real;
-    await copyENBFiles(currentENB);
-  }
-}
-
 const preventMO2GUIFromShowing = async () => {
   logger.info(`Preventing the MO2 GUI from showing`);
   const settings = await readSettings();
@@ -158,7 +145,12 @@ const prepareForLaunch = async (): Promise<boolean> => {
 
   await backupOriginalENBs();
 
-  await copyENBFilesIfNotExist();
+  await copyENBFiles(
+    userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) ||
+      (
+        await getENBPresets()
+      )[0].real
+  );
 
   await setResolution();
 
