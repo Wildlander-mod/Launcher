@@ -3,7 +3,8 @@
     :arrow="true"
     :interactive="false"
     placement="right"
-    :show="showTooltip && isOpen"
+    :show="showTooltipOnHover ? undefined : showTooltip && isOpen"
+    :hover="showTooltipOnHover"
   >
     <template #content>
       <slot />
@@ -81,6 +82,7 @@ export default class BaseDropdown extends Vue {
   @Prop({ required: true }) currentSelection!: SelectOption;
   @Prop({ default: false }) grow!: boolean;
   @Prop({ default: false }) showTooltip!: boolean;
+  @Prop({ default: false }) showTooltipOnHover!: boolean;
 
   selectedOption!: SelectOption;
   isOpen = false;
@@ -234,17 +236,18 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   }
 }
 
+// All popper classes need important because once built, the order of the css is not consistent
 :deep(.popper) {
-  background-color: $colour-background--darker-solid;
-  padding: $size-spacing;
+  background-color: $colour-background--darker-solid !important;
+  padding: $size-spacing !important;
 }
 
 :deep(.popper #arrow::before) {
-  background-color: $colour-background--darker-solid;
+  background-color: $colour-background--darker-solid !important;
 }
 
 :deep(.popper:hover),
 :deep(.popper:hover > #arrow::before) {
-  background-color: $colour-background--darker-solid;
+  background-color: $colour-background--darker-solid !important;
 }
 </style>

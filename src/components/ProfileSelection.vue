@@ -5,7 +5,12 @@
     :options="presets"
     v-if="!loadingPresets"
     :grow="true"
-  />
+    :show-tooltip-on-hover="true"
+  >
+    Determines the draw distance of grass and shadows, the number of effects
+    visible at once, and the quality of distant objects. These elements use a
+    mix of CPU and GPU.
+  </BaseDropdown>
 </template>
 
 <script lang="ts">
