@@ -6,13 +6,7 @@ import {
   userPreferences,
 } from "@/main/config";
 import { logger } from "@/main/logger";
-import {
-  backupOriginalENBs,
-  checkENBFilesExist,
-  copyENBFiles,
-  getENBPresets,
-  syncENBFromGameToPresets,
-} from "@/main/ENB";
+import { backupOriginalENBs, syncENBFromGameToPresets } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
@@ -145,13 +139,6 @@ const prepareForLaunch = async (): Promise<boolean> => {
   }
 
   await backupOriginalENBs();
-
-  await copyENBFiles(
-    userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE) ||
-      (
-        await getENBPresets()
-      )[0].real
-  );
 
   await setResolution();
 

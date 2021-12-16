@@ -16,7 +16,12 @@ import {
 } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
-import { copyENBFiles, deleteAllENBFiles, getENBPresets } from "@/main/ENB";
+import {
+  checkENBFilesExist,
+  copyENBFiles,
+  deleteAllENBFiles,
+  getENBPresets,
+} from "@/main/ENB";
 import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
@@ -92,6 +97,13 @@ export function registerHandlers() {
 
   ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () =>
     copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
+  );
+
+  ipcMain.handle(
+    IPCEvents.COPY_ENB_FILES_IF_NOT_EXIST,
+    async () =>
+      !(await checkENBFilesExist()) &&
+      copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
   );
 
   ipcMain.handle(IPCEvents.DELETE_ALL_ENB_FILES, async () =>

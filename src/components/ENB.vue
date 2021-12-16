@@ -28,6 +28,12 @@ import {
 } from "@/services/service-container";
 import { FriendlyDirectoryMap, Modpack } from "@/modpack-metadata";
 import { logger } from "@/main/logger";
+import {
+  DISABLE_ACTIONS_EVENT,
+  DISABLE_LOADING_EVENT,
+  ENABLE_ACTIONS_EVENT,
+  ENABLE_LOADING_EVENT,
+} from "@/App.vue";
 
 @Options({
   components: { BaseLink, BaseDropdown, BaseButton },
@@ -47,12 +53,12 @@ export default class ENB extends Vue {
 
     this.ENBPresets = await this.getENBPresets();
 
-    this.setInitialENB();
+    await this.setInitialENB();
 
     this.loadingENBPresets = false;
   }
 
-  setInitialENB() {
+  async setInitialENB() {
     const ENBPreference = userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE);
 
     this.selectedENB = ENBPreference
@@ -66,6 +72,8 @@ export default class ENB extends Vue {
       USER_PREFERENCE_KEYS.ENB_PROFILE,
       this.selectedENB.value
     );
+
+    await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES_IF_NOT_EXIST);
   }
 
   async getENBPresets(): Promise<SelectOption[]> {
@@ -86,7 +94,14 @@ export default class ENB extends Vue {
   }
 
   async handleENBPresetChanged(profile: SelectOption) {
+    this.eventService.emit(DISABLE_ACTIONS_EVENT);
+    this.eventService.emit(ENABLE_LOADING_EVENT);
+
     userPreferences.set(USER_PREFERENCE_KEYS.ENB_PROFILE, profile.value);
+    await ipcRenderer.invoke(IPCEvents.COPY_ENB_FILES);
+
+    this.eventService.emit(DISABLE_LOADING_EVENT);
+    this.eventService.emit(ENABLE_ACTIONS_EVENT);
   }
 }
 </script>
