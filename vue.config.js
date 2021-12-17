@@ -19,6 +19,9 @@ module.exports = {
             filter: ["**/*"],
           },
         ],
+        nsis: {
+          deleteAppDataOnUninstall: true,
+        },
       },
     },
   },
