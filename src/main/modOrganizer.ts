@@ -6,7 +6,7 @@ import {
   userPreferences,
 } from "@/main/config";
 import { logger } from "@/main/logger";
-import { backupOriginalENBs, syncENBFromGameToPresets } from "@/main/ENB";
+import { syncENBFromGameToPresets } from "@/main/ENB";
 import { handleError } from "@/main/errorHandler";
 import find from "find-process";
 import { dialog } from "electron";
@@ -32,7 +32,7 @@ export const getProfiles = async (): Promise<FriendlyDirectoryMap[]> => {
     await fs.promises.readFile(
       `${userPreferences.get(
         USER_PREFERENCE_KEYS.MOD_DIRECTORY
-      )}/profiles/namesMO2.json`,
+      )}/launcher/namesMO2.json`,
       "utf-8"
     )
   ) as FriendlyDirectoryMap[];
@@ -137,8 +137,6 @@ const prepareForLaunch = async (): Promise<boolean> => {
       return false;
     }
   }
-
-  await backupOriginalENBs();
 
   await setResolution();
 

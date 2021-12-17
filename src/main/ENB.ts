@@ -13,14 +13,16 @@ import { FriendlyDirectoryMap } from "@/modpack-metadata";
 const ENBNameMappingFile = "namesENB.json";
 
 const ENBDirectory = () =>
-  `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/ENB Presets`;
+  `${userPreferences.get(
+    USER_PREFERENCE_KEYS.MOD_DIRECTORY
+  )}/launcher/ENB Presets`;
 
 export const getENBPresets = async (): Promise<FriendlyDirectoryMap[]> => {
   const mappedENBs = JSON.parse(
     await fs.promises.readFile(
       `${userPreferences.get(
         USER_PREFERENCE_KEYS.MOD_DIRECTORY
-      )}/ENB Presets/${ENBNameMappingFile}`,
+      )}/launcher/${ENBNameMappingFile}`,
       "utf-8"
     )
   ) as FriendlyDirectoryMap[];
@@ -122,6 +124,7 @@ export const syncENBFromGameToPresets = async (preset: string) => {
 /**
  * Copy all ENB files from an ENB preset
  * @param profile - Must be the actual ENB profile name, not the friendly name. noENB will remove all ENB files.
+ * @param sync - Whether to sync the changes from Stock Game back to the ENB Preset directory
  */
 export const copyENBFiles = async (profile: string | "noENB", sync = true) => {
   const previousProfile =

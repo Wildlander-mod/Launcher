@@ -26,8 +26,11 @@ import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
+import { startupTasks } from "@/main/modpack";
 
 export function registerHandlers() {
+  ipcMain.handle(IPCEvents.MODPACK_SELECTED, startupTasks);
+
   ipcMain.handle(IPCEvents.LAUNCH_MO2, async () => await launchMO2());
   ipcMain.handle(IPCEvents.CLOSE_GAME, async () => {
     await closeGame();

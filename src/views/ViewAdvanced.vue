@@ -7,7 +7,7 @@
         </div>
 
         <div class="l-row c-settings__actions">
-          <div class="c-settings__label">Mod Organiser 2</div>
+          <div class="c-settings__label">Mod Organizer 2</div>
           <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
         </div>
 
@@ -93,6 +93,9 @@ export default class Settings extends Vue {
   }
 
   async restoreENBPresets() {
+    this.eventService.emit(DISABLE_ACTIONS_EVENT);
+    this.eventService.emit(ENABLE_LOADING_EVENT);
+
     const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
       message:
         "Restoring ENB presets will reset any changes you have made to any ENBs. This cannot be undone. Are you sure?",
@@ -109,6 +112,9 @@ export default class Settings extends Vue {
         });
       }
     }
+
+    this.eventService.emit(ENABLE_ACTIONS_EVENT);
+    this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
   openLogPath() {
