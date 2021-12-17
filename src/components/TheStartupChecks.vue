@@ -40,6 +40,8 @@ import BaseLink from "@/components/BaseLink.vue";
 import { modpack, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import TheTitleBar from "@/components/TheTitleBar.vue";
 import { Modpack } from "@/modpack-metadata";
+import { ipcRenderer } from "electron";
+import { IPCEvents } from "@/enums/IPCEvents";
 
 @Options({
   components: {
@@ -73,9 +75,11 @@ export default class TheStartupChecks extends Vue {
     this.checkIfShouldRenderWindow();
   }
 
-  modDirectorySet() {
+  async modDirectorySet() {
     this.modDirectorySelected = true;
     this.showModDirectoryModal = false;
+
+    await ipcRenderer.invoke(IPCEvents.MODPACK_SELECTED);
 
     this.checkIfShouldRenderWindow();
   }
