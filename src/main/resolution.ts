@@ -105,12 +105,8 @@ const skyrimGraphicsSettingsPath = () =>
   `${modDirectory()}/mods/${modpack.name}/SKSE/Plugins/SSEDisplayTweaks.ini`;
 
 export const setResolution = async () => {
-  const widthPreference = userPreferences.get(
-    USER_PREFERENCE_KEYS.WIDTH
-  ) as number;
-  const heightPreference = userPreferences.get(
-    USER_PREFERENCE_KEYS.HEIGHT
-  ) as number;
+  const { width: widthPreference, height: heightPreference } =
+    userPreferences.get(USER_PREFERENCE_KEYS.RESOLUTION) as Resolution;
 
   // Only change the resolution in the ini if it has been set in the launcher
   if (widthPreference && heightPreference) {

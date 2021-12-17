@@ -59,11 +59,13 @@ export default class Resolution extends Vue {
   setInitialResolution() {
     logger.info("Attempting to set initial resolutions");
 
-    const width = userPreferences.get(USER_PREFERENCE_KEYS.WIDTH);
-    const height = userPreferences.get(USER_PREFERENCE_KEYS.HEIGHT);
+    const resolutionPreference = userPreferences.get(
+      USER_PREFERENCE_KEYS.RESOLUTION
+    );
 
     // If there is already a width and height selected, try to use that
-    if (width && height) {
+    if (resolutionPreference) {
+      const { width, height } = resolutionPreference as ResolutionType;
       logger.debug(`Resolution preference: ${width}x${height}`);
 
       this.selectedResolution =
@@ -79,14 +81,10 @@ export default class Resolution extends Vue {
       `Resolution set to ${this.selectedResolution.width} x ${this.selectedResolution.height}`
     );
 
-    userPreferences.set(
-      USER_PREFERENCE_KEYS.HEIGHT,
-      this.selectedResolution.height
-    );
-    userPreferences.set(
-      USER_PREFERENCE_KEYS.WIDTH,
-      this.selectedResolution.width
-    );
+    userPreferences.set(USER_PREFERENCE_KEYS.RESOLUTION, {
+      width: this.selectedResolution.width,
+      height: this.selectedResolution.height,
+    });
   }
 
   getFirstSupportedResolution() {
@@ -111,8 +109,7 @@ export default class Resolution extends Vue {
 
   handleResolutionSelected({ value }: SelectOption) {
     const { height, width } = value as ResolutionType;
-    userPreferences.set(USER_PREFERENCE_KEYS.HEIGHT, height);
-    userPreferences.set(USER_PREFERENCE_KEYS.WIDTH, width);
+    userPreferences.set(USER_PREFERENCE_KEYS.RESOLUTION, { height, width });
   }
 }
 </script>
