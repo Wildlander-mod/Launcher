@@ -18,13 +18,19 @@ import { IPCEvents } from "@/enums/IPCEvents";
 import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 import { Prop } from "vue-property-decorator";
 import { Modpack } from "@/modpack-metadata";
+import {
+  DISABLE_ACTIONS_EVENT,
+  DISABLE_LOADING_EVENT,
+  ENABLE_ACTIONS_EVENT,
+  ENABLE_LOADING_EVENT,
+} from "@/App.vue";
 
 export const modDirectorySetEvent = "modDirectorySet";
 export const modDirectoryAlreadySetEvent = "modDirectoryAlreadySet";
 
 @Options({
   components: { AppFileSelect },
-  emits: [modDirectorySetEvent, modDirectoryAlreadySetEvent],
+  emits: [modDirectoryAlreadySetEvent],
 })
 export default class ModDirectory extends Vue {
   @Prop({ default: false }) private centered!: boolean;
@@ -74,11 +80,16 @@ export default class ModDirectory extends Vue {
 
   async modDirectorySet(filepath: string) {
     if (await this.checkModDirectoryIsValid(filepath)) {
+      this.eventService.emit(DISABLE_ACTIONS_EVENT);
+      this.eventService.emit(ENABLE_LOADING_EVENT);
+
       userPreferences.set(USER_PREFERENCE_KEYS.MOD_DIRECTORY, filepath);
       this.modDirectory = filepath;
-      this.$emit(modDirectorySetEvent);
       this.eventService.emit(modDirectorySetEvent);
       await ipcRenderer.invoke(IPCEvents.MODPACK_SELECTED);
+
+      this.eventService.emit(ENABLE_ACTIONS_EVENT);
+      this.eventService.emit(DISABLE_LOADING_EVENT);
     }
   }
 

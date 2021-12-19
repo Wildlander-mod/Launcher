@@ -12,7 +12,6 @@
       />
 
       <ModDirectory
-        @modDirectorySet="modDirectorySet"
         @modDirectoryAlreadySet="modDirectorySet"
         :hide-open="true"
         :label="`To get started, select your ${modpack.name} installation directory:`"
@@ -33,13 +32,16 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import AppModal from "@/components/AppModal.vue";
-import ModDirectory from "@/components/ModDirectory.vue";
+import ModDirectory, {
+  modDirectorySetEvent,
+} from "@/components/ModDirectory.vue";
 import AutoUpdate from "@/components/AutoUpdate.vue";
 import BaseImage from "@/components/BaseImage.vue";
 import BaseLink from "@/components/BaseLink.vue";
 import { modpack, USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import TheTitleBar from "@/components/TheTitleBar.vue";
 import { Modpack } from "@/modpack-metadata";
+import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 
 @Options({
   components: {
@@ -60,12 +62,16 @@ export default class TheStartupChecks extends Vue {
 
   private modpack!: Modpack;
 
+  private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+
   created() {
     this.modpack = modpack;
 
     this.showModDirectoryModal = !userPreferences.get(
       USER_PREFERENCE_KEYS.MOD_DIRECTORY
     );
+
+    this.eventService.on(modDirectorySetEvent, this.modDirectorySet);
   }
 
   updateCompleteHandler() {
