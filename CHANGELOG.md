@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.210 (2021-12-19)
+
+
+### Bug Fixes
+
+* prevent app from reloading after first selecting modpack ([c3b20c3](https://github.com/Wildlander-mod/Launcher/commit/c3b20c3bf69ab19da6ea187600c7a5b6ecff05bd))
+
 ### 0.1.209 (2021-12-19)
 
 
