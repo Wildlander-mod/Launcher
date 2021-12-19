@@ -149,7 +149,9 @@ export const copyENBFiles = async (profile: string | "noENB", sync = true) => {
     for (const file of ENBFiles) {
       const fileWithPath = `${ENBDirectory()}/${profile}/${file}`;
       const fileDestination = `${skyrimDirectory()}/${file}`;
-      logger.debug(`Copy ENB file ${file} with path ${fileWithPath}`);
+      logger.debug(
+        `Copy ENB file ${file} with path ${fileWithPath} to ${fileDestination}`
+      );
       await copy(fileWithPath, fileDestination);
     }
   }

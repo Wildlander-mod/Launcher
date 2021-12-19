@@ -78,6 +78,7 @@ export default class ModDirectory extends Vue {
       this.modDirectory = filepath;
       this.$emit(modDirectorySetEvent);
       this.eventService.emit(modDirectorySetEvent);
+      await ipcRenderer.invoke(IPCEvents.MODPACK_SELECTED);
     }
   }
 
