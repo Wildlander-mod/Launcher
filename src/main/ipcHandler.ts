@@ -16,12 +16,7 @@ import {
 } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
-import {
-  copyENBFiles,
-  deleteAllENBFiles,
-  getENBPresets,
-  restoreENBPresets,
-} from "@/main/ENB";
+import { copyENBFiles, getENBPresets, restoreENBPresets } from "@/main/ENB";
 import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
@@ -53,6 +48,10 @@ export function registerHandlers() {
 
   ipcMain.on(IPCEvents.MINIMIZE, () => {
     getWindow().minimize();
+  });
+
+  ipcMain.handle(IPCEvents.RELOAD, () => {
+    getWindow().reload();
   });
 
   ipcMain.handle(IPCEvents.SHOW_OPEN_DIALOG, async () => {
@@ -109,10 +108,6 @@ export function registerHandlers() {
       false
     );
   });
-
-  ipcMain.handle(IPCEvents.DELETE_ALL_ENB_FILES, async () =>
-    deleteAllENBFiles()
-  );
 
   ipcMain.handle(
     IPCEvents.GET_ENB_PRESETS,

@@ -19,8 +19,6 @@ import BaseDropdown, { SelectOption } from "@/components/BaseDropdown.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
-import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
-import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
 import { logger } from "@/main/logger";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
 
@@ -33,9 +31,6 @@ export default class ProfileSelection extends Vue {
   loadingPresets = true;
 
   async created() {
-    const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-    eventService.on(modDirectorySetEvent, this.getPresets);
-
     this.presets = await this.getPresets();
 
     this.setInitialPreset();

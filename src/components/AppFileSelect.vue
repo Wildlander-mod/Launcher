@@ -2,11 +2,10 @@
   <div :class="{ 'l-row l-row--bottom': !centered, 'l-column': centered }">
     <BaseInput
       :label="label"
-      :oninput="onFilepathChange"
       :value="filepath"
       :readonly="true"
       :centered="centered"
-      :onclick="openFileSelectDialog"
+      @click="openFileSelectDialog"
     />
     <div
       class="l-row l-no-flex-grow c-file-input__actions"
@@ -37,7 +36,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import { ipcRenderer, shell } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import BaseInput from "@/components/BaseInput.vue";
-import { Prop, Watch } from "vue-property-decorator";
+import { Prop } from "vue-property-decorator";
 import {
   EventService,
   injectStrict,
@@ -50,23 +49,22 @@ import {
   ENABLE_LOADING_EVENT,
 } from "@/App.vue";
 
+export const filepathSelectedEvent = "filepathSelected";
+
 @Component({
   components: { BaseButton, BaseInput },
+  emits: [filepathSelectedEvent],
 })
 export default class AppFileSelect extends Vue {
   @Prop({ required: true }) private label!: string;
-  @Prop() onFilepathChange!: (filepath: string) => void;
-  @Prop() private preFilepathChange!: (filepath: string) => Promise<boolean>;
   @Prop({ default: false }) private centered!: boolean;
-  @Prop() private initialFilepath!: string;
   @Prop() private hideOpen!: boolean;
-  private filepath!: string;
+  @Prop() private filepath!: string;
 
   private eventService!: EventService;
 
   created() {
     this.eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-    this.filepath = this.initialFilepath;
   }
 
   async openFileSelectDialog() {
@@ -80,13 +78,7 @@ export default class AppFileSelect extends Vue {
       // Only one directory is allowed to be selected so use the first filepath
       const newFilepath = dialogResponse.filePaths[0];
 
-      // Allow parents to prevent the new filepath from being set
-      if (
-        this.preFilepathChange &&
-        (await this.preFilepathChange(newFilepath))
-      ) {
-        this.setNewFilepath(newFilepath);
-      }
+      this.$emit(filepathSelectedEvent, newFilepath);
     }
 
     this.eventService.emit(ENABLE_ACTIONS_EVENT);
@@ -95,12 +87,6 @@ export default class AppFileSelect extends Vue {
 
   async openDirectory() {
     await shell.openPath(this.filepath);
-  }
-
-  @Watch("initialFilepath")
-  private setNewFilepath(filepath: string) {
-    this.filepath = filepath;
-    this.onFilepathChange(filepath);
   }
 }
 </script>
