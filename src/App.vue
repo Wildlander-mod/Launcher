@@ -30,12 +30,15 @@ import TheFooter from "@/components/TheFooter.vue";
 import TheNavigation from "@/components/TheNavigation.vue";
 import TheTitleBar from "@/components/TheTitleBar.vue";
 import { Options, Vue } from "vue-class-component";
-import { registerServices } from "@/services/service-container";
+import { EventService, registerServices } from "@/services/service-container";
 import TheStartupChecks from "@/components/TheStartupChecks.vue";
 import { modalOpenedEvent } from "@/services/modal.service";
 import TheHeader from "@/components/TheHeader.vue";
 import { modpack } from "@/main/config";
 import { Modpack } from "@/modpack-metadata";
+import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
+import { ipcRenderer } from "electron";
+import { IPCEvents } from "@/enums/IPCEvents";
 
 export const ENABLE_ACTIONS_EVENT = "ENABLE_ACTIONS_EVENT";
 export const DISABLE_ACTIONS_EVENT = "DISABLE_ACTIONS_EVENT";
@@ -54,6 +57,7 @@ export const DISABLE_LOADING_EVENT = "DISABLE_LOADING_EVENT";
 export default class App extends Vue {
   clickEventsEnabled = false;
   renderApp = false;
+  private eventService!: EventService;
 
   private modpackInfo!: Modpack;
 
@@ -81,6 +85,8 @@ export default class App extends Vue {
     eventService.on(DISABLE_LOADING_EVENT, () => {
       this.setLoading(false);
     });
+
+    this.eventService = eventService;
   }
 
   setClickEventsEnabled(enabled: boolean) {
@@ -93,6 +99,9 @@ export default class App extends Vue {
 
   startupChecksComplete() {
     this.renderApp = true;
+    this.eventService.on(modDirectorySetEvent, async () => {
+      await ipcRenderer.invoke(IPCEvents.RELOAD);
+    });
   }
 }
 </script>

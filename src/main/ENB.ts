@@ -127,6 +127,8 @@ export const syncENBFromGameToPresets = async (preset: string) => {
  * @param sync - Whether to sync the changes from Stock Game back to the ENB Preset directory
  */
 export const copyENBFiles = async (profile: string | "noENB", sync = true) => {
+  logger.info(`Copying ${profile} ENB Files prerequisite`);
+
   const previousProfile =
     (userPreferences.get(
       USER_PREFERENCE_KEYS.PREVIOUS_ENB_PROFILE

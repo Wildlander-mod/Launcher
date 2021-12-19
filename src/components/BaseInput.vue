@@ -10,36 +10,34 @@
       type="text"
       :readonly="readonly"
       class="c-input"
-      @input="handleInput"
-      @click="handleClick"
+      @input="input"
+      @click="click"
       :value="value"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import { Options, Vue } from "vue-class-component";
+import { Emit, Prop } from "vue-property-decorator";
 
+@Options({
+  emits: ["input", "click"],
+})
 export default class BaseInput extends Vue {
-  @Prop() private oninput!: (filepath: string) => void;
-  @Prop() private onclick!: () => void;
   @Prop({ required: true }) private label!: string;
   @Prop({ default: false }) private readonly!: boolean;
   @Prop({ default: false }) private centered!: boolean;
   @Prop() private value!: string;
 
-  handleClick() {
-    if (this.onclick) {
-      this.onclick();
-    }
+  @Emit()
+  input(event: Event) {
+    return event.target as HTMLInputElement;
   }
 
-  handleInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (this.oninput) {
-      this.oninput(target.value);
-    }
+  @Emit()
+  click(event: Event) {
+    return event.target as HTMLInputElement;
   }
 }
 </script>
