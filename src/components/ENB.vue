@@ -68,7 +68,10 @@ export default class ENB extends Vue {
 
     logger.debug(`Setting initial ENB to ${this.selectedENB.text}`);
 
-    await this.handleENBPresetChanged(this.selectedENB);
+    userPreferences.set(
+      USER_PREFERENCE_KEYS.ENB_PROFILE,
+      this.selectedENB.value
+    );
   }
 
   async getENBPresets(): Promise<SelectOption[]> {
