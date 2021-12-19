@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.209 (2021-12-19)
+
+
+### Bug Fixes
+
+* prevent ENBs from copying every time the app loads ([88741e8](https://github.com/Wildlander-mod/Launcher/commit/88741e83feab8bbe389f5395735ca13c108feddd))
+
 ### 0.1.208 (2021-12-17)
 
 ### 0.1.207 (2021-12-16)
