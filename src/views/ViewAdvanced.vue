@@ -18,6 +18,12 @@
           </BaseButton>
         </div>
         <div class="l-row c-settings__actions">
+          <div class="c-settings__label">Restore MO2 profiles</div>
+          <BaseButton type="warning" @click="restoreProfiles"
+            >Restore
+          </BaseButton>
+        </div>
+        <div class="l-row c-settings__actions">
           <div class="c-settings__label">Application logs</div>
           <BaseButton type="default" @click="openLogPath"> Open</BaseButton>
         </div>
@@ -108,6 +114,31 @@ export default class Settings extends Vue {
       } catch (error) {
         await ipcRenderer.invoke(IPCEvents.ERROR, {
           title: "Error restoring ENB files",
+          error: (error as Error).message,
+        });
+      }
+    }
+
+    this.eventService.emit(ENABLE_ACTIONS_EVENT);
+    this.eventService.emit(DISABLE_LOADING_EVENT);
+  }
+
+  async restoreProfiles() {
+    this.eventService.emit(DISABLE_ACTIONS_EVENT);
+    this.eventService.emit(ENABLE_LOADING_EVENT);
+
+    const { response } = await ipcRenderer.invoke(IPCEvents.CONFIRMATION, {
+      message:
+        "Restoring MO2 profiles will reset any changes you have made to any profiles. This cannot be undone. Are you sure?",
+      buttons: ["Cancel", "Restore MO2 profiles"],
+    });
+
+    if (response === 1) {
+      try {
+        await ipcRenderer.invoke(IPCEvents.RESTORE_MO2_PROFILES);
+      } catch (error) {
+        await ipcRenderer.invoke(IPCEvents.ERROR, {
+          title: "Error restoring MO2 profiles",
           error: (error as Error).message,
         });
       }

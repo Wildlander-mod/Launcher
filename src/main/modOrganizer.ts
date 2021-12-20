@@ -1,6 +1,7 @@
 import path from "path";
 import childProcess from "child_process";
 import {
+  backupDirectory,
   modDirectory,
   USER_PREFERENCE_KEYS,
   userPreferences,
@@ -18,6 +19,7 @@ import { not as isNotJunk } from "junk";
 import { promisify } from "util";
 import { IIniObject } from "js-ini/lib/interfaces/ini-object";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
+import { copy, existsSync } from "fs-extra";
 
 export const MO2EXE = "ModOrganizer.exe";
 const MO2Settings = "ModOrganizer.ini";
@@ -25,6 +27,9 @@ const MO2Settings = "ModOrganizer.ini";
 let previousMO2Settings: IIniObject | null = null;
 
 const isRunning = async () => (await find("name", "ModOrganizer")).length > 0;
+
+const profileDirectory = () =>
+  `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`;
 
 export const getProfiles = async (): Promise<FriendlyDirectoryMap[]> => {
   // Get mapped profile names that have a mapping
@@ -143,6 +148,27 @@ const prepareForLaunch = async (): Promise<boolean> => {
   logger.debug(`User configuration: ${JSON.stringify(userPreferences.store)}`);
 
   return true;
+};
+
+export const backupOriginalProfiles = async () => {
+  const profileBackupDirectory = `${backupDirectory()}/profiles`;
+  const backupExists = existsSync(profileBackupDirectory);
+  logger.debug(`Backup for profiles exists: ${backupExists}`);
+
+  if (!backupExists) {
+    logger.info("No profiles backup exists. Backing up...");
+    await fs.promises.mkdir(backupDirectory(), {
+      recursive: true,
+    });
+
+    await copy(profileDirectory(), profileBackupDirectory);
+  }
+};
+
+export const restoreProfiles = async () => {
+  logger.info("Restoring MO2 profiles");
+  const profileBackupDirectory = `${backupDirectory()}/profiles`;
+  await copy(profileBackupDirectory, profileDirectory(), { overwrite: true });
 };
 
 export const launchMO2 = async () => {
