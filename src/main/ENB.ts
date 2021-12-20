@@ -109,16 +109,20 @@ export const deleteAllENBFiles = async () => {
   }
 };
 
-export const syncENBFromGameToPresets = async (preset: string) => {
-  logger.info("Syncing ENB changes back to presets");
-  const enbFiles = await getENBFilesForPreset(preset);
-  logger.debug(`ENB files that need to be synced: ${JSON.stringify(enbFiles)}`);
+export const syncENBFromGameToPresets = async (preset: string | "noENB") => {
+  logger.info(`Syncing ENB changes back to presets for ${preset}`);
+  if (preset !== "noENB") {
+    const enbFiles = await getENBFilesForPreset(preset);
+    logger.debug(
+      `ENB files that need to be synced: ${JSON.stringify(enbFiles)}`
+    );
 
-  for (const file of enbFiles) {
-    const fileWithPath = `${skyrimDirectory()}/${file}`;
-    const fileDestination = `${ENBDirectory()}/${preset}/${file}`;
-    logger.debug(`Copying ${file} to ${fileDestination}`);
-    await copy(fileWithPath, fileDestination, { overwrite: true });
+    for (const file of enbFiles) {
+      const fileWithPath = `${skyrimDirectory()}/${file}`;
+      const fileDestination = `${ENBDirectory()}/${preset}/${file}`;
+      logger.debug(`Copying ${file} to ${fileDestination}`);
+      await copy(fileWithPath, fileDestination, { overwrite: true });
+    }
   }
 
   logger.info("Finished syncing ENB presets");

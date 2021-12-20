@@ -34,7 +34,11 @@ export function registerHandlers() {
   });
 
   ipcMain.handle(IPCEvents.LAUNCH_GAME, async () => {
-    await launchGame();
+    try {
+      await launchGame();
+    } catch (error) {
+      logger.error(`Failed to launch game - ${error}`);
+    }
   });
 
   // Wait until the application is ready to check for an update
