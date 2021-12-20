@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.216 (2021-12-20)
+
+
+### Features
+
+* add ability to backup profiles ([75aca31](https://github.com/Wildlander-mod/Launcher/commit/75aca31fc661411743fe65e93bff205d93977763))
+
 ### 0.1.215 (2021-12-19)
 
 ### 0.1.214 (2021-12-19)
