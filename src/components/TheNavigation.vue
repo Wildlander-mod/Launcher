@@ -94,6 +94,7 @@ import {
 import Resolution from "@/components/Resolution.vue";
 import AppModal from "@/components/AppModal.vue";
 import ENB from "@/components/ENB.vue";
+import { logger } from "@/main/logger";
 
 @Component({
   components: {
@@ -124,8 +125,10 @@ export default class TheNavigation extends Vue {
         "No mod directory specified, please select one on the settings page."
       );
     } else {
+      logger.debug("Setting game to running");
       this.gameRunning = true;
       await ipcRenderer.invoke(IPCEvents.LAUNCH_GAME);
+      logger.debug("Setting game to no longer running");
       this.gameRunning = false;
     }
   }
