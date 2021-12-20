@@ -65,10 +65,14 @@ export const getProfiles = async (): Promise<FriendlyDirectoryMap[]> => {
   return [...mappedProfiles, ...unmappedProfiles];
 };
 
-export const closeMO2 = async () =>
+export const closeMO2 = async () => {
+  logger.info("Killing MO2 forcefully");
   (await find("name", "ModOrganizer")).forEach((mo2Instance) => {
+    logger.debug(`Found process to kill: ${JSON.stringify(mo2Instance)}`);
     process.kill(mo2Instance.pid);
   });
+  logger.info("Killed all MO2 processes");
+};
 
 const handleMO2Running = async (): Promise<boolean> => {
   logger.info("MO2 already running. Giving user option to cancel or continue");
@@ -120,6 +124,7 @@ const preventMO2GUIFromShowing = async () => {
 };
 
 const restoreMO2Settings = async () => {
+  logger.info("Restoring MO2 settings");
   // If we have some previous settings saved, restore them
   if (previousMO2Settings) {
     await fs.promises.writeFile(
@@ -128,6 +133,7 @@ const restoreMO2Settings = async () => {
     );
     previousMO2Settings = null;
   }
+  logger.info("Finished restoring MO2 settings");
 };
 
 /**
@@ -220,6 +226,7 @@ export async function launchGame() {
     logger.debug(`Executing MO2 command: ${execCMD}`);
 
     const { stderr } = await promisify(childProcess.exec)(execCMD);
+    logger.info("MO2 exited");
     await restoreMO2Settings();
     await syncENBFromGameToPresets(
       userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
