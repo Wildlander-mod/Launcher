@@ -13,6 +13,7 @@ import {
   launchGame,
   launchMO2,
   MO2EXE,
+  restoreProfiles,
 } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
 import { getWindow } from "@/background";
@@ -108,6 +109,11 @@ export function registerHandlers() {
       false
     );
   });
+
+  ipcMain.handle(
+    IPCEvents.RESTORE_MO2_PROFILES,
+    async () => await restoreProfiles()
+  );
 
   ipcMain.handle(
     IPCEvents.GET_ENB_PRESETS,
