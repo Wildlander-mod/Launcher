@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.218 (2021-12-20)
+
+
+### Bug Fixes
+
+* prevent launcher crashing when closing game with no ENB ([40a5689](https://github.com/Wildlander-mod/Launcher/commit/40a5689ee62e7f383c333c819a5a792e433bd9fb))
+
 ### 0.1.217 (2021-12-20)
 
 ### 0.1.216 (2021-12-20)
