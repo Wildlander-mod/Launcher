@@ -99,6 +99,28 @@ export function registerHandlers() {
       );
       return false;
     }
+    const invalidDirectories = [
+      "Desktop",
+      "Documents",
+      "Downloads",
+      "Program Files",
+      "Program Files (x86)",
+      "steamapps",
+      "3D Objects",
+      "Music",
+      "Pictures",
+      "Videos",
+      "OneDrive",
+    ];
+    const directories = filepath.split("/");
+    for (const directory of directories) {
+      if (invalidDirectories.includes(directory)) {
+        logger.warn(
+          `Selected mod directory "${filepath}" is in an invalid directory."`
+        );
+        return false;
+      }
+    }
     return true;
   });
 
