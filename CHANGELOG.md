@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.219 (2022-01-04)
+
+
+### Bug Fixes
+
+* handle invalid modpaths on startup ([03ed76a](https://github.com/Wildlander-mod/Launcher/commit/03ed76a4c3ea98b436d6994767c8bae0d171e405))
+
 ### 0.1.218 (2021-12-20)
 
 
