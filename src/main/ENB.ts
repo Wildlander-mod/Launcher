@@ -119,9 +119,13 @@ export const syncENBFromGameToPresets = async (preset: string | "noENB") => {
 
     for (const file of enbFiles) {
       const fileWithPath = `${skyrimDirectory()}/${file}`;
-      const fileDestination = `${ENBDirectory()}/${preset}/${file}`;
-      logger.debug(`Copying ${file} to ${fileDestination}`);
-      await copy(fileWithPath, fileDestination, { overwrite: true });
+      if (existsSync(fileWithPath)) {
+        const fileDestination = `${ENBDirectory()}/${preset}/${file}`;
+        logger.debug(`Copying ${file} to ${fileDestination}`);
+        await copy(fileWithPath, fileDestination, { overwrite: true });
+      } else {
+        logger.info(`${file} does not exist at ${fileWithPath}, skipping sync`);
+      }
     }
   }
 
