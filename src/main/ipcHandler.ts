@@ -12,7 +12,6 @@ import {
   getProfiles,
   launchGame,
   launchMO2,
-  MO2EXE,
   restoreProfiles,
 } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
@@ -23,6 +22,7 @@ import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
 import { startupTasks } from "@/main/modpack";
+import { checkValidModDirectory } from "./paths";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.MODPACK_SELECTED, startupTasks);
@@ -85,43 +85,8 @@ export function registerHandlers() {
   );
 
   // Ensure that the mod directory contains a valid MO2 installation
-  ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) => {
-    if (!fs.existsSync(`${filepath}/${MO2EXE}`)) {
-      logger.warn(
-        `Selected mod directory "${filepath}" doesn't contain a valid ${MO2EXE}`
-      );
-      return false;
-    }
-
-    if (!fs.existsSync(`${filepath}/profiles`)) {
-      logger.warn(
-        `Selected mod directory "${filepath}" doesn't contain a valid profiles directory`
-      );
-      return false;
-    }
-    const invalidDirectories = [
-      "Desktop",
-      "Documents",
-      "Downloads",
-      "Program Files",
-      "Program Files (x86)",
-      "steamapps",
-      "3D Objects",
-      "Music",
-      "Pictures",
-      "Videos",
-      "OneDrive",
-    ];
-    const directories = filepath.split("/");
-    for (const directory of directories) {
-      if (invalidDirectories.includes(directory)) {
-        logger.warn(
-          `Selected mod directory "${filepath}" is in an invalid directory."`
-        );
-        return false;
-      }
-    }
-    return true;
+  ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, async (_event, filepath) => {
+    return await checkValidModDirectory(filepath);
   });
 
   ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () =>
