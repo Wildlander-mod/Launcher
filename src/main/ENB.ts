@@ -124,7 +124,7 @@ export const syncENBFromGameToPresets = async (preset: string | "noENB") => {
         logger.debug(`Copying ${file} to ${fileDestination}`);
         await copy(fileWithPath, fileDestination, { overwrite: true });
       } else {
-        logger.info(`${file} does not exist at ${fileWithPath}, skipping sync`);
+        logger.debug(`${file} does not exist in ${fileWithPath}, skipping sync`);
       }
     }
   }
