@@ -13,6 +13,7 @@
 
       <ModDirectory
         @modDirectoryAlreadySet="modDirectorySet"
+        @modDirectoryInvalidEvent="modDirectoryInvalid"
         :hide-open="true"
         :label="`To get started, select your ${modpack.name} installation directory:`"
       />
@@ -84,6 +85,11 @@ export default class TheStartupChecks extends Vue {
     this.showModDirectoryModal = false;
 
     this.checkIfShouldRenderWindow();
+  }
+
+  async modDirectoryInvalid() {
+    userPreferences.delete(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
+    this.showModDirectoryModal = true;
   }
 
   checkIfShouldRenderWindow() {

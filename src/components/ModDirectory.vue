@@ -27,10 +27,11 @@ import {
 
 export const modDirectorySetEvent = "modDirectorySet";
 export const modDirectoryAlreadySetEvent = "modDirectoryAlreadySet";
+export const modDirectoryInvalidEvent = "modDirectoryInvalidEvent";
 
 @Options({
   components: { AppFileSelect },
-  emits: [modDirectoryAlreadySetEvent],
+  emits: [modDirectoryAlreadySetEvent, modDirectoryInvalidEvent],
 })
 export default class ModDirectory extends Vue {
   @Prop({ default: false }) private centered!: boolean;
@@ -99,6 +100,8 @@ export default class ModDirectory extends Vue {
       error:
         "Please ensure this is a valid mockpack installation directory. Remember, this is NOT the Skyrim directory, it is the mod's installation directory (containing the ModOrganizer.exe/profiles/etc.).",
     });
+
+    this.$emit(modDirectoryInvalidEvent);
   }
 }
 </script>
