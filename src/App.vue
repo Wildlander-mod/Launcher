@@ -39,6 +39,7 @@ import { Modpack } from "@/modpack-metadata";
 import { modDirectorySetEvent } from "@/components/ModDirectory.vue";
 import { ipcRenderer } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
+import { startupTasks } from "./main/modpack";
 
 export const ENABLE_ACTIONS_EVENT = "ENABLE_ACTIONS_EVENT";
 export const DISABLE_ACTIONS_EVENT = "DISABLE_ACTIONS_EVENT";
@@ -97,11 +98,12 @@ export default class App extends Vue {
     document.body.style.cursor = loading ? "progress" : "default";
   }
 
-  startupChecksComplete() {
+  async startupChecksComplete() {
     this.renderApp = true;
     this.eventService.on(modDirectorySetEvent, async () => {
       await ipcRenderer.invoke(IPCEvents.RELOAD);
     });
+    await startupTasks();
   }
 }
 </script>
