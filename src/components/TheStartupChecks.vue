@@ -12,7 +12,7 @@
       />
 
       <ModDirectory
-        @modDirectoryAlreadySet="modDirectorySet"
+        @modDirectoryAlreadySet="handleModDirectoryAlreadySet"
         @modDirectoryInvalidEvent="modDirectoryInvalid"
         :hide-open="true"
         :label="`To get started, select your ${modpack.name} installation directory:`"
@@ -57,6 +57,7 @@ import { injectStrict, SERVICE_BINDINGS } from "@/services/service-container";
 export default class TheStartupChecks extends Vue {
   private showModDirectoryModal = true;
   private showTitleBar = true;
+  private modDirectoryAlreadySet = false;
 
   updateComplete = false;
   modDirectorySelected = false;
@@ -80,6 +81,11 @@ export default class TheStartupChecks extends Vue {
     this.checkIfShouldRenderWindow();
   }
 
+  handleModDirectoryAlreadySet() {
+    this.modDirectoryAlreadySet = true;
+    this.modDirectorySet();
+  }
+
   async modDirectorySet() {
     this.modDirectorySelected = true;
     this.showModDirectoryModal = false;
@@ -95,7 +101,9 @@ export default class TheStartupChecks extends Vue {
   checkIfShouldRenderWindow() {
     if (this.updateComplete && this.modDirectorySelected) {
       this.showTitleBar = false;
-      this.$emit("startupChecksComplete");
+      this.$emit("startupChecksComplete", {
+        modDirectoryAlreadySet: this.modDirectoryAlreadySet,
+      });
     }
   }
 }

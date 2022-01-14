@@ -97,7 +97,15 @@ export default class App extends Vue {
     document.body.style.cursor = loading ? "progress" : "default";
   }
 
-  startupChecksComplete() {
+  async startupChecksComplete({
+    modDirectoryAlreadySet,
+  }: {
+    modDirectoryAlreadySet: boolean;
+  }) {
+    if (modDirectoryAlreadySet) {
+      await ipcRenderer.invoke(IPCEvents.STARTUP_TASKS);
+    }
+
     this.renderApp = true;
     this.eventService.on(modDirectorySetEvent, async () => {
       await ipcRenderer.invoke(IPCEvents.RELOAD);
