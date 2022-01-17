@@ -1,3 +1,4 @@
+import { modpack } from "@/main/config";
 export class PatreonService {
   private patrons: Patron[] = [];
 
@@ -18,7 +19,7 @@ export class PatreonService {
         return this.patrons;
       }
 
-      const response = await fetch("https://ultsky.phinocio.com/api/patreon");
+      const response = await fetch(modpack.api);
       const data = (await response.json()) as { patrons: Patron[] };
       // Shuffle the array to show different Patrons each time
       this.patrons = shuffle

@@ -1,7 +1,8 @@
 <template>
   <div class="c-resources l-row">
     <BaseLink
-      href="https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww"
+      v-if="modpack.youtube"
+      :href="modpack.youtube"
       class="c-resource l-flex"
     >
       <ImageWithText
@@ -11,7 +12,8 @@
       />
     </BaseLink>
     <BaseLink
-      href="https://www.twitch.tv/dylanbperry"
+      v-if="modpack.twitch"
+      :href="modpack.twitch"
       class="c-resource l-flex"
     >
       <ImageWithText
@@ -20,14 +22,22 @@
         text="Twitch"
       />
     </BaseLink>
-    <BaseLink href="https://discord.gg/8VkDrfq" class="c-resource l-flex">
+    <BaseLink
+      v-if="modpack.discord"
+      :href="modpack.discord"
+      class="c-resource l-flex"
+    >
       <ImageWithText
         image-source="images/logos/discord.svg"
         alt=""
         text="Discord"
       />
     </BaseLink>
-    <BaseLink href="https://reddit.com/r/wildlander" class="c-resource l-flex">
+    <BaseLink
+      v-if="modpack.reddit"
+      :href="modpack.reddit"
+      class="c-resource l-flex"
+    >
       <ImageWithText
         image-source="images/logos/reddit.svg"
         alt=""

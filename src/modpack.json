@@ -4,5 +4,10 @@
   "backgroundImage": "images/background.png",
   "website": "https://www.wildlandermod.com",
   "wiki": "https://docs.google.com/document/d/1SXZSma38Mw2lTpDOY-pZRTYmpIUb6y0UYL4X7cZg2Ps",
-  "patreon": "https://www.patreon.com/dylanbperry"
+  "patreon": "https://www.patreon.com/dylanbperry",
+  "api": "https://ultsky.phinocio.com/api/patreon",
+  "youtube": "https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww",
+  "reddit": "https://reddit.com/r/wildlander",
+  "twitch": "https://www.twitch.tv/dylanbperry",
+  "discord": "https://discord.gg/8VkDrfq"
 }

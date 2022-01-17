@@ -1,3 +1,4 @@
+import { modpack } from "@/main/config";
 export class PostsService {
   private news: Posts[] = [];
 
@@ -7,7 +8,7 @@ export class PostsService {
         return this.news;
       }
 
-      const response = await fetch("https://ultsky.phinocio.com/api/patreon");
+      const response = await fetch(modpack.api);
       this.news = (await response.json()).posts as Posts[];
       return this.news;
     } catch (error) {

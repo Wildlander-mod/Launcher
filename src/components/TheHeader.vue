@@ -63,6 +63,7 @@ $logoMargin: 2px;
 
 .c-header__image {
   margin-top: $logoMargin;
+  width: 265px;
 }
 
 .c-header__links {
