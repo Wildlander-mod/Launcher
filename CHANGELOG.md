@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.223 (2022-02-09)
+
+### 0.1.222 (2022-01-15)
+
+### 0.1.221 (2022-01-14)
+
+
+### Bug Fixes
+
+* prevent launcher crashing if ENB can't sync ([fc5fb71](https://github.com/Wildlander-mod/Launcher/commit/fc5fb713f55c54a1d1bbca7308a5e24dfd1fe9e2))
+
+### 0.1.220 (2022-01-11)
+
 ### 0.1.219 (2022-01-04)
 
 
