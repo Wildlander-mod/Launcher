@@ -28,4 +28,5 @@ updates:
     reviewers:
       - "MattLish"
     allow:
-      - dependency-type: production
+      - dependency-name: "*"
+        dependency-type: "production"
