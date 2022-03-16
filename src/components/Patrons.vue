@@ -3,6 +3,7 @@
     <BaseList
       v-if="!failedToGetPatrons && superPatrons.length !== 0"
       :items="superPatrons"
+      class="c-patrons__list"
     >
       <div class="c-patrons__title">
         <div class="l-column l-center-text">
@@ -88,6 +89,12 @@ $star-stacked-size: 10px;
   justify-content: space-around;
 
   flex: 1;
+
+  word-break: break-all;
+}
+
+.c-patrons__list {
+  max-width: 50%;
 }
 
 .c-patrons__title {
