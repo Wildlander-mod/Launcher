@@ -20,10 +20,12 @@ updates:
     directory: "/"
     schedule:
       # Check for updates to GitHub Actions every weekday
-      interval: "daily"
+      interval: "weekly"
     assignees:
       - "MattLish"
     labels:
       - "dependencies"
     reviewers:
       - "MattLish"
+    allow:
+      - dependency-type: production
