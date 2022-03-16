@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.2 (2022-03-16)
+
+
+### Bug Fixes
+
+* prevent patron list from overflowing with long names ([49cd59a](https://github.com/Wildlander-mod/Launcher/commit/49cd59ae4a2c288b2556a8e70307a64637debbe0))
+
 ### 1.0.1 (2022-03-16)
 
 ## [1.0.0](https://github.com/Wildlander-mod/Launcher/compare/v0.1.233...v1.0.0) (2022-03-16)
