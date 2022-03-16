@@ -47,7 +47,7 @@
         }"
       >
         <div
-          v-for="option in options"
+          v-for="option in options.filter((x) => !x.hidden)"
           :key="option.value"
           class="c-select__option"
           :class="{
@@ -71,13 +71,22 @@ export interface SelectOption {
   text: string;
   value: unknown;
   disabled?: boolean;
+  hidden?: boolean;
 }
+
+const selectedEvent = "selected";
 
 @Component({
   components: { Popper },
+  emits: [selectedEvent],
 })
 export default class BaseDropdown extends Vue {
   @Prop({ required: true }) options!: SelectOption[];
+  /**
+   * @deprecated Use the '@selected' event instead.
+   * Note: this prop automatically sets the current option and @selected does not.
+   * If you use @selected it is your responsibility to handle the state
+   */
   @Prop({ required: false }) onOptionSelected!: (option: SelectOption) => void;
   @Prop({ required: true }) currentSelection!: SelectOption;
   @Prop({ default: false }) grow!: boolean;
@@ -93,9 +102,12 @@ export default class BaseDropdown extends Vue {
   }
 
   select(option: SelectOption) {
-    this.selectedOption = option;
     this.isOpen = false;
+    this.$emit(selectedEvent, option.value);
+
+    // Deprecated
     if (this.onOptionSelected) {
+      this.selectedOption = option;
       this.onOptionSelected(option);
     }
   }
@@ -182,10 +194,11 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 }
 
 .c-select__options {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   background-color: $colour-background--light-solid;
-  position: absolute;
   transform-origin: top;
-  width: 200px;
   z-index: 1;
   border-radius: 0 4px 4px 4px;
   max-height: 200px;
