@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/Wildlander-mod/Launcher/compare/v0.1.233...v1.0.0) (2022-03-16)
+
 ### 0.1.233 (2022-03-16)
 
 ### 0.1.232 (2022-03-16)
