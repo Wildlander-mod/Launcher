@@ -22,6 +22,7 @@ import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
 import { checkModpackPathIsValid, startupTasks } from "@/main/modpack";
+import { getInstalledWildlanderModpackPaths } from "@/main/wabbajack";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.MODPACK_SELECTED, startupTasks);
@@ -116,4 +117,8 @@ export function registerHandlers() {
   );
 
   ipcMain.handle(IPCEvents.GET_RESOLUTIONS, async () => getResolutions());
+
+  ipcMain.handle(IPCEvents.GET_INSTALLED_MODPACKS, async () =>
+    getInstalledWildlanderModpackPaths()
+  );
 }

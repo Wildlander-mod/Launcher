@@ -1,11 +1,6 @@
 <template>
   <div class="l-column">
-    <label
-      class="c-input__label"
-      :class="{ 'c-input__label--centered': centered }"
-    >
-      {{ label }}
-    </label>
+    <BaseLabel :label="label" :centered="centered" />
     <input
       type="text"
       :readonly="readonly"
@@ -20,8 +15,10 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { Emit, Prop } from "vue-property-decorator";
+import BaseLabel from "@/components/BaseLabel.vue";
 
 @Options({
+  components: { BaseLabel },
   emits: ["input", "click"],
 })
 export default class BaseInput extends Vue {
@@ -56,18 +53,5 @@ export default class BaseInput extends Vue {
   background: $colour-background--light;
   border: none;
   border-radius: 2px;
-}
-
-.c-input__label {
-  font-size: $font-size--body;
-  line-height: $line-height__body;
-
-  margin-bottom: $size-spacing;
-}
-
-.c-input__label--centered {
-  display: flex;
-  justify-content: center;
-  text-align: center;
 }
 </style>

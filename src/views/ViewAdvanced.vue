@@ -2,7 +2,7 @@
   <AppPage>
     <AppPageContent width="large">
       <div class="c-settings l-column">
-        <div class="c-settings__directories l-row l-space-between">
+        <div class="c-settings__directories l-column">
           <ModDirectory />
         </div>
 
@@ -44,7 +44,6 @@ import AppPage from "@/components/AppPage.vue";
 import AppPageContent from "@/components/AppPageContent.vue";
 import { USER_PREFERENCE_KEYS, userPreferences } from "@/main/config";
 import BaseButton from "@/components/BaseButton.vue";
-import AppFileSelect from "@/components/AppFileSelect.vue";
 import { ipcRenderer, shell } from "electron";
 import { IPCEvents } from "@/enums/IPCEvents";
 import ModDirectory from "@/components/ModDirectory.vue";
@@ -65,7 +64,6 @@ import {
 @Options({
   components: {
     ModDirectory,
-    AppFileSelect,
     AppPage,
     AppPageContent,
     BaseButton,
@@ -183,10 +181,6 @@ export default class Settings extends Vue {
   border-bottom: 1px solid $colour-background--light;
   margin-bottom: $size-spacing;
   padding-bottom: $size-spacing;
-
-  :first-child {
-    margin-right: $size-spacing;
-  }
 }
 
 .c-settings__actions {
