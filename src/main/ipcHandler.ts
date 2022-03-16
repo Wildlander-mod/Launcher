@@ -12,7 +12,6 @@ import {
   getProfiles,
   launchGame,
   launchMO2,
-  MO2EXE,
   restoreProfiles,
 } from "@/main/modOrganizer";
 import { autoUpdate } from "@/main/autoUpdate";
@@ -22,7 +21,7 @@ import { handleError } from "./errorHandler";
 import { getResolutions } from "@/main/resolution";
 import { closeGame } from "@/main/game";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
-import { startupTasks } from "@/main/modpack";
+import { checkModpackPathIsValid, startupTasks } from "@/main/modpack";
 
 export function registerHandlers() {
   ipcMain.handle(IPCEvents.MODPACK_SELECTED, startupTasks);
@@ -86,22 +85,9 @@ export function registerHandlers() {
   );
 
   // Ensure that the mod directory contains a valid MO2 installation
-  ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) => {
-    if (!fs.existsSync(`${filepath}/${MO2EXE}`)) {
-      logger.warn(
-        `Selected mod directory "${filepath}" doesn't contain a valid ${MO2EXE}`
-      );
-      return false;
-    }
-
-    if (!fs.existsSync(`${filepath}/profiles`)) {
-      logger.warn(
-        `Selected mod directory "${filepath}" doesn't contain a valid profiles directory`
-      );
-      return false;
-    }
-    return true;
-  });
+  ipcMain.handle(IPCEvents.CHECK_MOD_DIRECTORY, (_event, filepath) =>
+    checkModpackPathIsValid(filepath)
+  );
 
   ipcMain.handle(IPCEvents.COPY_ENB_FILES, async () =>
     copyENBFiles(userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE))
