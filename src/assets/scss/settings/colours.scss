@@ -1,19 +1,19 @@
 $colour-primary: #6f00c6;
 $colour-primary--light: #8f00ff;
 $colour-secondary: #e1e1e1;
-$colour-alternate: #00BF6F;
+$colour-alternate: #00bf6f;
 $colour-text: #ffffff;
 $colour-text--dark: darken($colour-text, 60%);
 $colour-text--secondary: #ffffff66;
 $color-warning: #980000;
-$color-warning--light: #FD1717;
+$color-warning--light: #fd1717;
 $colour-background: #e1e1e1;
 $colour-background-secondary: #000000;
 $colour-background--light: rgba(255, 255, 255, 0.2);
 $colour-background--light-solid: rgb(118, 118, 118);
 $colour-background--transparent: transparentize($colour-background, 0.8);
 $colour-background--dark: rgba(132, 132, 132, 0.2);
-$colour-background--darker: transparentize(#1F1F1F, 0.1);
+$colour-background--darker: transparentize(#1f1f1f, 0.1);
 $colour-background--darker-solid: rgb(31, 31, 31);
 $colour-background-secondary--transparent: transparentize(
   $colour-background-secondary,
@@ -23,5 +23,4 @@ $colour-background-secondary--transparent: transparentize(
 $colour-star: #ffce00;
 
 $background-blur: blur(10px);
-$background-blur--more: blur(20px)
-
+$background-blur--more: blur(20px);

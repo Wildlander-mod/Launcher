@@ -1,7 +1,7 @@
 {
   "name": "Wildlander",
   "logo": "images/logos/wildlander-full-light.svg",
-  "backgroundImage": "images/background.png",
+  "backgroundImage": "images/default-background.png",
   "website": "https://www.wildlandermod.com",
   "wiki": "https://github.com/Wildlander-mod/Support/wiki",
   "patreon": "https://www.patreon.com/dylanbperry"
