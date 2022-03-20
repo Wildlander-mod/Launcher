@@ -8,9 +8,11 @@ npm install
 
 ## Running
 
-Start the application in development mode
+Start the application
 ```
-npm run serve
+npm run start
+//or for automatic reloading of the main process with nodemon
+npm run start:dev
 ```
 
 ## Building 

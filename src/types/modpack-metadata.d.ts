@@ -1,7 +1,7 @@
 export interface Modpack {
   name: string;
   logo: string;
-  backgroundImage: string;
+  backgroundImage?: string;
   website: string;
   wiki: string;
   patreon: string;

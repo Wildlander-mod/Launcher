@@ -21,7 +21,7 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-#Electron-builder output
-/dist_electron
-
 dev-app-update.yml
+
+# Mock directory to replicate %APPDATA%
+local
