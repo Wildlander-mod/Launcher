@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ES2021",
+    "module": "CommonJS",
+    "outDir": "dist",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
@@ -10,12 +11,12 @@
     "noImplicitThis": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "types": [
       "webpack-env"

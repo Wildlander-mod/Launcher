@@ -1,7 +1,20 @@
+const dependencies = require("./package.json").dependencies;
+
 module.exports = {
+  configureWebpack: {
+    externals: {
+      electron: "window",
+      "@/main/logger": "window",
+    },
+  },
   pluginOptions: {
     electronBuilder: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      externals: Object.keys(dependencies),
+      bundleMainProcess: false,
+      mainProcessFile: "dist/main.js",
+      rendererProcessFile: "src/renderer/index.ts",
+      outputDir: "dist",
       builderOptions: {
         productName: "Wildlander Launcher",
         icon: "public/images/logos/wildlander-icon-light.png",
@@ -12,6 +25,24 @@ module.exports = {
         extraMetadata: {
           name: "Wildlander Launcher",
         },
+        files: [
+          "**",
+          {
+            from: "../main",
+            to: "./main",
+            filter: ["!*.map*"],
+          },
+          {
+            from: "../shared",
+            to: "./shared",
+            filter: ["!*.map*"],
+          },
+          {
+            from: "../",
+            to: ".",
+            filter: ["preload.*", "modpack.json"],
+          },
+        ],
         extraResources: [
           {
             from: "./src/assets/tools",
