@@ -4,6 +4,7 @@
   "description": "A launcher for the Wabbajack modpacks",
   "author": "Wildlander",
   "scripts": {
+    "clean": "rimraf dist_electron",
     "serve": "vue-cli-service electron:serve",
     "serve:dev": "nodemon",
     "build": "vue-cli-service electron:build",
@@ -77,6 +78,7 @@
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
     "sass-loader": "^10.2.0",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended-scss": "^4.3.0",

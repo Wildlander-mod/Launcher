@@ -26,6 +26,58 @@ export const isUnsupportedResolution = (width: number, height: number) =>
   // There are some legacy resolutions that aren't quite 16:9.
   width / height > 1.78;
 
+const getCurrentResolution = (): Resolution => {
+  const {
+    size: { height, width },
+    scaleFactor,
+  } = screen.getPrimaryDisplay();
+  return {
+    width: width * scaleFactor,
+    height: height * scaleFactor,
+  };
+};
+
+const getSupportedResolutions = async () => {
+  const { stdout: resolutionOutput, stderr } = await promisify(
+    childProcess.exec
+  )(`"${getResourcePath()}/tools/QRes.exe" /L`);
+  if (stderr) {
+    logger.error(`Error getting resolutions ${stderr}`);
+    throw new Error(stderr);
+  }
+
+  return (
+    resolutionOutput
+      /**
+       * QRes.exe outputs resolutions in the format:
+       * 640x480, 32 bits @ 60 Hz.
+       * 720x480, 32 bits @ 60 Hz.
+       */
+      .split(/\r*\n/)
+      // The first 2 items in the array will contain copyright and version information
+      .slice(2)
+      // Remove empty entries
+      .filter((resolution) => resolution !== "")
+      // Only save the resolution
+      .map((resolution) => resolution.split(",")[0])
+  );
+};
+
+const sortResolutions = (
+  resolution: Resolution,
+  previousResolution: Resolution
+) =>
+  previousResolution.width - resolution.width ||
+  previousResolution.height - resolution.height;
+
+const resolutionsContainCurrent = (
+  resolutions: Resolution[],
+  current: Resolution
+) =>
+  resolutions.some(
+    ({ width, height }) => current.height === height && current.width === width
+  );
+
 export const getResolutions = async (): Promise<Resolution[]> => {
   logger.info("Getting resolutions");
 
@@ -34,70 +86,43 @@ export const getResolutions = async (): Promise<Resolution[]> => {
     return resolutionsCache;
   }
 
+  const currentResolution = getCurrentResolution();
+
   // The application is only supported on Windows machines.
-  // However, development is supported on other OSs so just return some mock values
+  // However, development is supported on other OSs so just return the current resolution
   if (os.platform() !== "win32") {
-    return [
-      {
-        width: 5120,
-        height: 1440,
-      },
-      {
-        width: 3080,
-        height: 2040,
-      },
-      {
-        width: 1920,
-        height: 1080,
-      },
-    ];
+    return [currentResolution];
   } else {
-    const { stdout: resolutionOutput, stderr } = await promisify(
-      childProcess.exec
-    )(`"${getResourcePath()}/tools/QRes.exe" /L`);
-    if (stderr) {
-      logger.error(`Error getting resolutions ${stderr}`);
-      throw new Error(stderr);
-    }
-
-    /**
-     * The above command outputs resolutions in the format:
-     * 640x480, 32 bits @ 60 Hz.
-     * 720x480, 32 bits @ 60 Hz.
-     */
-
-    const resolutions = resolutionOutput
-      .split(/\r*\n/)
-      // The first 2 items in the array will contain copyright and version information
-      .slice(2)
-      // Remove empty entries
-      .filter((resolution) => resolution !== "")
-      // Only save the resolution
-      .map((resolution) => resolution.split(",")[0]);
-
-    // Remove duplicates
-    const uniqueResolutions = [...new Set(resolutions)]
-      // Save the height and width separately
+    const resolutions = [...new Set(await getSupportedResolutions())]
+      // Format the QRes output
       .map((resolution) => ({
         width: Number(resolution.split("x")[0]),
         height: Number(resolution.split("x")[1]),
-      }))
-      .sort((resolution, previousResolution) => {
-        return (
-          previousResolution.width - resolution.width ||
-          previousResolution.height - resolution.height
-        );
-      });
+      }));
+
+    logger.debug(`Supported resolutions: ${JSON.stringify(resolutions)}`);
+
+    // Sometimes, QRes.exe cannot recognise some resolutions.
+    // As a safety measure, add the users current resolution if it wasn't detected.
+    if (!resolutionsContainCurrent(resolutions, currentResolution)) {
+      logger.debug(
+        `Native resolution (${currentResolution}) not found. Adding to the list.`
+      );
+      resolutions.push(currentResolution);
+    }
+
+    const sortedResolutions = resolutions.sort(sortResolutions);
 
     logger.debug(
-      `Resolutions: ${uniqueResolutions.map(
+      `Resolutions: ${sortedResolutions.map(
         ({ width, height }) => `${width}x${height}`
       )}`
     );
 
-    resolutionsCache = uniqueResolutions;
+    // Add resolutions to a cache to computing them later
+    resolutionsCache = sortedResolutions;
 
-    return uniqueResolutions;
+    return sortedResolutions;
   }
 };
 
@@ -122,15 +147,10 @@ export const setResolution = async () => {
       SkyrimGraphicSettings.Render as IIniObjectSection
     ).Resolution = `${widthPreference}x${heightPreference}`;
 
-    const {
-      size: { width, height },
-      scaleFactor,
-    } = screen.getPrimaryDisplay();
+    const { scaleFactor } = screen.getPrimaryDisplay();
+    const { width, height } = getCurrentResolution();
 
-    const borderlessUpscale = !isUnsupportedResolution(
-      width * scaleFactor,
-      height * scaleFactor
-    );
+    const borderlessUpscale = !isUnsupportedResolution(width, height);
 
     logger.debug(
       `Enabling borderless upscale for ${width * scaleFactor}x${
