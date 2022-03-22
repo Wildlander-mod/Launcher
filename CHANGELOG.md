@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.1.0 (2022-03-22)
+
+
+### Features
+
+* add native resolution to dropdown if it isn't found ([b650f7a](https://github.com/Wildlander-mod/Launcher/commit/b650f7a20f14abe7341cd90458bc583475856301))
+
 ### 1.0.4 (2022-03-16)
 
 ### 1.0.3 (2022-03-16)
