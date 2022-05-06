@@ -35,7 +35,10 @@ export class ModpackService {
   }
 
   checkCurrentModpackPathIsValid() {
-    return this.checkModpackPathIsValid(this.getModpackDirectory());
+    return (
+      this.isModpackSet() &&
+      this.checkModpackPathIsValid(this.getModpackDirectory())
+    );
   }
 
   async refreshModpack() {
@@ -63,20 +66,34 @@ export class ModpackService {
       USER_PREFERENCE_KEYS.MOD_DIRECTORY,
       filepath
     );
-    this.configService.setDefaultPreferences({
-      [USER_PREFERENCE_KEYS.ENB_PROFILE]:
-        await this.enbService.getEnbPreference(),
-      [USER_PREFERENCE_KEYS.PRESET]:
-        await this.modOrganizerService.getProfilePreference(),
-      [USER_PREFERENCE_KEYS.RESOLUTION]:
-        this.resolutionService.getCurrentResolution(),
+    await this.validateConfig();
+    await this.backupAssets();
+    await this.enbService.copyCurrentEnbFiles(false);
+  }
+
+  async validateConfig() {
+    await this.configService.setDefaultPreferences({
+      [USER_PREFERENCE_KEYS.ENB_PROFILE]: {
+        value: await this.enbService.getDefaultPreference(),
+        validate: async () =>
+          this.enbService.isValid(await this.enbService.getEnbPreference()),
+      },
+      [USER_PREFERENCE_KEYS.PRESET]: {
+        value: await this.modOrganizerService.getDefaultPreference(),
+        validate: async () =>
+          this.modOrganizerService.isValid(
+            await this.modOrganizerService.getProfilePreference()
+          ),
+      },
+      [USER_PREFERENCE_KEYS.RESOLUTION]: {
+        value: this.resolutionService.getCurrentResolution(),
+      },
     });
+  }
+
+  async backupAssets() {
     await this.enbService.backupOriginalENBs();
     await this.modOrganizerService.backupOriginalProfiles();
-    await this.enbService.copyENBFiles(
-      await this.enbService.getEnbPreference(),
-      false
-    );
   }
 
   isModpackSet(): boolean {

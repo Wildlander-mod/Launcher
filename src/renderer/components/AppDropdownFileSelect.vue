@@ -5,6 +5,7 @@
     grow="true"
     v-if="options"
     @selected="optionSelected"
+    :small="true"
   />
 </template>
 

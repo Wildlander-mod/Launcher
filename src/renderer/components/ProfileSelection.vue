@@ -38,7 +38,6 @@ export default class ProfileSelection extends Vue {
   async created() {
     this.profiles = await this.getProfiles();
     this.selectedProfile = await this.getInitialProfile(this.profiles);
-    logger.debug(`Set initial mo2 profile to ${this.selectedProfile.value}`);
   }
 
   onProfileSelected(option: SelectOption) {
