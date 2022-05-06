@@ -25,17 +25,17 @@ export class StartupService {
   public registerStartupCommands() {
     this.startupCommands = [
       {
-        name: "Ensure modpack is valid",
+        name: "Delete invalid modpack preference",
         execute: () => {
           if (!this.modpackService.checkCurrentModpackPathIsValid()) {
             const modpackDirectory = this.modpackService.getModpackDirectory();
             logger.error(
               `Current selected modpack (${modpackDirectory}) is invalid. Removing so the user can select a valid one.`
             );
-            // If the modpack is not valid, remove it so the user can select another
             this.modpackService.deleteModpackDirectory();
           }
         },
+        requiresModpack: true,
       },
       {
         name: "Select modpack",
@@ -48,11 +48,11 @@ export class StartupService {
   public runStartup() {
     return Promise.all(
       this.startupCommands.map(async (command) => {
-        logger.debug(`Running startup command: ${command.name}`);
         if (
           (command.requiresModpack && this.modpackService.isModpackSet()) ||
           !command.requiresModpack
         ) {
+          logger.debug(`Running startup command: ${command.name}`);
           await command.execute();
         }
       })

@@ -4,6 +4,7 @@ import { logger } from "@/main/logger";
 import { SystemService } from "@/main/services/system.service";
 import { service } from "@loopback/core";
 import { BindingScope, injectable } from "@loopback/context";
+import { ModpackService } from "@/main/services/modpack.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -14,7 +15,10 @@ export class WabbajackService {
     this.installedModpacksFilename
   }`;
 
-  constructor(@service(SystemService) private systemService: SystemService) {}
+  constructor(
+    @service(SystemService) private systemService: SystemService,
+    @service(ModpackService) private modpackService: ModpackService
+  ) {}
 
   async getInstalledModpacks() {
     if (fs.existsSync(this.wabbajackInstalledModpacksPath)) {
@@ -29,17 +33,21 @@ export class WabbajackService {
     }
   }
 
-  async getInstalledWildlanderModpackPaths() {
+  async getInstalledCurrentModpackPaths() {
+    const { name: modpackName } = this.modpackService.getModpackMetadata();
     const modpacks = await this.getInstalledModpacks();
     const wildlanderModpacks =
       modpacks !== null
         ? Object.keys(modpacks).filter(
             (modpack) =>
               modpack !== "$type" &&
-              modpacks[modpack].ModList.Name === "Wildlander"
+              modpacks[modpack].ModList.Name === modpackName
           )
         : [];
-    logger.debug(`Wildlander modpacks: ${JSON.stringify(wildlanderModpacks)}`);
+    logger.info(
+      `Discovered ${wildlanderModpacks.length} ${modpackName} modpack installations in ${this.installedModpacksFilename}`
+    );
+    logger.debug(wildlanderModpacks);
     return wildlanderModpacks;
   }
 }
