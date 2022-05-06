@@ -26,8 +26,10 @@
   },
   "nodemonConfig": {
     "watch": [
-      "src/main/",
-      "src/services"
+      "src/**"
+    ],
+    "ignore": [
+      "src/renderer/**"
     ],
     "exec": "npm run start",
     "ext": "*"
