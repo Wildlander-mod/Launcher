@@ -44,6 +44,7 @@
           'c-select__options--open': isOpen && !loading,
           'c-select__options--closed': !isOpen && !loading,
           'c-select__options--loading': loading,
+          'c-select__options--small': small,
         }"
       >
         <div
@@ -86,6 +87,8 @@ export default class BaseDropdown extends Vue {
   @Prop({ default: false }) grow!: boolean;
   @Prop({ default: false }) showTooltip!: boolean;
   @Prop({ default: false }) showTooltipOnHover!: boolean;
+  // Whether to reduce the size of the dropdown if there isn't enough space
+  @Prop({ default: false }) small!: boolean;
 
   isOpen = false;
   loading = true;
@@ -119,7 +122,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   background-color: $colour-background--light;
 
   &--fixed-width {
-    width: 155px;
+    width: 150px;
   }
 
   &:hover {
@@ -197,6 +200,10 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
   &--loading {
     display: none;
+  }
+
+  &--small {
+    max-height: 155px;
   }
 
   @keyframes expand {

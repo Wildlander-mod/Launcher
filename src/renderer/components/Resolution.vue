@@ -63,11 +63,6 @@ export default class Resolution extends Vue {
     [this.selectedResolution] = await this.resolutionsToSelectOptions([
       await this.getInitialResolution(resolutions),
     ]);
-    logger.debug(
-      `Set initial resolution set to ${JSON.stringify(
-        this.selectedResolution.value
-      )}`
-    );
   }
 
   async getInitialResolution(resolutions: ResolutionType[]) {

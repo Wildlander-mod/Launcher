@@ -8,7 +8,7 @@ import { BindingScope, injectable } from "@loopback/context";
 export class ErrorService {
   async handleError(title: string, message: string) {
     logger.error(`${title}: ${message}`);
-    console.trace();
+    logger.error(new Error().stack);
     await dialog.showErrorBox(title, message);
   }
 }

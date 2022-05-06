@@ -117,7 +117,7 @@ export class WindowService {
 
       readFile(path.join(appRoot, pathName), (error, data) => {
         if (error) {
-          console.error(
+          logger.error(
             `Failed to read ${pathName} on ${scheme} protocol`,
             error
           );
