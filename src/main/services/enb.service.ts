@@ -51,23 +51,18 @@ export class EnbService {
     return [...mappedEnbs, ...unmappedENBs];
   }
 
-  /**
-   * Get the enb preference from the user preferences or just return the first one if it is invalid (e.g. the preference is no longer included)
-   */
   async getEnbPreference() {
-    const preference = this.configService.getPreference<string>(
+    return this.configService.getPreference<string>(
       USER_PREFERENCE_KEYS.ENB_PROFILE
     ) as string;
+  }
 
-    if (preference && (await this.isInPresetList(preference))) {
-      return preference;
-    } else {
-      const preset = (await this.getENBPresets())[0].real;
-      logger.debug(
-        `Returning the first enb preset (${preset}) because there was either no preference or the preference was not in the list`
-      );
-      return preset;
-    }
+  async getDefaultPreference() {
+    return (await this.getENBPresets())[0].real;
+  }
+
+  isValid(preset: string) {
+    return this.isInPresetList(preset);
   }
 
   async isInPresetList(preset: string) {
@@ -83,7 +78,7 @@ export class EnbService {
     return isInList;
   }
 
-  async setEnbPreference(enb: string) {
+  async setEnbPreference(enb: string, sync = true) {
     const previousEnb = this.configService.getPreference(
       USER_PREFERENCE_KEYS.ENB_PROFILE
     );
@@ -92,7 +87,7 @@ export class EnbService {
       previousEnb
     );
     this.configService.setPreference(USER_PREFERENCE_KEYS.ENB_PROFILE, enb);
-    return this.copyENBFiles(enb);
+    return this.copyEnbFiles(enb, sync);
   }
 
   async backupOriginalENBs() {
@@ -114,7 +109,7 @@ export class EnbService {
     logger.info("Restoring ENB presets");
     const ENBBackupDirectory = `${this.configService.backupDirectory()}/ENB Presets`;
     await copy(ENBBackupDirectory, this.enbDirectory(), { overwrite: true });
-    await this.copyENBFiles(
+    await this.copyEnbFiles(
       userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE),
       false
     );
@@ -186,12 +181,16 @@ export class EnbService {
     logger.info("Finished syncing ENB presets");
   }
 
+  async copyCurrentEnbFiles(sync?: boolean) {
+    return this.copyEnbFiles(await this.getEnbPreference(), sync);
+  }
+
   /**
    * Copy all ENB files from an ENB preset
    * @param profile - Must be the actual ENB profile name, not the friendly name. noENB will remove all ENB files.
    * @param sync - Whether to sync the changes from Stock Game back to the ENB Preset directory
    */
-  async copyENBFiles(profile: string | "noENB", sync = true) {
+  async copyEnbFiles(profile: string | "noENB", sync = true) {
     logger.info(`Copying ${profile} ENB Files prerequisite`);
 
     const previousProfile =

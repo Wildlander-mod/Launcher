@@ -11,6 +11,6 @@ export class WabbajackController {
 
   @handle(WABBAJACK_EVENTS.GET_INSTALLED_MODPACKS)
   async getInstalledModpacks() {
-    return this.wabbajackService.getInstalledWildlanderModpackPaths();
+    return this.wabbajackService.getInstalledCurrentModpackPaths();
   }
 }

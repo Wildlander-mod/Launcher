@@ -84,22 +84,28 @@ export class ModOrganizerService {
    * Return the current profile preference or the first if it is invalid
    */
   async getProfilePreference() {
-    const preference = this.configService.getPreference<string>(
+    return this.configService.getPreference<string>(
       USER_PREFERENCE_KEYS.PRESET
     );
-    if (preference && (await this.isInProfileList(preference))) {
-      return preference;
-    } else {
-      return (await this.getProfiles())[0].real;
-    }
+  }
+
+  async getDefaultPreference() {
+    return (await this.getProfiles())[0].real;
   }
 
   setProfilePreference(profile: string) {
     this.configService.setPreference(USER_PREFERENCE_KEYS.PRESET, profile);
   }
 
+  async isValid(profile: string) {
+    return this.isInProfileList(profile);
+  }
+
   async isInProfileList(profile: string) {
-    return (await this.getProfiles()).filter(({ real }) => real === profile);
+    return (
+      (await this.getProfiles()).filter(({ real }) => real === profile).length >
+      0
+    );
   }
 
   async closeMO2() {

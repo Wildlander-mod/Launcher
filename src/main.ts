@@ -6,7 +6,10 @@ import { logger } from "@/main/logger";
 import { ErrorService } from "@/main/services/error.service";
 
 // Ensure it's easy to tell where the logs for this application start
-logger.debug("-".repeat(20));
+const initialLog = `|             ${new Date().toLocaleString()}             |`;
+logger.debug("-".repeat(initialLog.length));
+logger.debug(initialLog);
+logger.debug("-".repeat(initialLog.length));
 autoUpdater.logger = require("electron-log");
 
 // Scheme must be registered before the app is ready
