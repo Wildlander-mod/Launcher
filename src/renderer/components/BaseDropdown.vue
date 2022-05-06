@@ -186,6 +186,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
   border-radius: 0 4px 4px 4px;
   max-height: 200px;
   padding-left: 8px;
+  position: relative;
 
   &--closed {
     animation: retract 0.2s forwards;
