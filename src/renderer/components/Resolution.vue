@@ -36,6 +36,7 @@ import {
   injectStrict,
   SERVICE_BINDINGS,
 } from "@/renderer/services/service-container";
+import { asyncFilter } from "@/shared/util/asyncFilter";
 
 @Options({
   components: { BaseLink, BaseDropdown, BaseInput },
@@ -49,15 +50,18 @@ export default class Resolution extends Vue {
 
   async created() {
     const resolutions = await this.getResolutions();
-    this.containsUltrawide = !!resolutions.find(({ width, height }) => {
-      return this.ipcService.invoke(
-        RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION,
-        {
-          width,
-          height,
-        }
-      );
-    });
+    this.containsUltrawide =
+      (
+        await asyncFilter(resolutions, async ({ width, height }) => {
+          return this.ipcService.invoke(
+            RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION,
+            {
+              width,
+              height,
+            }
+          );
+        })
+      ).length > 0;
 
     this.resolutions = await this.resolutionsToSelectOptions(resolutions);
     [this.selectedResolution] = await this.resolutionsToSelectOptions([
