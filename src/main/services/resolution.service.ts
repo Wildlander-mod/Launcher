@@ -49,7 +49,13 @@ export class ResolutionService {
   }
 
   getResolutionPreference() {
-    return this.configService.getPreference(USER_PREFERENCE_KEYS.RESOLUTION);
+    return this.configService.getPreference<Resolution>(
+      USER_PREFERENCE_KEYS.RESOLUTION
+    );
+  }
+
+  hasResolutionPreference() {
+    return this.configService.hasPreference(USER_PREFERENCE_KEYS.RESOLUTION);
   }
 
   setResolutionPreference(resolution: Resolution) {
@@ -92,10 +98,10 @@ export class ResolutionService {
     );
   }
 
-  resolutionsContainCurrent(resolutions: Resolution[], current: Resolution) {
+  resolutionsContain(resolutions: Resolution[], resolution: Resolution) {
     return resolutions.some(
       ({ width, height }) =>
-        current.height === height && current.width === width
+        resolution.height === height && resolution.width === width
     );
   }
 
@@ -116,9 +122,10 @@ export class ResolutionService {
     // Also, return an ultrawide resolution for testing
     if (os.platform() !== "win32") {
       return [
+        { width: 7680, height: 4320 },
         currentResolution,
-        { width: 1920, height: 1080 },
         { width: 3440, height: 1440 },
+        { width: 1920, height: 1080 },
       ];
     } else {
       const resolutions = [...new Set(await this.getSupportedResolutions())]
@@ -132,13 +139,21 @@ export class ResolutionService {
 
       // Sometimes, QRes.exe cannot recognise some resolutions.
       // As a safety measure, add the users current resolution if it wasn't detected.
-      if (!this.resolutionsContainCurrent(resolutions, currentResolution)) {
+      if (!this.resolutionsContain(resolutions, currentResolution)) {
         logger.debug(
           `Native resolution (${JSON.stringify(
             currentResolution
           )}) not found. Adding to the list.`
         );
         resolutions.push(currentResolution);
+      }
+
+      // If a user has manually edited the preferences, add that resolution too
+      if (
+        this.hasResolutionPreference() &&
+        !this.resolutionsContain(resolutions, this.getResolutionPreference())
+      ) {
+        resolutions.push(this.getResolutionPreference());
       }
 
       const sortedResolutions = resolutions.sort(this.sortResolutions);
