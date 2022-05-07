@@ -65,38 +65,13 @@ export default class Resolution extends Vue {
 
     this.resolutions = await this.resolutionsToSelectOptions(resolutions);
     [this.selectedResolution] = await this.resolutionsToSelectOptions([
-      await this.getInitialResolution(resolutions),
+      await this.getResolutionPreference(),
     ]);
   }
 
-  async getInitialResolution(resolutions: ResolutionType[]) {
-    const resolutionPreference = await this.ipcService.invoke(
+  async getResolutionPreference() {
+    return await this.ipcService.invoke(
       RESOLUTION_EVENTS.GET_RESOLUTION_PREFERENCE
-    );
-
-    return (
-      resolutions.find((resolution) =>
-        resolutionPreference
-          ? resolution.height === resolutionPreference.height &&
-            resolution.width === resolutionPreference.width
-          : false
-      ) ??
-      (this.getFirstSupportedResolution(
-        resolutions
-      ) as unknown as ResolutionType)
-    );
-  }
-
-  getFirstSupportedResolution(resolutions: ResolutionType[]) {
-    return resolutions.find(
-      async ({ width, height }) =>
-        !(await this.ipcService.invoke(
-          RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION,
-          {
-            width,
-            height,
-          }
-        ))
     );
   }
 
