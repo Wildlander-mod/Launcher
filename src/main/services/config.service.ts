@@ -51,6 +51,10 @@ export class ConfigService {
     return userPreferences.get(key) as unknown as T;
   }
 
+  hasPreference(key: keyof UserPreferences) {
+    return userPreferences.has(key);
+  }
+
   deletePreference(key: keyof UserPreferences) {
     return userPreferences.delete(key);
   }
