@@ -33,6 +33,7 @@ export const SERVICE_BINDINGS = {
   MESSAGE_SERVICE: createBinding<MessageService>("keys.services.message"),
   IPC_SERVICE: createBinding<IpcService>("keys.services.ipc"),
   UPDATE_SERVICE: createBinding<UpdateService>("keys.services.update"),
+  MODPACK_SERVICE: createBinding<ModpackService>("keys.services.modpack"),
 };
 
 /**
@@ -49,6 +50,7 @@ export function registerServices(app: App) {
   app.provide(SERVICE_BINDINGS.MESSAGE_SERVICE, new MessageService(ipcService));
   app.provide(SERVICE_BINDINGS.EVENT_SERVICE, EventService);
   app.provide(SERVICE_BINDINGS.MODAL_SERVICE, new ModalService(EventService));
+  app.provide(SERVICE_BINDINGS.MODPACK_SERVICE, modpackService);
 
   return { ipcService, updateService, modpackService };
 }
