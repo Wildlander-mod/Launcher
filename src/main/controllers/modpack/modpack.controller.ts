@@ -1,5 +1,8 @@
 import { controller, handle } from "@/main/decorators/controller.decorator";
-import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
+import {
+  IsModpackValidResponse,
+  MODPACK_EVENTS,
+} from "@/main/controllers/modpack/mopack.events";
 import { service } from "@loopback/core";
 import { ModpackService } from "@/main/services/modpack.service";
 import { logger } from "@/main/logger";
@@ -16,10 +19,10 @@ export class ModpackController {
   }
 
   @handle(MODPACK_EVENTS.IS_MODPACK_DIRECTORY_VALID)
-  isValidModDirectory(filepath: string): boolean {
+  isValidModDirectory(filepath: string): IsModpackValidResponse {
     if (!filepath) {
       logger.warn("No filepath specified when checking mod directory");
-      return false;
+      return { ok: false };
     }
     return this.modpackService.checkModpackPathIsValid(filepath);
   }
