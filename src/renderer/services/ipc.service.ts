@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron";
 
 export class IpcService {
-  public invoke(channel: string, ...args: unknown[]) {
+  public invoke<T>(channel: string, ...args: unknown[]): Promise<T> {
     return ipcRenderer.invoke(channel, ...args);
   }
 

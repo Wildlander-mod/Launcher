@@ -6,3 +6,8 @@ export const enum MODPACK_EVENTS {
   GET_MODPACK_METADATA = "GET_MODPACK_METADATA",
   DELETE_MODPACK_DIRECTORY = "DELETE_MODPACK_DIRECTORY",
 }
+
+export interface IsModpackValidResponse {
+  ok: boolean;
+  missingPaths?: string[];
+}

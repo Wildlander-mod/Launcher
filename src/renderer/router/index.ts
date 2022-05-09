@@ -33,7 +33,7 @@ const checkModDirectory =
   async () => {
     if (
       !(await modpackService.isModDirectorySet()) ||
-      !(await modpackService.isModDirectoryValid())
+      !(await modpackService.isCurrentModpackValid())
     ) {
       await modpackService.deleteModpackDirectory();
       return {
