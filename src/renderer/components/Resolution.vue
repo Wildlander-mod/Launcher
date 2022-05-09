@@ -69,8 +69,8 @@ export default class Resolution extends Vue {
     ]);
   }
 
-  async getResolutionPreference() {
-    return await this.ipcService.invoke(
+  async getResolutionPreference(): Promise<ResolutionType> {
+    return await this.ipcService.invoke<ResolutionType>(
       RESOLUTION_EVENTS.GET_RESOLUTION_PREFERENCE
     );
   }

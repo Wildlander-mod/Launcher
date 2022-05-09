@@ -1,6 +1,7 @@
 import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
 import { logger } from "@/main/logger";
 import { IpcService } from "@/renderer/services/ipc.service";
+import { MessageBoxReturnValue } from "electron";
 
 export class MessageService {
   constructor(private ipcService: IpcService) {}
@@ -11,9 +12,12 @@ export class MessageService {
   }
 
   async confirmation(message: string, buttons: string[]) {
-    return this.ipcService.invoke(DIALOG_EVENTS.CONFIRMATION, {
-      message,
-      buttons,
-    });
+    return this.ipcService.invoke<MessageBoxReturnValue>(
+      DIALOG_EVENTS.CONFIRMATION,
+      {
+        message,
+        buttons,
+      }
+    );
   }
 }

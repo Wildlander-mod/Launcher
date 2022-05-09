@@ -37,9 +37,10 @@ export default class ModDirectory extends Vue {
   private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
   private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+  private modpackService = injectStrict(SERVICE_BINDINGS.MODPACK_SERVICE);
 
   async created() {
-    this.modDirectory = (await this.getCurrentModDirectory()) ?? null;
+    this.modDirectory = await this.getCurrentModDirectory();
 
     const installedModpacks = await this.getInstalledModpacks();
 
@@ -52,20 +53,9 @@ export default class ModDirectory extends Vue {
     this.modpacks = await this.convertModpackPathsToOptions(installedModpacks);
   }
 
-  async getCurrentModDirectory() {
-    const currentModDirectory = await this.ipcService.invoke(
-      MODPACK_EVENTS.GET_MODPACK
-    );
-
-    if (
-      currentModDirectory &&
-      (await this.checkModDirectoryIsValid(currentModDirectory))
-    ) {
-      return {
-        text: currentModDirectory,
-        value: currentModDirectory,
-      };
-    }
+  async getCurrentModDirectory(): Promise<SelectOption | null> {
+    const modpack = await this.modpackService.getModpackDirectory();
+    return modpack ? this.convertModpackToOption(modpack) : null;
   }
 
   async getInstalledModpacks() {
@@ -77,17 +67,19 @@ export default class ModDirectory extends Vue {
   async convertModpackPathsToOptions(
     modpacks: string[]
   ): Promise<SelectOption[]> {
-    return modpacks.map((modpack) => ({ text: modpack, value: modpack }));
+    return modpacks.map(this.convertModpackToOption);
+  }
+
+  convertModpackToOption(modpack: string): SelectOption {
+    return { text: modpack, value: modpack };
   }
 
   async checkModDirectoryIsValid(filepath: string): Promise<boolean> {
-    const modDirectoryOkay = (await this.ipcService.invoke(
-      MODPACK_EVENTS.IS_MODPACK_DIRECTORY_VALID,
-      filepath
-    )) as boolean;
+    const { ok: modDirectoryOkay, missingPaths } =
+      await this.modpackService.isModDirectoryValid(filepath);
 
     if (!modDirectoryOkay) {
-      await this.triggerError();
+      await this.triggerError(missingPaths);
       return false;
     }
     return true;
@@ -102,11 +94,15 @@ export default class ModDirectory extends Vue {
     }
   }
 
-  async triggerError() {
+  async triggerError(missingPaths?: string[]) {
+    const missingPathsError = missingPaths
+      ? `Missing files/directories: ${JSON.stringify(missingPaths)
+          .replace("[", "")
+          .replace("]", "")}`
+      : "";
     await this.messageService.error({
       title: "Invalid modpack directory selected",
-      error:
-        "Please ensure this is a valid modpack installation directory. Remember, this is NOT the Skyrim directory, it is the mod's installation directory (containing the ModOrganizer.exe/profiles/etc.).",
+      error: `Please ensure this is a valid modpack installation directory. Remember, this is NOT the Skyrim directory, it is the mod's installation directory. ${missingPathsError}`,
     });
   }
 }
