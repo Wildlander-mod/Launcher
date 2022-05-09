@@ -56,6 +56,7 @@ export class ConfigService {
   }
 
   deletePreference(key: keyof UserPreferences) {
+    logger.debug(`Deleting preference: ${key}`);
     return userPreferences.delete(key);
   }
 

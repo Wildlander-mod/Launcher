@@ -1,5 +1,8 @@
 import { IpcService } from "@/renderer/services/ipc.service";
-import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
+import {
+  IsModpackValidResponse,
+  MODPACK_EVENTS,
+} from "@/main/controllers/modpack/mopack.events";
 
 export class ModpackService {
   constructor(private ipcService: IpcService) {}
@@ -9,15 +12,18 @@ export class ModpackService {
   }
 
   public getModpackDirectory() {
-    return this.ipcService.invoke(MODPACK_EVENTS.GET_MODPACK);
+    return this.ipcService.invoke<string>(MODPACK_EVENTS.GET_MODPACK);
   }
 
-  public async isModDirectoryValid() {
-    const modDirectory = await this.getModpackDirectory();
-    return this.ipcService.invoke(
+  public async isModDirectoryValid(modDirectory: string) {
+    return this.ipcService.invoke<IsModpackValidResponse>(
       MODPACK_EVENTS.IS_MODPACK_DIRECTORY_VALID,
       modDirectory
     );
+  }
+
+  public async isCurrentModpackValid() {
+    return this.isModDirectoryValid(await this.getModpackDirectory());
   }
 
   public async deleteModpackDirectory() {

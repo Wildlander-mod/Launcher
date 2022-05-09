@@ -8,6 +8,7 @@ import { ConfigService } from "@/main/services/config.service";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { ResolutionService } from "@/main/services/resolution.service";
 import modpack from "@/modpack.json";
+import { IsModpackValidResponse } from "@/main/controllers/modpack/mopack.events";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -21,23 +22,27 @@ export class ModpackService {
     @service(ResolutionService) private resolutionService: ResolutionService
   ) {}
 
-  checkModpackPathIsValid(modpackPath: string) {
-    return (
-      [this.modOrganizerService.MO2EXE, "profiles", "launcher"]
-        .filter((path) => !fs.existsSync(`${modpackPath}/${path}`))
-        .map((path) => {
-          logger.warn(
-            `Selected mod directory "${modpackPath}" doesn't contain a "${path}" directory/file`
-          );
-          return path;
-        }).length === 0
-    );
+  checkModpackPathIsValid(modpackPath: string): IsModpackValidResponse {
+    const missingPaths = [
+      this.modOrganizerService.MO2EXE,
+      "profiles",
+      "launcher",
+    ]
+      .filter((path) => !fs.existsSync(`${modpackPath}/${path}`))
+      .map((path) => {
+        logger.warn(
+          `Selected mod directory "${modpackPath}" doesn't contain a "${path}" directory/file`
+        );
+        return path;
+      });
+
+    return { ok: missingPaths.length === 0, missingPaths };
   }
 
   checkCurrentModpackPathIsValid() {
     return (
       this.isModpackSet() &&
-      this.checkModpackPathIsValid(this.getModpackDirectory())
+      this.checkModpackPathIsValid(this.getModpackDirectory()).ok
     );
   }
 

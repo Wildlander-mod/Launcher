@@ -55,7 +55,9 @@ export default class ENB extends Vue {
 
   async getEnbPresets(): Promise<FriendlyDirectoryMap[]> {
     return [
-      ...(await this.ipcService.invoke(ENB_EVENTS.GET_ENB_PRESETS)),
+      ...(await this.ipcService.invoke<FriendlyDirectoryMap[]>(
+        ENB_EVENTS.GET_ENB_PRESETS
+      )),
       {
         friendly: "No Shaders",
         real: "noENB",
