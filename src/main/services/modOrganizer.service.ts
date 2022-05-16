@@ -18,6 +18,7 @@ import { service } from "@loopback/core";
 import { ErrorService } from "@/main/services/error.service";
 import { BindingScope, injectable } from "@loopback/context";
 import { ResolutionService } from "@/main/services/resolution.service";
+import { GameService } from "@/main/services/game.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -31,7 +32,8 @@ export class ModOrganizerService {
     @service(EnbService) private enbService: EnbService,
     @service(ErrorService) private errorService: ErrorService,
     @service(ConfigService) private configService: ConfigService,
-    @service(ResolutionService) private resolutionService: ResolutionService
+    @service(ResolutionService) private resolutionService: ResolutionService,
+    @service(GameService) private gameService: GameService
   ) {}
 
   async isRunning() {
@@ -263,7 +265,7 @@ export class ModOrganizerService {
   }
 
   async launchGame() {
-    logger.info("Preparing game for launch");
+    logger.info("Preparing to launch game");
 
     try {
       const continueLaunch = await this.prepareForLaunch();
@@ -281,28 +283,30 @@ export class ModOrganizerService {
       );
       const profile = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
 
-      const execCMD = `"${MO2Path}" -p "${profile}" "moshortcut://:SKSE"`;
-      logger.debug(`Executing MO2 command: ${execCMD}`);
+      const mo2Command = `"${MO2Path}" -p "${profile}" "moshortcut://:SKSE"`;
+      logger.debug(`Executing MO2 command: ${mo2Command}`);
 
-      const { stderr } = await promisify(childProcess.exec)(execCMD);
-      logger.info("MO2 exited");
-      await this.restoreMO2Settings();
-      await this.enbService.syncENBFromGameToPresets(
-        userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
-      );
+      const { stderr } = await promisify(childProcess.exec)(mo2Command);
+      await this.postLaunch();
       if (stderr) {
         logger.error(`Error while executing ModOrganizer - ${stderr}`);
       }
     } catch (error) {
       logger.error(`Failed to launch game - ${error}`);
-      await this.restoreMO2Settings();
-      await this.enbService.syncENBFromGameToPresets(
-        userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
-      );
+      await this.postLaunch();
       await this.errorService.handleError(
         "Error launching modlist",
         `${error}`
       );
     }
+  }
+
+  async postLaunch() {
+    logger.info("MO2 exited, starting post launch actions");
+    await this.gameService.copySkyrimLaunchLogs();
+    await this.restoreMO2Settings();
+    await this.enbService.syncENBFromGameToPresets(
+      userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
+    );
   }
 }
