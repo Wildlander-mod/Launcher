@@ -32,9 +32,11 @@ export const userPreferences = new Store<UserPreferences>({
 })
 export class ConfigService {
   skyrimDirectory() {
-    return `${userPreferences.get(
-      USER_PREFERENCE_KEYS.MOD_DIRECTORY
-    )}/Stock Game`;
+    return `${this.modDirectory()}/Stock Game`;
+  }
+
+  getLogDirectory() {
+    return path.dirname(logger.transports?.file.getFile().path);
   }
 
   modDirectory() {
