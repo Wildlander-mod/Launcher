@@ -97,10 +97,10 @@ export default class Resolution extends Vue {
     );
   }
 
-  onResolutionSelected(option: SelectOption) {
+  async onResolutionSelected(option: SelectOption) {
     logger.debug(`User selected resolution ${JSON.stringify(option.value)}`);
     const value = option.value as ResolutionType;
-    this.ipcService.invoke(RESOLUTION_EVENTS.SET_RESOLUTION_PREFERENCE, {
+    await this.ipcService.invoke(RESOLUTION_EVENTS.SET_RESOLUTION_PREFERENCE, {
       height: value.height,
       width: value.width,
     });
