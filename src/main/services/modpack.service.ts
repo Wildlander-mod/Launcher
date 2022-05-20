@@ -74,6 +74,7 @@ export class ModpackService {
     await this.validateConfig();
     await this.backupAssets();
     await this.enbService.copyCurrentEnbFiles(false);
+    await this.resolutionService.setResolutionInGraphicsSettings();
   }
 
   async validateConfig() {
