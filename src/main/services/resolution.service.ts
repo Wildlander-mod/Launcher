@@ -59,10 +59,11 @@ export class ResolutionService {
   }
 
   setResolutionPreference(resolution: Resolution) {
-    return this.configService.setPreference(
+    this.configService.setPreference(
       USER_PREFERENCE_KEYS.RESOLUTION,
       resolution
     );
+    return this.setResolutionInGraphicsSettings();
   }
 
   async getSupportedResolutions() {
@@ -181,39 +182,36 @@ export class ResolutionService {
     const { width: widthPreference, height: heightPreference } =
       userPreferences.get(USER_PREFERENCE_KEYS.RESOLUTION) as Resolution;
 
-    // Only change the resolution in the ini if it has been set in the launcher
-    if (widthPreference && heightPreference) {
-      logger.info(
-        `Setting resolution to ${widthPreference} x ${heightPreference}`
-      );
-      const SkyrimGraphicSettings = parse(
-        await fs.promises.readFile(this.skyrimGraphicsSettingsPath(), "utf-8"),
-        { comment: "#" }
-      ) as IIniObjectSection;
+    logger.info(
+      `Setting resolution in ${this.skyrimGraphicsSettingsPath()} to ${widthPreference} x ${heightPreference}`
+    );
+    const SkyrimGraphicSettings = parse(
+      await fs.promises.readFile(this.skyrimGraphicsSettingsPath(), "utf-8"),
+      { comment: "#" }
+    ) as IIniObjectSection;
 
-      (
-        SkyrimGraphicSettings.Render as IIniObjectSection
-      ).Resolution = `${widthPreference}x${heightPreference}`;
+    (
+      SkyrimGraphicSettings.Render as IIniObjectSection
+    ).Resolution = `${widthPreference}x${heightPreference}`;
 
-      const { scaleFactor } = screen.getPrimaryDisplay();
-      const { width, height } = this.getCurrentResolution();
+    const { scaleFactor } = screen.getPrimaryDisplay();
+    const { width, height } = this.getCurrentResolution();
 
-      const borderlessUpscale = !this.isUnsupportedResolution(width, height);
+    const borderlessUpscale = !this.isUnsupportedResolution(width, height);
 
-      logger.debug(
-        `Enabling borderless upscale for ${width * scaleFactor}x${
-          height * scaleFactor
-        }: ${borderlessUpscale}`
-      );
+    logger.debug(
+      `Enabling borderless upscale for ${width * scaleFactor}x${
+        height * scaleFactor
+      }: ${borderlessUpscale}`
+    );
 
-      // If the selected resolution is ultra-widescreen, don't upscale the image otherwise it gets stretched
-      (SkyrimGraphicSettings.Render as IIniObjectSection).BorderlessUpscale =
-        borderlessUpscale;
+    // If the selected resolution is ultra-widescreen, don't upscale the image otherwise it gets stretched
+    (SkyrimGraphicSettings.Render as IIniObjectSection).BorderlessUpscale =
+      borderlessUpscale;
 
-      await fs.promises.writeFile(
-        this.skyrimGraphicsSettingsPath(),
-        stringify(SkyrimGraphicSettings)
-      );
-    }
+    await fs.promises.writeFile(
+      this.skyrimGraphicsSettingsPath(),
+      stringify(SkyrimGraphicSettings)
+    );
   }
 }
