@@ -35,7 +35,7 @@ export class LauncherApplication extends BootMixin(Application) {
     });
   }
 
-  private getServiceByClass<T>(cls: Constructor<T>): Promise<T> {
+  public getServiceByClass<T>(cls: Constructor<T>): Promise<T> {
     return this.get(`${serviceNamespace}.${cls.name}`);
   }
 
