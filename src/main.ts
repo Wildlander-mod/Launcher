@@ -4,6 +4,12 @@ import { autoUpdater } from "electron-updater";
 import { LauncherApplication } from "@/main/application";
 import { logger } from "@/main/logger";
 import { ErrorService } from "@/main/services/error.service";
+import { WindowService } from "@/main/services/window.service";
+
+const isSingleInstance = app.requestSingleInstanceLock();
+if (!isSingleInstance) {
+  app.quit();
+}
 
 // Ensure it's easy to tell where the logs for this application start
 const initialLog = `|             ${new Date().toLocaleString()}             |`;
@@ -36,6 +42,14 @@ const start = async () => {
   const launcherApplication = new LauncherApplication();
   await launcherApplication.boot();
   await launcherApplication.start();
+
+  app.on("second-instance", async () => {
+    const windowService = await launcherApplication.getServiceByClass(
+      WindowService
+    );
+    // Someone tried to run a second instance, so focus the original window.
+    windowService.focusWindow();
+  });
 };
 
 // This method will be called when Electron has finished
