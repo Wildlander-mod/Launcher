@@ -51,6 +51,14 @@ export class WindowService {
     this.getWindow().minimize();
   }
 
+  focusWindow() {
+    const window = this.getWindow();
+    if (window.isMinimized()) {
+      window.restore();
+    }
+    window.focus();
+  }
+
   async createBrowserWindow() {
     logger.debug("Creating browser window");
 
