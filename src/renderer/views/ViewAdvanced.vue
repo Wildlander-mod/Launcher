@@ -65,6 +65,7 @@ import {
   ENABLE_LOADING_EVENT,
 } from "@/renderer/services/event.service";
 import AppModal from "@/renderer/components/AppModal.vue";
+import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
 
 @Options({
   components: {
@@ -128,7 +129,7 @@ export default class Settings extends Vue {
 
     if (response === 1) {
       try {
-        await this.ipcService.invoke(MOD_ORGANIZER_EVENTS.RESTORE_PROFILES);
+        await this.ipcService.invoke(PROFILE_EVENTS.RESTORE_PROFILES);
       } catch (error) {
         await this.messageService.error({
           title: "Error restoring MO2 profiles",

@@ -1,0 +1,8 @@
+[
+  {
+    "action": "disable-plugin",
+    "type": "enb",
+    "target": "noEnb",
+    "plugin": "NightEyeENBFix_PredatorVision.esp"
+  }
+]
