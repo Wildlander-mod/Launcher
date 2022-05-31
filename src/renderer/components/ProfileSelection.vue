@@ -19,12 +19,12 @@ import BaseDropdown, {
   SelectOption,
 } from "@/renderer/components/BaseDropdown.vue";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
-import { MOD_ORGANIZER_EVENTS } from "@/main/controllers/modOrganizer/modOrganizer.events";
 import { logger } from "@/main/logger";
 import {
   injectStrict,
   SERVICE_BINDINGS,
 } from "@/renderer/services/service-container";
+import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
 
 @Options({
   components: { BaseDropdown },
@@ -42,16 +42,13 @@ export default class ProfileSelection extends Vue {
 
   onProfileSelected(option: SelectOption) {
     logger.debug(`User selected profile ${option.value}`);
-    this.ipcService.invoke(
-      MOD_ORGANIZER_EVENTS.SET_PROFILE_PREFERENCE,
-      option.value
-    );
+    this.ipcService.invoke(PROFILE_EVENTS.SET_PROFILE_PREFERENCE, option.value);
     this.selectedProfile = option;
   }
 
   async getInitialProfile(profiles: SelectOption[]) {
     const profilePreference = await this.ipcService.invoke(
-      MOD_ORGANIZER_EVENTS.GET_PROFILE_PREFERENCE
+      PROFILE_EVENTS.GET_PROFILE_PREFERENCE
     );
 
     return (
@@ -63,7 +60,7 @@ export default class ProfileSelection extends Vue {
   async getProfiles() {
     return (
       (await this.ipcService.invoke(
-        MOD_ORGANIZER_EVENTS.GET_PROFILES
+        PROFILE_EVENTS.GET_PROFILES
       )) as FriendlyDirectoryMap[]
     ).map(({ friendly, real }) => ({
       text: friendly,

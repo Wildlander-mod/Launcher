@@ -7,6 +7,11 @@ import { FriendlyDirectoryMap } from "@/modpack-metadata";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { service } from "@loopback/core";
 import { BindingScope, injectable } from "@loopback/context";
+import { AdditionalInstructionBase } from "@/additional-instructions";
+import { InstructionService } from "@/main/services/instruction.service";
+
+const noEnb = "noEnb";
+type noEnb = typeof noEnb;
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -14,7 +19,11 @@ import { BindingScope, injectable } from "@loopback/context";
 export class EnbService {
   private ENBNameMappingFile = "namesENB.json";
 
-  constructor(@service(ConfigService) private configService: ConfigService) {}
+  constructor(
+    @service(ConfigService) private configService: ConfigService,
+    @service(InstructionService)
+    private modpackInstructionsService: InstructionService
+  ) {}
 
   enbDirectory() {
     return `${userPreferences.get(
@@ -48,7 +57,14 @@ export class EnbService {
           )
       );
 
-    return [...mappedEnbs, ...unmappedENBs];
+    return [
+      ...mappedEnbs,
+      ...unmappedENBs,
+      {
+        real: noEnb,
+        friendly: "No Shaders",
+      },
+    ];
   }
 
   async getEnbPreference() {
@@ -78,7 +94,11 @@ export class EnbService {
     return isInList;
   }
 
-  async setEnbPreference(enb: string, sync = true) {
+  async resetCurrentEnb(sync = true) {
+    return this.setEnb(await this.getEnbPreference(), sync);
+  }
+
+  async setEnb(enb: string, sync = true) {
     const previousEnb = this.configService.getPreference(
       USER_PREFERENCE_KEYS.ENB_PROFILE
     );
@@ -87,7 +107,32 @@ export class EnbService {
       previousEnb
     );
     this.configService.setPreference(USER_PREFERENCE_KEYS.ENB_PROFILE, enb);
-    return this.copyEnbFiles(enb, sync);
+    await this.copyEnbFiles(enb, sync);
+    return this.postSetEnb(enb);
+  }
+
+  /**
+   * Actions to perform after setting the enb.
+   * Defined in additional-instructions.json
+   */
+  async postSetEnb(enb: string) {
+    logger.info("Handling post set enb logic");
+    const modpackEnbInstructions = this.modpackInstructionsService
+      .getInstructions()
+      .filter(EnbService.getEnbInstruction);
+    if (modpackEnbInstructions) {
+      logger.debug(
+        `Found modpack instructions: ${JSON.stringify(modpackEnbInstructions)}`
+      );
+      await this.modpackInstructionsService.execute(
+        modpackEnbInstructions,
+        enb
+      );
+    }
+  }
+
+  private static getEnbInstruction(instruction: AdditionalInstructionBase) {
+    return instruction.type === "enb";
   }
 
   async backupOriginalENBs() {
@@ -122,7 +167,9 @@ export class EnbService {
    */
   async getAllPossibleENBFiles() {
     const files = [];
-    for (const ENB of await this.getENBPresets()) {
+    for (const ENB of (await this.getENBPresets()).filter(
+      (enb) => enb.real !== noEnb
+    )) {
       files.push(
         await fs.promises.readdir(`${this.enbDirectory()}/${ENB.real}`)
       );
@@ -160,9 +207,9 @@ export class EnbService {
     }
   }
 
-  async syncENBFromGameToPresets(preset: string | "noENB") {
+  async syncENBFromGameToPresets(preset: string | noEnb) {
     logger.info(`Syncing ENB changes back to presets for ${preset}`);
-    if (preset !== "noENB") {
+    if (preset !== noEnb) {
       const enbFiles = await this.getENBFilesForPreset(preset);
       logger.debug(
         `ENB files that need to be synced: ${JSON.stringify(enbFiles)}`
@@ -187,17 +234,17 @@ export class EnbService {
 
   /**
    * Copy all ENB files from an ENB preset
-   * @param profile - Must be the actual ENB profile name, not the friendly name. noENB will remove all ENB files.
+   * @param profile - Must be the actual ENB profile name, not the friendly name. noEnb will remove all ENB files.
    * @param sync - Whether to sync the changes from Stock Game back to the ENB Preset directory
    */
-  async copyEnbFiles(profile: string | "noENB", sync = true) {
+  async copyEnbFiles(profile: string | noEnb, sync = true) {
     logger.info(`Copying ${profile} ENB Files prerequisite`);
 
     const previousProfile =
       (userPreferences.get(
         USER_PREFERENCE_KEYS.PREVIOUS_ENB_PROFILE
       ) as string) || "";
-    if (sync && previousProfile && previousProfile !== "noENB") {
+    if (sync && previousProfile && previousProfile !== noEnb) {
       // Sync the previous profile first so changes are not lost
       await this.syncENBFromGameToPresets(previousProfile);
     }
@@ -206,8 +253,8 @@ export class EnbService {
 
     logger.info(`Copying ${profile} ENB Files`);
 
-    // All ENB files have been deleted already so nothing to do if the preset is noENB
-    if (profile !== "noENB") {
+    // All ENB files have been deleted already so nothing to do if the preset is noEnb
+    if (profile !== noEnb) {
       const ENBFiles = await this.getENBFilesForPreset(profile);
 
       for (const file of ENBFiles) {

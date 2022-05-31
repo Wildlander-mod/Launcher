@@ -9,6 +9,8 @@ import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { ResolutionService } from "@/main/services/resolution.service";
 import modpack from "@/modpack.json";
 import { IsModpackValidResponse } from "@/main/controllers/modpack/mopack.events";
+import { Modpack } from "@/modpack-metadata";
+import { ProfileService } from "@/main/services/profile.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -17,6 +19,7 @@ export class ModpackService {
   constructor(
     @service(ModOrganizerService)
     private modOrganizerService: ModOrganizerService,
+    @service(ProfileService) private profileService: ProfileService,
     @service(EnbService) private enbService: EnbService,
     @service(ConfigService) private configService: ConfigService,
     @service(ResolutionService) private resolutionService: ResolutionService
@@ -56,7 +59,7 @@ export class ModpackService {
     );
   }
 
-  getModpackMetadata() {
+  getModpackMetadata(): Modpack {
     return modpack;
   }
 
@@ -73,7 +76,7 @@ export class ModpackService {
     );
     await this.validateConfig();
     await this.backupAssets();
-    await this.enbService.copyCurrentEnbFiles(false);
+    await this.enbService.resetCurrentEnb(false);
     await this.resolutionService.setResolutionInGraphicsSettings();
   }
 
@@ -85,10 +88,10 @@ export class ModpackService {
           this.enbService.isValid(await this.enbService.getEnbPreference()),
       },
       [USER_PREFERENCE_KEYS.PRESET]: {
-        value: await this.modOrganizerService.getDefaultPreference(),
+        value: await this.profileService.getDefaultPreference(),
         validate: async () =>
-          this.modOrganizerService.isValid(
-            await this.modOrganizerService.getProfilePreference()
+          this.profileService.isValid(
+            await this.profileService.getProfilePreference()
           ),
       },
       [USER_PREFERENCE_KEYS.RESOLUTION]: {
