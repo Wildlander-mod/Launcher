@@ -40,7 +40,11 @@ module.exports = {
           {
             from: "../",
             to: ".",
-            filter: ["preload.*", "modpack.json"],
+            filter: [
+              "preload.*",
+              "modpack.json",
+              "additional-instructions.json",
+            ],
           },
         ],
         extraResources: [
