@@ -28,6 +28,6 @@ export class EnbController {
     if (typeof enb !== "string") {
       throw new Error(`ENB is not a string: ${enb}`);
     }
-    await this.enbService.setEnbPreference(enb);
+    await this.enbService.setEnb(enb);
   }
 }

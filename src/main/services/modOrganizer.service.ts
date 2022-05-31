@@ -6,10 +6,8 @@ import { dialog } from "electron";
 import fs from "fs";
 import { parse, stringify } from "js-ini";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
-import { not as isNotJunk } from "junk";
 import { promisify } from "util";
 import { IIniObject } from "js-ini/lib/interfaces/ini-object";
-import { FriendlyDirectoryMap } from "@/modpack-metadata";
 import { copy, existsSync } from "fs-extra";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { logger } from "@/main/logger";
@@ -19,6 +17,7 @@ import { ErrorService } from "@/main/services/error.service";
 import { BindingScope, injectable } from "@loopback/context";
 import { ResolutionService } from "@/main/services/resolution.service";
 import { GameService } from "@/main/services/game.service";
+import { ProfileService } from "@/main/services/profile.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -33,81 +32,12 @@ export class ModOrganizerService {
     @service(ErrorService) private errorService: ErrorService,
     @service(ConfigService) private configService: ConfigService,
     @service(ResolutionService) private resolutionService: ResolutionService,
-    @service(GameService) private gameService: GameService
+    @service(GameService) private gameService: GameService,
+    @service(ProfileService) private profileService: ProfileService
   ) {}
 
   async isRunning() {
     return (await find("name", "ModOrganizer")).length > 0;
-  }
-
-  profileDirectory() {
-    return `${userPreferences.get(
-      USER_PREFERENCE_KEYS.MOD_DIRECTORY
-    )}/profiles`;
-  }
-
-  async getProfiles(): Promise<FriendlyDirectoryMap[]> {
-    // Get mapped profile names that have a mapping
-    const mappedProfiles = JSON.parse(
-      await fs.promises.readFile(
-        `${userPreferences.get(
-          USER_PREFERENCE_KEYS.MOD_DIRECTORY
-        )}/launcher/namesMO2.json`,
-        "utf-8"
-      )
-    ) as FriendlyDirectoryMap[];
-
-    // Get any profiles that don't have a mapping
-    const unmappedProfiles = (
-      await fs.promises.readdir(
-        `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`,
-        { withFileTypes: true }
-      )
-    )
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name)
-      .filter(isNotJunk)
-      .map(
-        (preset): FriendlyDirectoryMap => ({ real: preset, friendly: preset })
-      )
-      // Remove any profiles that have a mapping
-      .filter(
-        (unmappedPreset) =>
-          !mappedProfiles.find(
-            (mappedPreset: FriendlyDirectoryMap) =>
-              mappedPreset.real === unmappedPreset.real
-          )
-      );
-
-    return [...mappedProfiles, ...unmappedProfiles];
-  }
-
-  /**
-   * Return the current profile preference or the first if it is invalid
-   */
-  async getProfilePreference() {
-    return this.configService.getPreference<string>(
-      USER_PREFERENCE_KEYS.PRESET
-    );
-  }
-
-  async getDefaultPreference() {
-    return (await this.getProfiles())[0].real;
-  }
-
-  setProfilePreference(profile: string) {
-    this.configService.setPreference(USER_PREFERENCE_KEYS.PRESET, profile);
-  }
-
-  async isValid(profile: string) {
-    return this.isInProfileList(profile);
-  }
-
-  async isInProfileList(profile: string) {
-    return (
-      (await this.getProfiles()).filter(({ real }) => real === profile).length >
-      0
-    );
   }
 
   async closeMO2() {
@@ -222,16 +152,11 @@ export class ModOrganizerService {
         recursive: true,
       });
 
-      await copy(this.profileDirectory(), profileBackupDirectory);
+      await copy(
+        this.profileService.profileDirectory(),
+        profileBackupDirectory
+      );
     }
-  }
-
-  async restoreProfiles() {
-    logger.info("Restoring MO2 profiles");
-    const profileBackupDirectory = `${this.configService.backupDirectory()}/profiles`;
-    await copy(profileBackupDirectory, this.profileDirectory(), {
-      overwrite: true,
-    });
   }
 
   async launchMO2() {
@@ -247,7 +172,7 @@ export class ModOrganizerService {
 
       // MO2 will not respect the profile set in the launcher until the config is edited
       await this.updateSelectedProfile(
-        userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
+        await this.profileService.getProfilePreference()
       );
 
       const MO2Path = path.join(
