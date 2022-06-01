@@ -52,6 +52,7 @@
       </div>
 
       <div class="c-navigation__launcher-info">
+        <p>Modpack version: {{ modpackVersion }}</p>
         <p>Launcher Version: {{ launcherVersion }}</p>
         <BaseLink
           href="https://github.com/Wildlander-mod/Launcher"
@@ -88,6 +89,7 @@ import {
   injectStrict,
   SERVICE_BINDINGS,
 } from "@/renderer/services/service-container";
+import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
 
 @Component({
   components: {
@@ -106,6 +108,13 @@ export default class TheNavigation extends Vue {
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
   launcherVersion = launcherVersion;
+  modpackVersion: string | null = null;
+
+  async created() {
+    this.modpackVersion = await this.ipcService.invoke(
+      WABBAJACK_EVENTS.GET_MODPACK_VERSION
+    );
+  }
 
   async launchGame() {
     logger.debug("Setting game to running");
