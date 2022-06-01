@@ -13,4 +13,9 @@ export class WabbajackController {
   async getInstalledModpacks() {
     return this.wabbajackService.getInstalledCurrentModpackPaths();
   }
+
+  @handle(WABBAJACK_EVENTS.GET_MODPACK_VERSION)
+  async getVersion() {
+    return this.wabbajackService.getModpackVersion();
+  }
 }
