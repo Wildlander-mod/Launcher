@@ -50,4 +50,19 @@ export class WabbajackService {
     logger.debug(wildlanderModpacks);
     return wildlanderModpacks;
   }
+
+  async getModpackMetadata(path: string) {
+    const modpacks = await this.getInstalledModpacks();
+    return modpacks && modpacks[path] ? modpacks[path] : null;
+  }
+
+  async getCurrentModpackMetadata() {
+    return this.getModpackMetadata(this.modpackService.getModpackDirectory());
+  }
+
+  async getModpackVersion() {
+    return (
+      (await this.getCurrentModpackMetadata())?.ModList.Version ?? "unknown"
+    );
+  }
 }
