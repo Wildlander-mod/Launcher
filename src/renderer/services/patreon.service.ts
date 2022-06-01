@@ -1,5 +1,16 @@
+import { CacheService } from "@/renderer/services/cache.service";
+
 export class PatreonService {
   private patrons: Patron[] = [];
+  private readonly cacheKey = "patreon.patrons";
+  private cacheService = new CacheService();
+
+  constructor() {
+    const data = this.cacheService.get<Patron[]>(this.cacheKey, 60 * 60 * 24);
+    if (data !== undefined) {
+      this.patrons = data;
+    }
+  }
 
   /**
    * Taken from https://stackoverflow.com/a/12646864/3379536
@@ -24,6 +35,7 @@ export class PatreonService {
       this.patrons = shuffle
         ? PatreonService.shuffleArray(data.patrons)
         : data.patrons;
+      this.cacheService.set(this.cacheKey, this.patrons);
       return this.patrons;
     } catch (error) {
       throw new Error(`Failed to get Patrons: ${error}`);
