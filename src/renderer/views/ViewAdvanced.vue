@@ -149,8 +149,8 @@ export default class Settings extends Vue {
   }
 
   async clearLogs() {
-    await ipcRenderer.invoke(IPCEvents.CLEAR_LOG_FILES, {});
-    logger.transports?.file.getFile().clear();
+    // clear logs (main & renderer) via event
+    await this.ipcService.invoke(SYSTEM_EVENTS.CLEAR_APP_LOGS);
   }
 
   async openCrashLogPath() {
