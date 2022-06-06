@@ -1,20 +1,25 @@
 interface AdditionalInstructionBase {
-  type: "enb";
-  target: string;
+  // The version the instruction applies to
+  version?: string;
 }
 
+// Instruction will be run when enb is changed
+// The `target` is the enb that the change will be applied on
 interface DisablePluginInstruction extends AdditionalInstructionBase {
+  type: "enb";
   action: "disable-plugin";
+  target: string;
   plugin: string;
 }
 
-interface DisableModInstruction extends AdditionalInstructionBase {
-  action: "disable-mod";
-  mod: string;
+// A single entry of `disable-ultra-widescreen` is enough for the instruction to return true
+interface DisableUltraWidescreenInstruction extends AdditionalInstructionBase {
+  type?: string;
+  action: "disable-ultra-widescreen";
 }
 
 export type AdditionalInstruction =
-  | DisableModInstruction
-  | DisablePluginInstruction;
+  | DisablePluginInstruction
+  | DisableUltraWidescreenInstruction;
 
 export type AdditionalInstructions = AdditionalInstruction[];

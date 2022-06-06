@@ -4,5 +4,9 @@
     "type": "enb",
     "target": "noEnb",
     "plugin": "NightEyeENBFix_PredatorVision.esp"
+  },
+  {
+    "action": "disable-ultra-widescreen",
+    "version": "1.0.0"
   }
 ]

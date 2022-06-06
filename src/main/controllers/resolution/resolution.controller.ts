@@ -17,7 +17,7 @@ export class ResolutionController {
 
   @handle(RESOLUTION_EVENTS.SET_RESOLUTION_PREFERENCE)
   setResolutionPreference(resolution: Resolution) {
-    return this.resolutionService.setResolutionPreference(resolution);
+    return this.resolutionService.setResolution(resolution);
   }
 
   @handle(RESOLUTION_EVENTS.GET_RESOLUTIONS)
@@ -26,7 +26,7 @@ export class ResolutionController {
   }
 
   @handle(RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION)
-  isUnsupportedResolution({ width, height }: Resolution) {
-    return this.resolutionService.isUnsupportedResolution(width, height);
+  isUnsupportedResolution(resolution: Resolution) {
+    return this.resolutionService.isUnsupportedResolution(resolution);
   }
 }
