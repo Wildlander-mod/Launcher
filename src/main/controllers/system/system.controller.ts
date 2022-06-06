@@ -17,6 +17,11 @@ export class SystemController {
     await this.systemService.openCrashLogs();
   }
 
+  @handle(SYSTEM_EVENTS.CHECK_SUPPORTED_WIN_VERSION)
+  async checkSupportedWindowsVersion() {
+    await this.systemService.checkSupportedWindows();
+  }
+
   @handle(SYSTEM_EVENTS.OPEN_APPLICATION_LOGS)
   async openApplicationLogs() {
     await this.systemService.openApplicationLogsPath();

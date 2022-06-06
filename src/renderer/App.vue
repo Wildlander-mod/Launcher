@@ -45,6 +45,7 @@ import {
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import { useRoute } from "vue-router";
 import { watch } from "vue";
+import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
 
 @Options({
   components: {
@@ -71,6 +72,9 @@ export default class App extends Vue {
         this.preloadCheck = route.meta?.preload as boolean;
       }
     );
+
+    // This will make an error alert popup if an unsupported Windows version is use.
+    await this.ipcService.invoke(SYSTEM_EVENTS.CHECK_SUPPORTED_WIN_VERSION);
 
     this.modpack = await this.ipcService.invoke(
       MODPACK_EVENTS.GET_MODPACK_METADATA
