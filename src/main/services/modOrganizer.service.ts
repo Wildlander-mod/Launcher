@@ -19,12 +19,15 @@ import { ResolutionService } from "@/main/services/resolution.service";
 import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
 
+export const enum MO2Files {
+  MO2EXE = "ModOrganizer.exe",
+  MO2Settings = "ModOrganizer.ini",
+}
+
 @injectable({
   scope: BindingScope.SINGLETON,
 })
 export class ModOrganizerService {
-  public MO2EXE = "ModOrganizer.exe";
-  private MO2Settings = "ModOrganizer.ini";
   private previousMO2Settings: IIniObject | null = null;
 
   constructor(
@@ -70,7 +73,7 @@ export class ModOrganizerService {
   async readSettings() {
     return parse(
       await fs.promises.readFile(
-        `${this.configService.modDirectory()}/${this.MO2Settings}`,
+        `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
         "utf-8"
       )
     );
@@ -85,7 +88,7 @@ export class ModOrganizerService {
     ] = `@ByteArray(${profile})`;
 
     await fs.promises.writeFile(
-      `${this.configService.modDirectory()}/${this.MO2Settings}`,
+      `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
       stringify(settings)
     );
   }
@@ -101,7 +104,7 @@ export class ModOrganizerService {
     (settings.Settings as IIniObjectSection)["lock_gui"] = false;
 
     await fs.promises.writeFile(
-      `${this.configService.modDirectory()}/${this.MO2Settings}`,
+      `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
       stringify(settings)
     );
   }
@@ -111,7 +114,7 @@ export class ModOrganizerService {
     // If we have some previous settings saved, restore them
     if (this.previousMO2Settings) {
       await fs.promises.writeFile(
-        `${this.configService.modDirectory()}/${this.MO2Settings}`,
+        `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
         stringify(this.previousMO2Settings)
       );
       this.previousMO2Settings = null;
@@ -177,7 +180,7 @@ export class ModOrganizerService {
 
       const MO2Path = path.join(
         userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        this.MO2EXE
+        MO2Files.MO2EXE
       );
       const { stderr } = await promisify(childProcess.exec)(`"${MO2Path}"`);
       if (stderr) {
@@ -204,7 +207,7 @@ export class ModOrganizerService {
 
       const MO2Path = path.join(
         userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        this.MO2EXE
+        MO2Files.MO2EXE
       );
       const profile = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
 

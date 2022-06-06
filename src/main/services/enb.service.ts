@@ -7,7 +7,7 @@ import { FriendlyDirectoryMap } from "@/modpack-metadata";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { service } from "@loopback/core";
 import { BindingScope, injectable } from "@loopback/context";
-import { AdditionalInstructionBase } from "@/additional-instructions";
+import { AdditionalInstruction } from "@/additional-instructions";
 import { InstructionService } from "@/main/services/instruction.service";
 
 const noEnb = "noEnb";
@@ -116,7 +116,7 @@ export class EnbService {
    * Defined in additional-instructions.json
    */
   async postSetEnb(enb: string) {
-    logger.info("Handling post set enb logic");
+    logger.info("Handling additional enb set instructions");
     const modpackEnbInstructions = this.modpackInstructionsService
       .getInstructions()
       .filter(EnbService.getEnbInstruction);
@@ -131,7 +131,7 @@ export class EnbService {
     }
   }
 
-  private static getEnbInstruction(instruction: AdditionalInstructionBase) {
+  private static getEnbInstruction(instruction: AdditionalInstruction) {
     return instruction.type === "enb";
   }
 
@@ -226,10 +226,6 @@ export class EnbService {
     }
 
     logger.info("Finished syncing ENB presets");
-  }
-
-  async copyCurrentEnbFiles(sync?: boolean) {
-    return this.copyEnbFiles(await this.getEnbPreference(), sync);
   }
 
   /**

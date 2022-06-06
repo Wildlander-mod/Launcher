@@ -6,11 +6,13 @@ import {
 import { service } from "@loopback/core";
 import { ModpackService } from "@/main/services/modpack.service";
 import { logger } from "@/main/logger";
+import { LauncherService } from "@/main/services/launcher.service";
 
 @controller
 export class ModpackController {
   constructor(
-    @service(ModpackService) private modpackService: ModpackService
+    @service(ModpackService) private modpackService: ModpackService,
+    @service(LauncherService) private launcherService: LauncherService
   ) {}
 
   @handle(MODPACK_EVENTS.IS_MODPACK_SET)
@@ -32,7 +34,7 @@ export class ModpackController {
     if (!filepath) {
       logger.error("No filepath specified when setting mod directory");
     }
-    return this.modpackService.setModpack(filepath);
+    return this.launcherService.setModpack(filepath);
   }
 
   @handle(MODPACK_EVENTS.GET_MODPACK)

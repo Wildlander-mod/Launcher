@@ -9,6 +9,7 @@ import { ProfileService } from "@/main/services/profile.service";
 import * as readline from "readline";
 import * as os from "os";
 import { PathLike } from "fs-extra";
+import { WabbajackService } from "@/main/services/wabbajack.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -16,23 +17,39 @@ import { PathLike } from "fs-extra";
 export class InstructionService {
   constructor(
     @service(ConfigService) private configService: ConfigService,
-    @service(ProfileService) private profileService: ProfileService
+    @service(ProfileService) private profileService: ProfileService,
+    @service(WabbajackService) private wabbajackService: WabbajackService
   ) {}
 
   getInstructions(): AdditionalInstructions {
     return modpackAdditionalInstructions as AdditionalInstructions;
   }
 
-  async execute(instructions: AdditionalInstructions, target: string) {
+  async execute(instructions: AdditionalInstructions, target?: string) {
+    const modpackVersion = await this.wabbajackService.getModpackVersion();
+
     for (const instruction of instructions) {
-      logger.debug(`Handling enb instruction ${JSON.stringify(instruction)}`);
-      switch (instruction.action) {
-        case "disable-plugin":
-          if (instruction.target === target) {
-            await this.togglePlugin(instruction.plugin, "disable");
-          } else {
-            await this.togglePlugin(instruction.plugin, "enable");
-          }
+      logger.debug(
+        `Handling enb instruction ${JSON.stringify(
+          instruction
+        )} for modpack version ${modpackVersion}`
+      );
+      if (
+        instruction.version === undefined ||
+        instruction.version === modpackVersion
+      ) {
+        switch (instruction.action) {
+          case "disable-plugin":
+            if (instruction.target === target) {
+              await this.togglePlugin(instruction.plugin, "disable");
+            } else {
+              await this.togglePlugin(instruction.plugin, "enable");
+            }
+            break;
+
+          case "disable-ultra-widescreen":
+            return true;
+        }
       }
     }
   }
