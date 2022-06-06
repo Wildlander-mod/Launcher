@@ -17,7 +17,7 @@ export class SystemService {
     @service(ErrorService) private errorService: ErrorService
   ) {}
 
-  getLocalAppData() {
+  static getLocalAppData() {
     return path.resolve(`${process.env.APPDATA}/../local`);
   }
 
