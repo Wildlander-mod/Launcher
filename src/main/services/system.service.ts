@@ -7,6 +7,7 @@ import { service } from "@loopback/core";
 import { ConfigService } from "@/main/services/config.service";
 import { ErrorService } from "@/main/services/error.service";
 import log from "electron-log";
+import os from "os";
 import { pipeline } from "stream/promises";
 import fetch from "node-fetch";
 import { promisify } from "util";
@@ -29,6 +30,17 @@ export class SystemService {
 
   static getLocalAppData() {
     return path.resolve(`${process.env.APPDATA}/../local`);
+  }
+
+  async checkSupportedWindows() {
+    const release = os.release();
+    if (release.startsWith("7")) {
+      logger.error(`Detected Windows 7 (${release})`);
+      await this.errorService.handleError(
+        "Windows 7 detected",
+        `Wildlander Launcher does not support Windows 7,\nusing this Windows version may cause some features to not work at all.`
+      );
+    }
   }
 
   reboot() {
