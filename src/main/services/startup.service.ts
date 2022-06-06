@@ -3,6 +3,7 @@ import { logger } from "@/main/logger";
 import { service } from "@loopback/core";
 import { ConfigService } from "@/main/services/config.service";
 import { ModpackService } from "@/main/services/modpack.service";
+import { LauncherService } from "@/main/services/launcher.service";
 
 interface StartupCommand {
   name: string;
@@ -19,6 +20,7 @@ export class StartupService {
 
   constructor(
     @service(ModpackService) private modpackService: ModpackService,
+    @service(LauncherService) private launcherService: LauncherService,
     @service(ConfigService) private configService: ConfigService
   ) {}
 
@@ -39,7 +41,7 @@ export class StartupService {
       },
       {
         name: "Select modpack",
-        execute: () => this.modpackService.refreshModpack(),
+        execute: () => this.launcherService.refreshModpack(),
         requiresModpack: true,
       },
     ];

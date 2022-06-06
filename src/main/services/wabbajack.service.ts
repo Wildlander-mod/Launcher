@@ -11,7 +11,7 @@ import { ModpackService } from "@/main/services/modpack.service";
 })
 export class WabbajackService {
   private installedModpacksFilename = "installed_modlists.json";
-  private wabbajackInstalledModpacksPath = `${this.systemService.getLocalAppData()}/Wabbajack/${
+  private wabbajackInstalledModpacksPath = `${SystemService.getLocalAppData()}/Wabbajack/${
     this.installedModpacksFilename
   }`;
 

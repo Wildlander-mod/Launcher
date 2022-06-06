@@ -16,6 +16,7 @@ import { logger } from "@/main/logger";
 import { BindingScope, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
 import { name as modpackName } from "@/modpack.json";
+import { InstructionService } from "@/main/services/instruction.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -23,7 +24,11 @@ import { name as modpackName } from "@/modpack.json";
 export class ResolutionService {
   private resolutionsCache!: Resolution[];
 
-  constructor(@service(ConfigService) private configService: ConfigService) {}
+  constructor(
+    @service(ConfigService) private configService: ConfigService,
+    @service(InstructionService)
+    private modpackInstructionsService: InstructionService
+  ) {}
 
   getResourcePath() {
     return isDevelopment
@@ -31,10 +36,25 @@ export class ResolutionService {
       : process.resourcesPath;
   }
 
-  isUnsupportedResolution(width: number, height: number) {
-    // Anything above this is an unsupported resolution. Most 16:9 resolutions are 1.7777777777777777.
+  isUltraWidescreen({ width, height }: Resolution) {
+    // Anything above this is an ultra widescreen resolution.
+    // Most 16:9 resolutions are 1.7777777777777777.
     // There are some legacy resolutions that aren't quite 16:9.
     return width / height > 1.78;
+  }
+
+  private shouldDisableUltraWidescreen() {
+    const instructions = this.modpackInstructionsService
+      .getInstructions()
+      .filter((x) => x.action === "disable-ultra-widescreen");
+    return this.modpackInstructionsService.execute(instructions);
+  }
+
+  async isUnsupportedResolution(resolution: Resolution) {
+    return (
+      (await this.shouldDisableUltraWidescreen()) &&
+      this.isUltraWidescreen(resolution)
+    );
   }
 
   getCurrentResolution(): Resolution {
@@ -58,7 +78,7 @@ export class ResolutionService {
     return this.configService.hasPreference(USER_PREFERENCE_KEYS.RESOLUTION);
   }
 
-  setResolutionPreference(resolution: Resolution) {
+  async setResolution(resolution: Resolution) {
     this.configService.setPreference(
       USER_PREFERENCE_KEYS.RESOLUTION,
       resolution
@@ -125,7 +145,7 @@ export class ResolutionService {
       return [
         { width: 7680, height: 4320 },
         currentResolution,
-        { width: 3440, height: 1440 },
+        { width: 3440, height: 1440 }, // Ultra widescreen
         { width: 1920, height: 1080 },
       ];
     } else {
@@ -197,10 +217,12 @@ export class ResolutionService {
     const { scaleFactor } = screen.getPrimaryDisplay();
     const { width, height } = this.getCurrentResolution();
 
-    const borderlessUpscale = !this.isUnsupportedResolution(width, height);
+    // If the user has an ultra-widescreen monitor,
+    // disable borderlessUpscale so the game doesn't get stretched.
+    const borderlessUpscale = !this.isUltraWidescreen({ width, height });
 
     logger.debug(
-      `Enabling borderless upscale for ${width * scaleFactor}x${
+      `Setting borderless upscale for ${width * scaleFactor}x${
         height * scaleFactor
       }: ${borderlessUpscale}`
     );
