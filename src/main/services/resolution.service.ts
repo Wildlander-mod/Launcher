@@ -23,11 +23,12 @@ import { InstructionService } from "@/main/services/instruction.service";
 })
 export class ResolutionService {
   private resolutionsCache!: Resolution[];
+  private ultraWidescreenDisabled: boolean | undefined;
 
   constructor(
     @service(ConfigService) private configService: ConfigService,
     @service(InstructionService)
-    private modpackInstructionsService: InstructionService
+    private instructionsService: InstructionService
   ) {}
 
   getResourcePath() {
@@ -43,18 +44,50 @@ export class ResolutionService {
     return width / height > 1.78;
   }
 
-  private shouldDisableUltraWidescreen() {
-    const instructions = this.modpackInstructionsService
+  getSupportedRatios() {
+    return [
+      {
+        key: "16:9",
+        value: 16 / 9,
+      },
+      {
+        key: "21:9",
+        value: 21 / 9,
+      },
+      {
+        key: "32:9",
+        value: 32 / 9,
+      },
+    ];
+  }
+
+  getClosestSupportedRatio({ width, height }: Resolution) {
+    const supportedRatios = this.getSupportedRatios();
+    const ratio = width / height;
+
+    const closestValue = supportedRatios
+      .map((x) => x.value)
+      .reduce((prev, curr) =>
+        Math.abs(curr - ratio) < Math.abs(prev - ratio) ? curr : prev
+      );
+    const closestRatio = supportedRatios.find(
+      (x) => x.value === closestValue
+    )?.key;
+    logger.debug(`Found closest ratio for ${width}x${height}: ${closestRatio}`);
+    return closestRatio;
+  }
+
+  public async setShouldDisableUltraWidescreen() {
+    const instructions = this.instructionsService
       .getInstructions()
       .filter((x) => x.action === "disable-ultra-widescreen");
-    return this.modpackInstructionsService.execute(instructions);
+    this.ultraWidescreenDisabled =
+      (await this.instructionsService.execute(instructions)) ?? false;
+    logger.debug(`Ultra-widescreen disabled: ${this.ultraWidescreenDisabled}`);
   }
 
   async isUnsupportedResolution(resolution: Resolution) {
-    return (
-      (await this.shouldDisableUltraWidescreen()) &&
-      this.isUltraWidescreen(resolution)
-    );
+    return this.ultraWidescreenDisabled && this.isUltraWidescreen(resolution);
   }
 
   getCurrentResolution(): Resolution {
@@ -83,7 +116,23 @@ export class ResolutionService {
       USER_PREFERENCE_KEYS.RESOLUTION,
       resolution
     );
-    return this.setResolutionInGraphicsSettings();
+    await this.setResolutionInGraphicsSettings();
+    return this.postSetResolution(resolution);
+  }
+
+  postSetResolution(resolution: Resolution) {
+    const resolutionInstructions = this.getResolutionInstructions();
+    const closestRatio = this.getClosestSupportedRatio(resolution);
+    return this.instructionsService.execute(
+      resolutionInstructions,
+      closestRatio
+    );
+  }
+
+  getResolutionInstructions() {
+    return this.instructionsService
+      .getInstructions()
+      .filter((instruction) => instruction.type === "resolution-ratio");
   }
 
   async getSupportedResolutions() {
@@ -127,7 +176,7 @@ export class ResolutionService {
   }
 
   async getResolutions(): Promise<Resolution[]> {
-    logger.info("Getting resolutions");
+    logger.debug("Getting resolutions");
 
     if (this.resolutionsCache) {
       logger.debug(
@@ -143,10 +192,12 @@ export class ResolutionService {
     // Also, return an ultrawide resolution for testing
     if (os.platform() !== "win32") {
       return [
-        { width: 7680, height: 4320 },
+        { width: 7680, height: 4320 }, // 16:9
         currentResolution,
-        { width: 3440, height: 1440 }, // Ultra widescreen
-        { width: 1920, height: 1080 },
+        { width: 3840, height: 1080 }, // Ultra widescreen (32:9)
+        { width: 3440, height: 1440 }, // Ultra widescreen (21:9)
+        { width: 1920, height: 1080 }, // 16:9
+        { width: 1280, height: 800 }, // 16:10
       ];
     } else {
       const resolutions = [...new Set(await this.getSupportedResolutions())]
@@ -198,12 +249,34 @@ export class ResolutionService {
     )}/mods/${modpackName}/SKSE/Plugins/SSEDisplayTweaks.ini`;
   }
 
-  async setResolutionInGraphicsSettings() {
-    const { width: widthPreference, height: heightPreference } =
-      userPreferences.get(USER_PREFERENCE_KEYS.RESOLUTION) as Resolution;
+  //Borderless upscale will need to be toggled depending on if the user is using an ultra-widescreen monitor.
+  // Without upscale, users on ultra-widescreen but using a smaller resolution will get stretching
+  // User has normal monitor - enable upscale all the time
+  // User has ultra-widescreen and selects non-ultra-widescreen resolution - Disable upscaling
+  // User has ultra-widescreen and selects ultra-widescreen resolution - Enable upscaling
+  shouldEnableBorderlessUpscale(resolution: Resolution) {
+    const { width, height } = this.getCurrentResolution();
+
+    const monitorIsUltraWidescreen = this.isUltraWidescreen({ width, height });
+    const preferenceIsUltraWidescreen = this.isUltraWidescreen(resolution);
+    const borderlessUpscale =
+      monitorIsUltraWidescreen && preferenceIsUltraWidescreen
+        ? true
+        : !(monitorIsUltraWidescreen && !preferenceIsUltraWidescreen);
 
     logger.info(
-      `Setting resolution in ${this.skyrimGraphicsSettingsPath()} to ${widthPreference} x ${heightPreference}`
+      `Setting borderless upscale for ${width}x${height}: ${borderlessUpscale}`
+    );
+    return borderlessUpscale;
+  }
+
+  async setResolutionInGraphicsSettings() {
+    const { width, height } = userPreferences.get(
+      USER_PREFERENCE_KEYS.RESOLUTION
+    ) as Resolution;
+
+    logger.info(
+      `Setting resolution in ${this.skyrimGraphicsSettingsPath()} to ${width} x ${height}`
     );
     const SkyrimGraphicSettings = parse(
       await fs.promises.readFile(this.skyrimGraphicsSettingsPath(), "utf-8"),
@@ -212,24 +285,11 @@ export class ResolutionService {
 
     (
       SkyrimGraphicSettings.Render as IIniObjectSection
-    ).Resolution = `${widthPreference}x${heightPreference}`;
-
-    const { scaleFactor } = screen.getPrimaryDisplay();
-    const { width, height } = this.getCurrentResolution();
-
-    // If the user has an ultra-widescreen monitor,
-    // disable borderlessUpscale so the game doesn't get stretched.
-    const borderlessUpscale = !this.isUltraWidescreen({ width, height });
-
-    logger.debug(
-      `Setting borderless upscale for ${width * scaleFactor}x${
-        height * scaleFactor
-      }: ${borderlessUpscale}`
-    );
+    ).Resolution = `${width}x${height}`;
 
     // If the selected resolution is ultra-widescreen, don't upscale the image otherwise it gets stretched
     (SkyrimGraphicSettings.Render as IIniObjectSection).BorderlessUpscale =
-      borderlessUpscale;
+      this.shouldEnableBorderlessUpscale({ width, height });
 
     await fs.promises.writeFile(
       this.skyrimGraphicsSettingsPath(),

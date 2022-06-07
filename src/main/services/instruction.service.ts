@@ -47,6 +47,14 @@ export class InstructionService {
             }
             break;
 
+          case "enable-mod":
+            if (instruction.target === target) {
+              await this.toggleMod(instruction.mod, "enable");
+            } else {
+              await this.toggleMod(instruction.mod, "disable");
+            }
+            break;
+
           case "disable-ultra-widescreen":
             return true;
         }
@@ -90,6 +98,58 @@ export class InstructionService {
         "utf-8"
       );
     }
+  }
+
+  /**
+   * modlist.txt: dictates the order, enabling, and disabling of mods (left panel in MO2)
+   * Enabled mods have a + symbol, like this: +Wildlander FULL
+   * Disabled mods have a - symbol, like this: -Wildlander FULL
+   */
+  async toggleMod(mod: string, state: "enable" | "disable"): Promise<void> {
+    logger.info(`Toggling mod ${mod} to state ${state}`);
+
+    for (const modlistFile of await this.getModlistFiles()) {
+      logger.debug(`Toggling mod in ${modlistFile}`);
+      const mods = this.getModsFromFile(modlistFile);
+
+      const editedFile = [];
+      for await (let currentMod of mods) {
+        if (
+          currentMod.replace("+", "") === mod ||
+          currentMod.replace("-", "") === mod
+        ) {
+          if (state === "disable" && currentMod.startsWith("+")) {
+            logger.debug(`Disabling mod ${mod}`);
+            currentMod = currentMod.replace("+", "-");
+          } else if (state === "enable" && currentMod.startsWith("-")) {
+            logger.debug(`Enabling mod ${mod}`);
+            currentMod = currentMod.replace("-", "+");
+          }
+        }
+
+        editedFile.push(currentMod);
+      }
+
+      await fs.promises.writeFile(
+        modlistFile,
+        editedFile.join(os.EOL),
+        "utf-8"
+      );
+    }
+  }
+
+  async getModlistFiles() {
+    return (await this.profileService.getProfiles()).map(
+      (profile) =>
+        `${this.profileService.profileDirectory()}/${profile.real}/modlist.txt`
+    );
+  }
+
+  getModsFromFile(modsFile: string) {
+    return readline.createInterface({
+      input: fs.createReadStream(modsFile),
+      crlfDelay: Infinity,
+    });
   }
 
   getPluginsFromFile(pluginsFile: PathLike) {
