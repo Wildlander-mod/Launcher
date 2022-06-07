@@ -10,9 +10,9 @@
     <div class="l-row">
       <span class="material-icons c-resolution__info-icon u-text"> info </span>
       <div>
-        Ultra-widescreen resolutions are not supported.
+        Ultra-widescreen resolutions are not supported in this modpack.
         <BaseLink
-          href="https://github.com/Wildlander-mod/Support/blob/master/Docs/SSEFAQ.md#does-this-pack-support-ultrawide-resolutions"
+          href="https://github.com/Wildlander-mod/Support/wiki/FAQ#does-this-pack-support-ultrawide-resolutions"
           :underline="true"
         >
           More info.
