@@ -34,7 +34,10 @@ export class LauncherService {
     await this.validateConfig();
     await this.backupAssets();
     await this.enbService.resetCurrentEnb(false);
-    await this.resolutionService.setResolutionInGraphicsSettings();
+    await this.resolutionService.setResolution(
+      this.resolutionService.getCurrentResolution()
+    );
+    await this.resolutionService.setShouldDisableUltraWidescreen();
   }
 
   async validateConfig() {
