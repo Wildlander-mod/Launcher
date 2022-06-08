@@ -4,6 +4,9 @@ import { service } from "@loopback/core";
 import { ConfigService } from "@/main/services/config.service";
 import { ModpackService } from "@/main/services/modpack.service";
 import { LauncherService } from "@/main/services/launcher.service";
+import { platform, version, type } from "os";
+import { WabbajackService } from "@/main/services/wabbajack.service";
+import { ResolutionService } from "@/main/services/resolution.service";
 
 interface StartupCommand {
   name: string;
@@ -21,7 +24,9 @@ export class StartupService {
   constructor(
     @service(ModpackService) private modpackService: ModpackService,
     @service(LauncherService) private launcherService: LauncherService,
-    @service(ConfigService) private configService: ConfigService
+    @service(ConfigService) private configService: ConfigService,
+    @service(WabbajackService) private wabbajackService: WabbajackService,
+    @service(ResolutionService) private resolutionService: ResolutionService
   ) {}
 
   public registerStartupCommands() {
@@ -43,6 +48,21 @@ export class StartupService {
         name: "Select modpack",
         execute: () => this.launcherService.refreshModpack(),
         requiresModpack: true,
+      },
+      {
+        name: "Startup logs",
+        execute: async () => {
+          logger.debug(`
+            --- Startup debug logs ---
+            OS: ${type()} ${platform()} ${version()}
+            Modpack version: ${await this.wabbajackService.getModpackVersion()}
+            Launcher version: ${process.env.npm_package_version} 
+            Modpack path: ${this.modpackService.getModpackDirectory()}
+            Current screen resolution: ${JSON.stringify(
+              this.resolutionService.getCurrentResolution()
+            )}
+          `);
+        },
       },
     ];
   }
