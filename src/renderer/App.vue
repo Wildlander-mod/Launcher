@@ -5,6 +5,7 @@
       backgroundImage && { 'background-image': `url(${backgroundImage})` },
     ]"
   >
+    <TheTitleBar />
     <main
       class="l-column"
       :class="{
@@ -14,13 +15,14 @@
       <div class="l-row">
         <TheNavigation v-if="!preloadCheck" />
         <div class="l-column">
-          <TheTitleBar />
-          <TheHeader class="l-no-flex-grow" />
-          <router-view />
+          <div class="c-app__page l-column">
+            <TheHeader class="l-no-flex-grow" />
+            <router-view />
+          </div>
         </div>
       </div>
+      <TheFooter v-if="!preloadCheck" class="l-end-self" />
     </main>
-    <TheFooter v-if="!preloadCheck" class="l-end-self" />
   </div>
 </template>
 
@@ -131,6 +133,10 @@ p {
   width: $size-window-width;
 
   font-size: $font-size;
+}
+
+.c-app__page {
+  margin-top: $size-spacing--titlebar;
 }
 
 // Custom scrollbars
