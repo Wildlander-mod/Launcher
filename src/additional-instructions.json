@@ -20,5 +20,14 @@
     "type": "resolution-ratio",
     "target": "32:9",
     "mod": "Wildlander 32-9 Resolution Support"
+  },
+  {
+    "action": "enable-plugin",
+    "type": "resolution-ratio",
+    "target": [
+      "21:9",
+      "32:9"
+    ],
+    "plugin": "widescreen_skyui_fix.esp"
   }
 ]
