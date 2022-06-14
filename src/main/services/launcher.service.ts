@@ -7,6 +7,7 @@ import { ConfigService } from "@/main/services/config.service";
 import { ResolutionService } from "@/main/services/resolution.service";
 import { ModpackService } from "@/main/services/modpack.service";
 import { BindingScope, injectable } from "@loopback/context";
+import { app } from "electron";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -63,5 +64,9 @@ export class LauncherService {
   async backupAssets() {
     await this.enbService.backupOriginalENBs();
     await this.modOrganizerService.backupOriginalProfiles();
+  }
+
+  getVersion() {
+    return app.getVersion();
   }
 }
