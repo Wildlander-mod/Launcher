@@ -64,17 +64,43 @@
   </nav>
 
   <AppModal :show-modal="gameRunning" name="gameRunning">
-    <div class="l-column l-center">
+    <div class="l-column l-center l-center-text">
       <div class="u-spacing">
-        Please wait while Skyrim launches. This is not an error, and launching
-        may take several minutes.
+        <template v-if="checkingPrerequisites">
+          Checking if Wildlander prerequisites are installed...
+        </template>
+        <template v-if="installingPrerequisites">
+          <div>
+            <div>Wildlander prerequisites are currently installing.</div>
+            <div>Please click "Install" or "Repair" on any pop ups.</div>
+            <div>
+              Ensure you close all pop ups that appear after installation is
+              complete.
+            </div>
+          </div>
+        </template>
+        <template v-if="!checkingPrerequisites && !installingPrerequisites">
+          Please wait while Skyrim launches. This is not an error, and launching
+          may take several minutes.
+        </template>
       </div>
     </div>
+  </AppModal>
+
+  <AppModal name="rebootModal" :show-modal="rebootRequired">
+    <div class="l-column l-center l-center-text">
+      <div class="u-spacing">
+        A system reboot is required to complete installation.
+      </div>
+    </div>
+
+    <template v-slot:action>
+      <BaseButton type="primary" @click="reboot">Reboot</BaseButton>
+    </template>
   </AppModal>
 </template>
 
 <script lang="ts">
-import { version as launcherVersion } from "../../../package.json";
 import { Options as Component, Vue } from "vue-class-component";
 import AppModal from "@/renderer/components/AppModal.vue";
 import BaseLink from "@/renderer/components/BaseLink.vue";
@@ -90,6 +116,9 @@ import {
   SERVICE_BINDINGS,
 } from "@/renderer/services/service-container";
 import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
+import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
+import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
+import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
 
 @Component({
   components: {
@@ -103,25 +132,87 @@ import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events"
   },
 })
 export default class TheNavigation extends Vue {
-  private gameRunning = false;
-
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  launcherVersion = launcherVersion;
-  modpackVersion: string | null = null;
+  private gameRunning = false;
+  private checkingPrerequisites = false;
+  private installingPrerequisites = false;
+  private rebootRequired = false;
+  private launcherVersion: string | null = null;
+  private modpackVersion: string | null = null;
 
   async created() {
     this.modpackVersion = await this.ipcService.invoke(
       WABBAJACK_EVENTS.GET_MODPACK_VERSION
     );
+
+    this.launcherVersion = await this.getVersion();
+  }
+
+  async getVersion() {
+    return this.ipcService.invoke<string>(LAUNCHER_EVENTS.GET_VERSION);
+  }
+
+  async checkPrerequisites(message = true) {
+    if (message) {
+      this.checkingPrerequisites = true;
+    }
+    const installed = await this.ipcService.invoke<boolean>(
+      SYSTEM_EVENTS.CHECK_PREREQUISITES
+    );
+    if (message) {
+      this.checkingPrerequisites = false;
+    }
+    return installed;
+  }
+
+  resetChecks() {
+    this.installingPrerequisites = false;
+    this.checkingPrerequisites = false;
+    this.gameRunning = false;
+  }
+
+  async installPrerequisites() {
+    this.installingPrerequisites = true;
+    await this.ipcService.invoke(SYSTEM_EVENTS.INSTALL_PREREQUISITES);
+    const installed = await this.checkPrerequisites(false);
+    if (!installed) {
+      logger.error(`Error installing prerequisites`);
+      throw new Error(
+        `Program not available after successful install. Perhaps try restarting your PC.`
+      );
+    }
+    this.installingPrerequisites = false;
   }
 
   async launchGame() {
     logger.debug("Setting game to running");
     this.gameRunning = true;
+    const installed = await this.checkPrerequisites();
+    if (!installed) {
+      try {
+        await this.installPrerequisites();
+        this.resetChecks();
+        this.rebootRequired = true;
+        return;
+      } catch (error) {
+        logger.error(`Error installing prerequisites: ${error}`);
+        await this.ipcService.invoke(DIALOG_EVENTS.ERROR, {
+          title: "Install failed",
+          error: `Failed to install prerequisites. ${error}`,
+        });
+        this.resetChecks();
+        return;
+      }
+    }
+
     await this.ipcService.invoke(MOD_ORGANIZER_EVENTS.LAUNCH_GAME);
     logger.debug("Setting game to no longer running");
     this.gameRunning = false;
+  }
+
+  reboot() {
+    this.ipcService.invoke(SYSTEM_EVENTS.REBOOT);
   }
 }
 </script>
