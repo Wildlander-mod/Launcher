@@ -3,22 +3,24 @@ interface AdditionalInstructionBase {
   version?: string;
 }
 
-interface PluginOrModInstruction extends AdditionalInstructionBase {
+export type Target = string | string[];
+
+export interface PluginOrModInstruction extends AdditionalInstructionBase {
   type: "enb" | "resolution-ratio";
-  target: string;
+  target: Target;
 }
 
 // Instruction will be run when enb is changed
 // The `target` is the enb that the change will be applied on
-interface DisablePluginInstruction extends PluginOrModInstruction {
-  action: "disable-plugin";
+interface PluginInstruction extends PluginOrModInstruction {
+  action: "disable-plugin" | "enable-plugin";
   plugin: string;
 }
 
 // Instruction will be run when enb is changed
 // The `target` is the enb that the change will be applied on
-interface EnableModInstruction extends PluginOrModInstruction {
-  action: "enable-mod";
+interface ModInstruction extends PluginOrModInstruction {
+  action: "disable-mod" | "enable-mod";
   mod: string;
 }
 
@@ -29,8 +31,8 @@ interface DisableUltraWidescreenInstruction extends AdditionalInstructionBase {
 }
 
 export type AdditionalInstruction =
-  | DisablePluginInstruction
-  | EnableModInstruction
+  | PluginInstruction
+  | ModInstruction
   | DisableUltraWidescreenInstruction;
 
 export type AdditionalInstructions = AdditionalInstruction[];
