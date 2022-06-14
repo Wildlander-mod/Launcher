@@ -14,7 +14,10 @@
     <div class="l-column">
       <slot />
 
-      <div class="c-modal__actions c-modal__actions--right">
+      <div
+        class="c-modal__actions c-modal__actions--right"
+        v-if="includeCloseButton"
+      >
         <BaseButton @click="toggleModal(false)" v-if="includeCloseButton"
           >Close
         </BaseButton>
