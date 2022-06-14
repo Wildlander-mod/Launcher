@@ -1,4 +1,7 @@
-import { AdditionalInstructions } from "@/additional-instructions";
+import {
+  AdditionalInstructions,
+  PluginOrModInstruction,
+} from "@/additional-instructions";
 import modpackAdditionalInstructions from "@/additional-instructions.json";
 import fs from "fs";
 import { BindingScope, injectable } from "@loopback/context";
@@ -39,8 +42,26 @@ export class InstructionService {
         instruction.version === modpackVersion
       ) {
         switch (instruction.action) {
+          case "enable-plugin":
+            if (
+              InstructionService.checkTargetMatches(
+                instruction,
+                target as string
+              )
+            ) {
+              await this.togglePlugin(instruction.plugin, "enable");
+            } else {
+              await this.togglePlugin(instruction.plugin, "disable");
+            }
+            break;
+
           case "disable-plugin":
-            if (instruction.target === target) {
+            if (
+              InstructionService.checkTargetMatches(
+                instruction,
+                target as string
+              )
+            ) {
               await this.togglePlugin(instruction.plugin, "disable");
             } else {
               await this.togglePlugin(instruction.plugin, "enable");
@@ -48,10 +69,28 @@ export class InstructionService {
             break;
 
           case "enable-mod":
-            if (instruction.target === target) {
+            if (
+              InstructionService.checkTargetMatches(
+                instruction,
+                target as string
+              )
+            ) {
               await this.toggleMod(instruction.mod, "enable");
             } else {
               await this.toggleMod(instruction.mod, "disable");
+            }
+            break;
+
+          case "disable-mod":
+            if (
+              InstructionService.checkTargetMatches(
+                instruction,
+                target as string
+              )
+            ) {
+              await this.toggleMod(instruction.mod, "disable");
+            } else {
+              await this.toggleMod(instruction.mod, "enable");
             }
             break;
 
@@ -164,5 +203,14 @@ export class InstructionService {
       (profile) =>
         `${this.profileService.profileDirectory()}/${profile.real}/plugins.txt`
     );
+  }
+
+  private static checkTargetMatches(
+    instruction: PluginOrModInstruction,
+    target: string
+  ) {
+    return typeof instruction.target === "string"
+      ? instruction.target === target
+      : instruction.target.includes(target);
   }
 }
