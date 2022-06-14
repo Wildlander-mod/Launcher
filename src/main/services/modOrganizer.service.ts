@@ -220,10 +220,10 @@ export class ModOrganizerService {
         logger.error(`Error while executing ModOrganizer - ${stderr}`);
       }
     } catch (error) {
-      logger.error(`Failed to launch game - ${error}`);
+      logger.error(`Failed to launch game or Skyrim crashed - ${error}`);
       await this.postLaunch();
       await this.errorService.handleError(
-        "Error launching modlist",
+        "Error launching modlist or Skyrim crashed",
         `${error}`
       );
     }
