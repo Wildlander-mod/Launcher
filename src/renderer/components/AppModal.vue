@@ -22,6 +22,10 @@
           >Close
         </BaseButton>
       </div>
+
+      <div class="c-modal__actions u-spacing" v-if="$slots.action">
+        <slot name="action"></slot>
+      </div>
     </div>
   </vue-final-modal>
 </template>

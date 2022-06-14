@@ -33,4 +33,19 @@ export class SystemController {
       );
     }
   }
+
+  @handle(SYSTEM_EVENTS.CHECK_PREREQUISITES)
+  async checkPrerequisite() {
+    return await this.systemService.checkPrerequisitesInstalled();
+  }
+
+  @handle(SYSTEM_EVENTS.INSTALL_PREREQUISITES)
+  async installPrerequisites() {
+    return await this.systemService.installPrerequisites();
+  }
+
+  @handle(SYSTEM_EVENTS.REBOOT)
+  reboot() {
+    this.systemService.reboot();
+  }
 }
