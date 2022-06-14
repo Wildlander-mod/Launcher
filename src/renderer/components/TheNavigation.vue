@@ -63,11 +63,11 @@
     </div>
   </nav>
 
-  <AppModal :show-modal="gameRunning" name="gameRunning">
+  <AppModal :show-modal="!gameRunning" name="gameRunning">
     <div class="l-column l-center">
       <div class="u-spacing">
-        Skyrim is currently launching/running, please wait. This is not an
-        error, and the launching process may take several minutes.
+        Please wait while Skyrim launches. This is not an error, and launching
+        may take several minutes.
       </div>
     </div>
   </AppModal>
