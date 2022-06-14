@@ -1,12 +1,17 @@
 import path from "path";
 import { BindingScope, injectable } from "@loopback/context";
-import { shell } from "electron";
+import { shell, app } from "electron";
 import { logger } from "@/main/logger";
-import fs from "fs";
+import fs, { createWriteStream } from "fs";
 import { service } from "@loopback/core";
 import { ConfigService } from "@/main/services/config.service";
 import { ErrorService } from "@/main/services/error.service";
 import log from "electron-log";
+import { pipeline } from "stream/promises";
+import fetch from "node-fetch";
+import { promisify } from "util";
+import childProcess from "child_process";
+import { reboot } from "electron-shutdown-command";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -17,8 +22,18 @@ export class SystemService {
     @service(ErrorService) private errorService: ErrorService
   ) {}
 
+  private installerFile = path.normalize(
+    `${app.getPath("userData")}/vc_redist.x64.exe`
+  );
+  private prerequisitesDownloaded = false;
+
   static getLocalAppData() {
     return path.resolve(`${process.env.APPDATA}/../local`);
+  }
+
+  reboot() {
+    logger.debug("Rebooting system");
+    reboot();
   }
 
   async openApplicationLogsPath() {
@@ -46,6 +61,84 @@ export class SystemService {
         "Error while opening crash logs folder",
         `Crash logs directory at ${logPath} does not exist. This likely means you do not have any crash logs.`
       );
+    }
+  }
+
+  async checkPrerequisitesInstalled() {
+    logger.debug("Checking prerequisites are installed");
+
+    const productTester = "C++";
+
+    const { stdout, stderr } = await promisify(childProcess.exec)(
+      `wmic product where "name like '%${productTester}%'" get name`
+    );
+
+    // "No Instance(s) Available." means C++ is not installed
+    if (stderr.trim() === "No Instance(s) Available.") {
+      logger.debug(`${productTester} not detected`);
+      return false;
+    } else if (stderr) {
+      throw new Error(`Error getting ${productTester} installations ${stderr}`);
+    }
+
+    /**
+     * The command outputs in the format:
+     * Name
+     * Microsoft Visual C++ 2022 X64 Additional Runtime - 14.32.31326
+     * Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.32.31326
+     */
+    const installedProducts = stdout
+      .split(/\r*\n/)
+      // Remove the "Name" title
+      .slice(1)
+      // Remove empty entries
+      .filter((product) => product !== "")
+      // Trim whitespace
+      .map((x) => x.trim());
+
+    const installedVersions = installedProducts.map(
+      (product) =>
+        // Capture digits after Microsoft Visual C++ as this is the version
+        product.split(/Microsoft Visual C\+\+ (\d+)/)[1]
+    );
+
+    logger.debug(`Installed ${productTester} versions ${installedVersions}`);
+
+    return installedVersions.filter((x) => Number(x) >= 2019).length > 0;
+  }
+
+  async installPrerequisites() {
+    await this.downloadPrerequisites();
+    logger.debug("Downloads completed");
+    logger.debug(`Installing ${this.installerFile}`);
+    return promisify(childProcess.exec)(`"${this.installerFile}"`);
+  }
+
+  async downloadPrerequisites() {
+    logger.debug("Downloading prerequisites");
+    await this.downloadFile(
+      "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+      this.installerFile
+    );
+
+    this.prerequisitesDownloaded = true;
+  }
+
+  async downloadFile(url: string, output: string) {
+    if (fs.existsSync(output)) {
+      logger.debug("Download already exists, skipping");
+      return;
+    }
+
+    logger.debug(`Downloading from ${url} to ${output}`);
+
+    const body = (await fetch(url)).body;
+    if (body) {
+      logger.debug(`Download complete, writing to ${output}`);
+      await pipeline(body, createWriteStream(output));
+      logger.debug(`Finished writing to ${output}`);
+    } else {
+      logger.error(`Failed to download file from ${url}`);
     }
   }
 }
