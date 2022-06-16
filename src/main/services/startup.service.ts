@@ -1,6 +1,7 @@
 import { BindingScope, injectable } from "@loopback/context";
 import { logger } from "@/main/logger";
 import { service } from "@loopback/core";
+import { app } from "electron";
 import { ConfigService } from "@/main/services/config.service";
 import { ModpackService } from "@/main/services/modpack.service";
 import { LauncherService } from "@/main/services/launcher.service";
@@ -56,7 +57,7 @@ export class StartupService {
             --- Startup debug logs ---
             OS: ${type()} ${platform()} ${version()}
             Modpack version: ${await this.wabbajackService.getModpackVersion()}
-            Launcher version: ${process.env.npm_package_version} 
+            Launcher version: ${app.getVersion()} 
             Modpack path: ${this.modpackService.getModpackDirectory()}
             Current screen resolution: ${JSON.stringify(
               this.resolutionService.getCurrentResolution()
