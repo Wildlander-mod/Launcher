@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '16'
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run lint -- --no-fix
 
   # Validate that commits are following the conventional commit format
@@ -39,7 +39,7 @@ jobs:
           node-version: '16'
 
       - name: install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: lint commits
         run: npx commitlint --from origin/main
