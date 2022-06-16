@@ -1,6 +1,6 @@
 import fs from "fs";
 import { logger } from "@/main/logger";
-import { MO2Files } from "@/main/services/modOrganizer.service";
+import { MO2Names } from "@/main/services/modOrganizer.service";
 import { BindingScope, injectable } from "@loopback/context";
 import modpack from "@/modpack.json";
 import { IsModpackValidResponse } from "@/main/controllers/modpack/mopack.events";
@@ -16,7 +16,7 @@ export class ModpackService {
   constructor(@service(ConfigService) private configService: ConfigService) {}
 
   checkModpackPathIsValid(modpackPath: string): IsModpackValidResponse {
-    const missingPaths = [MO2Files.MO2EXE, "profiles", "launcher"]
+    const missingPaths = [MO2Names.MO2EXE, "profiles", "launcher"]
       .filter((path) => !fs.existsSync(`${modpackPath}/${path}`))
       .map((path) => {
         logger.warn(
