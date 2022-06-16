@@ -7,6 +7,7 @@ import { ConfigService } from "@/main/services/config.service";
 import { ResolutionService } from "@/main/services/resolution.service";
 import { ModpackService } from "@/main/services/modpack.service";
 import { BindingScope, injectable } from "@loopback/context";
+import { logger } from "@/main/logger";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -23,6 +24,7 @@ export class LauncherService {
   ) {}
 
   async refreshModpack() {
+    logger.debug("Refreshing modpack");
     return this.setModpack(this.modpackService.getModpackDirectory());
   }
 
