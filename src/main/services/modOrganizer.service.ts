@@ -1,7 +1,7 @@
 import path from "path";
 import childProcess from "child_process";
 import { ConfigService, userPreferences } from "@/main/services/config.service";
-import find from "find-process";
+import psList from "ps-list";
 import { dialog } from "electron";
 import fs from "fs";
 import { parse, stringify } from "js-ini";
@@ -19,7 +19,7 @@ import { ResolutionService } from "@/main/services/resolution.service";
 import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
 
-export const enum MO2Files {
+export const enum MO2Names {
   MO2EXE = "ModOrganizer.exe",
   MO2Settings = "ModOrganizer.ini",
 }
@@ -39,16 +39,22 @@ export class ModOrganizerService {
     @service(ProfileService) private profileService: ProfileService
   ) {}
 
+  private static filterMO2(process: psList.ProcessDescriptor) {
+    return process.name === MO2Names.MO2EXE;
+  }
+
   async isRunning() {
-    return (await find("name", "ModOrganizer")).length > 0;
+    return (await psList()).filter(ModOrganizerService.filterMO2).length > 0;
   }
 
   async closeMO2() {
     logger.info("Killing MO2 forcefully");
-    (await find("name", "ModOrganizer")).forEach((mo2Instance) => {
-      logger.debug(`Found process to kill: ${JSON.stringify(mo2Instance)}`);
-      process.kill(mo2Instance.pid);
-    });
+    (await psList())
+      .filter(ModOrganizerService.filterMO2)
+      .forEach((mo2Instance) => {
+        logger.debug(`Found process to kill: ${JSON.stringify(mo2Instance)}`);
+        process.kill(mo2Instance.pid);
+      });
     logger.info("Killed all MO2 processes");
   }
 
@@ -73,7 +79,7 @@ export class ModOrganizerService {
   async readSettings() {
     return parse(
       await fs.promises.readFile(
-        `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
+        `${this.configService.modDirectory()}/${MO2Names.MO2Settings}`,
         "utf-8"
       )
     );
@@ -88,7 +94,7 @@ export class ModOrganizerService {
     ] = `@ByteArray(${profile})`;
 
     await fs.promises.writeFile(
-      `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
+      `${this.configService.modDirectory()}/${MO2Names.MO2Settings}`,
       stringify(settings)
     );
   }
@@ -104,7 +110,7 @@ export class ModOrganizerService {
     (settings.Settings as IIniObjectSection)["lock_gui"] = false;
 
     await fs.promises.writeFile(
-      `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
+      `${this.configService.modDirectory()}/${MO2Names.MO2Settings}`,
       stringify(settings)
     );
   }
@@ -114,7 +120,7 @@ export class ModOrganizerService {
     // If we have some previous settings saved, restore them
     if (this.previousMO2Settings) {
       await fs.promises.writeFile(
-        `${this.configService.modDirectory()}/${MO2Files.MO2Settings}`,
+        `${this.configService.modDirectory()}/${MO2Names.MO2Settings}`,
         stringify(this.previousMO2Settings)
       );
       this.previousMO2Settings = null;
@@ -180,7 +186,7 @@ export class ModOrganizerService {
 
       const MO2Path = path.join(
         userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        MO2Files.MO2EXE
+        MO2Names.MO2EXE
       );
       const { stderr } = await promisify(childProcess.exec)(`"${MO2Path}"`);
       if (stderr) {
@@ -207,7 +213,7 @@ export class ModOrganizerService {
 
       const MO2Path = path.join(
         userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY),
-        MO2Files.MO2EXE
+        MO2Names.MO2EXE
       );
       const profile = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
 
