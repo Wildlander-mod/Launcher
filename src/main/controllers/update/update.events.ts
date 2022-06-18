@@ -7,4 +7,5 @@ export const enum UPDATE_RENDERER_EVENTS {
   UPDATE_NOT_AVAILABLE = "update-not-available",
   UPDATE_DOWNLOADED = "update-downloaded",
   DOWNLOAD_PROGRESS = "download-progress",
+  ERROR = "error",
 }

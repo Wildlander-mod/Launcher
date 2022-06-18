@@ -31,7 +31,7 @@
         <div class="c-patrons__title-text">Patrons</div>
       </div>
     </BaseList>
-    <div v-if="failedToGetPatrons">Could not retrieve Patron list.</div>
+    <div v-if="failedToGetPatrons">Unable to retrieve Patron list.</div>
   </div>
 </template>
 

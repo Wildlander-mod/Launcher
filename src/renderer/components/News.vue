@@ -12,12 +12,8 @@
       </BaseLink>
     </div>
   </div>
-  <div v-if="failedToGetNews && news.length === 0">
-    Cannot load latest news. Please report this error in the modpack
-    <BaseLink href="https://discordapp.com/invite/8VkDrfq" :underline="true"
-      >Discord
-    </BaseLink>
-    .
+  <div v-if="failedToGetNews && news.length === 0" class="l-flex l-center">
+    Unable to load latest news.
   </div>
 </template>
 
