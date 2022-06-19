@@ -7,10 +7,6 @@ import { logger } from "@/main/logger";
 export class CacheService {
   /**
    * Returns data from the localStorage if it exists and is newer than maxAge
-   * @param key the key to take the data from
-   * @param maxAge the max age in seconds the data can have (storeDateTime - now > maxAge*1000)
-   *
-   * @returns T|undefined data of type T if found and new enough, otherwise undefined
    */
   public get<T>(key: string, maxAge: number): T | undefined {
     maxAge *= 1000; // convert s to ms for comparison
@@ -30,8 +26,6 @@ export class CacheService {
 
   /**
    * Sets data in the localStorage, overwrites regardless of previous data presence
-   * @param key to store the data in
-   * @param data to store
    */
   public set(key: string, data: unknown) {
     logger.debug(`Cache: setting data for "${key}".`);
