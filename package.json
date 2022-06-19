@@ -55,7 +55,7 @@
     "tslib": "^2.3.1",
     "vue": "^3.2.31",
     "vue-class-component": "^8.0.0-0",
-    "vue-final-modal": "^3.4.3",
+    "vue-final-modal": "^3.4.4",
     "vue-router": "^4.0.14",
     "vue3-click-away": "^1.2.4",
     "vue3-popper": "^1.4.2"
