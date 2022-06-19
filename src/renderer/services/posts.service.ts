@@ -3,16 +3,20 @@ import { CacheService } from "@/renderer/services/cache.service";
 export class PostsService {
   private news: Posts[] = [];
   private readonly cacheKey = "patreon.posts";
-  private cacheService = new CacheService();
+  private readonly cacheService: CacheService;
 
-  constructor() {
-    const data = this.cacheService.get<Posts[]>(this.cacheKey, 60 * 60 * 24);
-    if (data !== undefined) {
-      this.news = data;
-    }
+  constructor(cacheService: CacheService) {
+    this.cacheService = cacheService;
   }
 
   public async getPosts() {
+    if (this.news.length === 0) {
+      const data = this.cacheService.get<Posts[]>(this.cacheKey, 60 * 60 * 24);
+      if (data !== undefined) {
+        this.news = data;
+      }
+    }
+
     try {
       if (this.news.length > 0) {
         return this.news;

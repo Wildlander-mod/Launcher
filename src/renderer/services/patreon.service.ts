@@ -3,13 +3,10 @@ import { CacheService } from "@/renderer/services/cache.service";
 export class PatreonService {
   private patrons: Patron[] = [];
   private readonly cacheKey = "patreon.patrons";
-  private cacheService = new CacheService();
+  private readonly cacheService: CacheService;
 
-  constructor() {
-    const data = this.cacheService.get<Patron[]>(this.cacheKey, 60 * 60 * 24);
-    if (data !== undefined) {
-      this.patrons = data;
-    }
+  constructor(cacheService: CacheService) {
+    this.cacheService = cacheService;
   }
 
   /**
@@ -24,6 +21,13 @@ export class PatreonService {
   }
 
   public async getPatrons(shuffle = true): Promise<Patron[]> {
+    if (this.patrons.length === 0) {
+      const data = this.cacheService.get<Patron[]>(this.cacheKey, 60 * 60 * 24);
+      if (data !== undefined) {
+        this.patrons = data;
+      }
+    }
+
     try {
       if (this.patrons.length > 0) {
         return this.patrons;
