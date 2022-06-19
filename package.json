@@ -39,7 +39,7 @@
     "@loopback/boot": "^4.1.2",
     "@loopback/context": "^4.1.1",
     "@loopback/core": "^3.1.1",
-    "electron-log": "^4.4.6",
+    "electron-log": "^4.4.7",
     "electron-shutdown-command": "^2.0.1",
     "electron-store": "^8.0.1",
     "electron-updater": "^4.6.5",
