@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.3 (2022-06-19)
+
+
+### Bug Fixes
+
+* prevent a failed update from preventing use of the launcher ([4d33072](https://github.com/Wildlander-mod/Launcher/commit/4d33072e4dd35dad221924686cbfc9b4be4d3f9b)), closes [#525](https://github.com/Wildlander-mod/Launcher/issues/525)
+
 ### 1.1.2 (2022-04-10)
 
 ### 1.1.1 (2022-04-10)
