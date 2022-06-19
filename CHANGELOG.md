@@ -2,12 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### 1.1.3 (2022-06-19)
+## [2.0.0](https://github.com/Wildlander-mod/Launcher/compare/v1.1.2...v2.0.0) (2022-06-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* C++ 2022 will now be installed in C++ 2019 or greater
+is not installed
+* When profiles are restored, the entire modpack will now
+be refreshed to keep everything in sync
+* Ultra-widescreen resolutions will not be disabled by
+default. Modpack authors must either support or disable them via
+configuration.
+* The default screen resolution will now use the
+current screen resolution instead of the highest one
+
+### Features
+
+* add ability to disable plugins when enb is set ([9026982](https://github.com/Wildlander-mod/Launcher/commit/9026982039b295ed057675ae26e557810dce9150))
+* add an information message when MO2 is running ([ce0e1bc](https://github.com/Wildlander-mod/Launcher/commit/ce0e1bc515e6c66c0b384ee028bebad9c0686edb))
+* add modpack version to navigation ([536a7a4](https://github.com/Wildlander-mod/Launcher/commit/536a7a4d24e774b53e49751d2cd3ea3c91235a2c))
+* add more information when displaying invalid modpack message ([5c8a445](https://github.com/Wildlander-mod/Launcher/commit/5c8a44567830d50c9bbd5b61aefdaee49ff19a6c))
+* copy skyrim launch logs after game launch ([762f0c5](https://github.com/Wildlander-mod/Launcher/commit/762f0c57254a5ff76b2589addd5861909391e05a)), closes [#511](https://github.com/Wildlander-mod/Launcher/issues/511)
+* default to current resolution ([327cdd9](https://github.com/Wildlander-mod/Launcher/commit/327cdd90dbdcd6ce1a4442e145c66e58dce2921b)), closes [#521](https://github.com/Wildlander-mod/Launcher/issues/521)
+* enable ultra-widescreen plugins when required ([ad78cfd](https://github.com/Wildlander-mod/Launcher/commit/ad78cfde3e7aee28031964f1514f208a0d29d2e9))
+* enable ultrawide mods when that resolution is selected ([6eaf0dd](https://github.com/Wildlander-mod/Launcher/commit/6eaf0dd364b58c5de38e3d5865b7cdf83366567d))
+* ensure modpack path is valid on startup ([d468546](https://github.com/Wildlander-mod/Launcher/commit/d4685469e6bff93f40250c60b50cf332c970b323))
+* improve wording when Skyrim is starting up ([a7908e7](https://github.com/Wildlander-mod/Launcher/commit/a7908e76c279041595a6be26941f9a799ea74c8e))
+* install prerequisites on game launch ([5fb917b](https://github.com/Wildlander-mod/Launcher/commit/5fb917b8f5f36acde6298bdf9077f7f4a799f2aa))
+* only prevent ultra-widescreen resolutions on certain modpack versions ([93bb232](https://github.com/Wildlander-mod/Launcher/commit/93bb23265c610fe048f6f5115672ed5b24df6619))
+* refresh modpack when restoring profiles ([7efe157](https://github.com/Wildlander-mod/Launcher/commit/7efe157d7d0e293adcde4d0b64f7f4b9c1143200))
+* set resolution when it is selected, not on game start ([3363130](https://github.com/Wildlander-mod/Launcher/commit/33631309ae853789e6bd6ef72074dba2b800c102)), closes [#527](https://github.com/Wildlander-mod/Launcher/issues/527)
 
 
 ### Bug Fixes
 
-* prevent a failed update from preventing use of the launcher ([4d33072](https://github.com/Wildlander-mod/Launcher/commit/4d33072e4dd35dad221924686cbfc9b4be4d3f9b)), closes [#525](https://github.com/Wildlander-mod/Launcher/issues/525)
+* enable close and minimise buttons when modal is open ([d1e71a4](https://github.com/Wildlander-mod/Launcher/commit/d1e71a45b6c1566d8110383a5048cf9b88ea2708))
+* only show ultrawide warning when ultrawide exists ([34f0bb5](https://github.com/Wildlander-mod/Launcher/commit/34f0bb5fec823fc71583cafdf942428c947b253b))
+* prevent a failed update from preventing use of the launcher ([3589a13](https://github.com/Wildlander-mod/Launcher/commit/3589a13e61bc4454fe4559bf47099176c524cac1)), closes [#525](https://github.com/Wildlander-mod/Launcher/issues/525)
+* prevent dropdowns from overlapping icons ([2c0a3d9](https://github.com/Wildlander-mod/Launcher/commit/2c0a3d9ba3365521ada863f328014d2da152d03f)), closes [#524](https://github.com/Wildlander-mod/Launcher/issues/524)
+* prevent invalid enbs from being persisted on mod selection ([73a47b7](https://github.com/Wildlander-mod/Launcher/commit/73a47b7e46bd8b7ea2396d0670ca0bd622fe13cf)), closes [#518](https://github.com/Wildlander-mod/Launcher/issues/518)
+* prevent multiple instances of the launcher from opening ([dd1271e](https://github.com/Wildlander-mod/Launcher/commit/dd1271ee4d49c7936ac8e0b8ba18eb482e0e3672))
+* remove dependency on PowerShell ([e103752](https://github.com/Wildlander-mod/Launcher/commit/e103752cbbe96e5643020d74b46384930b48cc79))
 
 ### 1.1.2 (2022-04-10)
 
