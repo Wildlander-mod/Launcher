@@ -8,6 +8,7 @@ import { EventService } from "@/renderer/services/event.service";
 import { IpcService } from "@/renderer/services/ipc.service";
 import { UpdateService } from "@/renderer/services/update.service";
 import { ModpackService } from "@/renderer/services/modpack.service";
+import { CacheService } from "@/renderer/services/cache.service";
 
 export type EventService = Emitter<Record<EventType, unknown>>;
 
@@ -43,10 +44,14 @@ export function registerServices(app: App) {
   const ipcService = new IpcService();
   const updateService = new UpdateService();
   const modpackService = new ModpackService(ipcService);
+  const cacheService = new CacheService();
   app.provide(SERVICE_BINDINGS.UPDATE_SERVICE, updateService);
   app.provide(SERVICE_BINDINGS.IPC_SERVICE, ipcService);
-  app.provide(SERVICE_BINDINGS.PATRON_SERVICE, new PatreonService());
-  app.provide(SERVICE_BINDINGS.NEWS_SERVICE, new PostsService());
+  app.provide(
+    SERVICE_BINDINGS.PATRON_SERVICE,
+    new PatreonService(cacheService)
+  );
+  app.provide(SERVICE_BINDINGS.NEWS_SERVICE, new PostsService(cacheService));
   app.provide(SERVICE_BINDINGS.MESSAGE_SERVICE, new MessageService(ipcService));
   app.provide(SERVICE_BINDINGS.EVENT_SERVICE, EventService);
   app.provide(SERVICE_BINDINGS.MODAL_SERVICE, new ModalService(EventService));
