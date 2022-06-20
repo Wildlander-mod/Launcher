@@ -23,9 +23,12 @@
             >Restore
           </BaseButton>
         </div>
-        <div class="l-row c-settings__actions">
+        <div class="l-row c-settings__multi-actions">
           <div class="c-settings__label">Application logs</div>
-          <BaseButton type="default" @click="openLogPath"> Open</BaseButton>
+          <div class="c-settings__multi-buttons">
+            <BaseButton type="default" @click="openLogPath">Open</BaseButton>
+            <BaseButton type="default" @click="clearLogs">Clear</BaseButton>
+          </div>
         </div>
         <div class="l-row c-settings__actions">
           <div class="c-settings__label">Skyrim crash logs</div>
@@ -145,6 +148,11 @@ export default class Settings extends Vue {
     await this.ipcService.invoke(SYSTEM_EVENTS.OPEN_APPLICATION_LOGS);
   }
 
+  async clearLogs() {
+    // clear logs (main & renderer) via event
+    await this.ipcService.invoke(SYSTEM_EVENTS.CLEAR_APP_LOGS);
+  }
+
   async openCrashLogPath() {
     await this.ipcService.invoke(SYSTEM_EVENTS.OPEN_CRASH_LOGS);
   }
@@ -162,6 +170,21 @@ export default class Settings extends Vue {
   border-bottom: 1px solid $colour-background--light;
   margin-bottom: $size-spacing;
   padding-bottom: $size-spacing;
+}
+
+.c-settings__multi-actions {
+  display: grid;
+  grid-template-columns: 45% 65%;
+  align-items: center;
+  margin-top: $size-spacing;
+  width: 60%;
+}
+
+.c-settings__multi-buttons {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  column-gap: 5px;
+  justify-self: start;
 }
 
 .c-settings__actions {

@@ -64,6 +64,25 @@ export class SystemService {
     }
   }
 
+  async clearApplicationLogs() {
+    logger.transports?.file.getFile().clear();
+    /*
+    Due to the fact that the renderer proc has little to no node func / lib access,
+    the renderer logs have to be manually cleared here.
+    Because even if the entire logging object is exposed to the renderer it is unable to clear the file.
+    */
+    const path = logger.transports?.file.getFile().path.split("\\") || [];
+    // replace main.log with renderer.log
+    path.pop();
+    path.push("renderer.log");
+
+    //clear renderer.log
+    const renderLog = path.join("\\");
+    if (fs.existsSync(renderLog)) {
+      await fs.promises.writeFile(renderLog, "", { flag: "w" });
+    }
+  }
+
   async checkPrerequisitesInstalled() {
     logger.debug("Checking prerequisites are installed");
 

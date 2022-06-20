@@ -34,6 +34,11 @@ export class SystemController {
     }
   }
 
+  @handle(SYSTEM_EVENTS.CLEAR_APP_LOGS)
+  public async clearLogFiles() {
+    await this.systemService.clearApplicationLogs();
+  }
+
   @handle(SYSTEM_EVENTS.CHECK_PREREQUISITES)
   async checkPrerequisite() {
     return await this.systemService.checkPrerequisitesInstalled();
