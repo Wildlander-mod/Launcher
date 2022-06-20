@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.2.0 (2022-06-20)
+
+
+### Features
+
+* add button to clear logs ([bde4c0b](https://github.com/Wildlander-mod/Launcher/commit/bde4c0b94bd4c2e9fafabc62d5166abf4496dd83)), closes [#536](https://github.com/Wildlander-mod/Launcher/issues/536)
+
 ## 2.1.0 (2022-06-20)
 
 
