@@ -249,20 +249,29 @@ export class ResolutionService {
     )}/mods/${modpackName}/SKSE/Plugins/SSEDisplayTweaks.ini`;
   }
 
-  //Borderless upscale will need to be toggled depending on if the user is using an ultra-widescreen monitor.
-  // Without upscale, users on ultra-widescreen but using a smaller resolution will get stretching
-  // User has normal monitor - enable upscale all the time
-  // User has ultra-widescreen and selects non-ultra-widescreen resolution - Disable upscaling
-  // User has ultra-widescreen and selects ultra-widescreen resolution - Enable upscaling
-  shouldEnableBorderlessUpscale(resolution: Resolution) {
+  /**
+   * Borderless upscale will need to be toggled depending on if the user is using an ultra-widescreen monitor.
+   * Without upscale, users on ultra-widescreen but using a smaller resolution will get stretching
+   * User has non-ultra-widescreen monitor resolution and selects non-ultra-widescreen resolution - Enable upscale
+   * User has non-ultra-widescreen monitor resolution and selects ultra-widescreen resolution - Disable upscale
+   * User has ultra-widescreen and selects non-ultra-widescreen resolution - Disable upscale
+   * User has ultra-widescreen and selects ultra-widescreen resolution - Enable upscale
+   */
+  shouldEnableBorderlessUpscale(resolution: Resolution): boolean {
     const { width, height } = this.getCurrentResolution();
 
     const monitorIsUltraWidescreen = this.isUltraWidescreen({ width, height });
     const preferenceIsUltraWidescreen = this.isUltraWidescreen(resolution);
-    const borderlessUpscale =
-      monitorIsUltraWidescreen && preferenceIsUltraWidescreen
-        ? true
-        : !(monitorIsUltraWidescreen && !preferenceIsUltraWidescreen);
+    let borderlessUpscale;
+    if (!monitorIsUltraWidescreen && !preferenceIsUltraWidescreen) {
+      borderlessUpscale = true;
+    } else if (!monitorIsUltraWidescreen && preferenceIsUltraWidescreen) {
+      borderlessUpscale = false;
+    } else {
+      borderlessUpscale = !(
+        monitorIsUltraWidescreen && !preferenceIsUltraWidescreen
+      );
+    }
 
     logger.info(
       `Setting borderless upscale for ${width}x${height}: ${borderlessUpscale}`
