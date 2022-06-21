@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.2.2 (2022-06-21)
+
+
+### Bug Fixes
+
+* disable upscaling when running ultrawide on non-ultrawide monitor ([7587805](https://github.com/Wildlander-mod/Launcher/commit/7587805dd96f155f4fc3b3930805fb3a22bf4876))
+
 ### 2.2.1 (2022-06-21)
 
 
