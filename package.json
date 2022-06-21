@@ -43,6 +43,7 @@
     "electron-shutdown-command": "^2.0.1",
     "electron-store": "^8.0.1",
     "electron-updater": "^4.6.5",
+    "fetch-installed-software": "^0.0.7",
     "fs-extra": "^10.1.0",
     "glob": "^7.2.0",
     "js-ini": "^1.5.1",

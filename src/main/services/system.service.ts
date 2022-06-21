@@ -12,6 +12,7 @@ import fetch from "node-fetch";
 import { promisify } from "util";
 import childProcess from "child_process";
 import { reboot } from "electron-shutdown-command";
+import { getAllInstalledSoftware } from "fetch-installed-software";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -87,41 +88,23 @@ export class SystemService {
     logger.debug("Checking prerequisites are installed");
 
     const productTester = "C++";
+    const installedSoftware = (await getAllInstalledSoftware())
+      .filter((x) => x.DisplayName?.includes(productTester))
+      .map((x) => x.DisplayName);
 
-    const { stdout, stderr } = await promisify(childProcess.exec)(
-      `wmic product where "name like '%${productTester}%'" get name`
-    );
-
-    // "No Instance(s) Available." means C++ is not installed
-    if (stderr.trim() === "No Instance(s) Available.") {
+    if (installedSoftware.length === 0) {
       logger.debug(`${productTester} not detected`);
       return false;
-    } else if (stderr) {
-      throw new Error(`Error getting ${productTester} installations ${stderr}`);
     }
 
-    /**
-     * The command outputs in the format:
-     * Name
-     * Microsoft Visual C++ 2022 X64 Additional Runtime - 14.32.31326
-     * Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.32.31326
-     */
-    const installedProducts = stdout
-      .split(/\r*\n/)
-      // Remove the "Name" title
-      .slice(1)
-      // Remove empty entries
-      .filter((product) => product !== "")
-      // Trim whitespace
-      .map((x) => x.trim());
-
-    const installedVersions = installedProducts.map(
-      (product) =>
+    const installedVersions = installedSoftware.map(
+      (softwareName) =>
         // Capture digits after Microsoft Visual C++ as this is the version
-        product.split(/Microsoft Visual C\+\+ (\d+)/)[1]
+        softwareName?.split(/Microsoft Visual C\+\+ (\d+)/)[1]
     );
 
-    logger.debug(`Installed ${productTester} versions ${installedVersions}`);
+    const sortedVersions = [...new Set(installedVersions.sort())];
+    logger.debug(`Installed ${productTester} versions ${sortedVersions}`);
 
     return installedVersions.filter((x) => Number(x) >= 2019).length > 0;
   }
