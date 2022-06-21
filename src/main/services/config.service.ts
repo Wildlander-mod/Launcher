@@ -63,7 +63,11 @@ export class ConfigService {
   }
 
   setPreference(key: keyof UserPreferences | string, value: unknown) {
-    logger.debug(`Setting preference ${key} to ${value}`);
+    if (typeof value === "object") {
+      logger.debug(`Setting preference ${key} to ${JSON.stringify(value)}`);
+    } else {
+      logger.debug(`Setting preference ${key} to ${value}`);
+    }
     return userPreferences.set(key, value);
   }
 
