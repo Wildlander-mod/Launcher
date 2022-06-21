@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.2.1 (2022-06-21)
+
+
+### Bug Fixes
+
+* prevent resolution from always using user's monitor settings ([69eef30](https://github.com/Wildlander-mod/Launcher/commit/69eef306cdbc2f280bd567334444f941f09d1294))
+
 ## 2.2.0 (2022-06-20)
 
 
