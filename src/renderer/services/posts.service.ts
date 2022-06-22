@@ -11,7 +11,9 @@ export class PostsService {
 
   public async getPosts() {
     if (this.news.length === 0) {
-      const data = this.cacheService.get<Posts[]>(this.cacheKey, 60 * 60 * 24);
+      // Cache for 30 minutes. Ideally, the launcher should query an endpoint on the server to see if the cache is outdated.
+      // However, this isn't available on the server yet.
+      const data = this.cacheService.get<Posts[]>(this.cacheKey, 60 * 60 * 0.5);
       if (data !== undefined) {
         this.news = data;
       }
