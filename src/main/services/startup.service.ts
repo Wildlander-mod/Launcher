@@ -33,6 +33,21 @@ export class StartupService {
   public registerStartupCommands() {
     this.startupCommands = [
       {
+        name: "Startup logs",
+        execute: async () => {
+          logger.debug(`
+            --- Startup debug logs ---
+            OS: ${type()} ${platform()} ${version()}
+            Modpack version: ${await this.wabbajackService.getModpackVersion()}
+            Launcher version: ${app.getVersion()} 
+            Modpack path: ${this.modpackService.getModpackDirectory()}
+            Current screen resolution: ${JSON.stringify(
+              this.resolutionService.getCurrentResolution()
+            )}
+          `);
+        },
+      },
+      {
         name: "Delete invalid modpack preference",
         execute: () => {
           if (!this.modpackService.checkCurrentModpackPathIsValid()) {
@@ -49,21 +64,6 @@ export class StartupService {
         name: "Select modpack",
         execute: () => this.launcherService.refreshModpack(),
         requiresModpack: true,
-      },
-      {
-        name: "Startup logs",
-        execute: async () => {
-          logger.debug(`
-            --- Startup debug logs ---
-            OS: ${type()} ${platform()} ${version()}
-            Modpack version: ${await this.wabbajackService.getModpackVersion()}
-            Launcher version: ${app.getVersion()} 
-            Modpack path: ${this.modpackService.getModpackDirectory()}
-            Current screen resolution: ${JSON.stringify(
-              this.resolutionService.getCurrentResolution()
-            )}
-          `);
-        },
       },
     ];
   }

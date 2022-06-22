@@ -33,7 +33,7 @@ export class InstructionService {
 
     for (const instruction of instructions) {
       logger.debug(
-        `Handling enb instruction ${JSON.stringify(
+        `Handling instruction ${JSON.stringify(
           instruction
         )} for modpack version ${modpackVersion}`
       );
