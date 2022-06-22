@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.3.1 (2022-06-22)
+
+
+### Bug Fixes
+
+* reduce news cache to 30 minutes ([8017075](https://github.com/Wildlander-mod/Launcher/commit/8017075bc901b6e958680fda2cd747ae8a403b5b))
+
 ## 2.3.0 (2022-06-22)
 
 
