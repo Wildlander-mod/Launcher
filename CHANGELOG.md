@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.3.0 (2022-06-22)
+
+
+### Features
+
+* massively decrease time to check for prerequisites ([db46d46](https://github.com/Wildlander-mod/Launcher/commit/db46d4625d4a79c8182dbeca1091eabb11449e71))
+
 ### 2.2.2 (2022-06-21)
 
 
