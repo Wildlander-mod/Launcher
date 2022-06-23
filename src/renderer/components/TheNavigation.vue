@@ -67,11 +67,11 @@
     <div class="l-column l-center l-center-text">
       <div class="u-spacing">
         <template v-if="checkingPrerequisites">
-          Checking if Wildlander prerequisites are installed...
+          Checking if {{ modpackName }} prerequisites are installed...
         </template>
         <template v-if="installingPrerequisites">
           <div>
-            <div>Wildlander prerequisites are currently installing.</div>
+            <div>{{ modpackName }} prerequisites are currently installing.</div>
             <div>Please click "Install" or "Repair" on any pop ups.</div>
             <div>
               Ensure you close all pop ups that appear after installation is
@@ -80,8 +80,8 @@
           </div>
         </template>
         <template v-if="!checkingPrerequisites && !installingPrerequisites">
-          Please wait while Skyrim launches. This is not an error, and launching
-          may take several minutes.
+          Launching {{ modpackName }} version {{ modpackVersion }}. This is not
+          an error, and launching may take several minutes.
         </template>
       </div>
     </div>
@@ -119,6 +119,8 @@ import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events"
 import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
 import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
 import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
+import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
+import { Modpack } from "@/modpack-metadata";
 
 @Component({
   components: {
@@ -140,11 +142,16 @@ export default class TheNavigation extends Vue {
   private rebootRequired = false;
   private launcherVersion: string | null = null;
   private modpackVersion: string | null = null;
+  private modpackName: string | null = null;
 
   async created() {
     this.modpackVersion = await this.ipcService.invoke(
       WABBAJACK_EVENTS.GET_MODPACK_VERSION
     );
+
+    this.modpackName = (
+      await this.ipcService.invoke<Modpack>(MODPACK_EVENTS.GET_MODPACK_METADATA)
+    ).name;
 
     this.launcherVersion = await this.getVersion();
   }
