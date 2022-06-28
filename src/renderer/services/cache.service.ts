@@ -8,16 +8,21 @@ export class CacheService {
   /**
    * Returns data from the localStorage if it exists and is newer than maxAge
    */
-  public get<T>(key: string, maxAge: number): T | undefined {
-    maxAge *= 1000; // convert s to ms for comparison
+  public get<T>(
+    key: string,
+    maxAge?: number
+  ): { age: number; content: T } | undefined {
     const now = new Date();
-    logger.debug(`Cache: query "${key}" with maxAge: ${maxAge}.`);
+    logger.debug(
+      `Cache: query "${key}" with maxAge: ${maxAge || "unlimited"} seconds.`
+    );
     const rawData = window.localStorage.getItem(key);
     if (rawData !== null) {
       const data: { age: number; content: T } = JSON.parse(rawData);
-      if (now.getTime() - data.age < maxAge) {
+      // Convert maxAge to ms for comparison
+      if (!maxAge || now.getTime() - data.age < maxAge * 1000) {
         logger.debug(`Cache: returning data for "${key}"`);
-        return data.content;
+        return data;
       }
     }
     logger.debug(`Cache: could not find "${key}" in cache or too old`);
