@@ -22,9 +22,12 @@ export class PatreonService {
 
   public async getPatrons(shuffle = true): Promise<Patron[]> {
     if (this.patrons.length === 0) {
-      const data = this.cacheService.get<Patron[]>(this.cacheKey, 60 * 60 * 24);
-      if (data !== undefined) {
-        this.patrons = data;
+      const cache = this.cacheService.get<Patron[]>(
+        this.cacheKey,
+        60 * 60 * 24
+      );
+      if (cache?.content) {
+        this.patrons = cache.content;
       }
     }
 

@@ -1,16 +1,21 @@
 <template>
   <div v-if="!failedToGetNews && news.length > 0" class="c-news l-column">
-    <div v-for="newsItem in news" :key="newsItem.key" class="c-news__item">
-      <BaseLink :href="`https://www.patreon.com${newsItem.url}`" class="l-row">
-        <div class="c-news__published l-center-vertically">
-          {{ new Date(newsItem.published).toLocaleDateString() }}
-        </div>
+    <TransitionGroup name="c-news__group">
+      <div v-for="newsItem in news" :key="newsItem.url" class="c-news__item">
+        <BaseLink
+          :href="`https://www.patreon.com${newsItem.url}`"
+          class="l-row"
+        >
+          <div class="c-news__published l-center-vertically">
+            {{ new Date(newsItem.published).toLocaleDateString() }}
+          </div>
 
-        <div class="c-news__title">
-          {{ newsItem.title }}
-        </div>
-      </BaseLink>
-    </div>
+          <div class="c-news__title">
+            {{ newsItem.title }}
+          </div>
+        </BaseLink>
+      </div>
+    </TransitionGroup>
   </div>
   <div v-if="failedToGetNews && news.length === 0" class="l-flex l-center">
     Unable to load latest news.
@@ -20,7 +25,7 @@
 <script lang="ts">
 import { Options as Component, Vue } from "vue-class-component";
 import BaseList from "./BaseList.vue";
-import { Posts, PostsService } from "@/renderer/services/posts.service";
+import { Post, PostsService } from "@/renderer/services/posts.service";
 import {
   injectStrict,
   SERVICE_BINDINGS,
@@ -35,16 +40,20 @@ import BaseLink from "@/renderer/components/BaseLink.vue";
 })
 export default class News extends Vue {
   newsService!: PostsService;
-  news: Posts[] = [];
+  news: Post[] = [];
   failedToGetNews = false;
 
   async created() {
     this.newsService = injectStrict(SERVICE_BINDINGS.NEWS_SERVICE);
     try {
-      this.news = await this.newsService.getPosts();
+      this.news = await this.newsService.getPosts(this.updateNews);
     } catch {
       this.failedToGetNews = true;
     }
+  }
+
+  updateNews(news: Post[]) {
+    this.news = news;
   }
 }
 </script>
@@ -79,5 +88,16 @@ export default class News extends Vue {
   color: $colour-text--secondary;
 
   flex: 0.3;
+}
+
+.c-news__group-enter-active,
+.c-news__group-leave-active {
+  transition: all 0.5s ease;
+}
+
+.c-news__group-enter-from,
+.c-news__group-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
 }
 </style>
