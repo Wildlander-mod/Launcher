@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.4.0 (2022-06-28)
+
+
+### Features
+
+* display version number on game launch modal ([6dae26d](https://github.com/Wildlander-mod/Launcher/commit/6dae26dfc8735b1a4fdf315efe27e195c1320900))
+
 ### 2.3.3 (2022-06-28)
 
 ### 2.3.2 (2022-06-22)
