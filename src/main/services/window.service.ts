@@ -5,6 +5,7 @@ import path from "path";
 import { appRoot, isDevelopment } from "@/main/services/config.service";
 import { logger } from "@/main/logger";
 import { BindingScope, injectable } from "@loopback/context";
+import contextMenu from "electron-context-menu";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -63,6 +64,11 @@ export class WindowService {
     logger.debug("Creating browser window");
 
     try {
+      // Add default context menu
+      contextMenu({
+        showSaveImageAs: true,
+      });
+
       // Create the browser window.
       this.window = new BrowserWindow({
         frame: false,
