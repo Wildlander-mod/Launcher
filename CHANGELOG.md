@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.5.0 (2022-06-30)
+
+
+### Features
+
+* add context menu when right clicking ([0bed4a7](https://github.com/Wildlander-mod/Launcher/commit/0bed4a7db6795b6a07831bde48e34645f1905ef6))
+
 ### 2.4.7 (2022-06-28)
 
 ### 2.4.6 (2022-06-28)
