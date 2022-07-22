@@ -6,7 +6,6 @@ import { ModalService } from "@/renderer/services/modal.service";
 import { MessageService } from "@/renderer/services/message.service";
 import { EventService } from "@/renderer/services/event.service";
 import { IpcService } from "@/renderer/services/ipc.service";
-import { UpdateService } from "@/renderer/services/update.service";
 import { ModpackService } from "@/renderer/services/modpack.service";
 import { CacheService } from "@/renderer/services/cache.service";
 
@@ -33,7 +32,6 @@ export const SERVICE_BINDINGS = {
   MODAL_SERVICE: createBinding<ModalService>("keys.services.modal"),
   MESSAGE_SERVICE: createBinding<MessageService>("keys.services.message"),
   IPC_SERVICE: createBinding<IpcService>("keys.services.ipc"),
-  UPDATE_SERVICE: createBinding<UpdateService>("keys.services.update"),
   MODPACK_SERVICE: createBinding<ModpackService>("keys.services.modpack"),
 };
 
@@ -42,10 +40,8 @@ export const SERVICE_BINDINGS = {
  */
 export function registerServices(app: App) {
   const ipcService = new IpcService();
-  const updateService = new UpdateService();
   const modpackService = new ModpackService(ipcService);
   const cacheService = new CacheService();
-  app.provide(SERVICE_BINDINGS.UPDATE_SERVICE, updateService);
   app.provide(SERVICE_BINDINGS.IPC_SERVICE, ipcService);
   app.provide(
     SERVICE_BINDINGS.PATRON_SERVICE,
@@ -57,7 +53,7 @@ export function registerServices(app: App) {
   app.provide(SERVICE_BINDINGS.MODAL_SERVICE, new ModalService(EventService));
   app.provide(SERVICE_BINDINGS.MODPACK_SERVICE, modpackService);
 
-  return { ipcService, updateService, modpackService };
+  return { ipcService, modpackService };
 }
 
 /**

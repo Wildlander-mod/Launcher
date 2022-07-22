@@ -44,6 +44,7 @@ export class LauncherService {
   }
 
   async validateConfig() {
+    logger.debug("Validating config...");
     await this.configService.setDefaultPreferences({
       [USER_PREFERENCE_KEYS.ENB_PROFILE]: {
         value: await this.enbService.getDefaultPreference(),
@@ -61,6 +62,7 @@ export class LauncherService {
         value: this.resolutionService.getCurrentResolution(),
       },
     });
+    logger.debug("Config validated");
   }
 
   async backupAssets() {

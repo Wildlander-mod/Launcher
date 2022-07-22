@@ -1,17 +1,11 @@
 <template>
-  <AppPage layout="row">
-    <AppPageContent :spacing="false" :scrollable="true">
-      <News />
-    </AppPageContent>
+  <AppPageContent :spacing="false" :scrollable="true">
+    <News />
+  </AppPageContent>
 
-    <AppPageContent
-      title="Patron Highlight"
-      :spacing="false"
-      :scrollable="true"
-    >
-      <Patrons />
-    </AppPageContent>
-  </AppPage>
+  <AppPageContent title="Patron Highlight" :spacing="false" :scrollable="true">
+    <Patrons />
+  </AppPageContent>
 </template>
 
 <script lang="ts">

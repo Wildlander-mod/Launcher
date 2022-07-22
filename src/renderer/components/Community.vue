@@ -5,7 +5,7 @@
       class="c-resource l-flex"
     >
       <ImageWithText
-        image-source="images/logos/youtube.svg"
+        image-source="/images/logos/youtube.svg"
         alt=""
         text="YouTube"
       />
@@ -15,21 +15,21 @@
       class="c-resource l-flex"
     >
       <ImageWithText
-        image-source="images/logos/twitch.svg"
+        image-source="/images/logos/twitch.svg"
         alt=""
         text="Twitch"
       />
     </BaseLink>
     <BaseLink href="https://discord.gg/8VkDrfq" class="c-resource l-flex">
       <ImageWithText
-        image-source="images/logos/discord.svg"
+        image-source="/images/logos/discord.svg"
         alt=""
         text="Discord"
       />
     </BaseLink>
     <BaseLink href="https://reddit.com/r/wildlander" class="c-resource l-flex">
       <ImageWithText
-        image-source="images/logos/reddit.svg"
+        image-source="/images/logos/reddit.svg"
         alt=""
         text="Reddit"
       />

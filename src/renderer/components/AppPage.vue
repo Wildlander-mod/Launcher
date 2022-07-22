@@ -1,23 +1,98 @@
 <template>
-  <div
-    class="c-page"
-    :class="{ 'l-row': layout === 'row', 'l-column': layout === 'column' }"
+  <main
+    class="l-column"
+    :class="{
+      'u-disable-click-events': !clickEventsEnabled,
+    }"
   >
-    <slot></slot>
-  </div>
+    <div class="l-row">
+      <TheNavigation v-if="!preloadCheck" />
+      <div class="l-column">
+        <div class="c-app__page l-column">
+          <TheHeader class="l-no-flex-grow" />
+          <div class="c-page l-row">
+            <router-view />
+          </div>
+        </div>
+      </div>
+    </div>
+    <TheFooter v-if="!preloadCheck" class="l-end-self" />
+  </main>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
+import TheFooter from "@/renderer/components/TheFooter.vue";
+import TheHeader from "@/renderer/components/TheHeader.vue";
+import TheNavigation from "@/renderer/components/TheNavigation.vue";
+import { modalOpenedEvent } from "@/renderer/services/modal.service";
+import {
+  DISABLE_LOADING_EVENT,
+  ENABLE_LOADING_EVENT,
+} from "@/renderer/services/event.service";
+import {
+  injectStrict,
+  SERVICE_BINDINGS,
+} from "@/renderer/services/service-container";
+import { useRoute } from "vue-router";
+import { watch } from "vue";
 
+@Options({
+  components: {
+    TheFooter,
+    TheHeader,
+    TheNavigation,
+  },
+})
 export default class AppPage extends Vue {
   @Prop({ default: "column" }) private layout!: "row" | "column";
+
+  clickEventsEnabled = true;
+  private preloadCheck = true;
+
+  private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+
+  created() {
+    const route = useRoute();
+    watch(
+      () => route.name,
+      () => {
+        this.preloadCheck = route.meta?.preload as boolean;
+      }
+    );
+
+    this.eventService.on(modalOpenedEvent, (opened: unknown) => {
+      this.setClickEventsEnabled(!opened as boolean);
+    });
+
+    this.eventService.on(ENABLE_LOADING_EVENT, () => {
+      this.setClickEventsEnabled(false);
+      this.setLoading(true);
+    });
+
+    this.eventService.on(DISABLE_LOADING_EVENT, () => {
+      this.setClickEventsEnabled(true);
+      this.setLoading(false);
+    });
+  }
+
+  setClickEventsEnabled(enabled: boolean) {
+    this.clickEventsEnabled = enabled;
+  }
+
+  setLoading(loading: boolean) {
+    document.body.style.cursor = loading ? "progress" : "default";
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "~@/assets/scss";
+
+.c-app__page {
+  margin-top: $size-spacing--titlebar;
+}
 
 .c-page {
   margin-top: $size-spacing--titlebar;
