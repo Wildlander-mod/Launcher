@@ -12,8 +12,8 @@ export class WindowController {
   ) {}
 
   @handle(WindowEvents.CLOSE)
-  close() {
-    this.renderService.close();
+  quit() {
+    this.renderService.quit();
   }
 
   @handle(WindowEvents.RELOAD)

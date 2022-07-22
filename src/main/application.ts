@@ -52,5 +52,6 @@ export class LauncherApplication extends BootMixin(Application) {
   private async startBrowser() {
     const renderService = await this.getServiceByClass(WindowService);
     await renderService.createBrowserWindow();
+    await renderService.load("/");
   }
 }

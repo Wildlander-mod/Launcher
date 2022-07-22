@@ -8,6 +8,7 @@ import { LauncherService } from "@/main/services/launcher.service";
 import { platform, version, type } from "os";
 import { WabbajackService } from "@/main/services/wabbajack.service";
 import { ResolutionService } from "@/main/services/resolution.service";
+import { UpdateService } from "@/main/services/update.service";
 
 interface StartupCommand {
   name: string;
@@ -27,7 +28,8 @@ export class StartupService {
     @service(LauncherService) private launcherService: LauncherService,
     @service(ConfigService) private configService: ConfigService,
     @service(WabbajackService) private wabbajackService: WabbajackService,
-    @service(ResolutionService) private resolutionService: ResolutionService
+    @service(ResolutionService) private resolutionService: ResolutionService,
+    @service(UpdateService) private updateService: UpdateService
   ) {}
 
   public registerStartupCommands() {
@@ -48,7 +50,11 @@ export class StartupService {
         },
       },
       {
-        name: "Delete invalid modpack preference",
+        name: "Auto update",
+        execute: async () => await this.updateService.update(),
+      },
+      {
+        name: "Check for invalid modpack preference",
         execute: () => {
           if (!this.modpackService.checkCurrentModpackPathIsValid()) {
             const modpackDirectory = this.modpackService.getModpackDirectory();
@@ -68,17 +74,16 @@ export class StartupService {
     ];
   }
 
-  public runStartup() {
-    return Promise.all(
-      this.startupCommands.map(async (command) => {
-        if (
-          (command.requiresModpack && this.modpackService.isModpackSet()) ||
-          !command.requiresModpack
-        ) {
-          logger.debug(`Running startup command: ${command.name}`);
-          await command.execute();
-        }
-      })
-    );
+  public async runStartup() {
+    for (const command of this.startupCommands) {
+      if (
+        (command.requiresModpack && this.modpackService.isModpackSet()) ||
+        !command.requiresModpack
+      ) {
+        logger.debug(`Running startup command: ${command.name}`);
+        await command.execute();
+        logger.debug(`Command "${command.name}" completed`);
+      }
+    }
   }
 }

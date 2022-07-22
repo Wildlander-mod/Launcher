@@ -1,9 +1,7 @@
 <template>
-  <AppPage>
-    <AppPageContent>
-      <Community />
-    </AppPageContent>
-  </AppPage>
+  <AppPageContent>
+    <Community />
+  </AppPageContent>
 </template>
 
 <script lang="ts">

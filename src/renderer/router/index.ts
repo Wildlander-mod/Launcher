@@ -9,7 +9,6 @@ import {
 import ViewHome from "@/renderer/views/ViewHome.vue";
 import ViewCommunity from "@/renderer/views/ViewCommunity.vue";
 import ViewAdvanced from "@/renderer/views/ViewAdvanced.vue";
-import { UpdateService } from "@/renderer/services/update.service";
 import AutoUpdate from "@/renderer/views/AutoUpdate.vue";
 import ModDirectoryView from "@/renderer/views/ModDirectory.vue";
 import { ModpackService } from "@/renderer/services/modpack.service";
@@ -18,16 +17,6 @@ const HomeRouteName = "Home";
 const AutoUpdateRouteName = "AutoUpdate";
 const ModDirectoryRouteName = "ModDirectory";
 
-const checkAutoUpdate =
-  (updateService: UpdateService): NavigationGuardWithThis<undefined> =>
-  async (to) => {
-    if (!updateService.isUpdated()) {
-      return {
-        name: AutoUpdateRouteName,
-        params: { nextRoute: to.fullPath },
-      };
-    }
-  };
 const checkModDirectory =
   (modpackService: ModpackService): NavigationGuardWithThis<undefined> =>
   async () => {
@@ -42,49 +31,36 @@ const checkModDirectory =
     }
   };
 
-const getRoutes = (
-  updateService: UpdateService,
-  modpackService: ModpackService
-): RouteRecordRaw[] =>
+const getRoutes = (modpackService: ModpackService): RouteRecordRaw[] =>
   [
     {
       path: "/",
       name: HomeRouteName,
       component: ViewHome,
-      beforeEnter: [
-        checkAutoUpdate(updateService),
-        checkModDirectory(modpackService),
-      ],
+      beforeEnter: [checkModDirectory(modpackService)],
     },
     {
       path: "/community",
       name: "Community",
       component: ViewCommunity,
-      beforeEnter: [
-        checkAutoUpdate(updateService),
-        checkModDirectory(modpackService),
-      ],
+      beforeEnter: [checkModDirectory(modpackService)],
     },
     {
       path: "/advanced",
       name: "Advanced",
       component: ViewAdvanced,
-      beforeEnter: [
-        checkAutoUpdate(updateService),
-        checkModDirectory(modpackService),
-      ],
+      beforeEnter: [checkModDirectory(modpackService)],
     },
     {
-      path: "/auto-update/:nextRoute",
+      path: "/auto-update",
       name: AutoUpdateRouteName,
       component: AutoUpdate,
-      props: true,
       meta: {
         preload: true,
       },
     },
     {
-      path: "/ModDirectory",
+      path: "/mod-directory",
       name: ModDirectoryRouteName,
       component: ModDirectoryView,
       props: true,
@@ -110,11 +86,8 @@ const getRoutes = (
       };
     });
 
-export const getRouter = (
-  updateService: UpdateService,
-  modpackService: ModpackService
-) =>
+export const getRouter = (modpackService: ModpackService) =>
   createRouter({
     history: createWebHashHistory(),
-    routes: getRoutes(updateService, modpackService),
+    routes: getRoutes(modpackService),
   });

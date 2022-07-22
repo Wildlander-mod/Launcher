@@ -11,7 +11,7 @@ import contextMenu from "electron-context-menu";
   scope: BindingScope.SINGLETON,
 })
 export class WindowService {
-  private window!: Electron.BrowserWindow;
+  private window!: BrowserWindow;
 
   private static handleFatalError(message: string, err: string | Error) {
     logger.error(`${message}. ${err}`);
@@ -36,9 +36,8 @@ export class WindowService {
     return this.window.webContents;
   }
 
-  close() {
-    logger.debug("Close application");
-    this.getWindow().close();
+  quit() {
+    logger.debug("Quit application");
     app.quit();
   }
 
@@ -62,6 +61,11 @@ export class WindowService {
 
   async createBrowserWindow() {
     logger.debug("Creating browser window");
+
+    if (this.window) {
+      logger.debug("Browser window already exists");
+      return;
+    }
 
     try {
       // Add default context menu
@@ -90,21 +94,6 @@ export class WindowService {
           preload: path.join(appRoot, "main/preload.js"),
         },
       });
-
-      if (isDevelopment) {
-        // Load the url of the dev server if in development mode
-        await this.window.loadURL("http://localhost:8080");
-        if (!process.env.IS_TEST) {
-          this.window.webContents.openDevTools();
-        }
-        // show window without setting focus
-        this.window.showInactive();
-      } else {
-        this.createProtocol("app");
-        // Load the index.html when not in development
-        await this.window.loadURL("app://./index.html");
-        this.window.show();
-      }
     } catch (error) {
       if (error instanceof Error) {
         WindowService.handleFatalError(
@@ -117,6 +106,58 @@ export class WindowService {
           ""
         );
       }
+    }
+  }
+
+  /**
+   *
+   * @param path - Must start with a '/'
+   */
+  async load(path: string) {
+    try {
+      if (isDevelopment) {
+        const url = new URL(`http://localhost:8080/#${path}`).toString();
+        await this.navigateInWindow(url);
+        if (!process.env.IS_TEST) {
+          this.window.webContents.openDevTools();
+        }
+        // Show window without setting focus
+        this.window.showInactive();
+      } else {
+        this.createProtocol("app");
+        // Load the index.html when not in development
+        const url = new URL(`app://./index.html/#${path}`).toString();
+        await this.navigateInWindow(url);
+        this.window.show();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        WindowService.handleFatalError(
+          "Unable to load application page",
+          error
+        );
+      } else {
+        WindowService.handleFatalError(
+          "Unable to load application page with unknown error",
+          ""
+        );
+      }
+    }
+  }
+
+  private async navigateInWindow(url: string) {
+    // If the browser window is already open, a URL change will cause electron to think the request is aborted.
+    // When the app loads a URL, the hash is changed immediately. If the window is already open,
+    // electron considers this a change in URl and a failure so it errors.
+    // If the window is open, just navigate from the browser instead.
+    logger.debug(`Loading url: ${url}`);
+    if (this.window.isVisible()) {
+      await this.window.webContents.executeJavaScript(
+        `window.location.href = '${url}'`
+      );
+      this.window.reload();
+    } else {
+      await this.window.loadURL(url);
     }
   }
 

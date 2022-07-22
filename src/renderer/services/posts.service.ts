@@ -38,6 +38,7 @@ export class PostsService {
             if (afterFetch) {
               logger.debug("Calling optional method after fetching posts");
               afterFetch(posts);
+              logger.debug("Finished calling optional method");
             }
           });
         });

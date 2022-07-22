@@ -8,10 +8,10 @@ import { registerServices } from "@/renderer/services/service-container";
 
 const app = createApp(App);
 
-const { updateService, modpackService } = registerServices(app);
+const { modpackService } = registerServices(app);
 
 app
-  .use(getRouter(updateService, modpackService))
+  .use(getRouter(modpackService))
   .use(VueFinalModal())
   .use(VueClickAway)
   .mount("#app");

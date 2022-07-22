@@ -1,44 +1,40 @@
 <template>
-  <AppPage>
-    <AppPageContent width="large">
-      <div class="c-settings l-column">
-        <div class="c-settings__directories l-column">
-          <ModDirectory />
-        </div>
+  <AppPageContent width="large">
+    <div class="c-settings l-column">
+      <div class="c-settings__directories l-column">
+        <ModDirectory />
+      </div>
 
-        <div class="l-row c-settings__actions">
-          <div class="c-settings__label">Mod Organizer 2</div>
-          <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
-        </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Mod Organizer 2</div>
+        <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
+      </div>
 
-        <div class="l-row c-settings__actions">
-          <div class="c-settings__label">Restore ENB presets</div>
-          <BaseButton type="warning" @click="restoreENBPresets"
-            >Restore
-          </BaseButton>
-        </div>
-        <div class="l-row c-settings__actions">
-          <div class="c-settings__label">Restore MO2 profiles</div>
-          <BaseButton type="warning" @click="restoreProfiles"
-            >Restore
-          </BaseButton>
-        </div>
-        <div class="l-row c-settings__multi-actions">
-          <div class="c-settings__label">Application logs</div>
-          <div class="c-settings__multi-buttons">
-            <BaseButton type="default" @click="openLogPath">Open</BaseButton>
-            <BaseButton type="default" @click="clearLogs">Clear</BaseButton>
-          </div>
-        </div>
-        <div class="l-row c-settings__actions">
-          <div class="c-settings__label">Skyrim crash logs</div>
-          <BaseButton type="default" @click="openCrashLogPath">
-            Open
-          </BaseButton>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Restore ENB presets</div>
+        <BaseButton type="warning" @click="restoreENBPresets"
+          >Restore
+        </BaseButton>
+      </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Restore MO2 profiles</div>
+        <BaseButton type="warning" @click="restoreProfiles"
+          >Restore
+        </BaseButton>
+      </div>
+      <div class="l-row c-settings__multi-actions">
+        <div class="c-settings__label">Application logs</div>
+        <div class="c-settings__multi-buttons">
+          <BaseButton type="default" @click="openLogPath">Open</BaseButton>
+          <BaseButton type="default" @click="clearLogs">Clear</BaseButton>
         </div>
       </div>
-    </AppPageContent>
-  </AppPage>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Skyrim crash logs</div>
+        <BaseButton type="default" @click="openCrashLogPath"> Open </BaseButton>
+      </div>
+    </div>
+  </AppPageContent>
 
   <AppModal :show-modal="mo2Running" name="mo2Running">
     <div class="l-column l-center">
