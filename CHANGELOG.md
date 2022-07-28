@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.6.0 (2022-07-28)
+
+
+### Features
+
+* lock the launcher when MO2 is running ([5101315](https://github.com/Wildlander-mod/Launcher/commit/5101315c04f33d348ae5f68af61dc71ba0c32902))
+
 ### 2.5.3 (2022-07-27)
 
 ### 2.5.2 (2022-07-27)
