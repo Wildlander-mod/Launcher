@@ -18,6 +18,8 @@
     </div>
     <TheFooter v-if="!preloadCheck" class="l-end-self" />
   </main>
+
+  <MO2Modal />
 </template>
 
 <script lang="ts">
@@ -37,12 +39,14 @@ import {
 } from "@/renderer/services/service-container";
 import { useRoute } from "vue-router";
 import { watch } from "vue";
+import MO2Modal from "@/renderer/components/MO2RunningModal.vue";
 
 @Options({
   components: {
     TheFooter,
     TheHeader,
     TheNavigation,
+    MO2Modal,
   },
 })
 export default class AppPage extends Vue {

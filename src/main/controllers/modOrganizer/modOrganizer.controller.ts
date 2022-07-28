@@ -19,4 +19,14 @@ export class ModOrganizerController {
   async launchGame() {
     await this.modOrganizerService.launchGame();
   }
+
+  @handle(MOD_ORGANIZER_EVENTS.CLOSE_MO2)
+  async closeMO2() {
+    await this.modOrganizerService.closeMO2();
+  }
+
+  @handle(MOD_ORGANIZER_EVENTS.IS_MO2_RUNNING)
+  async isMO2Running(): Promise<boolean> {
+    return this.modOrganizerService.isRunning();
+  }
 }
