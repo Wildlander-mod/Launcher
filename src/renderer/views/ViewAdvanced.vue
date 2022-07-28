@@ -35,15 +35,6 @@
       </div>
     </div>
   </AppPageContent>
-
-  <AppModal :show-modal="mo2Running" name="mo2Running">
-    <div class="l-column l-center">
-      <div class="u-spacing">
-        Mod Organizer 2 is currently running. To prevent conflicts, the launcher
-        has been locked until it is closed.
-      </div>
-    </div>
-  </AppModal>
 </template>
 
 <script lang="ts">
@@ -63,12 +54,10 @@ import {
   DISABLE_LOADING_EVENT,
   ENABLE_LOADING_EVENT,
 } from "@/renderer/services/event.service";
-import AppModal from "@/renderer/components/AppModal.vue";
 import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
 
 @Options({
   components: {
-    AppModal,
     ModDirectory,
     AppPage,
     AppPageContent,
@@ -80,11 +69,8 @@ export default class Settings extends Vue {
   private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  private mo2Running = false;
-
   async launchMO2() {
     this.eventService.emit(ENABLE_LOADING_EVENT);
-    this.mo2Running = true;
     try {
       await this.ipcService.invoke(MOD_ORGANIZER_EVENTS.LAUNCH_MO2);
     } catch (error) {
@@ -93,7 +79,6 @@ export default class Settings extends Vue {
         error: (error as Error).message,
       });
     }
-    this.mo2Running = false;
     this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
