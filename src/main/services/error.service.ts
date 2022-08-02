@@ -11,4 +11,15 @@ export class ErrorService {
     logger.error(new Error().stack);
     await dialog.showErrorBox(title, message);
   }
+
+  async handleUnknownError(error?: unknown) {
+    logger.error(
+      `Unknown error. The stack trace might hold more details. ${error}`
+    );
+    logger.error(new Error().stack);
+    await dialog.showErrorBox(
+      "An unknown error has occurred",
+      "If you require more support, please post a message in the official modpack Discord and send your launcher log files."
+    );
+  }
 }

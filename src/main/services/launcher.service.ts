@@ -9,6 +9,8 @@ import { ModpackService } from "@/main/services/modpack.service";
 import { BindingScope, injectable } from "@loopback/context";
 import { app } from "electron";
 import { logger } from "@/main/logger";
+import { ErrorService } from "@/main/services/error.service";
+import { WindowService } from "@/main/services/window.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -21,7 +23,9 @@ export class LauncherService {
     @service(ModpackService) private modpackService: ModpackService,
     @service(ProfileService) private profileService: ProfileService,
     @service(ModOrganizerService)
-    private modOrganizerService: ModOrganizerService
+    private modOrganizerService: ModOrganizerService,
+    @service(ErrorService) private errorService: ErrorService,
+    @service(WindowService) private windowService: WindowService
   ) {}
 
   async refreshModpack() {
@@ -30,17 +34,31 @@ export class LauncherService {
   }
 
   async setModpack(filepath: string) {
-    await this.configService.setPreference(
-      USER_PREFERENCE_KEYS.MOD_DIRECTORY,
-      filepath
-    );
-    await this.validateConfig();
-    await this.backupAssets();
-    await this.enbService.resetCurrentEnb(false);
-    await this.resolutionService.setResolution(
-      this.resolutionService.getResolutionPreference()
-    );
-    await this.resolutionService.setShouldDisableUltraWidescreen();
+    try {
+      await this.configService.setPreference(
+        USER_PREFERENCE_KEYS.MOD_DIRECTORY,
+        filepath
+      );
+      await this.validateConfig();
+      await this.backupAssets();
+      await this.enbService.resetCurrentEnb(false);
+      await this.resolutionService.setResolution(
+        this.resolutionService.getResolutionPreference()
+      );
+      await this.resolutionService.setShouldDisableUltraWidescreen();
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("EPERM")) {
+        await this.errorService.handleError(
+          "Permission error",
+          `
+          The launcher has been unable to create/modify some files due to a permissions error.
+          It is strongly recommended you restart the application as an administrator.`
+        );
+        this.windowService.quit();
+      } else {
+        await this.errorService.handleUnknownError(error);
+      }
+    }
   }
 
   async validateConfig() {
