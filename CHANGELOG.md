@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.6.2 (2022-08-02)
+
+
+### Bug Fixes
+
+* promt user to restart as admin if they get a permission error ([1189059](https://github.com/Wildlander-mod/Launcher/commit/11890591e9e2951b1851e4328a586ccd22a6d0e8))
+
 ### 2.6.1 (2022-07-28)
 
 ## 2.6.0 (2022-07-28)
