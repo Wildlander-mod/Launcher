@@ -223,15 +223,14 @@ export class ModOrganizerService {
       const { stderr } = await promisify(childProcess.exec)(mo2Command);
       await this.postLaunch();
       if (stderr) {
-        logger.error(`Error while executing ModOrganizer - ${stderr}`);
+        await this.errorService.handleError(
+          "Error launching game",
+          `${stderr}`
+        );
       }
     } catch (error) {
-      logger.error(`Failed to launch game or Skyrim crashed - ${error}`);
       await this.postLaunch();
-      await this.errorService.handleError(
-        "Error launching modlist or Skyrim crashed",
-        `${error}`
-      );
+      await this.errorService.handleError("Error launching game", `${error}`);
     }
   }
 
