@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.7.2 (2022-08-03)
+
+
+### Bug Fixes
+
+* clarify error message when the game fails to launch ([94d24f4](https://github.com/Wildlander-mod/Launcher/commit/94d24f48fe8ff043b6912b5f13e5b1c44bcd7b78))
+
 ### 2.7.1 (2022-08-03)
 
 ## 2.7.0 (2022-08-03)
