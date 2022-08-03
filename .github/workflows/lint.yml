@@ -23,6 +23,20 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run lint -- --no-fix
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - run: npm ci --legacy-peer-deps
+      - run: npm run test
+
   # Validate that commits are following the conventional commit format
   commit-validate:
     #  Don't run for dependabot updates
