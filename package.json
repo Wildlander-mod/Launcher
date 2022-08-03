@@ -4,9 +4,9 @@
   "description": "A launcher for the Wabbajack modpacks",
   "author": "Wildlander",
   "scripts": {
-    "clean": "rimraf dist && rimraf dist_electron",
+    "clean": "lb-clean dist",
     "precompile": "npm run clean",
-    "compile": "tsc",
+    "compile": "lb-tsc",
     "postcompile": "tsc-alias",
     "prestart": "npm run compile",
     "start": "vue-cli-service electron:serve",
@@ -22,7 +22,11 @@
     "lint:styles": "stylelint **/*.scss",
     "lint:typescript": "tsc --noEmit",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "pretest": "npm run compile",
+    "test": "npm run test:unit",
+    "test:coverage": "lb-nyc npm run test",
+    "test:unit": "lb-mocha \"dist/__tests__/unit\""
   },
   "nodemonConfig": {
     "watch": [
@@ -63,9 +67,13 @@
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/preset-typescript": "^7.16.5",
     "@commitlint/config-conventional": "^15.0.0",
+    "@loopback/build": "^9.0.2",
+    "@loopback/testlab": "^5.0.2",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/fs-extra": "^9.0.13",
     "@types/ini": "^1.3.31",
+    "@types/mocha": "^9.1.1",
+    "@types/mock-fs": "^4.13.1",
     "@types/ncp": "^2.0.5",
     "@types/node-fetch": "^2.6.1",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
@@ -91,19 +99,21 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^8.2.0",
     "lint-staged": "^12.1.3",
+    "mocha": "^10.0.0",
+    "mock-fs": "^5.1.3",
     "node-sass": "^6.0.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
     "sass-loader": "^10.2.0",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended-scss": "^4.3.0",
     "stylelint-scss": "^3.21.0",
     "tsc-alias": "^1.6.4",
+    "tsconfig-paths": "^4.0.0",
     "typescript": "^4.5.4",
     "vue-cli-plugin-electron-builder": "~2.1.1",
-    "vue-property-decorator": "^9.1.2"
+    "vue-property-decorator": "^10.0.0-rc.3"
   },
   "commitlint": {
     "extends": [
@@ -126,14 +136,6 @@
   "gitHooks": {
     "pre-commit": "lint-staged",
     "commit-msg": "commitlint -e -V "
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": [
-      "vue-cli-service lint"
-    ],
-    "*.scss": [
-      "npm run lint:styles"
-    ]
   },
   "repository": "https://github.com/Wildlander-mod/Launcher"
 }

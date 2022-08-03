@@ -19,7 +19,7 @@ import BaseImage from "@/renderer/components/BaseImage.vue";
   components: { BaseImage },
 })
 export default class ImageWithText extends Vue {
-  @Prop({ require: true }) imageSource!: string;
+  @Prop({ required: true }) imageSource!: string;
   @Prop({ required: true }) alt!: string;
   @Prop({ required: true }) text!: string;
 }
