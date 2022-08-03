@@ -239,19 +239,4 @@ $selectFocus: rgba(255, 255, 255, 0.1);
     cursor: pointer;
   }
 }
-
-// All popper classes need important because once built, the order of the css is not consistent
-:deep(.popper) {
-  background-color: $colour-background--darker-solid !important;
-  padding: $size-spacing !important;
-}
-
-:deep(.popper #arrow::before) {
-  background-color: $colour-background--darker-solid !important;
-}
-
-:deep(.popper:hover),
-:deep(.popper:hover > #arrow::before) {
-  background-color: $colour-background--darker-solid !important;
-}
 </style>
