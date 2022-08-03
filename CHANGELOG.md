@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.7.0 (2022-08-03)
+
+
+### Features
+
+* show warning to user's using a pre-release version ([9e44309](https://github.com/Wildlander-mod/Launcher/commit/9e443094b0e55793e9838ebf3a96d4c57399127f))
+
 ### 2.6.2 (2022-08-02)
 
 
