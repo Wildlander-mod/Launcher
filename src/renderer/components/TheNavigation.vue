@@ -53,12 +53,14 @@
 
       <div class="c-navigation__launcher-info">
         <p>Modpack version: {{ modpackVersion }}</p>
-        <p>Launcher Version: {{ launcherVersion }}</p>
-        <BaseLink
-          href="https://github.com/Wildlander-mod/Launcher"
-          :underline="true"
-          >Help contribute
-        </BaseLink>
+        <LauncherVersion :version="launcherVersion" />
+        <p>
+          <BaseLink
+            href="https://github.com/Wildlander-mod/Launcher"
+            :underline="true"
+            >Help contribute
+          </BaseLink>
+        </p>
       </div>
     </div>
   </nav>
@@ -121,9 +123,12 @@ import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
 import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import { Modpack } from "@/modpack-metadata";
+import Popper from "vue3-popper";
+import LauncherVersion from "@/renderer/components/LauncherVersion.vue";
 
 @Component({
   components: {
+    LauncherVersion,
     ENB,
     AppModal,
     Resolution,
@@ -131,6 +136,7 @@ import { Modpack } from "@/modpack-metadata";
     BaseLink,
     BaseButton,
     NavigationItem,
+    Popper,
   },
 })
 export default class TheNavigation extends Vue {

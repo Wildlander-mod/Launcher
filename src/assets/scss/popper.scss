@@ -1,0 +1,15 @@
+@import "./layout";
+@import "./settings/colours";
+
+// All popper classes need important because once built, the order of the css is not consistent
+:deep(.popper) {
+  padding: $size-spacing !important;
+  color: white;
+}
+
+:deep(.popper),
+:deep(.popper:hover),
+:deep(.popper #arrow::before),
+:deep(.popper:hover > #arrow::before) {
+  background-color: $colour-background--darker-solid !important;
+}
