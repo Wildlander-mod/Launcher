@@ -43,7 +43,7 @@
     "@loopback/boot": "^5.0.2",
     "@loopback/context": "^5.0.1",
     "@loopback/core": "^4.0.2",
-    "electron-context-menu": "^3.3.0",
+    "electron-context-menu": "^3.4.0",
     "electron-log": "^4.4.8",
     "electron-shutdown-command": "^2.0.1",
     "electron-store": "^8.1.0",
