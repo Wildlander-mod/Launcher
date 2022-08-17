@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'c-button',
+      'c-button u-text',
       { [`c-button--${size}`]: size !== 'grow' },
       `c-button--${type}`,
     ]"
@@ -33,16 +33,11 @@ export default class BaseButton extends Vue {
   border-radius: 2px;
   color: $colour-text;
   display: flex;
-  height: $size-action-height;
+  min-height: $size-action-height;
   justify-content: center;
+  align-items: center;
   padding: 0;
   user-select: none;
-
-  // These shouldn't have to be set specifically here
-  // but they were originally only set on the <p> tag
-  font-weight: 300;
-  line-height: 30px;
-  size: 14px;
 
   &:active,
   &:hover {
@@ -76,7 +71,7 @@ export default class BaseButton extends Vue {
   }
 
   &--small {
-    width: 85px;
+    min-width: 85px;
   }
 }
 </style>

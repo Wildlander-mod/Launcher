@@ -57,12 +57,6 @@ body {
   margin: 0;
 }
 
-p {
-  font-weight: $font-weight--small;
-  size: $font-size--large;
-  margin: 0;
-}
-
 .c-app {
   background-repeat: no-repeat;
   background-size: cover;

@@ -7,7 +7,7 @@
 
       <div class="l-row c-settings__actions">
         <div class="c-settings__label">Mod Organizer 2</div>
-        <BaseButton type="primary" @click="launchMO2"> Launch</BaseButton>
+        <BaseButton type="primary" @click="launchMO2">Launch</BaseButton>
       </div>
 
       <div class="l-row c-settings__actions">

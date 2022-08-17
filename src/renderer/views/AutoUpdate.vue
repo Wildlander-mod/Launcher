@@ -5,8 +5,8 @@
         Checking for update...
       </div>
       <template v-else>
-        <p>There is a new version of the launcher available.</p>
-        <p>
+        <p class="u-text">There is a new version of the launcher available.</p>
+        <p class="u-text">
           The application will download an update and restart automatically
           before continuing.
         </p>

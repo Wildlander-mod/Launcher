@@ -11,7 +11,7 @@
     </template>
 
     <div
-      class="c-select"
+      class="c-select u-text"
       :class="{
         'c-select--fixed-width': !grow,
         'c-select--open': isOpen && !loading,
@@ -39,7 +39,7 @@
         </span>
       </div>
       <div
-        class="c-select__options u-scroll-y-auto"
+        class="c-select__options u-scroll-y-auto u-text"
         :class="{
           'c-select__options--open': isOpen && !loading,
           'c-select__options--closed': !isOpen && !loading,
@@ -50,7 +50,7 @@
         <div
           v-for="option in options.filter((x) => !x.hidden)"
           :key="option.value"
-          class="c-select__option"
+          class="c-select__option l-center-vertically"
           :class="{
             'c-select__option--disabled': option.disabled,
           }"
@@ -113,9 +113,10 @@ export default class BaseDropdown extends Vue {
 @import "~@/assets/scss";
 
 $selectFocus: rgba(255, 255, 255, 0.1);
+$selectHeight: $size-action-height;
 
 .c-select {
-  height: 30px;
+  height: $selectHeight;
   user-select: none;
   border-radius: 2px;
 
@@ -142,10 +143,10 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 .c-select__head {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: $size-action-height;
   width: 100%;
   overflow: hidden;
-  margin-bottom: 0;
   padding-left: 8px;
 
   .c-select__icon {
@@ -228,6 +229,7 @@ $selectFocus: rgba(255, 255, 255, 0.1);
 
 .c-select__option {
   cursor: default;
+  min-height: $selectHeight;
 
   &--disabled {
     background-color: $colour-background--dark;

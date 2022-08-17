@@ -1,5 +1,6 @@
 @import "./settings/colours";
 @import "./settings/sizes";
+@import "./settings/font";
 
 // Utility classes not tied to a component
 
@@ -44,10 +45,10 @@
 }
 
 .u-text {
-  font-weight: 300;
-  line-height: 30px;
-  size: 14px;
   box-sizing: border-box;
+  font-weight: $font-weight--small;
+  size: $font-size--large;
+  margin: 0;
 }
 
 .u-disable-click-events {
