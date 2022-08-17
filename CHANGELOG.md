@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.7.4 (2022-08-17)
+
+
+### Bug Fixes
+
+* add suggestion to change permissions if admin fails ([c5ee5b6](https://github.com/Wildlander-mod/Launcher/commit/c5ee5b68b485291dc3eb9fa333bd1e348225d44a))
+
 ### 2.7.3 (2022-08-15)
 
 ### 2.7.2 (2022-08-03)
