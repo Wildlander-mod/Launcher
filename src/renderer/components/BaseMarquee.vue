@@ -4,7 +4,11 @@
       :style="{ 'animation-duration': `${getAnimationLength()}s` }"
       class="marquee__scroller"
     >
-      <p v-for="element in items" :key="element.key" :class="`marquee__item`">
+      <p
+        v-for="element in items"
+        :key="element.key"
+        class="marquee__item u-text"
+      >
         {{ element }}
       </p>
     </div>

@@ -9,7 +9,7 @@
       <BaseLink
         href="https://github.com/Wildlander-mod/Launcher/releases/tag/v2.6.2"
       >
-        <p>
+        <p class="u-text">
           Launcher Version: {{ version }}
           <span class="material-icons c-launcher-version__warning">
             warning
@@ -20,7 +20,7 @@
   </template>
 
   <template v-else>
-    <p>Launcher Version: {{ version }}</p>
+    <p class="u-text">Launcher Version: {{ version }}</p>
   </template>
 </template>
 

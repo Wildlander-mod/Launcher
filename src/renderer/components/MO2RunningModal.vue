@@ -2,8 +2,8 @@
   <AppModal :show-modal="mo2Running" name="mo2Running">
     <div class="l-column l-center">
       <div class="u-spacing l-center-text">
-        <p>Mod Organizer 2 is currently running.</p>
-        <p>
+        <p class="u-text">Mod Organizer 2 is currently running.</p>
+        <p class="u-text">
           To prevent conflicts, the launcher has been locked until Mod Organizer
           is closed.
         </p>

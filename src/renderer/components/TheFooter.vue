@@ -1,13 +1,13 @@
 <template>
   <footer class="c-footer">
-    <p class="c-footer__text">
+    <p class="c-footer__text u-text">
       <BaseLink :href="modpack.patreon"> Thanks to all the Patrons!</BaseLink>
     </p>
     <BaseMarquee
       v-if="patronNames && patronNames.length > 0"
       :items="patronNames"
     />
-    <p v-else-if="cannotGetPatrons" class="c-footer__text">
+    <p v-else-if="cannotGetPatrons" class="c-footer__text u-text">
       Could not retrieve Patron list.
     </p>
   </footer>

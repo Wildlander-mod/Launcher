@@ -52,9 +52,9 @@
       </div>
 
       <div class="c-navigation__launcher-info">
-        <p>Modpack version: {{ modpackVersion }}</p>
+        <p class="u-text">Modpack version: {{ modpackVersion }}</p>
         <LauncherVersion :version="launcherVersion" />
-        <p>
+        <p class="u-text">
           <BaseLink
             href="https://github.com/Wildlander-mod/Launcher"
             :underline="true"
