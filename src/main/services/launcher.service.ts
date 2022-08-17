@@ -52,7 +52,8 @@ export class LauncherService {
           "Permission error",
           `
           The launcher has been unable to create/modify some files due to a permissions error.
-          It is strongly recommended you restart the application as an administrator.`
+          It is strongly recommended you restart the application as an administrator.
+          If this does not work, you will need to change the permissions of the install directory.`
         );
         this.windowService.quit();
       } else {
