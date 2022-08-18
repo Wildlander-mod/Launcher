@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.7.7 (2022-08-18)
+
+
+### Bug Fixes
+
+* remove Norton from process blacklist ([339d83b](https://github.com/Wildlander-mod/Launcher/commit/339d83b84786c763000fc1684f54ad2d1752403b))
+
 ### 2.7.6 (2022-08-18)
 
 
