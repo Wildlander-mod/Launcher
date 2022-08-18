@@ -24,14 +24,6 @@ export class BlacklistService {
         name: "WebRoot Antivirus",
         processName: "WRCoreService.x86.exe",
       },
-      {
-        name: "Norton Antivirus",
-        processName: "NortonSecurity.exe",
-      },
-      {
-        name: "Norton Antivirus",
-        processName: "navapsvc.exe",
-      },
     ];
   }
 
