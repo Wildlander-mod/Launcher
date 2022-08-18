@@ -13,6 +13,7 @@ import { promisify } from "util";
 import childProcess from "child_process";
 import { reboot } from "electron-shutdown-command";
 import { getAllInstalledSoftware } from "fetch-installed-software";
+import psList from "ps-list";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -20,12 +21,14 @@ import { getAllInstalledSoftware } from "fetch-installed-software";
 export class SystemService {
   constructor(
     @service(ConfigService) private configService: ConfigService,
-    @service(ErrorService) private errorService: ErrorService
+    @service(ErrorService) private errorService: ErrorService,
+    private listProcesses = psList
   ) {}
 
-  private installerFile = path.normalize(
-    `${app.getPath("userData")}/vc_redist.x64.exe`
-  );
+  private static getInstallerFile() {
+    return path.normalize(`${app.getPath("userData")}/vc_redist.x64.exe`);
+  }
+
   private prerequisitesDownloaded = false;
 
   static getLocalAppData() {
@@ -112,15 +115,17 @@ export class SystemService {
   async installPrerequisites() {
     await this.downloadPrerequisites();
     logger.debug("Downloads completed");
-    logger.debug(`Installing ${this.installerFile}`);
-    return promisify(childProcess.exec)(`"${this.installerFile}"`);
+    logger.debug(`Installing ${SystemService.getInstallerFile()}`);
+    return promisify(childProcess.exec)(
+      `"${SystemService.getInstallerFile()}"`
+    );
   }
 
   async downloadPrerequisites() {
     logger.debug("Downloading prerequisites");
     await this.downloadFile(
       "https://aka.ms/vs/17/release/vc_redist.x64.exe",
-      this.installerFile
+      SystemService.getInstallerFile()
     );
 
     this.prerequisitesDownloaded = true;
@@ -142,5 +147,13 @@ export class SystemService {
     } else {
       logger.error(`Failed to download file from ${url}`);
     }
+  }
+
+  async isProcessRunning(process: string): Promise<boolean> {
+    return (
+      (await this.listProcesses()).filter(
+        ({ name }) => name.toLowerCase() === process.toLowerCase()
+      ).length > 0
+    );
   }
 }

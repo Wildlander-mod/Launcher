@@ -9,8 +9,13 @@ import { platform, version, type } from "os";
 import { WabbajackService } from "@/main/services/wabbajack.service";
 import { ResolutionService } from "@/main/services/resolution.service";
 import { UpdateService } from "@/main/services/update.service";
+import { BlacklistService } from "@/main/services/blacklist.service";
+import { ErrorService } from "@/main/services/error.service";
+import { WindowService } from "@/main/services/window.service";
 
 interface StartupCommand {
+  // Only needed if the command is being filtered
+  id?: string;
   name: string;
   execute: () => unknown;
   // Only run certain startup if the modpack is set
@@ -29,10 +34,13 @@ export class StartupService {
     @service(ConfigService) private configService: ConfigService,
     @service(WabbajackService) private wabbajackService: WabbajackService,
     @service(ResolutionService) private resolutionService: ResolutionService,
-    @service(UpdateService) private updateService: UpdateService
+    @service(UpdateService) private updateService: UpdateService,
+    @service(BlacklistService) private blacklistService: BlacklistService,
+    @service(ErrorService) private errorService: ErrorService,
+    @service(WindowService) private windowService: WindowService
   ) {}
 
-  public registerStartupCommands() {
+  public registerStartupCommands(filter?: string) {
     this.startupCommands = [
       {
         name: "Startup logs",
@@ -54,6 +62,30 @@ export class StartupService {
         execute: async () => await this.updateService.update(),
       },
       {
+        id: "processBlacklist",
+        name: "Check if blacklisted process is running",
+        execute: async () => {
+          const runningBlacklistedProcesses =
+            await this.blacklistService.blacklistedProcessesRunning();
+          if (runningBlacklistedProcesses.length > 0) {
+            // Throw an error and don't continue until the process has been closed
+            logger.debug(
+              `Blacklisted process running ${JSON.stringify(
+                runningBlacklistedProcesses
+              )}`
+            );
+            await this.errorService.handleError(
+              "Incompatible program running",
+              `
+               Please note that ${runningBlacklistedProcesses[0].name} is incompatible with the modpack/launcher.
+               Please exit the program before continuing.
+               The launcher will close to prevent further issues.`
+            );
+            this.windowService.quit();
+          }
+        },
+      },
+      {
         name: "Check for invalid modpack preference",
         execute: () => {
           if (!this.modpackService.checkCurrentModpackPathIsValid()) {
@@ -72,6 +104,12 @@ export class StartupService {
         requiresModpack: true,
       },
     ];
+
+    if (filter) {
+      this.startupCommands = this.startupCommands.filter(
+        ({ id }) => id === filter
+      );
+    }
   }
 
   public async runStartup() {

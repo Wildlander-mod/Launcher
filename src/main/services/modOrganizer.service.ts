@@ -18,6 +18,7 @@ import { BindingScope, injectable } from "@loopback/context";
 import { ResolutionService } from "@/main/services/resolution.service";
 import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
+import { SystemService } from "@/main/services/system.service";
 
 export const enum MO2Names {
   MO2EXE = "ModOrganizer.exe",
@@ -36,7 +37,8 @@ export class ModOrganizerService {
     @service(ConfigService) private configService: ConfigService,
     @service(ResolutionService) private resolutionService: ResolutionService,
     @service(GameService) private gameService: GameService,
-    @service(ProfileService) private profileService: ProfileService
+    @service(ProfileService) private profileService: ProfileService,
+    @service(SystemService) private systemService: SystemService
   ) {}
 
   private static filterMO2(process: psList.ProcessDescriptor) {
@@ -44,7 +46,7 @@ export class ModOrganizerService {
   }
 
   async isRunning() {
-    return (await psList()).filter(ModOrganizerService.filterMO2).length > 0;
+    return this.systemService.isProcessRunning(MO2Names.MO2EXE);
   }
 
   async closeMO2() {

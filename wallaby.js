@@ -1,10 +1,21 @@
-module.exports = function () {
+module.exports = function (w) {
   return {
-    files: ["src/**/*.ts", "!src/__tests__/unit/**/*.ts", "tsconfig.json"],
-
+    files: [
+      "src/**/*.ts",
+      "src/**/*.js",
+      "src/**/*.json",
+      "!src/__tests__/unit/**/*.ts",
+      "tsconfig.json",
+    ],
     tests: ["src/__tests__/unit/**/*.ts"],
 
     testFramework: "mocha",
+
+    compilers: {
+      "**/*.ts": w.compilers.typeScript({
+        noResolve: false,
+      }),
+    },
 
     env: {
       type: "node",
