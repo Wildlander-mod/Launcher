@@ -78,8 +78,8 @@ export class StartupService {
               "Incompatible program running",
               `
                Please note that ${runningBlacklistedProcesses[0].name} is incompatible with the modpack/launcher.
-               Please exit the program before continuing.
-               The launcher will close to prevent further issues.`
+               Please close ${runningBlacklistedProcesses[0].name} before continuing.
+               The launcher will now close to prevent further issues.`
             );
             this.windowService.quit();
           }
