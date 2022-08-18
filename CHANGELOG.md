@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.7.6 (2022-08-18)
+
+
+### Bug Fixes
+
+* adjust wording for blacklist error to be explicit ([bb85273](https://github.com/Wildlander-mod/Launcher/commit/bb852730c80fa568e5731272b5f12c758a4ae9d3))
+
 ### 2.7.5 (2022-08-17)
 
 ### 2.7.4 (2022-08-17)
