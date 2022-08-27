@@ -7,31 +7,68 @@
 
       <div class="l-row c-settings__actions">
         <div class="c-settings__label">Mod Organizer 2</div>
-        <BaseButton type="primary" @click="launchMO2">Launch</BaseButton>
-      </div>
-
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Restore ENB presets</div>
-        <BaseButton type="warning" @click="restoreENBPresets"
-          >Restore
-        </BaseButton>
+        <div class="c-settings__action">
+          <BaseButton type="primary" @click="launchMO2">Launch</BaseButton>
+        </div>
       </div>
       <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Restore MO2 profiles</div>
-        <BaseButton type="warning" @click="restoreProfiles"
-          >Restore
-        </BaseButton>
-      </div>
-      <div class="l-row c-settings__multi-actions">
         <div class="c-settings__label">Application logs</div>
-        <div class="c-settings__multi-buttons">
-          <BaseButton type="default" @click="openLogPath">Open</BaseButton>
-          <BaseButton type="default" @click="clearLogs">Clear</BaseButton>
+        <div class="c-settings__action c-settings__multi-buttons">
+          <BaseButton
+            class="c-settings__multi-button"
+            type="default"
+            size="grow"
+            @click="openLogPath"
+          >
+            Open
+          </BaseButton>
+          <BaseButton
+            class="c-settings__multi-button"
+            type="default"
+            size="grow"
+            @click="clearLogs"
+          >
+            Clear
+          </BaseButton>
         </div>
       </div>
       <div class="l-row c-settings__actions">
         <div class="c-settings__label">Skyrim crash logs</div>
-        <BaseButton type="default" @click="openCrashLogPath"> Open </BaseButton>
+        <div class="c-settings__action">
+          <BaseButton type="default" @click="openCrashLogPath">
+            Open
+          </BaseButton>
+        </div>
+      </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Restore ENB presets</div>
+        <div class="c-settings__action">
+          <BaseButton type="warning" @click="restoreENBPresets">
+            Restore
+          </BaseButton>
+        </div>
+      </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Restore MO2 profiles</div>
+        <div class="c-settings__action">
+          <BaseButton type="warning" @click="restoreProfiles">
+            Restore
+          </BaseButton>
+        </div>
+      </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Restore graphics presets</div>
+        <div class="c-settings__action">
+          <BaseButton type="warning" @click="restoreGraphics">
+            Restore
+          </BaseButton>
+        </div>
+      </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Show hidden profiles</div>
+        <div class="c-settings__action c-settings__action--toggle">
+          <Toggle @click="setShowHiddenProfiles" v-model="showHiddenProfiles" />
+        </div>
       </div>
     </div>
   </AppPageContent>
@@ -55,6 +92,8 @@ import {
   ENABLE_LOADING_EVENT,
 } from "@/renderer/services/event.service";
 import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
+import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
+import Toggle from "@vueform/toggle/src/Toggle";
 
 @Options({
   components: {
@@ -62,12 +101,20 @@ import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
     AppPage,
     AppPageContent,
     BaseButton,
+    Toggle,
   },
 })
 export default class Settings extends Vue {
   private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
   private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+  private showHiddenProfiles = false;
+
+  async created() {
+    this.showHiddenProfiles = await this.ipcService.invoke(
+      PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
+    );
+  }
 
   async launchMO2() {
     this.eventService.emit(ENABLE_LOADING_EVENT);
@@ -125,6 +172,28 @@ export default class Settings extends Vue {
     this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
+  async restoreGraphics() {
+    this.eventService.emit(ENABLE_LOADING_EVENT);
+
+    const { response } = await this.messageService.confirmation(
+      "Restoring graphics presets will reset any changes you have made to any presets. This cannot be undone. Are you sure?",
+      ["Cancel", "Restore graphics presets"]
+    );
+
+    if (response === 1) {
+      try {
+        await this.ipcService.invoke(GRAPHICS_EVENTS.RESTORE_GRAPHICS);
+      } catch (error) {
+        await this.messageService.error({
+          title: "Error restoring graphics presets",
+          error: (error as Error).message,
+        });
+      }
+    }
+
+    this.eventService.emit(DISABLE_LOADING_EVENT);
+  }
+
   async openLogPath() {
     await this.ipcService.invoke(SYSTEM_EVENTS.OPEN_APPLICATION_LOGS);
   }
@@ -136,6 +205,13 @@ export default class Settings extends Vue {
 
   async openCrashLogPath() {
     await this.ipcService.invoke(SYSTEM_EVENTS.OPEN_CRASH_LOGS);
+  }
+
+  async setShowHiddenProfiles() {
+    await this.ipcService.invoke(
+      PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES,
+      this.showHiddenProfiles
+    );
   }
 }
 </script>
@@ -153,19 +229,16 @@ export default class Settings extends Vue {
   padding-bottom: $size-spacing;
 }
 
-.c-settings__multi-actions {
-  display: grid;
-  grid-template-columns: 45% 65%;
-  align-items: center;
-  margin-top: $size-spacing;
-  width: 60%;
+.c-settings__multi-buttons {
+  display: flex;
+
+  :last-child {
+    margin-right: 0;
+  }
 }
 
-.c-settings__multi-buttons {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  column-gap: 5px;
-  justify-self: start;
+.c-settings__multi-button {
+  margin-right: 5px;
 }
 
 .c-settings__actions {
@@ -175,10 +248,22 @@ export default class Settings extends Vue {
   justify-content: space-between;
   margin-top: $size-spacing;
 
-  width: 40%;
+  width: 50%;
+}
+
+.c-settings__action {
+  flex: 1;
+}
+
+.c-settings__action--toggle {
+  display: flex;
+  justify-content: center;
 }
 
 .c-settings__label {
   margin-right: $size-spacing;
+  flex: 1;
 }
 </style>
+
+<style src="@vueform/toggle/themes/default.css"></style>

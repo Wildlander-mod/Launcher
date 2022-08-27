@@ -2,7 +2,7 @@
 // Taken from: https://stackoverflow.com/a/46842181/3379536
 export async function asyncFilter<T>(
   arr: T[],
-  callback: (item: T) => Promise<T[]>
+  callback: (item: T) => Promise<boolean>
 ) {
   const fail = Symbol();
   return (
