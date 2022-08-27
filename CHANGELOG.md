@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.8.0 (2022-08-27)
+
+
+### Features
+
+* separate graphics from profiles ([ba2d0d4](https://github.com/Wildlander-mod/Launcher/commit/ba2d0d46acdfb7ec0ec6e18e2f695375fc9691b6)), closes [#634](https://github.com/Wildlander-mod/Launcher/issues/634)
+
 ### 2.7.7 (2022-08-18)
 
 
