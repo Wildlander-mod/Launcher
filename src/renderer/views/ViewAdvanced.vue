@@ -22,12 +22,6 @@
           >Restore
         </BaseButton>
       </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Restore graphics presets</div>
-        <BaseButton type="warning" @click="restoreGraphics"
-          >Restore
-        </BaseButton>
-      </div>
       <div class="l-row c-settings__multi-actions">
         <div class="c-settings__label">Application logs</div>
         <div class="c-settings__multi-buttons">
@@ -61,7 +55,6 @@ import {
   ENABLE_LOADING_EVENT,
 } from "@/renderer/services/event.service";
 import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
-import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
 
 @Options({
   components: {
@@ -124,28 +117,6 @@ export default class Settings extends Vue {
       } catch (error) {
         await this.messageService.error({
           title: "Error restoring MO2 profiles",
-          error: (error as Error).message,
-        });
-      }
-    }
-
-    this.eventService.emit(DISABLE_LOADING_EVENT);
-  }
-
-  async restoreGraphics() {
-    this.eventService.emit(ENABLE_LOADING_EVENT);
-
-    const { response } = await this.messageService.confirmation(
-      "Restoring graphics presets will reset any changes you have made to any presets. This cannot be undone. Are you sure?",
-      ["Cancel", "Restore graphics presets"]
-    );
-
-    if (response === 1) {
-      try {
-        await this.ipcService.invoke(GRAPHICS_EVENTS.RESTORE_GRAPHICS);
-      } catch (error) {
-        await this.messageService.error({
-          title: "Error restoring graphics presets",
           error: (error as Error).message,
         });
       }

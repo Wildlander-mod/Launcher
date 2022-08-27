@@ -152,6 +152,24 @@ export class ModOrganizerService {
     return true;
   }
 
+  async backupOriginalProfiles() {
+    const profileBackupDirectory = `${this.configService.backupDirectory()}/profiles`;
+    const backupExists = existsSync(profileBackupDirectory);
+    logger.debug(`Backup for profiles exists: ${backupExists}`);
+
+    if (!backupExists) {
+      logger.info("No profiles backup exists. Backing up...");
+      await fs.promises.mkdir(this.configService.backupDirectory(), {
+        recursive: true,
+      });
+
+      await copy(
+        this.profileService.profileDirectory(),
+        profileBackupDirectory
+      );
+    }
+  }
+
   async launchMO2() {
     logger.info("Preparing MO2 for launch");
 
