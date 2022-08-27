@@ -40,7 +40,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@loopback/boot": "^5.0.2",
+    "@loopback/boot": "^5.0.3",
     "@loopback/context": "^5.0.1",
     "@loopback/core": "^4.0.2",
     "dir-compare": "^4.0.0",
