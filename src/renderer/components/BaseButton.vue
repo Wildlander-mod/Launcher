@@ -1,11 +1,5 @@
 <template>
-  <div
-    :class="[
-      'c-button u-text',
-      { [`c-button--${size}`]: size !== 'grow' },
-      `c-button--${type}`,
-    ]"
-  >
+  <div :class="['c-button u-text', `c-button--${size}`, `c-button--${type}`]">
     <slot />
   </div>
 </template>
@@ -50,6 +44,10 @@ export default class BaseButton extends Vue {
 
   &--large {
     width: 155px;
+  }
+
+  &--grow {
+    flex: 1;
   }
 
   &--primary {
