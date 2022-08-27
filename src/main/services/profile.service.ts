@@ -1,55 +1,102 @@
-import { ConfigService, userPreferences } from "@/main/services/config.service";
+import { ConfigService } from "@/main/services/config.service";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { FriendlyDirectoryMap } from "@/modpack-metadata";
 import fs from "fs";
 import { not as isNotJunk } from "junk";
 import { logger } from "@/main/logger";
-import { copy } from "fs-extra";
+import { copy, existsSync } from "fs-extra";
 import { service } from "@loopback/core";
 
 export class ProfileService {
   constructor(@service(ConfigService) private configService: ConfigService) {}
 
   profileDirectory() {
-    return `${userPreferences.get(
-      USER_PREFERENCE_KEYS.MOD_DIRECTORY
-    )}/profiles`;
+    return `${this.configService.modDirectory()}/profiles`;
+  }
+
+  profileBackupDirectory() {
+    return `${this.configService.backupDirectory()}/profiles`;
+  }
+
+  profileMappingFile() {
+    return `${this.configService.launcherDirectory()}/namesMO2.json`;
+  }
+
+  getShowHiddenProfiles() {
+    return (
+      this.configService.getPreference(
+        USER_PREFERENCE_KEYS.SHOW_HIDDEN_PROFILE
+      ) ?? false
+    );
+  }
+
+  setShowHiddenProfiles(show: boolean) {
+    return this.configService.setPreference(
+      USER_PREFERENCE_KEYS.SHOW_HIDDEN_PROFILE,
+      show
+    );
   }
 
   async getProfiles(): Promise<FriendlyDirectoryMap[]> {
     // Get mapped profile names that have a mapping
-    const mappedProfiles = JSON.parse(
-      await fs.promises.readFile(
-        `${userPreferences.get(
-          USER_PREFERENCE_KEYS.MOD_DIRECTORY
-        )}/launcher/namesMO2.json`,
-        "utf-8"
-      )
-    ) as FriendlyDirectoryMap[];
+    const mappedProfiles = await this.getMappedProfiles();
 
     // Get any profiles that don't have a mapping
-    const unmappedProfiles = (
-      await fs.promises.readdir(
-        `${userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY)}/profiles`,
-        { withFileTypes: true }
-      )
-    )
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name)
-      .filter(isNotJunk)
-      .map(
-        (preset): FriendlyDirectoryMap => ({ real: preset, friendly: preset })
-      )
-      // Remove any profiles that have a mapping
-      .filter(
-        (unmappedPreset) =>
-          !mappedProfiles.find(
-            (mappedPreset: FriendlyDirectoryMap) =>
-              mappedPreset.real === unmappedPreset.real
-          )
-      );
+    const unmappedProfiles = await this.getUnmappedProfiles(mappedProfiles);
 
     return [...mappedProfiles, ...unmappedProfiles];
+  }
+
+  getPhysicalProfiles() {
+    return fs.promises.readdir(this.profileDirectory(), {
+      withFileTypes: true,
+    });
+  }
+
+  async getMappedProfiles() {
+    return JSON.parse(
+      await fs.promises.readFile(this.profileMappingFile(), "utf-8")
+    ) as FriendlyDirectoryMap[];
+  }
+
+  async getUnmappedProfiles(mappedProfiles: FriendlyDirectoryMap[]) {
+    return (
+      (await this.getPhysicalProfiles())
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name)
+        .filter(isNotJunk)
+        .map(
+          (preset): FriendlyDirectoryMap => ({ real: preset, friendly: preset })
+        )
+        // Remove any profiles that have a mapping
+        .filter(
+          (unmappedPreset) =>
+            !mappedProfiles.find(
+              (mappedPreset: FriendlyDirectoryMap) =>
+                mappedPreset.real === unmappedPreset.real
+            )
+        )
+    );
+  }
+
+  async getProfileDirectories() {
+    return (await this.getPhysicalProfiles()).map(
+      ({ name }) => `${this.profileDirectory()}/${name}`
+    );
+  }
+
+  async getBackedUpProfiles() {
+    return fs.promises.readdir(this.profileBackupDirectory());
+  }
+
+  async getBackedUpProfileDirectories() {
+    return (await this.getBackedUpProfiles()).map(
+      (profile) => `${this.profileBackupDirectory()}/${profile}`
+    );
+  }
+
+  prependProfileDirectory(profile: string) {
+    return `${this.profileDirectory()}/${profile}`;
   }
 
   /**
@@ -62,7 +109,7 @@ export class ProfileService {
   }
 
   async getDefaultPreference() {
-    return (await this.getProfiles())[0].real;
+    return (await this.getPhysicalProfiles())[0].name;
   }
 
   setProfilePreference(profile: string) {
@@ -71,8 +118,8 @@ export class ProfileService {
 
   async isInProfileList(profile: string) {
     return (
-      (await this.getProfiles()).filter(({ real }) => real === profile).length >
-      0
+      (await this.getPhysicalProfiles()).filter(({ name }) => name === profile)
+        .length > 0
     );
   }
 
@@ -80,10 +127,23 @@ export class ProfileService {
     return this.isInProfileList(profile);
   }
 
+  async backupOriginalProfiles() {
+    const backupExists = existsSync(this.profileBackupDirectory());
+    logger.debug(`Backup for profiles exists: ${backupExists}`);
+
+    if (!backupExists) {
+      logger.info("No profiles backup exists. Backing up...");
+      await fs.promises.mkdir(this.configService.backupDirectory(), {
+        recursive: true,
+      });
+
+      await copy(this.profileDirectory(), this.profileBackupDirectory());
+    }
+  }
+
   async restoreProfiles() {
     logger.info("Restoring MO2 profiles");
-    const profileBackupDirectory = `${this.configService.backupDirectory()}/profiles`;
-    await copy(profileBackupDirectory, this.profileDirectory(), {
+    await copy(this.profileBackupDirectory(), this.profileDirectory(), {
       overwrite: true,
     });
   }

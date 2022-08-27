@@ -7,9 +7,8 @@
     v-if="enbPresets !== null && selectedEnb !== null"
     @selected="onEnbChanged"
   >
-    Determines the quality of environment lighting, particle lighting, ambient
-    occlusion, sun rays, and other post-processing effects. These elements are
-    very heavy on the GPU.
+    Uses GPU. Determines the quality of post-processing effects: ambient
+    occlusion, sun rays, advanced lighting, and more.
   </BaseDropdown>
 </template>
 

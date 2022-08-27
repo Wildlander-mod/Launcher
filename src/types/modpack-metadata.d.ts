@@ -10,4 +10,5 @@ export interface Modpack {
 export interface FriendlyDirectoryMap {
   real: string;
   friendly: string;
+  hidden?: boolean;
 }
