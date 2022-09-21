@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.10.0 (2022-09-21)
+
+
+### Features
+
+* support Wabbajack V3 modlist metadata files ([974cfd7](https://github.com/Wildlander-mod/Launcher/commit/974cfd75819ce561af4d1282a80ecab64fad78be))
+
 ## 2.9.0 (2022-08-27)
 
 
