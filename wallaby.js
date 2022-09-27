@@ -22,7 +22,6 @@ module.exports = function (w) {
     },
 
     setup: function () {
-      // Enable TypeScript aliases
       if (global._tsconfigPathsRegistered) return;
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const tsConfigPaths = require("tsconfig-paths");
@@ -33,9 +32,6 @@ module.exports = function (w) {
         paths: tsconfig.compilerOptions.paths,
       });
       global._tsconfigPathsRegistered = true;
-
-      // Ensure MockFs has fully reset before starting
-      require("mock-fs").restore();
     },
   };
 };

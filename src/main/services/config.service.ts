@@ -4,7 +4,6 @@ import { Resolution } from "@/Resolution";
 import path from "path";
 import { BindingScope, injectable } from "@loopback/context";
 import { logger } from "@/main/logger";
-import fs from "fs";
 
 export const appRoot = path.resolve(`${__dirname}/../../`);
 export const isDevelopment = path.extname(appRoot) !== ".asar";
@@ -12,11 +11,9 @@ export const isDevelopment = path.extname(appRoot) !== ".asar";
 export interface UserPreferences {
   [USER_PREFERENCE_KEYS.MOD_DIRECTORY]: string;
   [USER_PREFERENCE_KEYS.PRESET]: string;
-  [USER_PREFERENCE_KEYS.GRAPHICS]: string;
   [USER_PREFERENCE_KEYS.ENB_PROFILE]: string;
   [USER_PREFERENCE_KEYS.PREVIOUS_ENB_PROFILE]: string;
   [USER_PREFERENCE_KEYS.RESOLUTION]: Resolution;
-  [USER_PREFERENCE_KEYS.SHOW_HIDDEN_PROFILE]: boolean;
 }
 
 type PreferenceWithValidator = {
@@ -34,8 +31,6 @@ export const userPreferences = new Store<UserPreferences>({
   scope: BindingScope.SINGLETON,
 })
 export class ConfigService {
-  constructor(private config = userPreferences) {}
-
   skyrimDirectory() {
     return `${this.modDirectory()}/Stock Game`;
   }
@@ -45,34 +40,26 @@ export class ConfigService {
   }
 
   modDirectory() {
-    return this.config.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
+    return userPreferences.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
   }
 
   backupDirectory() {
     return `${this.modDirectory()}/launcher/_backups`;
   }
 
-  backupsExist() {
-    return fs.existsSync(this.backupDirectory());
-  }
-
   getPreference<T = UserPreferences[keyof UserPreferences]>(
     key: keyof UserPreferences
   ): T {
-    return this.config.get(key) as unknown as T;
-  }
-
-  launcherDirectory() {
-    return `${this.modDirectory()}/launcher`;
+    return userPreferences.get(key) as unknown as T;
   }
 
   hasPreference(key: keyof UserPreferences) {
-    return this.config.has(key);
+    return userPreferences.has(key);
   }
 
   deletePreference(key: keyof UserPreferences) {
     logger.debug(`Deleting preference: ${key}`);
-    return this.config.delete(key);
+    return userPreferences.delete(key);
   }
 
   setPreference(key: keyof UserPreferences | string, value: unknown) {
@@ -81,7 +68,7 @@ export class ConfigService {
     } else {
       logger.debug(`Setting preference ${key} to ${value}`);
     }
-    return this.config.set(key, value);
+    return userPreferences.set(key, value);
   }
 
   /**
@@ -98,7 +85,7 @@ export class ConfigService {
           `Current ${key} preference is invalid. Setting to default: ${value}`
         );
       }
-      if ((!this.config.has(key) || !valid) && value) {
+      if ((!userPreferences.has(key) || !valid) && value) {
         this.setPreference(key, value);
       }
     }
@@ -107,6 +94,6 @@ export class ConfigService {
   }
 
   getPreferences() {
-    return this.config;
+    return userPreferences;
   }
 }

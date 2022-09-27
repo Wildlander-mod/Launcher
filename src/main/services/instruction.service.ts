@@ -178,9 +178,9 @@ export class InstructionService {
   }
 
   async getModlistFiles() {
-    return (await this.profileService.getPhysicalProfiles()).map(
-      ({ name }) =>
-        `${this.profileService.profileDirectory()}/${name}/modlist.txt`
+    return (await this.profileService.getProfiles()).map(
+      (profile) =>
+        `${this.profileService.profileDirectory()}/${profile.real}/modlist.txt`
     );
   }
 
@@ -199,9 +199,9 @@ export class InstructionService {
   }
 
   async getPluginFiles() {
-    return (await this.profileService.getPhysicalProfiles()).map(
-      ({ name }) =>
-        `${this.profileService.profileDirectory()}/${name}/plugins.txt`
+    return (await this.profileService.getProfiles()).map(
+      (profile) =>
+        `${this.profileService.profileDirectory()}/${profile.real}/plugins.txt`
     );
   }
 

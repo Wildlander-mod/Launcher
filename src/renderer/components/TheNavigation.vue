@@ -7,8 +7,6 @@
 
       <ProfileSelection />
 
-      <GraphicsSelection />
-
       <ENB />
 
       <Resolution />
@@ -127,11 +125,9 @@ import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import { Modpack } from "@/modpack-metadata";
 import Popper from "vue3-popper";
 import LauncherVersion from "@/renderer/components/LauncherVersion.vue";
-import GraphicsSelection from "@/renderer/components/GraphicsSelection.vue";
 
 @Component({
   components: {
-    GraphicsSelection,
     LauncherVersion,
     ENB,
     AppModal,
