@@ -31,14 +31,4 @@ export class ProfileController {
     await this.profileService.restoreProfiles();
     await this.launcherService.refreshModpack();
   }
-
-  @handle(PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES)
-  async getShowHiddenProfiles() {
-    return this.profileService.getShowHiddenProfiles();
-  }
-
-  @handle(PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES)
-  async setShowHiddenProfiles(show: boolean) {
-    return this.profileService.setShowHiddenProfiles(show);
-  }
 }

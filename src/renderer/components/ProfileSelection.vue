@@ -6,10 +6,10 @@
     :show-tooltip-on-hover="true"
     v-if="profiles !== null && selectedProfile !== null"
     @selected="onProfileSelected"
-    @click="checkIfShowingHiddenProfiles"
   >
-    Uses CPU and GPU. Determines the quality of visual mods, like textures and
-    models. Gameplay is not affected.
+    Determines the draw distance of grass and shadows, the number of effects
+    visible at once, and the quality of distant objects. These elements use a
+    mix of CPU and GPU.
   </BaseDropdown>
 </template>
 
@@ -26,16 +26,12 @@ import {
 } from "@/renderer/services/service-container";
 import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
 
-interface SelectOptionWithHiddenDefault extends SelectOption {
-  hiddenByDefault: boolean;
-}
-
 @Options({
   components: { BaseDropdown },
 })
 export default class ProfileSelection extends Vue {
   selectedProfile: SelectOption | null = null;
-  profiles: SelectOptionWithHiddenDefault[] | null = null;
+  profiles: SelectOption[] | null = null;
 
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
@@ -66,30 +62,10 @@ export default class ProfileSelection extends Vue {
       (await this.ipcService.invoke(
         PROFILE_EVENTS.GET_PROFILES
       )) as FriendlyDirectoryMap[]
-    ).map(
-      ({ friendly, real, hidden }) =>
-        ({
-          text: friendly,
-          value: real,
-          hidden,
-          hiddenByDefault: hidden,
-        } as SelectOptionWithHiddenDefault)
-    );
-  }
-
-  async checkIfShowingHiddenProfiles() {
-    const showHiddenProfiles = await this.ipcService.invoke(
-      PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
-    );
-
-    this.profiles =
-      this.profiles &&
-      this.profiles.map((profile) => {
-        return {
-          ...profile,
-          hidden: showHiddenProfiles ? false : profile.hiddenByDefault,
-        };
-      });
+    ).map(({ friendly, real }) => ({
+      text: friendly,
+      value: real,
+    }));
   }
 }
 </script>

@@ -11,8 +11,6 @@ import { app } from "electron";
 import { logger } from "@/main/logger";
 import { ErrorService } from "@/main/services/error.service";
 import { WindowService } from "@/main/services/window.service";
-import { GraphicsService } from "@/main/services/graphics.service";
-import { MigrationService } from "@/main/services/migration.service";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -27,9 +25,7 @@ export class LauncherService {
     @service(ModOrganizerService)
     private modOrganizerService: ModOrganizerService,
     @service(ErrorService) private errorService: ErrorService,
-    @service(WindowService) private windowService: WindowService,
-    @service(GraphicsService) private graphicsService: GraphicsService,
-    @service(MigrationService) private migrationService: MigrationService
+    @service(WindowService) private windowService: WindowService
   ) {}
 
   async refreshModpack() {
@@ -43,7 +39,6 @@ export class LauncherService {
         USER_PREFERENCE_KEYS.MOD_DIRECTORY,
         filepath
       );
-      await this.migrationService.separateProfileFromGraphics();
       await this.validateConfig();
       await this.backupAssets();
       await this.enbService.resetCurrentEnb(false);
@@ -51,9 +46,6 @@ export class LauncherService {
         this.resolutionService.getResolutionPreference()
       );
       await this.resolutionService.setShouldDisableUltraWidescreen();
-      await this.graphicsService.setGraphics(
-        this.graphicsService.getGraphicsPreference()
-      );
     } catch (error) {
       if (error instanceof Error && error.message.includes("EPERM")) {
         await this.errorService.handleError(
@@ -88,21 +80,13 @@ export class LauncherService {
       [USER_PREFERENCE_KEYS.RESOLUTION]: {
         value: this.resolutionService.getCurrentResolution(),
       },
-      [USER_PREFERENCE_KEYS.GRAPHICS]: {
-        value: await this.graphicsService.getDefaultPreference(),
-        validate: async () =>
-          this.graphicsService.isValid(
-            this.graphicsService.getGraphicsPreference()
-          ),
-      },
     });
     logger.debug("Config validated");
   }
 
   async backupAssets() {
     await this.enbService.backupOriginalENBs();
-    await this.profileService.backupOriginalProfiles();
-    await this.graphicsService.backupOriginalGraphics();
+    await this.modOrganizerService.backupOriginalProfiles();
   }
 
   getVersion() {
