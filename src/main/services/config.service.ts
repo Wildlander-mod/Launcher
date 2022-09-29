@@ -17,6 +17,7 @@ export interface UserPreferences {
   [USER_PREFERENCE_KEYS.PREVIOUS_ENB_PROFILE]: string;
   [USER_PREFERENCE_KEYS.RESOLUTION]: Resolution;
   [USER_PREFERENCE_KEYS.SHOW_HIDDEN_PROFILE]: boolean;
+  [USER_PREFERENCE_KEYS.ENABLE_AUTO_LAUNCH]: boolean;
 }
 
 type PreferenceWithValidator = {

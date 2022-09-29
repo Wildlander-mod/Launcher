@@ -128,6 +128,8 @@ import { Modpack } from "@/modpack-metadata";
 import Popper from "vue3-popper";
 import LauncherVersion from "@/renderer/components/LauncherVersion.vue";
 import GraphicsSelection from "@/renderer/components/GraphicsSelection.vue";
+import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
+import { reboot } from "electron-shutdown-command";
 
 @Component({
   components: {
@@ -153,7 +155,6 @@ export default class TheNavigation extends Vue {
   private launcherVersion: string | null = null;
   private modpackVersion: string | null = null;
   private modpackName: string | null = null;
-
   async created() {
     this.modpackVersion = await this.ipcService.invoke(
       WABBAJACK_EVENTS.GET_MODPACK_VERSION
@@ -164,6 +165,12 @@ export default class TheNavigation extends Vue {
     ).name;
 
     this.launcherVersion = await this.getVersion();
+    const autoLaunch = await this.ipcService.invoke(
+      PROFILE_EVENTS.GET_ENABLE_AUTO_LAUNCH
+    );
+    if (autoLaunch) {
+      this.launchGame();
+    }
   }
 
   async getVersion() {

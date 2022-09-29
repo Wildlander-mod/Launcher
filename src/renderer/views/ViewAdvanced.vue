@@ -70,6 +70,12 @@
           <Toggle @click="setShowHiddenProfiles" v-model="showHiddenProfiles" />
         </div>
       </div>
+      <div class="l-row c-settings__actions">
+        <div class="c-settings__label">Enable Auto Launch</div>
+        <div class="c-settings__action c-settings__action--toggle">
+          <Toggle @click="setEnableAutoLaunch" v-model="enableAutoLaunch" />
+        </div>
+      </div>
     </div>
   </AppPageContent>
 </template>
@@ -109,10 +115,14 @@ export default class Settings extends Vue {
   private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
   private showHiddenProfiles = false;
+  private enableAutoLaunch = false;
 
   async created() {
     this.showHiddenProfiles = await this.ipcService.invoke(
       PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
+    );
+    this.enableAutoLaunch = await this.ipcService.invoke(
+      PROFILE_EVENTS.GET_ENABLE_AUTO_LAUNCH
     );
   }
 
@@ -211,6 +221,12 @@ export default class Settings extends Vue {
     await this.ipcService.invoke(
       PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES,
       this.showHiddenProfiles
+    );
+  }
+  async setEnableAutoLaunch() {
+    await this.ipcService.invoke(
+      PROFILE_EVENTS.SET_ENABLE_AUTO_LAUNCH,
+      this.enableAutoLaunch
     );
   }
 }

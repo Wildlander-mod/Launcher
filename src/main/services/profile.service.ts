@@ -36,6 +36,19 @@ export class ProfileService {
       show
     );
   }
+  setEnableAutoLaunch(enable: boolean) {
+    return this.configService.setPreference(
+      USER_PREFERENCE_KEYS.ENABLE_AUTO_LAUNCH,
+      enable
+    );
+  }
+  getEnableAutoLaunch() {
+    return (
+      this.configService.getPreference(
+        USER_PREFERENCE_KEYS.ENABLE_AUTO_LAUNCH
+      ) ?? false
+    );
+  }
 
   async getProfiles(): Promise<FriendlyDirectoryMap[]> {
     // Get mapped profile names that have a mapping

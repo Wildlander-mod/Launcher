@@ -41,4 +41,12 @@ export class ProfileController {
   async setShowHiddenProfiles(show: boolean) {
     return this.profileService.setShowHiddenProfiles(show);
   }
+  @handle(PROFILE_EVENTS.GET_ENABLE_AUTO_LAUNCH)
+  async getEnableAutoLaunch() {
+    return this.profileService.getEnableAutoLaunch();
+  }
+  @handle(PROFILE_EVENTS.SET_ENABLE_AUTO_LAUNCH)
+  async setEnableAutoLaunch(enable: boolean) {
+    return this.profileService.setEnableAutoLaunch(enable);
+  }
 }
