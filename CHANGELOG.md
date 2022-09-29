@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.13.1 (2022-09-29)
+
+
+### Bug Fixes
+
+* fix migration for new users not working ([47b184c](https://github.com/Wildlander-mod/Launcher/commit/47b184c2e7f43d12134a12e4e43ea739845cbf17))
+
 ## 2.13.0 (2022-09-27)
 
 
