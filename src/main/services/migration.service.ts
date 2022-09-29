@@ -102,7 +102,7 @@ export class MigrationService {
         profiles.find((profile) => profile.toLowerCase().includes("potato")) ??
         profiles[[profiles].length - 1];
       await copy(profiles[0], standardProfilePath);
-      await copy(performanceProfile, standardProfilePath);
+      await copy(performanceProfile, performanceProfilePath);
     }
   }
 
