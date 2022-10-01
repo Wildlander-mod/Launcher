@@ -5,69 +5,79 @@
         <ModDirectory />
       </div>
 
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Mod Organizer 2</div>
-        <div class="c-settings__action">
-          <BaseButton type="primary" @click="launchMO2">Launch</BaseButton>
+      <div class="l-row">
+        <div class="l-column l-start c-settings__section">
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Mod Organizer 2</div>
+            <div class="c-settings__action">
+              <BaseButton type="primary" @click="launchMO2">Launch</BaseButton>
+            </div>
+          </div>
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Application logs</div>
+            <div class="c-settings__action c-settings__multi-buttons">
+              <BaseButton
+                class="c-settings__multi-button"
+                type="default"
+                size="grow"
+                @click="openLogPath"
+              >
+                Open
+              </BaseButton>
+              <BaseButton
+                class="c-settings__multi-button"
+                type="default"
+                size="grow"
+                @click="clearLogs"
+              >
+                Clear
+              </BaseButton>
+            </div>
+          </div>
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Skyrim crash logs</div>
+            <div class="c-settings__action">
+              <BaseButton type="default" @click="openCrashLogPath">
+                Open
+              </BaseButton>
+            </div>
+          </div>
+          <div class="l-row c-settings__actions c-settings__section">
+            <div class="c-settings__label">Show hidden profiles</div>
+            <div class="c-settings__action c-settings__action--toggle">
+              <Toggle
+                @click="setShowHiddenProfiles"
+                v-model="showHiddenProfiles"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Application logs</div>
-        <div class="c-settings__action c-settings__multi-buttons">
-          <BaseButton
-            class="c-settings__multi-button"
-            type="default"
-            size="grow"
-            @click="openLogPath"
-          >
-            Open
-          </BaseButton>
-          <BaseButton
-            class="c-settings__multi-button"
-            type="default"
-            size="grow"
-            @click="clearLogs"
-          >
-            Clear
-          </BaseButton>
-        </div>
-      </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Skyrim crash logs</div>
-        <div class="c-settings__action">
-          <BaseButton type="default" @click="openCrashLogPath">
-            Open
-          </BaseButton>
-        </div>
-      </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Restore ENB presets</div>
-        <div class="c-settings__action">
-          <BaseButton type="warning" @click="restoreENBPresets">
-            Restore
-          </BaseButton>
-        </div>
-      </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Restore MO2 profiles</div>
-        <div class="c-settings__action">
-          <BaseButton type="warning" @click="restoreProfiles">
-            Restore
-          </BaseButton>
-        </div>
-      </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Restore graphics presets</div>
-        <div class="c-settings__action">
-          <BaseButton type="warning" @click="restoreGraphics">
-            Restore
-          </BaseButton>
-        </div>
-      </div>
-      <div class="l-row c-settings__actions">
-        <div class="c-settings__label">Show hidden profiles</div>
-        <div class="c-settings__action c-settings__action--toggle">
-          <Toggle @click="setShowHiddenProfiles" v-model="showHiddenProfiles" />
+
+        <div class="l-column l-start">
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Restore ENB presets</div>
+            <div class="c-settings__action">
+              <BaseButton type="warning" @click="restoreENBPresets">
+                Restore
+              </BaseButton>
+            </div>
+          </div>
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Restore MO2 profiles</div>
+            <div class="c-settings__action">
+              <BaseButton type="warning" @click="restoreProfiles">
+                Restore
+              </BaseButton>
+            </div>
+          </div>
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Restore graphics presets</div>
+            <div class="c-settings__action">
+              <BaseButton type="warning" @click="restoreGraphics">
+                Restore
+              </BaseButton>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -237,6 +247,10 @@ export default class Settings extends Vue {
   }
 }
 
+.c-settings__section {
+  margin-right: $size-spacing--large;
+}
+
 .c-settings__multi-button {
   margin-right: 5px;
 }
@@ -244,11 +258,10 @@ export default class Settings extends Vue {
 .c-settings__actions {
   flex: 1;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   margin-top: $size-spacing;
-
-  width: 50%;
+  flex-grow: 0;
 }
 
 .c-settings__action {
