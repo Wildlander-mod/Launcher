@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.14.0 (2022-10-01)
+
+
+### Features
+
+* tidy up alignment of items in advanced section ([f4bf6a9](https://github.com/Wildlander-mod/Launcher/commit/f4bf6a9e942b4c8be25aa2400077632030f8804a))
+
 ### 2.13.1 (2022-09-29)
 
 
