@@ -10,7 +10,9 @@
           <div class="l-row c-settings__actions">
             <div class="c-settings__label">Mod Organizer 2</div>
             <div class="c-settings__action">
-              <BaseButton type="primary" @click="launchMO2">Launch</BaseButton>
+              <BaseButton type="primary" size="large" @click="launchMO2">
+                Launch
+              </BaseButton>
             </div>
           </div>
           <div class="l-row c-settings__actions">
@@ -37,10 +39,29 @@
           <div class="l-row c-settings__actions">
             <div class="c-settings__label">Skyrim crash logs</div>
             <div class="c-settings__action">
-              <BaseButton type="default" @click="openCrashLogPath">
+              <BaseButton type="default" size="large" @click="openCrashLogPath">
                 Open
               </BaseButton>
             </div>
+          </div>
+          <div class="l-row c-settings__actions">
+            <div class="c-settings__label">Edit launcher config</div>
+            <Popper
+              :arrow="true"
+              :interactive="false"
+              placement="top"
+              :hover="true"
+            >
+              <template #content>
+                Note: you will need to restart the app or re-select the modpack
+                for changes to take effect.
+              </template>
+              <div class="c-settings__action">
+                <BaseButton type="default" size="large" @click="editConfig"
+                  >Edit
+                </BaseButton>
+              </div>
+            </Popper>
           </div>
           <div class="l-row c-settings__actions c-settings__section">
             <div class="c-settings__label">Show hidden profiles</div>
@@ -57,7 +78,11 @@
           <div class="l-row c-settings__actions">
             <div class="c-settings__label">Restore ENB presets</div>
             <div class="c-settings__action">
-              <BaseButton type="warning" @click="restoreENBPresets">
+              <BaseButton
+                type="warning"
+                size="large"
+                @click="restoreENBPresets"
+              >
                 Restore
               </BaseButton>
             </div>
@@ -65,7 +90,7 @@
           <div class="l-row c-settings__actions">
             <div class="c-settings__label">Restore MO2 profiles</div>
             <div class="c-settings__action">
-              <BaseButton type="warning" @click="restoreProfiles">
+              <BaseButton type="warning" size="large" @click="restoreProfiles">
                 Restore
               </BaseButton>
             </div>
@@ -73,7 +98,7 @@
           <div class="l-row c-settings__actions">
             <div class="c-settings__label">Restore graphics presets</div>
             <div class="c-settings__action">
-              <BaseButton type="warning" @click="restoreGraphics">
+              <BaseButton type="warning" size="large" @click="restoreGraphics">
                 Restore
               </BaseButton>
             </div>
@@ -104,6 +129,8 @@ import {
 import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
 import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
 import Toggle from "@vueform/toggle/src/Toggle";
+import { CONFIG_EVENTS } from "@/main/controllers/config/config.events";
+import Popper from "vue3-popper";
 
 @Options({
   components: {
@@ -112,6 +139,7 @@ import Toggle from "@vueform/toggle/src/Toggle";
     AppPageContent,
     BaseButton,
     Toggle,
+    Popper,
   },
 })
 export default class Settings extends Vue {
@@ -222,6 +250,10 @@ export default class Settings extends Vue {
       PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES,
       this.showHiddenProfiles
     );
+  }
+
+  async editConfig() {
+    await this.ipcService.invoke(CONFIG_EVENTS.EDIT_CONFIG);
   }
 }
 </script>

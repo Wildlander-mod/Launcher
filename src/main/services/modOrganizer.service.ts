@@ -8,7 +8,6 @@ import { parse, stringify } from "js-ini";
 import { IIniObjectSection } from "js-ini/src/interfaces/ini-object-section";
 import { promisify } from "util";
 import { IIniObject } from "js-ini/lib/interfaces/ini-object";
-import { copy, existsSync } from "fs-extra";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { logger } from "@/main/logger";
 import { EnbService } from "@/main/services/enb.service";

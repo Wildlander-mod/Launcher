@@ -5,7 +5,7 @@ import { app } from "electron";
 import { ConfigService } from "@/main/services/config.service";
 import { ModpackService } from "@/main/services/modpack.service";
 import { LauncherService } from "@/main/services/launcher.service";
-import { platform, version, type } from "os";
+import { platform, type, version } from "os";
 import { WabbajackService } from "@/main/services/wabbajack.service";
 import { ResolutionService } from "@/main/services/resolution.service";
 import { UpdateService } from "@/main/services/update.service";
