@@ -109,4 +109,8 @@ export class ConfigService {
   getPreferences() {
     return this.config;
   }
+
+  editPreferences() {
+    return userPreferences.openInEditor();
+  }
 }

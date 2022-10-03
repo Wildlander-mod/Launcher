@@ -2,21 +2,29 @@
   <BaseDropdown
     :options="resolutions"
     :current-selection="selectedResolution"
-    :show-tooltip="containsUltrawide"
+    :show-tooltip-on-hover="true"
     v-if="resolutions !== null && selectedResolution !== null"
     :grow="true"
     @selected="onResolutionSelected"
   >
     <div class="l-row">
-      <span class="material-icons c-resolution__info-icon u-text"> info </span>
+      <div v-if="containsUltrawide">
+        <span class="material-icons c-resolution__info-icon u-text">
+          info
+        </span>
+        <div>
+          Ultra-widescreen resolutions are not supported in this modpack.
+          <BaseLink
+            href="https://github.com/Wildlander-mod/Support/wiki/FAQ#does-this-pack-support-ultrawide-resolutions"
+            :underline="true"
+          >
+            More info.
+          </BaseLink>
+        </div>
+      </div>
       <div>
-        Ultra-widescreen resolutions are not supported in this modpack.
-        <BaseLink
-          href="https://github.com/Wildlander-mod/Support/wiki/FAQ#does-this-pack-support-ultrawide-resolutions"
-          :underline="true"
-        >
-          More info.
-        </BaseLink>
+        If your desired resolution has not been detected, go to the advanced tab
+        and edit the launcher config.
       </div>
     </div>
   </BaseDropdown>
@@ -113,7 +121,6 @@ export default class Resolution extends Vue {
 @import "~@/assets/scss";
 
 .c-resolution__info-icon {
-  font-size: $font-size;
   margin-right: $size-spacing--small;
 }
 </style>
