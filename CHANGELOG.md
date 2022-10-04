@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.15.0 (2022-10-04)
+
+
+### Features
+
+* add button to manually edit configuration ([1543c19](https://github.com/Wildlander-mod/Launcher/commit/1543c191437c584037eb5c3b5830beda4352ed83))
+
 ## 2.14.0 (2022-10-01)
 
 
