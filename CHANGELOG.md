@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.15.1 (2022-10-10)
+
+
+### Bug Fixes
+
+* supress mouse4 and mouse5 browser navigation which could break the app ([ddac54b](https://github.com/Wildlander-mod/Launcher/commit/ddac54b6b9f4066e75b078dbcf124f8dc2432b3a))
+
 ## 2.15.0 (2022-10-04)
 
 
