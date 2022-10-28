@@ -1,6 +1,6 @@
 # Wildlander launcher
 
-A launcher for the [Wildlander](https://www.www.wildlandermod.com/) modpack.
+A launcher for the [Wildlander](https://www.wildlandermod.com/) modpack.
 
 The intention of the launcher is to ease the installation process for modpacks that utilise [Wabbajack](https://www.wabbajack.org/#/) but require extra steps.  
 This includes copying game files, installing prerequisites, various support options, etc.
