@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.16.0 (2023-01-02)
+
+
+### Features
+
+* remove footer to improve performance ([48d3861](https://github.com/Wildlander-mod/Launcher/commit/48d386188786f4899022cb661ec149f8e79bab5c)), closes [#671](https://github.com/Wildlander-mod/Launcher/issues/671)
+
 ### 2.15.1 (2022-10-10)
 
 
