@@ -16,7 +16,6 @@
         </div>
       </div>
     </div>
-    <TheFooter v-if="!preloadCheck" class="l-end-self" />
   </main>
 
   <MO2Modal />
@@ -25,7 +24,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
-import TheFooter from "@/renderer/components/TheFooter.vue";
+
 import TheHeader from "@/renderer/components/TheHeader.vue";
 import TheNavigation from "@/renderer/components/TheNavigation.vue";
 import { modalOpenedEvent } from "@/renderer/services/modal.service";
@@ -43,7 +42,6 @@ import MO2Modal from "@/renderer/components/MO2RunningModal.vue";
 
 @Options({
   components: {
-    TheFooter,
     TheHeader,
     TheNavigation,
     MO2Modal,
@@ -105,7 +103,7 @@ export default class AppPage extends Vue {
 
   // Awkward height because the layout engine doesn't allow the page to grow naturally
   // Needs replacing when there is a better layout engine
-  max-height: 408px;
+  max-height: 430px;
 
   z-index: 0;
 
