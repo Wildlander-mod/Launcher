@@ -316,4 +316,63 @@ describe("Graphics service", () => {
     });
     expect(await graphicsService.graphicsExist()).to.eql(true);
   });
+
+  describe("Syncing graphics", () => {
+    const mockLauncherDirectory = "mock/launcher/directory";
+    const mockModpackDirectory = "mock/modpack/directory";
+    const mockProfileDirectory = `${mockModpackDirectory}/profiles`;
+    const mockGraphicsPresets = `${mockLauncherDirectory}/Graphics Presets`;
+
+    beforeEach(() => {
+      mockFs({
+        [`${mockGraphicsPresets}/low`]: {
+          "Skyrim.ini": "mock original content",
+          "SkyrimCustom.ini": "mock original content",
+          "SkyrimPrefs.ini": "mock original content",
+        },
+        [`${mockGraphicsPresets}/ultra`]: {
+          "Skyrim.ini": "mock original content",
+          "SkyrimCustom.ini": "mock original content",
+          "SkyrimPrefs.ini": "mock original content",
+        },
+        [`${mockProfileDirectory}/profile-test`]: {
+          "Skyrim.ini": "mock original content",
+          "SkyrimCustom.ini": "mock original content",
+          "SkyrimPrefs.ini": "mock original content",
+        },
+      });
+    });
+
+    it("should sync the current graphics settings back to the presets", async () => {
+      // Edit the profile to mimic what the game might do
+      await fs.promises.writeFile(
+        `${mockProfileDirectory}/profile-test/SkyrimPrefs.ini`,
+        "modified content"
+      );
+
+      mockConfigService.stubs.launcherDirectory.returns(mockLauncherDirectory);
+      mockProfileService.stubs.profileDirectory.returns(mockProfileDirectory);
+
+      await graphicsService.syncGraphicsFromGameToPresets(
+        "ultra",
+        "profile-test"
+      );
+
+      // Check the settings are correctly copied back to the preset
+      expect(
+        await fs.promises.readFile(
+          `${mockGraphicsPresets}/ultra/SkyrimPrefs.ini`,
+          "utf-8"
+        )
+      ).to.eql("modified content");
+
+      // Ensure other profiles aren't changed
+      expect(
+        await fs.promises.readFile(
+          `${mockGraphicsPresets}/low/SkyrimPrefs.ini`,
+          "utf-8"
+        )
+      ).to.eql("mock original content");
+    });
+  });
 });
