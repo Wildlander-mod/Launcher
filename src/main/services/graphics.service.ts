@@ -76,6 +76,28 @@ export class GraphicsService {
     );
   }
 
+  async syncGraphicsFromGameToPresets(graphicsPreset: string, profile: string) {
+    logger.info(
+      `Syncing graphics changes back to presets for ${graphicsPreset}`
+    );
+
+    const graphicsFiles = await this.getGraphicsFilesForPreset(graphicsPreset);
+    logger.debug(
+      `Graphics files that need to be synced: ${JSON.stringify(graphicsFiles)}`
+    );
+
+    for (const file of graphicsFiles) {
+      const fileWithPath = `${this.profileService.profileDirectory()}/${profile}/${file}`;
+      const fileDestination = `${this.graphicsDirectory()}/${graphicsPreset}/${file}`;
+      if (existsSync(fileWithPath)) {
+        logger.debug(`Copying ${fileWithPath} to ${fileDestination}`);
+        await copy(fileWithPath, fileDestination, { overwrite: true });
+      }
+    }
+
+    logger.info("Finished syncing graphics presets");
+  }
+
   async getGraphics(): Promise<FriendlyDirectoryMap[]> {
     const mappedGraphics = await this.getMappedGraphics();
     const unmappedGraphics = await this.getUnmappedGraphics(mappedGraphics);
@@ -99,14 +121,14 @@ export class GraphicsService {
   }
 
   async getGraphicsFilesForPreset(graphics: string) {
-    return (
-      await fs.promises.readdir(`${this.graphicsDirectory()}/${graphics}`)
-    ).map((file) => `${this.graphicsDirectory()}/${graphics}/${file}`);
+    return fs.promises.readdir(`${this.graphicsDirectory()}/${graphics}`);
   }
 
   async updateProfilesWithGraphics(preset: string) {
     logger.debug("Updating profiles with graphics settings");
-    const graphics = await this.getGraphicsFilesForPreset(preset);
+    const graphics = (await this.getGraphicsFilesForPreset(preset)).map(
+      (file) => `${this.graphicsDirectory()}/${preset}/${file}`
+    );
     const profiles = await this.profileService.getProfileDirectories();
     return Promise.all(
       profiles.map((profile) =>

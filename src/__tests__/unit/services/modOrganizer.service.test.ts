@@ -14,6 +14,7 @@ import { ResolutionService } from "@/main/services/resolution.service";
 import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
 import { SystemService } from "@/main/services/system.service";
+import { GraphicsService } from "@/main/services/graphics.service";
 
 describe("ModOrganizer service", () => {
   let mockEnbService: StubbedInstanceWithSinonAccessor<EnbService>;
@@ -23,6 +24,7 @@ describe("ModOrganizer service", () => {
   let mockGameService: StubbedInstanceWithSinonAccessor<GameService>;
   let mockProfileService: StubbedInstanceWithSinonAccessor<ProfileService>;
   let mockSystemService: StubbedInstanceWithSinonAccessor<SystemService>;
+  let mockGraphicsService: StubbedInstanceWithSinonAccessor<GraphicsService>;
 
   let modOrganizerService: ModOrganizerService;
 
@@ -34,6 +36,7 @@ describe("ModOrganizer service", () => {
     mockGameService = createStubInstance(GameService);
     mockProfileService = createStubInstance(ProfileService);
     mockSystemService = createStubInstance(SystemService);
+    mockGraphicsService = createStubInstance(GraphicsService);
   });
 
   it("should determine if Mod Organizer is running", async () => {
@@ -48,7 +51,8 @@ describe("ModOrganizer service", () => {
       mockResolutionService,
       mockGameService,
       mockProfileService,
-      mockSystemService
+      mockSystemService,
+      mockGraphicsService
     );
 
     expect(await modOrganizerService.isRunning()).to.eql(true);

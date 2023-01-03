@@ -18,6 +18,7 @@ import { ResolutionService } from "@/main/services/resolution.service";
 import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
 import { SystemService } from "@/main/services/system.service";
+import { GraphicsService } from "@/main/services/graphics.service";
 
 export const enum MO2Names {
   MO2EXE = "ModOrganizer.exe",
@@ -37,7 +38,8 @@ export class ModOrganizerService {
     @service(ResolutionService) private resolutionService: ResolutionService,
     @service(GameService) private gameService: GameService,
     @service(ProfileService) private profileService: ProfileService,
-    @service(SystemService) private systemService: SystemService
+    @service(SystemService) private systemService: SystemService,
+    @service(GraphicsService) private graphicsService: GraphicsService
   ) {}
 
   private static filterMO2(process: psList.ProcessDescriptor) {
@@ -223,6 +225,10 @@ export class ModOrganizerService {
     await this.restoreMO2Settings();
     await this.enbService.syncENBFromGameToPresets(
       userPreferences.get(USER_PREFERENCE_KEYS.ENB_PROFILE)
+    );
+    await this.graphicsService.syncGraphicsFromGameToPresets(
+      userPreferences.get(USER_PREFERENCE_KEYS.GRAPHICS),
+      userPreferences.get(USER_PREFERENCE_KEYS.PRESET)
     );
   }
 }
