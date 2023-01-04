@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.16.1 (2023-01-04)
+
+
+### Bug Fixes
+
+* prevent changes to graphics files being lost on restart ([661bfd9](https://github.com/Wildlander-mod/Launcher/commit/661bfd9b26df6f5302e9273659316645e6e37511)), closes [#683](https://github.com/Wildlander-mod/Launcher/issues/683)
+
 ## 2.16.0 (2023-01-02)
 
 
