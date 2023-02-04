@@ -15,6 +15,9 @@
       <div v-if="modpack.wiki" class="c-header__link l-center-vertically">
         <BaseLink :href="modpack.wiki" :hover-style="true">Wiki</BaseLink>
       </div>
+      <div v-if="modpack.roadmap" class="c-header__link l-center-vertically">
+        <BaseLink :href="modpack.roadmap" :hover-style="true">Roadmap</BaseLink>
+      </div>
       <div v-if="modpack.wiki" class="c-header__link l-center-vertically">
         <BaseLink :href="modpack.patreon" :hover-style="true"
           >Patreon

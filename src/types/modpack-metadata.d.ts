@@ -5,6 +5,7 @@ export interface Modpack {
   website: string;
   wiki: string;
   patreon: string;
+  roadmap: string;
 }
 
 export interface FriendlyDirectoryMap {
