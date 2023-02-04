@@ -3,6 +3,7 @@
   "logo": "/images/logos/wildlander-full-light.svg",
   "backgroundImage": "/images/default-background.png",
   "website": "https://www.wildlandermod.com",
-  "wiki": "https://github.com/Wildlander-mod/Support/wiki",
-  "patreon": "https://www.patreon.com/dylanbperry"
+  "wiki": "https://wiki.wildlandermod.com/",
+  "patreon": "https://www.patreon.com/dylanbperry",
+  "roadmap": "https://airtable.com/shrvAxHcCeCqKfnGe"
 }
