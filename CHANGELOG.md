@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.17.0 (2023-02-07)
+
+
+### Features
+
+* update wiki link ([9fe7b43](https://github.com/Wildlander-mod/Launcher/commit/9fe7b43f518e24acde69165e23d96199769e56cd))
+
 ### 2.16.1 (2023-01-04)
 
 
