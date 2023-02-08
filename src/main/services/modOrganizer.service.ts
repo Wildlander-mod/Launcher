@@ -19,6 +19,7 @@ import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
 import { SystemService } from "@/main/services/system.service";
 import { GraphicsService } from "@/main/services/graphics.service";
+import { ModOrganizerIni } from "@/ModOrganizer.ini";
 
 export const enum MO2Names {
   MO2EXE = "ModOrganizer.exe",
@@ -85,7 +86,12 @@ export class ModOrganizerService {
         `${this.configService.modDirectory()}/${MO2Names.MO2Settings}`,
         "utf-8"
       )
-    );
+    ) as ModOrganizerIni;
+  }
+
+  async getFirstCustomExecutableTitle() {
+    const settings = await this.readSettings();
+    return settings["customExecutables"]["1\\title"];
   }
 
   async updateSelectedProfile(profile: string) {
@@ -202,7 +208,7 @@ export class ModOrganizerService {
       );
       const profile = userPreferences.get(USER_PREFERENCE_KEYS.PRESET);
 
-      const mo2Command = `"${MO2Path}" -p "${profile}" "moshortcut://:SKSE"`;
+      const mo2Command = `"${MO2Path}" -p "${profile}" "moshortcut://:${await this.getFirstCustomExecutableTitle()}"`;
       logger.debug(`Executing MO2 command: ${mo2Command}`);
 
       const { stderr } = await promisify(childProcess.exec)(mo2Command);

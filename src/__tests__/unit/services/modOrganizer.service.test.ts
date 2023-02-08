@@ -15,6 +15,7 @@ import { GameService } from "@/main/services/game.service";
 import { ProfileService } from "@/main/services/profile.service";
 import { SystemService } from "@/main/services/system.service";
 import { GraphicsService } from "@/main/services/graphics.service";
+import mockFs from "mock-fs";
 
 describe("ModOrganizer service", () => {
   let mockEnbService: StubbedInstanceWithSinonAccessor<EnbService>;
@@ -39,6 +40,10 @@ describe("ModOrganizer service", () => {
     mockGraphicsService = createStubInstance(GraphicsService);
   });
 
+  afterEach(() => {
+    mockFs.restore();
+  });
+
   it("should determine if Mod Organizer is running", async () => {
     mockSystemService.stubs.isProcessRunning
       .withArgs(MO2Names.MO2EXE)
@@ -56,5 +61,37 @@ describe("ModOrganizer service", () => {
     );
 
     expect(await modOrganizerService.isRunning()).to.eql(true);
+  });
+
+  it("should get the first binary", async () => {
+    const mockModDirectory = "mock/mod/directory";
+
+    mockFs({
+      [mockModDirectory]: {
+        [MO2Names.MO2Settings]: `
+        [customExecutables]
+        size=1
+        1\\binary=mock/first/custom/executable.exe
+        1\\title=SKSE
+        `,
+      },
+    });
+
+    mockConfigService.stubs.modDirectory.returns(mockModDirectory);
+
+    modOrganizerService = new ModOrganizerService(
+      mockEnbService,
+      mockErrorService,
+      mockConfigService,
+      mockResolutionService,
+      mockGameService,
+      mockProfileService,
+      mockSystemService,
+      mockGraphicsService
+    );
+
+    expect(await modOrganizerService.getFirstCustomExecutableTitle()).to.eql(
+      "SKSE"
+    );
   });
 });
