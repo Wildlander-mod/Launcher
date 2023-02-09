@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.18.1 (2023-02-09)
+
+
+### Bug Fixes
+
+* show correct modpack version when user has multiple installs ([5842f08](https://github.com/Wildlander-mod/Launcher/commit/5842f088a258ce7ce260d5289bb1eb9cb5245e18))
+
 ## 2.18.0 (2023-02-09)
 
 
