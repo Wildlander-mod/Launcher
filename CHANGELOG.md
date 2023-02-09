@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.18.0 (2023-02-09)
+
+
+### Features
+
+* use the first custom executable from MO2 when launching the game ([ec563dc](https://github.com/Wildlander-mod/Launcher/commit/ec563dc7f4414c77432d51c082d94943b9b730b9))
+
 ## 2.17.0 (2023-02-07)
 
 
