@@ -1,8 +1,9 @@
 export interface WabbajackModpackMetadata {
   [key: string]: {
-    title: string;
-    version: string;
+    title?: string;
+    version?: string;
     installPath: string;
+    lastUpdated?: Date;
   };
 }
 

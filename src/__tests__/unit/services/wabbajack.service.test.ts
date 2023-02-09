@@ -2,9 +2,16 @@ import mockFs from "mock-fs";
 import { WabbajackService } from "@/main/services/wabbajack.service";
 import { SystemService } from "@/main/services/system.service";
 import { ModpackService } from "@/main/services/modpack.service";
-import { createStubInstance, expect, sinon } from "@loopback/testlab";
+import {
+  createStubInstance,
+  expect,
+  sinon,
+  StubbedInstanceWithSinonAccessor,
+} from "@loopback/testlab";
 
 const mockLocalAppData = "mock/local/app/data";
+
+const mockDate = new Date();
 
 const getMockV2Wabbajack = () => {
   return {
@@ -29,19 +36,25 @@ const getMockV2Wabbajack = () => {
 
 const getMockV3Wabbajack = () => ({
   [`${mockLocalAppData}/Wabbajack/saved_settings`]: {
-    "install-settings-asdfghj.json": JSON.stringify({
-      InstallLocation: "mock/install/location/1",
-      Metadata: {
-        title: "Wildlander",
-        version: "1.1.9",
-      },
+    "install-settings-asdfghj.json": mockFs.file({
+      content: JSON.stringify({
+        InstallLocation: "mock/install/location/1",
+        Metadata: {
+          title: "Wildlander",
+          version: "1.1.9",
+        },
+      }),
+      mtime: mockDate,
     }),
-    "install-settings-lkjhgf.json": JSON.stringify({
-      InstallLocation: "mock/install/location/2",
-      Metadata: {
-        title: "Wildlander",
-        version: "1.1.10",
-      },
+    "install-settings-lkjhgf.json": mockFs.file({
+      content: JSON.stringify({
+        InstallLocation: "mock/install/location/2",
+        Metadata: {
+          title: "Wildlander",
+          version: "1.1.10",
+        },
+      }),
+      mtime: mockDate,
     }),
     "another-setting.json": JSON.stringify({
       something: "else",
@@ -50,14 +63,14 @@ const getMockV3Wabbajack = () => ({
 });
 
 describe("Wabbajack service", () => {
-  let mockSystemService: SystemService;
-  let mockModpackService: ModpackService;
+  let mockSystemService: StubbedInstanceWithSinonAccessor<SystemService>;
+  let mockModpackService: StubbedInstanceWithSinonAccessor<ModpackService>;
   let wabbajackService: WabbajackService;
 
   beforeEach(() => {
     mockSystemService = createStubInstance(SystemService);
-
     mockModpackService = createStubInstance(ModpackService);
+
     sinon.stub(SystemService, "getLocalAppData").returns(mockLocalAppData);
 
     wabbajackService = new WabbajackService(
@@ -79,11 +92,13 @@ describe("Wabbajack service", () => {
         title: "Wildlander",
         installPath: "mock/install/location/1",
         version: "1.1.9",
+        lastUpdated: mockDate,
       },
       ["mock/install/location/2"]: {
         title: "Wildlander",
         installPath: "mock/install/location/2",
         version: "1.1.10",
+        lastUpdated: mockDate,
       },
       ["mock/install/location/3"]: {
         title: "Wildlander",
@@ -123,11 +138,55 @@ describe("Wabbajack service", () => {
         title: "Wildlander",
         installPath: "mock/install/location/1",
         version: "1.1.9",
+        lastUpdated: mockDate,
       },
       ["mock/install/location/2"]: {
         title: "Wildlander",
         installPath: "mock/install/location/2",
         version: "1.1.10",
+        lastUpdated: mockDate,
+      },
+    });
+  });
+
+  it("should return only the latest v3 modpack for an install directory", async () => {
+    const laterDate = new Date();
+    const olderDate = new Date(new Date().setDate(-1));
+
+    mockFs({
+      [`${mockLocalAppData}/Wabbajack/saved_settings`]: {
+        "install-settings-asdfghj.json": mockFs.file({
+          content: JSON.stringify({
+            InstallLocation: "mock/install/location/1",
+            Metadata: {
+              title: "Wildlander",
+              version: "1.1.11",
+            },
+          }),
+          mtime: laterDate,
+        }),
+        "install-settings-lksadfh.json": mockFs.file({
+          content: JSON.stringify({
+            InstallLocation: "mock/install/location/1",
+            Metadata: {
+              title: "Wildlander",
+              version: "1.1.9",
+            },
+          }),
+          mtime: olderDate,
+        }),
+        "another-setting.json": JSON.stringify({
+          something: "else",
+        }),
+      },
+    });
+
+    expect(await wabbajackService.getInstalledModpacks()).to.eql({
+      ["mock/install/location/1"]: {
+        title: "Wildlander",
+        installPath: "mock/install/location/1",
+        version: "1.1.11",
+        lastUpdated: laterDate,
       },
     });
   });
@@ -165,11 +224,13 @@ describe("Wabbajack service", () => {
           title: "Wildlander",
           installPath: "mock/install/location/1",
           version: "1.1.9",
+          lastUpdated: mockDate,
         },
         ["mock/install/location/2"]: {
           title: "Wildlander",
           installPath: "mock/install/location/2",
           version: "1.1.10",
+          lastUpdated: mockDate,
         },
       }
     );
