@@ -14,6 +14,7 @@ import childProcess from "child_process";
 import { reboot } from "electron-shutdown-command";
 import { getAllInstalledSoftware } from "fetch-installed-software";
 import psList from "ps-list";
+import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -89,6 +90,15 @@ export class SystemService {
 
   async checkPrerequisitesInstalled() {
     logger.debug("Checking prerequisites are installed");
+
+    if (
+      this.configService.getPreference(
+        USER_PREFERENCE_KEYS.CHECK_PREREQUISITES
+      ) === false
+    ) {
+      logger.debug("Skip checking prerequisites due to user setting");
+      return true;
+    }
 
     const productTester = "C++";
     const installedSoftware = (await getAllInstalledSoftware())

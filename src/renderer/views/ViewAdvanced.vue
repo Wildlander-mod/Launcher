@@ -72,6 +72,15 @@
               />
             </div>
           </div>
+          <div class="l-row c-settings__actions c-settings__section">
+            <div class="c-settings__label">Check pre-requisites</div>
+            <div class="c-settings__action c-settings__action--toggle">
+              <Toggle
+                @click="setCheckPrerequisites"
+                v-model="checkPrerequisites"
+              />
+            </div>
+          </div>
         </div>
 
         <div class="l-column l-start">
@@ -131,6 +140,7 @@ import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
 import Toggle from "@vueform/toggle/src/Toggle";
 import { CONFIG_EVENTS } from "@/main/controllers/config/config.events";
 import Popper from "vue3-popper";
+import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
 
 @Options({
   components: {
@@ -147,11 +157,16 @@ export default class Settings extends Vue {
   private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
   private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
   private showHiddenProfiles = false;
+  private checkPrerequisites = true;
 
   async created() {
     this.showHiddenProfiles = await this.ipcService.invoke(
       PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
     );
+
+    this.checkPrerequisites =
+      (await this.ipcService.invoke(LAUNCHER_EVENTS.GET_CHECK_PREREQUISITES)) ||
+      true;
   }
 
   async launchMO2() {
@@ -249,6 +264,13 @@ export default class Settings extends Vue {
     await this.ipcService.invoke(
       PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES,
       this.showHiddenProfiles
+    );
+  }
+
+  async setCheckPrerequisites() {
+    await this.ipcService.invoke(
+      LAUNCHER_EVENTS.SET_CHECK_PREREQUISITES,
+      this.checkPrerequisites
     );
   }
 
