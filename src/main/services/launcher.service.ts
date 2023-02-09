@@ -108,4 +108,17 @@ export class LauncherService {
   getVersion() {
     return app.getVersion();
   }
+
+  setCheckPrerequisites(value: boolean) {
+    return this.configService.setPreference(
+      USER_PREFERENCE_KEYS.CHECK_PREREQUISITES,
+      value
+    );
+  }
+
+  getCheckPrerequisites() {
+    return this.configService.getPreference(
+      USER_PREFERENCE_KEYS.CHECK_PREREQUISITES
+    );
+  }
 }

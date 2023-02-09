@@ -13,4 +13,14 @@ export class LauncherController {
   getVersion() {
     return this.launcherService.getVersion();
   }
+
+  @handle(LAUNCHER_EVENTS.SET_CHECK_PREREQUISITES)
+  setCheckPrerequisites(value: boolean) {
+    return this.launcherService.setCheckPrerequisites(value);
+  }
+
+  @handle(LAUNCHER_EVENTS.GET_CHECK_PREREQUISITES)
+  getCheckPrerequisites() {
+    return this.launcherService.getCheckPrerequisites();
+  }
 }
