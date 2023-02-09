@@ -54,16 +54,17 @@ export class WabbajackService {
     ) as WabbajackV2SettingsFile;
     return Object.keys(modpackMeta)
       .filter((key) => key !== "$type")
-      .reduce((accumulator, current) => {
-        return {
+      .reduce(
+        (accumulator, current) => ({
           ...accumulator,
           [modpackMeta[current].InstallationPath]: {
             title: modpackMeta[current].ModList.Name,
             installPath: modpackMeta[current].InstallationPath,
             version: modpackMeta[current].ModList.Version,
           },
-        } as WabbajackModpackMetadata;
-      }, {});
+        }),
+        {}
+      );
   }
 
   async getInstalledModpacksFromWabbajackV3(): Promise<WabbajackModpackMetadata> {
@@ -73,25 +74,42 @@ export class WabbajackService {
 
     const modlists = [];
     for (const file of files) {
-      modlists.push(
-        JSON.parse(
-          await fs.promises.readFile(
-            `${this.wabbajackV3InstalledModpacksPath}/${file}`,
-            "utf-8"
-          )
-        ) as WabbajackInstallSettings
-      );
+      const path = `${this.wabbajackV3InstalledModpacksPath}/${file}`;
+      modlists.push({
+        contents: JSON.parse(
+          await fs.promises.readFile(path, "utf-8")
+        ) as WabbajackInstallSettings,
+        lastUpdated: (await fs.promises.lstat(path)).mtime,
+      });
     }
-    return modlists.reduce((accumulator, current) => {
-      return {
-        ...accumulator,
-        [current.InstallLocation]: {
-          title: current.Metadata?.title,
-          installPath: current.InstallLocation,
-          version: current.Metadata?.version,
-        },
-      };
-    }, {});
+
+    return modlists.reduce<WabbajackModpackMetadata>(
+      (accumulator, current): WabbajackModpackMetadata => {
+        const currentInAccumulator =
+          accumulator[current.contents.InstallLocation];
+        // Wabbajack saves modpack installs with files with random hashes
+        // This means a later install might appear before a previous one,
+        // we need to find the latest install and remove the others
+        if (
+          currentInAccumulator &&
+          currentInAccumulator.lastUpdated &&
+          currentInAccumulator.lastUpdated > current.lastUpdated
+        ) {
+          return accumulator;
+        }
+
+        return {
+          ...accumulator,
+          [current.contents.InstallLocation]: {
+            title: current.contents.Metadata?.title,
+            installPath: current.contents.InstallLocation,
+            version: current.contents.Metadata?.version,
+            lastUpdated: current.lastUpdated,
+          },
+        };
+      },
+      {}
+    );
   }
 
   async getInstalledCurrentModpackPaths() {
