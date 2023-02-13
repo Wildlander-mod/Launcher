@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.19.0 (2023-02-13)
+
+
+### Features
+
+* add setting to skip prerequisite check ([44ec668](https://github.com/Wildlander-mod/Launcher/commit/44ec668e6548d3a787fe5ba271bc0d10a1524489))
+
 ### 2.18.2 (2023-02-09)
 
 ### 2.18.1 (2023-02-09)
