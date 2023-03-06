@@ -19,7 +19,7 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
 
-      - uses: fregante/setup-git-user@v1
+      - uses: fregante/setup-git-user@v2
 
       - name: Use Node.js
         uses: actions/setup-node@v3
