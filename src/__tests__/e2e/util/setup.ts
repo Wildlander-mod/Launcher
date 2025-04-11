@@ -8,7 +8,8 @@ import fs from "fs/promises";
 import { _electron as electron, Page, test as Test } from "@playwright/test";
 import type { ElectronApplication } from "playwright";
 import { randomBytes } from "crypto";
-import { removeUserPreferences } from "./user-preferences";
+
+export type CloseTestApp = () => Promise<void>;
 
 type WindowWithCoverage = Page & {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -24,49 +25,59 @@ const UUID = (): string => {
   return randomBytes(16).toString("hex");
 };
 
+export interface MockFilesPaths {
+  mockFilesPath: string;
+  mockModpackPath: string;
+  mockAppDataLocalPath: string;
+}
+
 /**
  * Create mock files for the launcher to use.
  * - userPreferences.json
  * - wabbajack install settings
  * - mock modpack install
  */
-export const createMockFiles = async (test: typeof Test) => {
+export const createMockFiles = async (
+  test: typeof Test
+): Promise<MockFilesPaths> => {
   // Create an area for the Electron app to store config/files.
-  const mockFiles = `${config().paths.mockFiles}/${
+  const mockFilesPath = `${config().paths.mockFiles}/${
     test.info().titlePath[1]
   }/${UUID()}`;
-  await fs.mkdir(mockFiles, { recursive: true });
-  const mockModpackInstall = `${mockFiles}/mock-modpack-install`;
-  createDirectoryStructure(mockModpack, mockModpackInstall);
+  await fs.mkdir(mockFilesPath, { recursive: true });
+  const mockModpackPath = `${mockFilesPath}/mock-modpack-install`;
+  const mockAppDataLocalPath = `${mockFilesPath}/local`;
+
+  createDirectoryStructure(mockModpack, mockModpackPath);
   createDirectoryStructure(
-    getMockAPPDATALocal(mockModpackInstall),
-    `${mockFiles}/local`
+    getMockAPPDATALocal(mockModpackPath),
+    mockAppDataLocalPath
   );
 
-  return mockFiles;
+  return {
+    mockFilesPath,
+    mockModpackPath,
+    mockAppDataLocalPath,
+  };
 };
 
-export interface StartTestAppOptions {}
-
-export interface StartTestAppReturn {
-  mockFiles: string;
+export const startTestApp = async (
+  test: typeof Test
+): Promise<{
+  mockFiles: MockFilesPaths;
   window: Page;
   electronApp: ElectronApplication;
-  closeTestApp: () => Promise<void>;
-}
-
-export const startTestApp = async (
-  test: typeof Test,
-  options: StartTestAppOptions = {}
-): Promise<StartTestAppReturn> => {
-  const mockFiles = await createMockFiles(test);
+  closeTestApp: CloseTestApp;
+}> => {
+  const { mockFilesPath, mockModpackPath, mockAppDataLocalPath } =
+    await createMockFiles(test);
 
   // Launch Electron app.
   const electronApp = await electron.launch({
     args: [`${config().paths.instrumented}/main.js`],
     env: {
-      CONFIG_PATH: `${mockFiles}/config`,
-      APPDATA: `${mockFiles}/APPDATA`,
+      CONFIG_PATH: `${mockFilesPath}/config`,
+      APPDATA: `${mockFilesPath}/APPDATA`,
       MULTIPLE_INSTANCE: "true",
       // Disable this to open dev tools by default
       IS_TEST: "true",
@@ -87,20 +98,24 @@ export const startTestApp = async (
     window.on("console", console.log);
   }
 
-  // Move the window slightly in a random direction by 150 pixels for e2e tests,
+  // Move the window slightly in a random direction by 200 pixels for e2e tests,
+  // but only if playwrights is using more than one worker
   // this allows all windows to be visible when using multiple workers
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  await electronApp.evaluate(({ BrowserWindow }) => {
-    const offset = 200;
-    const win = BrowserWindow.getAllWindows()[0];
-    if (win) {
-      const [x, y] = win.getPosition();
-      // Generate random direction: up, down, left, right, or diagonal
-      const randomX = Math.random() > 0.5 ? offset : -offset;
-      const randomY = Math.random() > 0.5 ? offset : -offset;
-      win.setPosition(x + randomX, y + randomY);
-    }
-  });
+  if (!process.env["CI"]) {
+    // CI uses only 1 worker, local uses 3 workers by default
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    await electronApp.evaluate(({ BrowserWindow }) => {
+      const offset = 200;
+      const win = BrowserWindow.getAllWindows()[0];
+      if (win) {
+        const [x, y] = win.getPosition();
+        // Generate random direction: up, down, left, right, or diagonal
+        const randomX = Math.random() > 0.5 ? offset : -offset;
+        const randomY = Math.random() > 0.5 ? offset : -offset;
+        win.setPosition(x + randomX, y + randomY);
+      }
+    });
+  }
 
   const closeTestApp = async () => {
     await saveCoverage(
@@ -118,7 +133,16 @@ export const startTestApp = async (
     await electronApp.close();
   };
 
-  return { mockFiles, window, electronApp, closeTestApp };
+  return {
+    mockFiles: {
+      mockFilesPath,
+      mockModpackPath,
+      mockAppDataLocalPath,
+    },
+    window,
+    electronApp,
+    closeTestApp,
+  };
 };
 
 const saveCoverage = async (
@@ -154,6 +178,44 @@ export const waitForAppLoaded = async (window: Page): Promise<void> => {
 };
 
 /**
+ * Sets the modpack directory in user preferences and waits for the app to load
+ * This is useful for tests that need to set the modpack directory before loading the app
+ *
+ * @param window The Playwright page object
+ * @param mockFiles The mock files object containing paths
+ */
+export const setModpackAndWaitForAppLoaded = async (
+  window: Page,
+  mockFiles: MockFilesPaths
+): Promise<void> => {
+  const { mockFilesPath, mockModpackPath } = mockFiles;
+
+  await fs.mkdir(`${mockFilesPath}/config`, { recursive: true });
+  await fs.writeFile(
+    `${mockFilesPath}/config/userPreferences.json`,
+    JSON.stringify({
+      MOD_DIRECTORY: `${mockModpackPath}`,
+    })
+  );
+
+  await waitForAppLoaded(window);
+};
+
+/**
+ * Waits for the mod directory selection to be available
+ * This is used for tests that need to interact with the mod directory selection screen
+ *
+ * @param window The Playwright page object
+ */
+export const waitForModDirectorySelect = async (
+  window: Page
+): Promise<void> => {
+  await window.getByTestId("mod-directory-select").waitFor({
+    state: "visible",
+  });
+};
+
+/**
  * Waits for the preload to complete by checking if the current URL is the auto-update URL.
  * If it is, waits until it changes before proceeding.
  *
@@ -170,70 +232,4 @@ export const waitForPreloadComplete = async (window: Page): Promise<void> => {
 
   // Wait until the page is ready before continuing
   await window.waitForLoadState("load");
-};
-
-/**
- * Resets the window for initial mod selection tests by:
- * 1. Removing user preferences
- * 2. Reloading the window
- * 3. Waiting for the mod directory selection to be available
- *
- * This is different from the standard resetWindow function because
- * we need to ensure the mod directory is not set before testing
- * the initial mod selection screen.
- *
- * @param window The Playwright page object
- * @param mockFiles The path to the mock files directory
- */
-export const resetWindowWithoutModSelection = async (
-  window: Page,
-  mockFiles: string
-): Promise<void> => {
-  // Remove user preferences
-  await removeUserPreferences(mockFiles);
-
-  // Wait for preload to complete before reloading
-  await waitForPreloadComplete(window);
-
-  // Reload the window
-  await window.reload();
-
-  // Wait for the mod directory selection to be available
-  await window.getByTestId("mod-directory-select").waitFor({
-    state: "visible",
-  });
-};
-
-/**
- * Reset the window by:
- * 1. Resetting user preferences
- * 2. Setting the modpack
- * 3. Reloading the window
- * 4. Waiting for the launch button to be visible (this is only visible when the app has finished loading)
- *
- * This function should be called in the beforeEach hook of every e2e test
- * to ensure that the context for each test is fully reset.
- */
-export const resetWindow = async (
-  window: Page,
-  mockFiles: string
-): Promise<void> => {
-  // Reset user preferences and set the modpack
-  const mockModpackInstall = `${mockFiles}/mock-modpack-install`;
-  await fs.mkdir(`${mockFiles}/config`, { recursive: true });
-  await fs.writeFile(
-    `${mockFiles}/config/userPreferences.json`,
-    JSON.stringify({
-      MOD_DIRECTORY: `${mockModpackInstall}`,
-    })
-  );
-
-  // Wait for preload to complete before reloading
-  await waitForPreloadComplete(window);
-
-  // Reload the window reload to reset the context (useful between tests)
-  await window.reload();
-
-  // Wait for the app to load again after the refresh
-  await waitForAppLoaded(window);
 };

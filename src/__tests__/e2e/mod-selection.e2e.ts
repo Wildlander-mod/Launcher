@@ -1,39 +1,36 @@
 import { expect, Page, test } from "@playwright/test";
 import {
   startTestApp,
-  StartTestAppReturn,
-  resetWindowWithoutModSelection,
+  waitForModDirectorySelect,
+  MockFilesPaths,
+  CloseTestApp,
 } from "./util/setup";
+import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
 import fs from "fs";
 
 test.describe("Mod Selection", () => {
   let window: Page;
-  let closeTestApp: StartTestAppReturn["closeTestApp"];
-  let mockFiles: string;
-  let electronApp: StartTestAppReturn["electronApp"];
-
-  test.beforeAll(async () => {
-    ({ window, closeTestApp, mockFiles, electronApp } = await startTestApp(
-      test
-    ));
-  });
-
-  test.afterAll(async () => {
-    await closeTestApp();
-  });
+  let closeTestApp: CloseTestApp;
+  let mockFiles: MockFilesPaths;
+  let electronApp: ElectronApplication;
 
   test.describe("Initial Mod Selection", () => {
     test.beforeEach(async () => {
-      // For initial mod selection tests, we need to remove user preferences
-      // to ensure the mod directory selection screen is shown
-      await resetWindowWithoutModSelection(window, mockFiles);
+      ({ window, closeTestApp, electronApp, mockFiles } = await startTestApp(
+        test
+      ));
+
+      await waitForModDirectorySelect(window);
+    });
+
+    test.afterEach(async () => {
+      await closeTestApp();
     });
 
     test("should show the initial mod selection screen", async () => {
       const modDirectory = window.getByTestId("mod-directory");
 
-      // Verify the mod directory selection is visible
       await expect(modDirectory).toBeVisible();
 
       // Verify the welcome text is shown
@@ -52,7 +49,7 @@ test.describe("Mod Selection", () => {
       await window.getByTestId(modDirectorySelectTestId).click();
       const firstOption = window
         .getByTestId(modDirectorySelectTestId)
-        .getByTestId("dropdown-options-0");
+        .getByTestId("dropdown-option-0");
 
       const modDirectoryPath = await firstOption.textContent();
 
@@ -63,7 +60,7 @@ test.describe("Mod Selection", () => {
       await expect(window.getByTestId("page-home")).toBeVisible();
 
       // Get the user preferences
-      const userPreferences = await getUserPreferences(mockFiles);
+      const userPreferences = await getUserPreferences(mockFiles.mockFilesPath);
 
       // Verify the mod directory is set correctly
       expect(userPreferences.MOD_DIRECTORY).toBe(modDirectoryPath);
@@ -127,7 +124,7 @@ test.describe("Mod Selection", () => {
       await expect(window.getByTestId(modDirectorySelectTestId)).toBeVisible();
 
       // Verify the user preferences file is still an empty object
-      const userPreferencesPath = `${mockFiles}/config/userPreferences.json`;
+      const userPreferencesPath = `${mockFiles.mockFilesPath}/config/userPreferences.json`;
       const fileContents = fs.readFileSync(userPreferencesPath, "utf-8");
       expect(JSON.parse(fileContents)).toEqual({});
     });

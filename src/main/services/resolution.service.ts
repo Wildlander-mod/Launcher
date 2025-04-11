@@ -130,9 +130,8 @@ export class ResolutionService {
     let resolutionOutput: string;
 
     // The application is only supported on Windows machines.
-    // However, development is supported on other OSs so just return the current resolution
-    // Also, return an ultra-wide resolution for testing
-    if (os.platform() !== "win32") {
+    // However, development is supported on other OSs so just return the current resolution and some test resolutions.
+    if (os.platform() !== "win32" || process.env["IS_TEST"] === "true") {
       resolutionOutput = [
         // The first 2 items of the real output contains version and copyright information
         { width: 0, height: 0 },
@@ -249,7 +248,7 @@ export class ResolutionService {
 
   /**
    * Borderless upscale will need to be toggled depending on if the user is using an ultra-widescreen monitor.
-   * Without upscale, users on ultra-widescreen but using a smaller resolution will get stretching
+   * Without upscale, users on ultra-widescreen using a smaller resolution will get stretching
    * User has non-ultra-widescreen monitor resolution and selects non-ultra-widescreen resolution - Enable upscale
    * User has non-ultra-widescreen monitor resolution and selects ultra-widescreen resolution - Disable upscale
    * User has ultra-widescreen and selects non-ultra-widescreen resolution - Disable upscale
@@ -269,7 +268,7 @@ export class ResolutionService {
     }
 
     this.logger.info(
-      `Setting borderless upscale for ${width}x${height}: ${borderlessUpscale}`
+      `Setting borderless upscale for screen resolution ${width}x${height} and selected resolution ${resolution.width}x${resolution.height}: ${borderlessUpscale}`
     );
     return borderlessUpscale;
   }

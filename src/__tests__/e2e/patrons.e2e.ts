@@ -1,10 +1,15 @@
 import { Page, test, expect } from "@playwright/test";
-import { startTestApp, StartTestAppReturn, resetWindow } from "./util/setup";
+import {
+  startTestApp,
+  setModpackAndWaitForAppLoaded,
+  MockFilesPaths,
+  CloseTestApp,
+} from "./util/setup";
 
 test.describe("Patrons", () => {
   let window: Page;
-  let closeTestApp: StartTestAppReturn["closeTestApp"];
-  let mockFiles: string;
+  let closeTestApp: CloseTestApp;
+  let mockFiles: MockFilesPaths;
 
   // Mock data for tests
   const mockPatrons = [
@@ -26,13 +31,9 @@ test.describe("Patrons", () => {
     },
   ];
 
-  test.beforeAll(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-  });
-
   test.beforeEach(async () => {
-    // Reset the test context
-    await resetWindow(window, mockFiles);
+    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window, mockFiles);
 
     // Mock the API responses
     await window.route("**/api/patreon", (route) => {
@@ -51,9 +52,8 @@ test.describe("Patrons", () => {
   test.afterEach(async () => {
     // Reset all mocked routes
     await window.unroute("**");
-  });
 
-  test.afterAll(async () => {
+    // Close the app
     await closeTestApp();
   });
 

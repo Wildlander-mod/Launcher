@@ -5,10 +5,11 @@
     :current-selection="selectedResolution"
     :show-tooltip-on-hover="true"
     :grow="true"
+    data-testid="resolution-dropdown"
     @selected="onResolutionSelected"
   >
     <div class="l-row">
-      <div v-if="containsUltrawide">
+      <div v-if="containsUltrawide" data-testid="ultrawide-warning">
         <span class="material-icons c-resolution__info-icon u-text">
           info
         </span>
@@ -111,12 +112,19 @@ export default class Resolution extends Vue {
 
   async onResolutionSelected(option: SelectOption) {
     logger.debug(`User selected resolution ${JSON.stringify(option.value)}`);
+
+    // Emit event to indicate resolution change is starting
+    this.$emit("resolution-loading", true);
+
     const value = option.value as ResolutionType;
     await this.ipcService.invoke(RESOLUTION_EVENTS.SET_RESOLUTION_PREFERENCE, {
       height: value.height,
       width: value.width,
     });
     this.selectedResolution = option;
+
+    // Emit event to indicate resolution change is complete
+    this.$emit("resolution-loading", false);
   }
 }
 </script>

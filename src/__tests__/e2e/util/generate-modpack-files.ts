@@ -1,6 +1,7 @@
 import fs from "fs";
 import { removeSync } from "fs-extra";
 import path from "path";
+import os from "os";
 import { ModOrganizerIni } from "./files/ModOrganizer.ini";
 import { SSEDisplayTweaks } from "./files/SSEDisplayTweaks.ini";
 import namesMO2 from "./files/namesMO2.json";
@@ -14,7 +15,9 @@ import { skyrim } from "./files/profiles/Skyrim.ini";
 import { skyrimCustom } from "./files/profiles/SkyrimCustom.ini";
 import { skyrimPrefs } from "./files/profiles/SkyrimPrefs.ini";
 
-type DirectoryStructure = { [name: string]: string | DirectoryStructure };
+export type DirectoryStructure = {
+  [name: string]: string | DirectoryStructure;
+};
 
 export const createDirectoryStructure = (
   directoryObject: DirectoryStructure,
@@ -29,7 +32,9 @@ export const createDirectoryStructure = (
       fs.mkdirSync(itemPath, { recursive: true });
       createDirectoryStructure(item, itemPath);
     } else {
-      fs.writeFileSync(itemPath, item);
+      // Ensure correct line endings for the platform
+      const content = typeof item === 'string' ? item.replace(/\n/g, os.EOL) : item;
+      fs.writeFileSync(itemPath, content);
       fs.chmodSync(itemPath, 0o777); // Set file permissions to 777 so the app can execute them
     }
   }

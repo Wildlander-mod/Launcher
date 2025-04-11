@@ -1,15 +1,26 @@
-import { expect, test } from "@playwright/test";
-import { resetWindow, startTestApp } from "./util/setup";
+import { expect, test, Page } from "@playwright/test";
+import {
+  startTestApp,
+  setModpackAndWaitForAppLoaded,
+  MockFilesPaths,
+  CloseTestApp,
+} from "./util/setup";
+import type { ElectronApplication } from "playwright";
 
 test.describe("Application Actions", () => {
-  test("Minimize the app", async () => {
-    // Start a fresh app for this test
-    const { electronApp, closeTestApp, window, mockFiles } = await startTestApp(
+  let electronApp: ElectronApplication;
+  let closeTestApp: CloseTestApp;
+  let window: Page;
+  let mockFiles: MockFilesPaths;
+
+  test.beforeEach(async () => {
+    ({ electronApp, closeTestApp, window, mockFiles } = await startTestApp(
       test
-    );
+    ));
+    await setModpackAndWaitForAppLoaded(window, mockFiles);
+  });
 
-    await resetWindow(window, mockFiles);
-
+  test("Minimize the app", async () => {
     const minimizeButton = window.getByTestId("minimize-button");
     await minimizeButton.waitFor({ state: "visible" });
 
@@ -26,16 +37,10 @@ test.describe("Application Actions", () => {
 
     expect(isMinimized).toBe(true);
 
-    // Close the app after minimizing
     await closeTestApp();
   });
 
   test("Close the app", async () => {
-    // Start a fresh app for this test
-    const { electronApp, window, mockFiles } = await startTestApp(test);
-
-    await resetWindow(window, mockFiles);
-
     const closeButton = window.getByTestId("close-button");
     await closeButton.waitFor({ state: "visible" });
 

@@ -18,7 +18,7 @@ export default defineConfig({
   globalTeardown: "./src/__tests__/e2e/util/global-teardown.ts",
 
   /* Run tests in a single file in parallel,  */
-  // fullyParallel: true,
+  fullyParallel: true,
 
   workers: process.env["CI"] ? 1 : 3,
 

@@ -1,10 +1,15 @@
 import { Page, test, expect } from "@playwright/test";
-import { startTestApp, StartTestAppReturn, resetWindow } from "./util/setup";
+import {
+  startTestApp,
+  setModpackAndWaitForAppLoaded,
+  MockFilesPaths,
+  CloseTestApp,
+} from "./util/setup";
 
 test.describe("Community", () => {
   let window: Page;
-  let closeTestApp: StartTestAppReturn["closeTestApp"];
-  let mockFiles: string;
+  let closeTestApp: CloseTestApp;
+  let mockFiles: MockFilesPaths;
 
   // Define test data for better organization and maintainability
   const links = [
@@ -17,21 +22,17 @@ test.describe("Community", () => {
     { name: "Reddit", url: "https://reddit.com/r/wildlander" },
   ];
 
-  test.beforeAll(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-  });
-
   test.beforeEach(async () => {
-    await resetWindow(window, mockFiles);
+    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window, mockFiles);
 
-    // Navigate to the Community page after reset
+    // Navigate to the Community page
     await window
       .getByTestId("navigation-container")
       .getByText("Community")
       .click();
   });
-
-  test.afterAll(async () => {
+  test.afterEach(async () => {
     await closeTestApp();
   });
 

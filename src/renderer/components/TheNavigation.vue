@@ -5,6 +5,7 @@
         type="primary"
         size="grow"
         data-testid="launch-game"
+        :disabled="resolutionLoading"
         @click="launchGame"
       >
         Launch Game
@@ -16,7 +17,7 @@
 
       <ENB />
 
-      <Resolution />
+      <Resolution @resolution-loading="onResolutionLoading" />
     </div>
 
     <div class="c-navigation__content l-column l-space-between">
@@ -163,6 +164,7 @@ export default class TheNavigation extends Vue {
   checkingPrerequisites = false;
   installingPrerequisites = false;
   rebootRequired = false;
+  resolutionLoading = false;
   launcherVersion: string | null = null;
   modpackVersion: string | null = null;
   modpackName: string | null = null;
@@ -243,6 +245,10 @@ export default class TheNavigation extends Vue {
 
   reboot() {
     this.ipcService.invoke(SYSTEM_EVENTS.REBOOT);
+  }
+
+  onResolutionLoading(loading: boolean) {
+    this.resolutionLoading = loading;
   }
 }
 </script>

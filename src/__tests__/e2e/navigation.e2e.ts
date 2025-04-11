@@ -1,29 +1,30 @@
 import { Page, test, expect } from "@playwright/test";
-import { startTestApp, StartTestAppReturn, resetWindow } from "./util/setup";
+import {
+  startTestApp,
+  setModpackAndWaitForAppLoaded,
+  MockFilesPaths,
+} from "./util/setup";
 import path from "path";
 import fs from "fs/promises";
 
 test.describe("Navigation", () => {
   let window: Page;
-  let closeTestApp: StartTestAppReturn["closeTestApp"];
-  let mockFiles: string;
-
-  test.beforeAll(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-  });
-
-  test.afterAll(async () => {
-    await closeTestApp();
-  });
+  let closeTestApp: ReturnType<typeof startTestApp>["closeTestApp"];
+  let mockFiles: MockFilesPaths;
 
   test.beforeEach(async () => {
-    await resetWindow(window, mockFiles);
+    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window, mockFiles);
+  });
+
+  test.afterEach(async () => {
+    await closeTestApp();
   });
 
   test("Should display the correct modpack version", async () => {
     // Get the expected modpack version from the mock files
     const wabbajackSettingsPath = path.join(
-      mockFiles,
+      mockFiles.mockFilesPath,
       "local",
       "Wabbajack",
       "saved_settings",

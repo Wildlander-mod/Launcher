@@ -1,10 +1,15 @@
 import { expect, Page, test } from "@playwright/test";
-import { startTestApp, StartTestAppReturn, resetWindow } from "./util/setup";
+import {
+  startTestApp,
+  setModpackAndWaitForAppLoaded,
+  MockFilesPaths,
+  CloseTestApp,
+} from "./util/setup";
 
 test.describe("Header", () => {
   let window: Page;
-  let closeTestApp: StartTestAppReturn["closeTestApp"];
-  let mockFiles: string;
+  let closeTestApp: CloseTestApp;
+  let mockFiles: MockFilesPaths;
 
   // Define test data for better organization and maintainability
   const links = [
@@ -14,16 +19,13 @@ test.describe("Header", () => {
     { name: "patreon", url: "https://www.patreon.com/dylanbperry" },
   ];
 
-  test.beforeAll(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-  });
-
-  test.afterAll(async () => {
-    await closeTestApp();
-  });
-
   test.beforeEach(async () => {
-    await resetWindow(window, mockFiles);
+    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window, mockFiles);
+  });
+
+  test.afterEach(async () => {
+    await closeTestApp();
   });
 
   // Use test.each to reduce repetition

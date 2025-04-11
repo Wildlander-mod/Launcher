@@ -1,5 +1,13 @@
 <template>
-  <div :class="['c-button u-text', `c-button--${size}`, `c-button--${type}`]">
+  <div
+    :class="[
+      'c-button u-text',
+      `c-button--${size}`,
+      `c-button--${type}`,
+      { 'c-button--disabled': disabled },
+    ]"
+    @click="onClick"
+  >
     <slot />
   </div>
 </template>
@@ -15,6 +23,15 @@ export type ButtonTypes = "primary" | "default" | "warning";
 export default class BaseButton extends Vue {
   @Prop({ default: "small" }) size!: ButtonSizes;
   @Prop({ default: "default" }) type!: ButtonTypes;
+  @Prop({ default: false }) disabled!: boolean;
+
+  onClick(event: Event) {
+    if (this.disabled) {
+      event.stopPropagation();
+      return;
+    }
+    this.$emit("click", event);
+  }
 }
 </script>
 
@@ -33,13 +50,17 @@ export default class BaseButton extends Vue {
   padding: 0;
   user-select: none;
 
-  &:active,
-  &:hover {
+  &:active:not(.c-button--disabled),
+  &:hover:not(.c-button--disabled) {
     background-color: lighten($colour-background--dark, 10%);
   }
 
-  &:hover {
+  &:hover:not(.c-button--disabled) {
     cursor: pointer;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
   }
 
   &--large {

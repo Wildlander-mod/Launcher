@@ -25,6 +25,7 @@
           'c-select__head--open': isOpen && !loading,
           'c-select__head--closed': !isOpen && !loading,
         }"
+        data-testid="dropdown-head"
         @click="() => toggleOpenState()"
       >
         {{ currentSelection.text }}
@@ -51,7 +52,11 @@
         <div
           v-for="(option, index) in options.filter((x) => !x.hidden)"
           :key="option.value"
-          :data-testid="`dropdown-options-${index}`"
+          :data-testid="
+            option.disabled
+              ? `dropdown-option-disabled-${index}`
+              : `dropdown-option-${index}`
+          "
           class="c-select__option l-center-vertically"
           :class="{
             'c-select__option--disabled': option.disabled,
