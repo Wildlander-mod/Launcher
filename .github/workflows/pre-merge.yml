@@ -53,9 +53,7 @@ jobs:
       - name: Install Playwright dependencies
         run: npx playwright install
       - name: Run E2E tests
-        run: |
-          $env:DEBUG="true"
-          npm run test:e2e -- resolution.e2e.ts
+        run: npm run test:e2e
 
   # Validate that commits are following the conventional commit format
   commit-validate:

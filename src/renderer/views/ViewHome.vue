@@ -1,5 +1,5 @@
 <template>
-  <span data-testid="page-home">
+  <div data-testid="page-home" class="l-row">
     <AppPageContent :spacing="false" :scrollable="true">
       <News />
     </AppPageContent>
@@ -11,7 +11,7 @@
     >
       <Patrons />
     </AppPageContent>
-  </span>
+  </div>
 </template>
 
 <script lang="ts">

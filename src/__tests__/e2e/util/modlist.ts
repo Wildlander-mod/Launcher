@@ -21,7 +21,6 @@ const readAndSplitMultilineFile = async (
   ] as string;
   const filePath = `${mockFiles.mockModpackPath}/profiles/${selectedProfile}/${filename}`;
   const fileContent = await fs.readFile(filePath, "utf-8");
-  // Split by the platform-specific line ending
   return fileContent.split(os.EOL);
 };
 
