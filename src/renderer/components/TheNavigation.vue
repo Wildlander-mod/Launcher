@@ -13,7 +13,7 @@
 
       <ProfileSelection @profile-loading="onLoading" />
 
-      <GraphicsSelection />
+      <GraphicsSelection @graphics-loading="onLoading" />
 
       <ENB />
 

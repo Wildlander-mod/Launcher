@@ -1,0 +1,160 @@
+import { expect, Page, test } from "@playwright/test";
+import {
+  CloseTestApp,
+  MockFilesPaths,
+  setModpackAndWaitForAppLoaded,
+  startTestApp,
+  waitForLaunchButtonDisabled,
+  waitForLaunchButtonEnabled,
+} from "./util/setup";
+import { getUserPreferences } from "./util/user-preferences";
+import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import fs from "fs/promises";
+
+/**
+ * Hardcoded graphics presets configuration
+ * - value: The actual preset name used in the system
+ * - text: The display text shown to the user
+ */
+const GRAPHICS_PRESETS = {
+  ULTRA: {
+    value: "1_Wildlander-ULTRA",
+    text: "Ultra Graphics",
+  },
+  HIGH: {
+    value: "1_Wildlander-HIGH",
+    text: "High Graphics",
+  },
+  MEDIUM: {
+    value: "1_Wildlander-MEDIUM",
+    text: "Medium Graphics",
+  },
+  LOW: {
+    value: "1_Wildlander-LOW",
+    text: "Low Graphics",
+  },
+  POTATO: {
+    value: "1_Wildlander-POTATO",
+    text: "Potato Graphics",
+  },
+};
+
+/**
+ * Helper function to select a graphics preset from the dropdown
+ * @param window The Playwright Page object
+ * @param preset The graphics preset object to select
+ * @returns The selected graphics preset value (used for verification in tests)
+ */
+const selectGraphics = async (
+  window: Page,
+  preset: (typeof GRAPHICS_PRESETS)[keyof typeof GRAPHICS_PRESETS]
+) => {
+  const graphicsDropdown = window.getByTestId("graphics-dropdown");
+  await graphicsDropdown.getByTestId("dropdown-head").click();
+
+  // Get the promise for waiting for the button to be disabled before clicking
+  // This ensures we capture the disabled state even if it happens very quickly
+  const disabledPromise = waitForLaunchButtonDisabled(window);
+
+  // Select the graphics preset
+  const optionsContainer = graphicsDropdown.getByTestId("dropdown-options");
+  await optionsContainer.getByText(preset.text).click();
+
+  // Now await the promise to ensure the button was disabled at least once after the click
+  await disabledPromise;
+
+  // Wait for the graphics change to complete (button enabled again)
+  await waitForLaunchButtonEnabled(window);
+
+  return preset.value;
+};
+
+test.describe("Graphics Options", () => {
+  let window: Page;
+  let closeTestApp: CloseTestApp;
+  let mockFiles: MockFilesPaths;
+
+  test.beforeEach(async () => {
+    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window, mockFiles);
+  });
+
+  test.afterEach(async () => {
+    await closeTestApp();
+  });
+
+  test("should display the graphics dropdown", async () => {
+    // Verify the graphics dropdown is visible
+    const graphicsDropdown = window.getByTestId("graphics-dropdown");
+    await expect(graphicsDropdown).toBeVisible();
+  });
+
+  test("should update user preferences when changing graphics preset", async () => {
+    // Get the initial graphics preference
+    await getUserPreferences(mockFiles.mockFilesPath);
+
+    await selectGraphics(window, GRAPHICS_PRESETS.MEDIUM);
+
+    // Verify the graphics preference is updated in user preferences
+    const updatedPreferences = await getUserPreferences(
+      mockFiles.mockFilesPath
+    );
+    const updatedGraphicsPreference =
+      updatedPreferences[USER_PREFERENCE_KEYS.GRAPHICS];
+
+    expect(updatedGraphicsPreference).toBe(GRAPHICS_PRESETS.MEDIUM.value);
+  });
+
+  test("should copy graphics files to profiles when changing graphics preset", async () => {
+    // Get the current profile from user preferences
+    const userPreferences = await getUserPreferences(mockFiles.mockFilesPath);
+    const currentProfile = userPreferences[
+      USER_PREFERENCE_KEYS.PRESET
+    ] as string;
+
+    await selectGraphics(window, GRAPHICS_PRESETS.HIGH);
+
+    // Verify the graphics files were copied to the profile directory
+    const graphicsDir = `${mockFiles.mockModpackPath}/launcher/Graphics Presets/${GRAPHICS_PRESETS.HIGH.value}`;
+    const profileDir = `${mockFiles.mockModpackPath}/profiles/${currentProfile}`;
+
+    // Get a list of graphics files
+    const graphicsFiles = await fs.readdir(graphicsDir);
+    expect(graphicsFiles.length).toBeGreaterThan(0);
+
+    // Verify each file was copied
+    for (const file of graphicsFiles) {
+      const sourcePath = `${graphicsDir}/${file}`;
+      const destPath = `${profileDir}/${file}`;
+
+      // Verify source file exists and is readable
+      expect(async () => {
+        await fs.access(sourcePath);
+      }).not.toThrowError();
+
+      // Verify destination file exists and is readable
+      expect(async () => {
+        await fs.access(destPath);
+      }).not.toThrowError();
+
+      // Compare file contents to ensure proper copy
+      const sourceContent = await fs.readFile(sourcePath);
+      const destContent = await fs.readFile(destPath);
+      expect(sourceContent).toEqual(destContent);
+    }
+  });
+
+  test("should disable the Launch Game button during graphics changes", async () => {
+    const launchButton = window.getByTestId("launch-game");
+
+    // Verify the button is initially enabled
+    await expect(launchButton).not.toHaveClass(/c-button--disabled/);
+
+    // Use the LOW graphics preset
+    // This will trigger the graphics change and wait for it to complete
+    await selectGraphics(window, GRAPHICS_PRESETS.LOW);
+
+    // Verify the button is re-enabled after the graphics change is complete
+    await expect(launchButton).not.toHaveClass(/c-button--disabled/);
+  });
+});

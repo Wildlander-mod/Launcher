@@ -5,6 +5,7 @@
     :options="graphics"
     :grow="true"
     :show-tooltip-on-hover="true"
+    data-testid="graphics-dropdown"
     @selected="onGraphicsSelected"
   >
     Uses CPU and GPU. Determines the draw distance and quality of objects,
@@ -27,6 +28,7 @@ import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
 
 @Options({
   components: { BaseDropdown },
+  emits: ["graphics-loading"],
 })
 export default class GraphicsSelection extends Vue {
   selectedGraphics: SelectOption | null = null;
@@ -40,10 +42,15 @@ export default class GraphicsSelection extends Vue {
       (await this.getInitialGraphics(this.graphics)) ?? null;
   }
 
-  onGraphicsSelected(option: SelectOption) {
+  async onGraphicsSelected(option: SelectOption) {
     logger.debug(`User selected graphics ${option.value}`);
-    this.ipcService.invoke(GRAPHICS_EVENTS.SET_GRAPHICS, option.value);
+
+    this.$emit("graphics-loading", true);
+
+    await this.ipcService.invoke(GRAPHICS_EVENTS.SET_GRAPHICS, option.value);
     this.selectedGraphics = option;
+
+    this.$emit("graphics-loading", false);
   }
 
   async getInitialGraphics(graphics: SelectOption[]) {
