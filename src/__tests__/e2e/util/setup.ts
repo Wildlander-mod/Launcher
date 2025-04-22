@@ -8,6 +8,7 @@ import fs from "fs/promises";
 import { _electron as electron, Page, test as Test } from "@playwright/test";
 import type { ElectronApplication } from "playwright";
 import { randomBytes } from "crypto";
+import { waitForClass } from "./element";
 
 export type CloseTestApp = () => Promise<void>;
 
@@ -232,4 +233,47 @@ export const waitForPreloadComplete = async (window: Page): Promise<void> => {
 
   // Wait until the page is ready before continuing
   await window.waitForLoadState("load");
+};
+
+/**
+ * Reloads the window and waits for the app to be loaded.
+ * This is useful for tests that need to reload the page after changing settings.
+ *
+ * @param window The Playwright page object
+ */
+export const reloadWindow = async (window: Page): Promise<void> => {
+  // Wait for preload to complete before reloading
+  await waitForPreloadComplete(window);
+
+  // Reload the window
+  await window.reload();
+
+  // Wait for the app to be loaded
+  await waitForAppLoaded(window);
+};
+
+/**
+ * Helper function to wait for the launch button to be disabled.
+ * @param window The Playwright Page object
+ * @returns Promise that resolves when the launch button is disabled
+ */
+export const waitForLaunchButtonDisabled = async (window: Page) => {
+  return waitForClass(window, {
+    testId: "launch-game",
+    className: "c-button--disabled",
+    shouldExist: true,
+  });
+};
+
+/**
+ * Helper function to wait for the launch button to be enabled.
+ * @param window The Playwright Page object
+ * @returns Promise that resolves when the launch button is enabled
+ */
+export const waitForLaunchButtonEnabled = async (window: Page) => {
+  return waitForClass(window, {
+    testId: "launch-game",
+    className: "c-button--disabled",
+    shouldExist: false,
+  });
 };

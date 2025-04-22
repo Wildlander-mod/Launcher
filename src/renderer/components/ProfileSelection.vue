@@ -5,6 +5,7 @@
     :options="profiles"
     :grow="true"
     :show-tooltip-on-hover="true"
+    data-testid="profile-dropdown"
     @selected="onProfileSelected"
     @click="checkIfShowingHiddenProfiles"
   >
@@ -45,10 +46,18 @@ export default class ProfileSelection extends Vue {
       (await this.getInitialProfile(this.profiles)) ?? null;
   }
 
-  onProfileSelected(option: SelectOption) {
+  async onProfileSelected(option: SelectOption) {
     logger.debug(`User selected profile ${option.value}`);
-    this.ipcService.invoke(PROFILE_EVENTS.SET_PROFILE_PREFERENCE, option.value);
+
+    this.$emit("profile-loading", true);
+
+    await this.ipcService.invoke(
+      PROFILE_EVENTS.SET_PROFILE_PREFERENCE,
+      option.value
+    );
     this.selectedProfile = option;
+
+    this.$emit("profile-loading", false);
   }
 
   async getInitialProfile(profiles: SelectOption[]) {

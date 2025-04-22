@@ -8,6 +8,7 @@ Follow all generic and project specific instructions in this document.
 - Prefer `const` over `let` where possible to ensure immutability
 - Always declare variables at the lowest scope possible to prevent polluting the outer scope
 - Only suggest upgrading libraries when absolutely necessary for functionality
+- Avoid unnecessary comments that just repeat what the code already clearly expresses
 
 ## TypeScript Practices
 
@@ -18,7 +19,8 @@ Follow all generic and project specific instructions in this document.
 
 - Remove any output or script files used solely by Junie, including those from previous steps
 - When iterating on changes, ensure old unused implementations are properly removed
-- When renaming files, always remove the old unused versions to maintain a clean codebase and prevent confusion or potential bugs from having multiple versions of the same functionality
+- When renaming files, always remove the old unused versions to maintain a clean codebase and prevent confusion or
+  potential bugs from having multiple versions of the same functionality
 - After each code generation, run appropriate tests to validate your changes (see Validation Workflow below)
 - After each code generation, validate your code with the appropriate linting tools
 - Avoid inserting code between a comment and the method or section it is referencing
@@ -33,19 +35,23 @@ Follow all generic and project specific instructions in this document.
 - Always run all tests before submitting code changes to ensure no regressions
 - Ensure that tests always focus on the behaviour of the code being tested
 - Do not use divs when adding test IDs, use span or other inline elements that do not impact styling instead
+- Do not add comments that simply restate what the test assertion already clearly shows
 
 ## Validation Workflow Instructions
 
+- First attempt to run tests natively in the IDE before using command line test commands
 - After generating code with Junie, always validate your changes by running appropriate tests.
-- First, limit your tests to the specific area of code you modified. If only one e2e tests file has been changed, only run the tests for that file.
-- After validating the specific tests, run all tests to ensure overall functionality unless the change was to a single test file and nothing else.
+- First, limit your tests to the specific area of code you modified. If only one e2e tests file has been changed, only
+  run the tests for that file.
+- After validating the specific tests, run all tests to ensure overall functionality unless the change was to a single
+  test file and nothing else.
 - When tests fail:
-  - Analyze failure messages carefully to identify root causes
-  - Make targeted modifications to address specific issues
-  - Re-run failing tests to verify your fixes
-  - Once fixed, run all tests to ensure complete validation
-  - Repeat the test-fix-validate cycle until all tests pass successfully
-  - Ensure that coverage thresholds defined in the test output are always met before finalizing changes.
+    - Analyze failure messages carefully to identify root causes
+    - Make targeted modifications to address specific issues
+    - Re-run failing tests to verify your fixes
+    - Once fixed, run all tests to ensure complete validation
+    - Repeat the test-fix-validate cycle until all tests pass successfully
+    - Ensure that coverage thresholds defined in the test output are always met before finalizing changes.
 
 # Project-Specific Instructions
 

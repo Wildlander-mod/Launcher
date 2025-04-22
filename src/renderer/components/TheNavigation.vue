@@ -5,19 +5,19 @@
         type="primary"
         size="grow"
         data-testid="launch-game"
-        :disabled="resolutionLoading"
-        @click="launchGame"
+        :disabled="isLoading"
+        @click="isLoading ? undefined : launchGame()"
       >
         Launch Game
       </BaseButton>
 
-      <ProfileSelection />
+      <ProfileSelection @profile-loading="onLoading" />
 
       <GraphicsSelection />
 
       <ENB />
 
-      <Resolution @resolution-loading="onResolutionLoading" />
+      <Resolution @resolution-loading="onLoading" />
     </div>
 
     <div class="c-navigation__content l-column l-space-between">
@@ -164,7 +164,7 @@ export default class TheNavigation extends Vue {
   checkingPrerequisites = false;
   installingPrerequisites = false;
   rebootRequired = false;
-  resolutionLoading = false;
+  isLoading = false;
   launcherVersion: string | null = null;
   modpackVersion: string | null = null;
   modpackName: string | null = null;
@@ -247,8 +247,8 @@ export default class TheNavigation extends Vue {
     this.ipcService.invoke(SYSTEM_EVENTS.REBOOT);
   }
 
-  onResolutionLoading(loading: boolean) {
-    this.resolutionLoading = loading;
+  onLoading(loading: boolean) {
+    this.isLoading = loading;
   }
 }
 </script>

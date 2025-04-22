@@ -4,6 +4,8 @@ import {
   MockFilesPaths,
   setModpackAndWaitForAppLoaded,
   startTestApp,
+  waitForLaunchButtonDisabled,
+  waitForLaunchButtonEnabled,
 } from "./util/setup";
 import { getUserPreferences } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
@@ -14,7 +16,6 @@ import {
   isPluginEnabled,
   getDisplayTweaksIni,
 } from "./util/modlist";
-import { waitForClass } from "./util/element";
 
 /**
  * Helper function to mock the screen resolution
@@ -59,11 +60,7 @@ const selectResolution = async (window: Page, resolution: Resolution) => {
 
   // Get the promise for waiting for the button to be disabled before clicking
   // This ensures we capture the disabled state even if it happens very quickly
-  const disabledPromise = waitForClass(window, {
-    testId: "launch-game",
-    className: "c-button--disabled",
-    shouldExist: true,
-  });
+  const disabledPromise = waitForLaunchButtonDisabled(window);
 
   // Select the resolution
   await resolutionDropdown.getByText(targetResolutionText).click();
@@ -72,11 +69,7 @@ const selectResolution = async (window: Page, resolution: Resolution) => {
   await disabledPromise;
 
   // Wait for the resolution change to complete (button enabled again)
-  await waitForClass(window, {
-    testId: "launch-game",
-    className: "c-button--disabled",
-    shouldExist: false,
-  });
+  await waitForLaunchButtonEnabled(window);
 
   return resolution;
 };

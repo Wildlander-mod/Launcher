@@ -6,7 +6,6 @@
       `c-button--${type}`,
       { 'c-button--disabled': disabled },
     ]"
-    @click="onClick"
   >
     <slot />
   </div>
@@ -24,14 +23,6 @@ export default class BaseButton extends Vue {
   @Prop({ default: "small" }) size!: ButtonSizes;
   @Prop({ default: "default" }) type!: ButtonTypes;
   @Prop({ default: false }) disabled!: boolean;
-
-  onClick(event: Event) {
-    if (this.disabled) {
-      event.stopPropagation();
-      return;
-    }
-    this.$emit("click", event);
-  }
 }
 </script>
 
@@ -60,7 +51,7 @@ export default class BaseButton extends Vue {
   }
 
   &--disabled {
-    cursor: not-allowed;
+    cursor: progress;
   }
 
   &--large {
@@ -74,8 +65,8 @@ export default class BaseButton extends Vue {
   &--primary {
     background-color: $colour-primary;
 
-    &:active,
-    &:hover {
+    &:active:not(.c-button--disabled),
+    &:hover:not(.c-button--disabled) {
       background-color: $colour-primary--light;
     }
   }
@@ -83,8 +74,8 @@ export default class BaseButton extends Vue {
   &--warning {
     background-color: $color-warning;
 
-    &active,
-    &:hover {
+    &active:not(.c-button--disabled),
+    &:hover:not(.c-button--disabled) {
       background-color: $color-warning--light;
     }
   }
