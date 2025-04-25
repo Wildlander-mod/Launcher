@@ -15,7 +15,7 @@
 
       <GraphicsSelection @graphics-loading="onLoading" />
 
-      <ENB />
+      <ENB @enb-loading="onLoading" />
 
       <Resolution @resolution-loading="onLoading" />
     </div>
@@ -81,7 +81,11 @@
     </div>
   </nav>
 
-  <AppModal :show-modal="gameRunning" name="gameRunning">
+  <AppModal
+    :show-modal="gameRunning"
+    name="gameRunning"
+    data-testid="game-running-modal"
+  >
     <div class="l-column l-center l-center-text">
       <div class="u-spacing">
         <template v-if="checkingPrerequisites">
@@ -144,6 +148,11 @@ import LauncherVersion from "@/renderer/components/LauncherVersion.vue";
 import GraphicsSelection from "@/renderer/components/GraphicsSelection.vue";
 
 @Component({
+  methods: {
+    logger() {
+      return logger;
+    },
+  },
   components: {
     GraphicsSelection,
     LauncherVersion,
@@ -185,14 +194,14 @@ export default class TheNavigation extends Vue {
     return this.ipcService.invoke<string>(LAUNCHER_EVENTS.GET_VERSION);
   }
 
-  async checkPrerequisites(message = true) {
-    if (message) {
+  async checkPrerequisites(showMessage = true) {
+    if (showMessage) {
       this.checkingPrerequisites = true;
     }
     const installed = await this.ipcService.invoke<boolean>(
       SYSTEM_EVENTS.CHECK_PREREQUISITES
     );
-    if (message) {
+    if (showMessage) {
       this.checkingPrerequisites = false;
     }
     return installed;

@@ -17,6 +17,7 @@ import {
   ChildProcessBinding,
 } from "@/main/bindings/child-process.binding";
 import { type PSList, PsListBinding } from "@/main/bindings/psList.binding";
+import * as os from "node:os";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -92,6 +93,12 @@ export class SystemService {
   }
 
   async checkPrerequisitesInstalled() {
+    // If developing on a non-windows machine, just pretend everything is installed because the game will not launch anyway
+
+    if (os.platform() !== "win32") {
+      return true;
+    }
+
     this.logger.debug("Checking prerequisites are installed");
 
     if (
@@ -124,7 +131,6 @@ export class SystemService {
 
     return installedVersions.filter((x) => Number(x) >= 2019).length > 0;
   }
-
   async installPrerequisites() {
     await this.downloadPrerequisites();
     this.logger.debug("Downloads completed");

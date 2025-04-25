@@ -5,6 +5,7 @@
     :options="enbPresets"
     :grow="true"
     :show-tooltip-on-hover="true"
+    data-testid="enb-dropdown"
     @selected="onEnbChanged"
   >
     Uses GPU. Determines the quality of post-processing effects: ambient
@@ -75,12 +76,14 @@ export default class ENB extends Vue {
   async onEnbChanged(option: SelectOption) {
     logger.debug(`User selected enb ${option.value}`);
     this.eventService.emit(ENABLE_LOADING_EVENT);
+    this.$emit("enb-loading", true);
 
     if (option.value !== this.selectedEnb?.value) {
       await this.ipcService.invoke(ENB_EVENTS.SET_ENB_PREFERENCE, option.value);
       this.selectedEnb = option;
     }
 
+    this.$emit("enb-loading", false);
     this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 }

@@ -19,6 +19,7 @@ import nock from "nock";
 import type child_process from "child_process";
 import { getChildProcessMock } from "@/__tests__/unit/helpers/mocks/child-process.mock";
 import { afterEach } from "mocha";
+import os from "os";
 
 describe("System service #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;
@@ -202,6 +203,18 @@ describe("System service #main #service", () => {
   });
 
   describe("checkPrerequisitesInstalled", () => {
+    beforeEach(() => {
+      sinon.stub(os, "platform").returns("win32");
+    });
+
+    it("should resolve with true when platform is not win32", async () => {
+      // Override the platform stub to return a non-Windows value
+      sinon.restore(); // Remove the previous stub
+      sinon.stub(os, "platform").returns("darwin");
+
+      expect(await systemService.checkPrerequisitesInstalled()).to.eql(true);
+    });
+
     it("should return true if the user has disabled the check", async () => {
       mockConfigService.stubs.getPreference
         .withArgs(USER_PREFERENCE_KEYS.CHECK_PREREQUISITES)

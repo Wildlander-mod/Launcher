@@ -5,11 +5,13 @@ import {
   reloadWindow,
   setModpackAndWaitForAppLoaded,
   startTestApp,
-  waitForLaunchButtonDisabled,
-  waitForLaunchButtonEnabled,
 } from "./util/setup";
 import { getUserPreferences, setUserPreference } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import {
+  waitForLaunchButtonDisabled,
+  waitForLaunchButtonEnabled,
+} from "./util/app-state";
 
 /**
  * Unified profile configuration object that combines all profile information

@@ -4,8 +4,6 @@ import {
   MockFilesPaths,
   setModpackAndWaitForAppLoaded,
   startTestApp,
-  waitForLaunchButtonDisabled,
-  waitForLaunchButtonEnabled,
 } from "./util/setup";
 import { getUserPreferences } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
@@ -16,6 +14,10 @@ import {
   isPluginEnabled,
   getDisplayTweaksIni,
 } from "./util/modlist";
+import {
+  waitForLaunchButtonDisabled,
+  waitForLaunchButtonEnabled,
+} from "./util/app-state";
 
 /**
  * Helper function to mock the screen resolution
