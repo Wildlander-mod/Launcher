@@ -8,7 +8,11 @@
           is closed.
         </p>
       </div>
-      <BaseButton type="warning" size="large" @click="closeMO2"
+      <BaseButton
+        type="warning"
+        size="large"
+        data-testid="kill-mo2-processes"
+        @click="closeMO2"
         >Kill all MO2 Processes
       </BaseButton>
     </div>

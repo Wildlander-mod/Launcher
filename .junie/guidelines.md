@@ -36,6 +36,7 @@ Follow all generic and project specific instructions in this document.
 - Ensure that tests always focus on the behaviour of the code being tested
 - Do not use divs when adding test IDs, use span or other inline elements that do not impact styling instead
 - Do not add comments that simply restate what the test assertion already clearly shows
+- Tests are considered a failure if they show "x failed" even if they also show "y passed" at the end
 
 ## Validation Workflow Instructions
 
@@ -78,7 +79,6 @@ Follow all generic and project specific instructions in this document.
 - If a needed data-testid doesn't exist, add it to the relevant file
 - If a test times out trying to load http://localhost:8080/#/auto-update it means that the page has reloaded too quick
   before it loaded the application.
-- E2e tests are considered a failure if it says "x failed" even if it says "x passed" at the end.
 - When analyzing test results, scan the ENTIRE output for failure indicators, not just the final summary
 - ANY occurrence of "x failed" or "Error:" in the output indicates test failures that must be addressed
 - Test timeouts (e.g., "Timed out 5000ms waiting for...") are considered failures

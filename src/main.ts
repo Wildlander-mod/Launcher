@@ -4,6 +4,8 @@ import { LauncherApplication } from "./main/application";
 import { ErrorService } from "./main/services/error.service";
 import { WindowService } from "./main/services/window.service";
 import { newLogInstance } from "./main/logger";
+import type { ProcessWithGlobals } from "./main/types/process-globals";
+import { promisify } from "util";
 
 const logger = newLogInstance("Startup logger");
 
@@ -61,6 +63,8 @@ const start = async () => {
     // Someone tried to run a second instance, so focus the original window.
     windowService.focusWindow();
   });
+
+  return launcherApplication;
 };
 
 // This method will be called when Electron has finished
@@ -69,6 +73,18 @@ const start = async () => {
 // TODO this should probably use `app.whenReady().then(()` instead
 app.on("ready", () => {
   start()
+    .then((launcherApplication) => {
+      // In test mode, add some additional properties to the process object to be used later
+      if (process.env["IS_TEST"]) {
+        (process as ProcessWithGlobals)._globals_ = {
+          // Store the launcher application in the process so it can be accessed from tests to replace artefacts if necessary.
+          // This is due to playwright not being able to access `require` from the main process.
+          launcherApplication,
+          // Store the promisify unique symbol in the process so that promisified methods can be mocked correctly.
+          promisifyCustomSymbol: promisify.custom,
+        };
+      }
+    })
     .then(() => logger.debug("App started"))
     .catch((error) => {
       const errorService = new ErrorService(logger, dialog);

@@ -2,7 +2,6 @@ import path from "path";
 import { ConfigService } from "@/main/services/config.service";
 import fs from "fs";
 import { IIniObject, IIniObjectSection, parse, stringify } from "js-ini";
-import { promisify } from "util";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { EnbService } from "@/main/services/enb.service";
 import { service } from "@loopback/core";
@@ -19,12 +18,6 @@ import { MO2_NAMES } from "@/shared/enums/mo2";
 import type { ProcessDescriptor } from "ps-list";
 import { Dialog, DialogProvider } from "@/main/services/dialog.service";
 import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
-import {
-  ChildProcess,
-  ChildProcessBinding,
-} from "@/main/bindings/child-process.binding";
-import type { PSList } from "@/main/bindings/psList.binding";
-import { PsListBinding } from "@/main/bindings/psList.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -42,8 +35,6 @@ export class ModOrganizerService {
     @service(SystemService) private systemService: SystemService,
     @service(GraphicsService) private graphicsService: GraphicsService,
     @service(DialogProvider) private dialog: Dialog,
-    @inject(PsListBinding) private psList: PSList,
-    @inject(ChildProcessBinding) private childProcess: ChildProcess,
     @inject(LoggerBinding) private logger: Logger,
     @inject(IsDevelopmentBinding) private isDevelopment: boolean
   ) {}
@@ -58,13 +49,13 @@ export class ModOrganizerService {
 
   async closeMO2() {
     this.logger.info("Killing MO2 forcefully");
-    (await this.psList())
+    (await this.systemService.listProcesses())
       .filter(ModOrganizerService.filterMO2)
       .forEach((mo2Instance) => {
         this.logger.debug(
           `Found process to kill: ${JSON.stringify(mo2Instance)}`
         );
-        process.kill(mo2Instance.pid);
+        this.systemService.kill(mo2Instance.pid);
       });
     this.logger.info("Killed all MO2 processes");
   }
@@ -113,6 +104,8 @@ export class ModOrganizerService {
       `${this.configService.modDirectory()}/${MO2_NAMES.MO2Settings}`,
       stringify(settings)
     );
+
+    this.logger.info(`Updated selected profile to ${profile}`);
   }
 
   async preventMO2GUIFromShowing() {
@@ -189,9 +182,7 @@ export class ModOrganizerService {
         MO2_NAMES.MO2EXE
       );
 
-      const { stdout, stderr } = await promisify(this.childProcess.exec)(
-        `"${MO2Path}"`
-      );
+      const { stdout, stderr } = await this.systemService.exec(`"${MO2Path}"`);
       if (this.isDevelopment) {
         this.logger.debug(`MO2 stdout: ${stdout}`);
       }
@@ -226,9 +217,7 @@ export class ModOrganizerService {
       const mo2Command = `"${MO2Path}" -p "${profile}" "moshortcut://:${await this.getFirstCustomExecutableTitle()}"`;
       this.logger.debug(`Executing MO2 command: ${mo2Command}`);
 
-      const { stdout, stderr } = await promisify(this.childProcess.exec)(
-        mo2Command
-      );
+      const { stdout, stderr } = await this.systemService.exec(mo2Command);
       if (this.isDevelopment) {
         this.logger.debug(`MO2 stdout: ${stdout}`);
       }

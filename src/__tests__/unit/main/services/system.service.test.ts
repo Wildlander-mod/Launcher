@@ -20,6 +20,13 @@ import type child_process from "child_process";
 import { getChildProcessMock } from "@/__tests__/unit/helpers/mocks/child-process.mock";
 import { afterEach } from "mocha";
 import os from "os";
+import { Context } from "@loopback/core";
+import { ChildProcessBinding } from "@/main/bindings/child-process.binding";
+import { PsListBinding } from "@/main/bindings/psList.binding";
+import {
+  ProcessKill,
+  ProcessKillBinding,
+} from "@/main/bindings/process-kill.binding";
 
 describe("System service #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;
@@ -29,6 +36,7 @@ describe("System service #main #service", () => {
   let shellStub: sinon.SinonStub;
   let systemService: SystemService;
   let mockChildProcess: StubbedInstanceWithSinonAccessor<typeof child_process>;
+  let mockContext: sinon.SinonStubbedInstance<Context>;
 
   beforeEach(() => {
     mockConfigService = createStubInstance(ConfigService);
@@ -44,6 +52,13 @@ describe("System service #main #service", () => {
 
     mockChildProcess = getChildProcessMock();
 
+    mockContext = sinon.createStubInstance(Context);
+    mockContext.getSync.withArgs(ChildProcessBinding).returns(mockChildProcess);
+    mockContext.getSync.withArgs(PsListBinding).returns(mockListProcess);
+
+    const mockProcessKill: ProcessKill = sinon.stub().returns(true);
+    mockContext.getSync.withArgs(ProcessKillBinding).returns(mockProcessKill);
+
     systemService = new SystemService(
       mockConfigService,
       mockErrorService,
@@ -52,8 +67,7 @@ describe("System service #main #service", () => {
         app: { getPath: () => "/mock/path" },
         shell: { openPath: shellStub },
       } as unknown as typeof Electron,
-      mockChildProcess,
-      mockListProcess
+      mockContext
     );
   });
 
@@ -142,6 +156,18 @@ describe("System service #main #service", () => {
         mockErrorService.stubs.handleError,
         "Error while opening crash logs folder"
       );
+    });
+  });
+
+  describe("listProcesses", () => {
+    it("should dynamically get psList from context and return process list", async () => {
+      const processes = await systemService.listProcesses();
+
+      sinon.assert.calledOnce(mockContext.getSync);
+      sinon.assert.calledWith(mockContext.getSync, PsListBinding);
+      expect(processes).to.eql([
+        { name: "mockname.exe", pid: 1234, ppid: 1234 },
+      ]);
     });
   });
 
@@ -267,6 +293,34 @@ describe("System service #main #service", () => {
         mockChildProcess.stubs.exec,
         `"/mock/path/test.exe"`
       );
+    });
+  });
+
+  describe("exec", () => {
+    it("should dynamically get childProcess from context and call exec with the command", async () => {
+      const command = "test command";
+      await systemService.exec(command);
+
+      sinon.assert.calledOnce(mockContext.getSync);
+      sinon.assert.calledWith(mockContext.getSync, ChildProcessBinding);
+      sinon.assert.calledWith(mockChildProcess.stubs.exec, command);
+    });
+  });
+
+  describe("kill", () => {
+    it("should dynamically get process.kill from context and call it with the pid and signal", () => {
+      const pid = 12345;
+      const signal = "SIGTERM";
+
+      systemService.kill(pid, signal);
+
+      sinon.assert.calledOnce(mockContext.getSync);
+      sinon.assert.calledWith(mockContext.getSync, ProcessKillBinding);
+
+      // Get the mock process.kill function
+      const mockProcessKill = mockContext.getSync.withArgs(ProcessKillBinding)
+        .returnValues[0] as sinon.SinonStub;
+      sinon.assert.calledWith(mockProcessKill, pid, signal);
     });
   });
 

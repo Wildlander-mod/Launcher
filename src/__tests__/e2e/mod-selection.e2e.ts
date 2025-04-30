@@ -1,12 +1,14 @@
 import { expect, Page, test } from "@playwright/test";
 import {
+  CloseTestApp,
+  MockFilesPaths,
   startTestApp,
   waitForModDirectorySelect,
-  MockFilesPaths,
-  CloseTestApp,
 } from "./util/setup";
 import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
+import { mockErrorDialog } from "./util/mocks";
+import { waitForDialogShown } from "./util/app-state";
 import fs from "fs";
 
 test.describe("Mod Selection", () => {
@@ -81,38 +83,11 @@ test.describe("Mod Selection", () => {
       // Select the option with the text `/invalid/path`
       const invalidOption = window.getByText("/invalid/path");
 
-      const getDialogArgs = await electronApp.evaluateHandle(({ dialog }) => {
-        let title = "";
-        let content = "";
-        let dialogShown = false;
-
-        // Override showErrorBox method to capture dialog arguments
-        dialog.showErrorBox = (dialogTitle, dialogContent) => {
-          title = dialogTitle;
-          content = dialogContent;
-          dialogShown = true;
-        };
-
-        // Return a function to retrieve the captured dialog arguments later
-        return () => ({ title, content, dialogShown });
-      });
+      const errorDialogHandle = await mockErrorDialog(electronApp);
 
       await invalidOption.click();
 
-      await getDialogArgs.evaluate(
-        async (
-          fn: () => { title: string; content: string; dialogShown: boolean }
-        ) => {
-          while (!fn().dialogShown) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-        }
-      );
-
-      const { title, content } = await getDialogArgs.evaluate(
-        (fn: () => { title: string; content: string; dialogShown: boolean }) =>
-          fn()
-      );
+      const { title, content } = await waitForDialogShown(errorDialogHandle);
 
       expect({ title, content }).toEqual({
         title: "Invalid modpack directory selected",

@@ -14,6 +14,7 @@ import { ChildProcessBinding } from "@/main/bindings/child-process.binding";
 import * as child_process from "child_process";
 import { PsListBinding } from "@/main/bindings/psList.binding";
 import psList from "ps-list";
+import { ProcessKillBinding } from "@/main/bindings/process-kill.binding";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 import { AutoUpdaterBinding } from "@/main/bindings/autoUpdater.binding";
 import { autoUpdater } from "electron-updater";
@@ -106,6 +107,7 @@ export class LauncherApplication extends BootMixin(Application) {
     this.bind(IsDevelopmentBinding).to(!app.isPackaged);
     this.bind(ChildProcessBinding).to(child_process);
     this.bind(PsListBinding).to(psList);
+    this.bind(ProcessKillBinding).to(process.kill);
     this.bind(AutoUpdaterBinding).to(autoUpdater);
     this.bind(ContextMenuBinding).to(contextMenu);
     this.bind(ConfigBinding).to(ConfigService.getNewUserPreferencesStore());

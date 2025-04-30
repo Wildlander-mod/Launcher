@@ -16,7 +16,6 @@ import { GraphicsService } from "@/main/services/graphics.service";
 import mockFs from "mock-fs";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import { MO2_NAMES } from "@/shared/enums/mo2";
-import type psList from "ps-list";
 import type { ProcessDescriptor } from "ps-list";
 import type { NonEmptyArray } from "@/shared/types/non-empty-array";
 import { getMockDialog } from "@/__tests__/unit/helpers/mocks/dialog.mock";
@@ -24,10 +23,8 @@ import type { Dialog } from "@/main/services/dialog.service";
 import os from "os";
 import fs from "fs/promises";
 import Store from "electron-store";
-import { getChildProcessMock } from "@/__tests__/unit/helpers/mocks/child-process.mock";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import type { ElectronLog } from "electron-log";
-import type { ChildProcess } from "@/main/bindings/child-process.binding";
 
 describe("ModOrganizer service #main #service", () => {
   let mockEnbService: StubbedInstanceWithSinonAccessor<EnbService>;
@@ -38,12 +35,7 @@ describe("ModOrganizer service #main #service", () => {
   let mockProfileService: StubbedInstanceWithSinonAccessor<ProfileService>;
   let mockSystemService: StubbedInstanceWithSinonAccessor<SystemService>;
   let mockGraphicsService: StubbedInstanceWithSinonAccessor<GraphicsService>;
-  let mockPsList: sinon.SinonStub<
-    Parameters<typeof psList>,
-    ReturnType<typeof psList>
-  >;
   let mockDialog: StubbedInstanceWithSinonAccessor<Dialog>;
-  let mockChildProcess: StubbedInstanceWithSinonAccessor<ChildProcess>;
   let modOrganizerService: ModOrganizerService;
   let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
 
@@ -56,9 +48,6 @@ describe("ModOrganizer service #main #service", () => {
     mockProfileService = createStubInstance(ProfileService);
     mockSystemService = createStubInstance(SystemService);
     mockGraphicsService = createStubInstance(GraphicsService);
-
-    mockPsList = sinon.stub();
-    mockChildProcess = getChildProcessMock();
 
     mockDialog = getMockDialog();
     mockLogger = getMockLogger();
@@ -73,8 +62,6 @@ describe("ModOrganizer service #main #service", () => {
       mockSystemService,
       mockGraphicsService,
       mockDialog,
-      mockPsList,
-      mockChildProcess,
       mockLogger,
       true
     );
@@ -133,12 +120,13 @@ describe("ModOrganizer service #main #service", () => {
         },
       ];
 
-      const killStub = sinon.stub(process, "kill");
-
-      mockPsList.resolves(mockProcesses);
+      mockSystemService.stubs.listProcesses.resolves(mockProcesses);
       await modOrganizerService.closeMO2();
 
-      sinon.assert.calledWith(killStub, mockProcesses[0].pid);
+      sinon.assert.calledWith(
+        mockSystemService.stubs.kill,
+        mockProcesses[0].pid
+      );
     });
 
     it("should not try to kill anything if MO2 is not running", async () => {
@@ -150,12 +138,10 @@ describe("ModOrganizer service #main #service", () => {
         },
       ];
 
-      const killStub = sinon.stub(process, "kill");
-
-      mockPsList.resolves(mockProcesses);
+      mockSystemService.stubs.listProcesses.resolves(mockProcesses);
       await modOrganizerService.closeMO2();
 
-      sinon.assert.notCalled(killStub);
+      sinon.assert.notCalled(mockSystemService.stubs.kill);
     });
   });
 
@@ -190,13 +176,11 @@ describe("ModOrganizer service #main #service", () => {
         },
       ];
 
-      const killStub = sinon.stub(process, "kill");
-
-      mockPsList.resolves(mockProcesses);
+      mockSystemService.stubs.listProcesses.resolves(mockProcesses);
 
       await modOrganizerService.handleMO2Running();
 
-      sinon.assert.called(killStub);
+      sinon.assert.called(mockSystemService.stubs.kill);
     });
 
     it("should return false if not closing MO2", async () => {
@@ -388,8 +372,7 @@ describe("ModOrganizer service #main #service", () => {
       const mockProcesses: NonEmptyArray<ProcessDescriptor> = [
         { name: "mock", pid: 123, ppid: 0 },
       ];
-      sinon.stub(process, "kill");
-      mockPsList.resolves(mockProcesses);
+      mockSystemService.stubs.listProcesses.resolves(mockProcesses);
 
       const mockStore = createStubInstance<Store<UserPreferences>>(Store);
       sinon.stub(mockStore.stubs, "store").get(() => "mock");
@@ -445,7 +428,7 @@ describe("ModOrganizer service #main #service", () => {
         { name: "mock", pid: 123, ppid: 0 },
       ];
       sinon.stub(process, "kill");
-      mockPsList.resolves(mockProcesses);
+      mockSystemService.stubs.listProcesses.resolves(mockProcesses);
 
       const mockStore = createStubInstance<Store<UserPreferences>>(Store);
       sinon.stub(mockStore.stubs, "store").get(() => "mock");
@@ -476,22 +459,22 @@ describe("ModOrganizer service #main #service", () => {
 
       await modOrganizerService.launchMO2();
 
-      sinon.assert.notCalled(mockChildProcess.stubs.exec);
+      sinon.assert.notCalled(mockSystemService.stubs.exec);
     });
 
     it("should launch MO2", async () => {
-      mockChildProcess.stubs.exec.resolves({});
+      mockSystemService.stubs.exec.resolves({ stdout: "", stderr: "" });
 
       await modOrganizerService.launchMO2();
 
       sinon.assert.calledWith(
-        mockChildProcess.stubs.exec,
+        mockSystemService.stubs.exec,
         `"${mockModDirectory}/${MO2_NAMES.MO2EXE}"`
       );
     });
 
     it("should update the profile before launching", async () => {
-      mockChildProcess.stubs.exec.resolves({});
+      mockSystemService.stubs.exec.resolves({ stdout: "", stderr: "" });
 
       mockProfileService.stubs.getProfilePreference.resolves("mock-new-name");
 
@@ -513,7 +496,8 @@ describe("ModOrganizer service #main #service", () => {
     });
 
     it("should just log the error if there is any stderr from MO2", async () => {
-      mockChildProcess.stubs.exec.resolves({
+      mockSystemService.stubs.exec.resolves({
+        stdout: "",
         stderr: "mock error",
       });
 
@@ -523,7 +507,7 @@ describe("ModOrganizer service #main #service", () => {
     });
 
     it("should throw an error if anything fails", async () => {
-      mockChildProcess.stubs.exec.rejects(new Error("mock error"));
+      mockSystemService.stubs.exec.rejects(new Error("mock error"));
 
       await expect(modOrganizerService.launchMO2()).to.be.rejectedWith(
         "mock error"
@@ -531,7 +515,7 @@ describe("ModOrganizer service #main #service", () => {
     });
 
     it("should not log stdout if not in development mode", async () => {
-      mockChildProcess.stubs.exec.resolves({});
+      mockSystemService.stubs.exec.resolves({ stdout: "", stderr: "" });
 
       modOrganizerService = new ModOrganizerService(
         mockEnbService,
@@ -543,8 +527,6 @@ describe("ModOrganizer service #main #service", () => {
         mockSystemService,
         mockGraphicsService,
         mockDialog,
-        mockPsList,
-        mockChildProcess,
         mockLogger,
         false
       );
@@ -577,7 +559,7 @@ describe("ModOrganizer service #main #service", () => {
         { name: "mock", pid: 123, ppid: 0 },
       ];
       sinon.stub(process, "kill");
-      mockPsList.resolves(mockProcesses);
+      mockSystemService.stubs.listProcesses.resolves(mockProcesses);
 
       const mockStore = createStubInstance<Store<UserPreferences>>(Store);
       sinon.stub(mockStore.stubs, "store").get(() => "mock");
@@ -604,7 +586,7 @@ describe("ModOrganizer service #main #service", () => {
 
       mockProfileService.stubs.getProfilePreference.resolves("mock-profile");
 
-      mockChildProcess.stubs.exec.resolves({});
+      mockSystemService.stubs.exec.resolves({ stdout: "", stderr: "" });
     });
 
     it("should not continue the launch if the user chooses not to close MO2", async () => {
@@ -615,7 +597,7 @@ describe("ModOrganizer service #main #service", () => {
 
       await modOrganizerService.launchGame();
 
-      sinon.assert.notCalled(mockChildProcess.stubs.exec);
+      sinon.assert.notCalled(mockSystemService.stubs.exec);
     });
 
     it("should prevent the MO2 GUI from showing", async () => {
@@ -644,7 +626,7 @@ describe("ModOrganizer service #main #service", () => {
       await modOrganizerService.launchGame();
 
       sinon.assert.calledWith(
-        mockChildProcess.stubs.exec,
+        mockSystemService.stubs.exec,
         `"${mockModDirectory}/${MO2_NAMES.MO2EXE}" -p "mock-profile" "moshortcut://:SKSE"`
       );
     });
@@ -709,18 +691,18 @@ describe("ModOrganizer service #main #service", () => {
     });
 
     it("should throw an error if MO2 returns any stderr", async () => {
-      mockChildProcess.stubs.exec.resolves({
+      mockSystemService.stubs.exec.resolves({
         stdout: "",
-        stderr: new Error("mock error"),
+        stderr: "mock error",
       });
 
       await expect(modOrganizerService.launchGame()).to.be.rejectedWith(
-        "Error: mock error"
+        "mock error"
       );
     });
 
     it("should throw an error if exec throws an error", async () => {
-      mockChildProcess.stubs.exec.rejects(new Error("mock exec error"));
+      mockSystemService.stubs.exec.rejects(new Error("mock exec error"));
 
       await expect(modOrganizerService.launchGame()).to.be.rejectedWith(
         "mock exec error"
@@ -738,8 +720,6 @@ describe("ModOrganizer service #main #service", () => {
         mockSystemService,
         mockGraphicsService,
         mockDialog,
-        mockPsList,
-        mockChildProcess,
         mockLogger,
         false
       );

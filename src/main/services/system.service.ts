@@ -1,7 +1,7 @@
 import path from "path";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import fs, { createWriteStream } from "fs";
-import { service } from "@loopback/core";
+import { Context, service } from "@loopback/core";
 import { ConfigService } from "@/main/services/config.service";
 import { ErrorService } from "@/main/services/error.service";
 import { pipeline } from "stream/promises";
@@ -17,6 +17,10 @@ import {
   ChildProcessBinding,
 } from "@/main/bindings/child-process.binding";
 import { type PSList, PsListBinding } from "@/main/bindings/psList.binding";
+import {
+  ProcessKill,
+  ProcessKillBinding,
+} from "@/main/bindings/process-kill.binding";
 import * as os from "node:os";
 
 @injectable({
@@ -28,8 +32,7 @@ export class SystemService {
     @service(ErrorService) private errorService: ErrorService,
     @inject(LoggerBinding) private logger: Logger,
     @inject(ElectronBinding) private electron: typeof Electron,
-    @inject(ChildProcessBinding) private childProcess: ChildProcess,
-    @inject(PsListBinding) private psList: PSList
+    @inject.context() private context: Context
   ) {}
 
   static getLocalAppData() {
@@ -135,9 +138,7 @@ export class SystemService {
     await this.downloadPrerequisites();
     this.logger.debug("Downloads completed");
     this.logger.debug(`Installing ${this.getCPlusPlusInstallerFile()}`);
-    return promisify(this.childProcess.exec)(
-      `"${this.getCPlusPlusInstallerFile()}"`
-    );
+    return this.exec(`"${this.getCPlusPlusInstallerFile()}"`);
   }
 
   async downloadPrerequisites() {
@@ -171,11 +172,30 @@ export class SystemService {
     this.logger.debug(`Finished writing to ${output}`);
   }
 
+  async listProcesses(): ReturnType<PSList> {
+    // Get psList from the context so it can be replaced dynamically if necessary
+    const psList = this.context.getSync<PSList>(PsListBinding);
+    return psList();
+  }
+
   async isProcessRunning(process: string): Promise<boolean> {
     return (
-      (await this.psList()).filter(
+      (await this.listProcesses()).filter(
         ({ name }) => name.toLowerCase() === process.toLowerCase()
       ).length > 0
     );
+  }
+
+  async exec(command: string): Promise<{ stdout: string; stderr: string }> {
+    // Get childProcess from the context so it can be replaced dynamically if necessary
+    const childProcess =
+      this.context.getSync<ChildProcess>(ChildProcessBinding);
+    return promisify(childProcess.exec)(command);
+  }
+
+  kill(pid: number, signal?: string | number): boolean {
+    // Get process.kill from the context so it can be replaced dynamically if necessary
+    const processKill = this.context.getSync<ProcessKill>(ProcessKillBinding);
+    return processKill(pid, signal);
   }
 }

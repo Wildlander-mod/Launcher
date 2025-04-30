@@ -1,5 +1,5 @@
 <template>
-  <span data-testid="page-home">
+  <span data-testid="page-advanced">
     <AppPageContent width="large">
       <div class="c-settings l-column">
         <div class="c-settings__directories l-column">
@@ -11,7 +11,12 @@
             <div class="l-row c-settings__actions">
               <div class="c-settings__label">Mod Organizer 2</div>
               <div class="c-settings__action">
-                <BaseButton type="primary" size="large" @click="launchMO2">
+                <BaseButton
+                  type="primary"
+                  size="large"
+                  data-testid="launch-mo2"
+                  @click="launchMO2"
+                >
                   Launch
                 </BaseButton>
               </div>

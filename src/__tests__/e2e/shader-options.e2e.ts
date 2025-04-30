@@ -5,6 +5,8 @@ import {
   setModpackAndWaitForAppLoaded,
   startTestApp,
 } from "./util/setup";
+import { replaceChildProcessExecWithMock } from "./util/mocks";
+import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { filesExist, filesDoNotExist, fileContains } from "./util/file-utils";
@@ -76,9 +78,12 @@ test.describe("Shader Options", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
   let mockFiles: MockFilesPaths;
+  let electronApp: ElectronApplication;
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    ({ window, closeTestApp, mockFiles, electronApp } = await startTestApp(
+      test
+    ));
     await setModpackAndWaitForAppLoaded(window, mockFiles);
   });
 
@@ -162,6 +167,9 @@ test.describe("Shader Options", () => {
       copiedFilePath,
       originalEnbLocal + "\n" + modificationText
     );
+
+    // Mock the exec method to prevent actual game launch
+    await replaceChildProcessExecWithMock(electronApp);
 
     const launchButton = window.getByTestId("launch-game");
 

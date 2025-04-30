@@ -1,6 +1,7 @@
 <template>
   <main
     class="l-column"
+    data-testid="app-page"
     :class="{
       'u-disable-click-events': !clickEventsEnabled,
     }"
