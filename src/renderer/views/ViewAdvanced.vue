@@ -126,6 +126,7 @@
                 <BaseButton
                   type="warning"
                   size="large"
+                  data-testid="restore-graphics-presets"
                   @click="restoreGraphics"
                 >
                   Restore

@@ -11,7 +11,12 @@ import fs from "fs/promises";
 import {
   waitForLaunchButtonDisabled,
   waitForLaunchButtonEnabled,
+  waitForClickEventsEnabled,
+  waitForMessageBoxShown,
 } from "./util/app-state";
+import { mockMessageBox } from "./util/mocks";
+import type { ElectronApplication } from "playwright";
+import path from "path";
 
 /**
  * Hardcoded graphics presets configuration
@@ -75,9 +80,12 @@ test.describe("Graphics Options", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
   let mockFiles: MockFilesPaths;
+  let electronApp: ElectronApplication;
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    ({ window, closeTestApp, mockFiles, electronApp } = await startTestApp(
+      test
+    ));
     await setModpackAndWaitForAppLoaded(window, mockFiles);
   });
 
@@ -158,5 +166,47 @@ test.describe("Graphics Options", () => {
 
     // Verify the button is re-enabled after the graphics change is complete
     await expect(launchButton).not.toHaveClass(/c-button--disabled/);
+  });
+
+  test("should restore graphics presets when clicking the Restore Graphics Presets button", async () => {
+    // Select the High Graphics preset to ensure we're starting from a known state
+    await selectGraphics(window, GRAPHICS_PRESETS.HIGH);
+
+    const fileToModify = "SkyrimPrefs.ini";
+    const originalFilePath = path.join(
+      `${mockFiles.mockModpackPath}/launcher/Graphics Presets/${GRAPHICS_PRESETS.HIGH.value}/${fileToModify}`
+    );
+    const backupFilePath = path.join(
+      `${mockFiles.mockModpackPath}/launcher/_backups/graphics/${GRAPHICS_PRESETS.HIGH.value}/${fileToModify}`
+    );
+    const originalContent = await fs.readFile(originalFilePath, "utf-8");
+    const backupContent = await fs.readFile(backupFilePath, "utf-8");
+
+    await fs.writeFile(
+      originalFilePath,
+      originalContent +
+        "\n#This is a test modification for graphics restore test"
+    );
+
+    await window
+      .getByTestId("navigation-container")
+      .getByText("Advanced")
+      .click();
+    await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+
+    const messageBoxHandle = await mockMessageBox(electronApp, 1);
+
+    await window.getByTestId("restore-graphics-presets").click();
+
+    await waitForMessageBoxShown(messageBoxHandle);
+    await waitForClickEventsEnabled(window);
+
+    const restoredContent = await fs.readFile(originalFilePath, "utf-8");
+    const currentBackupContent = await fs.readFile(backupFilePath, "utf-8");
+
+    // Verify the content of the restored file matches the backup file
+    expect(restoredContent).toBe(currentBackupContent);
+    // Verify the backup file was not modified during the restore process
+    expect(currentBackupContent).toBe(backupContent);
   });
 });
