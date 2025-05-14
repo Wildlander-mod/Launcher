@@ -5,18 +5,20 @@ import {
   setModpackAndWaitForAppLoaded,
   startTestApp,
 } from "./util/setup";
-import { replaceChildProcessExecWithMock } from "./util/mocks";
+import { mockMessageBox, replaceChildProcessExecWithMock } from "./util/mocks";
 import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { filesExist, filesDoNotExist, fileContains } from "./util/file-utils";
+import { fileContains, filesDoNotExist, filesExist } from "./util/file-utils";
 import fs from "fs/promises";
 import path from "path";
 import {
   gameExited,
   gameLaunched,
+  waitForClickEventsEnabled,
   waitForLaunchButtonDisabled,
   waitForLaunchButtonEnabled,
+  waitForMessageBoxShown,
 } from "./util/app-state";
 import { isPluginEnabled } from "./util/modlist";
 
@@ -228,5 +230,54 @@ test.describe("Shader Options", () => {
     );
 
     expect(isPluginEnabledAgain).toBe(true);
+  });
+
+  test("should restore ENB presets when clicking the Restore ENB Presets button", async () => {
+    const fileToModify = "enbseries.ini";
+    const originalFilePath = path.join(
+      `${mockFiles.mockModpackPath}/launcher/ENB Presets/${ENB_PRESETS.LOW.value}`,
+      fileToModify
+    );
+    const backupFilePath = path.join(
+      `${mockFiles.mockModpackPath}/launcher/_backups/ENB Presets/${ENB_PRESETS.LOW.value}`,
+      fileToModify
+    );
+
+    await window
+      .getByTestId("navigation-container")
+      .getByText("Advanced")
+      .click();
+    await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+
+    // Select a shader preset to ensure we're starting from a known state
+    await selectEnb(window, ENB_PRESETS.LOW);
+
+    const originalContent = await fs.readFile(originalFilePath, "utf-8");
+    const backupContent = await fs.readFile(backupFilePath, "utf-8");
+
+    const modificationText = "#This is a test modification for restore test";
+    await fs.writeFile(
+      originalFilePath,
+      originalContent + "\n" + modificationText
+    );
+
+    // Verify the modification was made and the backup was not modified
+    expect(await fileContains(originalFilePath, modificationText)).toBe(true);
+    expect(await fileContains(backupFilePath, modificationText)).toBe(false);
+
+    const messageBoxHandle = await mockMessageBox(electronApp, 1);
+
+    await window.getByTestId("restore-enb-presets").click();
+
+    await waitForMessageBoxShown(messageBoxHandle);
+    await waitForClickEventsEnabled(window);
+
+    const restoredContent = await fs.readFile(originalFilePath, "utf-8");
+    const currentBackupContent = await fs.readFile(backupFilePath, "utf-8");
+
+    // Verify the content of the restored file matches the backup file
+    expect(restoredContent).toBe(currentBackupContent);
+    // Verify the backup file was not modified during the restore process
+    expect(currentBackupContent).toBe(backupContent);
   });
 });
