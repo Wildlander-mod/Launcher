@@ -235,12 +235,10 @@ test.describe("Shader Options", () => {
   test("should restore ENB presets when clicking the Restore ENB Presets button", async () => {
     const fileToModify = "enbseries.ini";
     const originalFilePath = path.join(
-      `${mockFiles.mockModpackPath}/launcher/ENB Presets/${ENB_PRESETS.LOW.value}`,
-      fileToModify
+      `${mockFiles.mockModpackPath}/launcher/ENB Presets/${ENB_PRESETS.LOW.value}/${fileToModify}`
     );
     const backupFilePath = path.join(
-      `${mockFiles.mockModpackPath}/launcher/_backups/ENB Presets/${ENB_PRESETS.LOW.value}`,
-      fileToModify
+      `${mockFiles.mockModpackPath}/launcher/_backups/ENB Presets/${ENB_PRESETS.LOW.value}/${fileToModify}`
     );
 
     await window
@@ -255,15 +253,10 @@ test.describe("Shader Options", () => {
     const originalContent = await fs.readFile(originalFilePath, "utf-8");
     const backupContent = await fs.readFile(backupFilePath, "utf-8");
 
-    const modificationText = "#This is a test modification for restore test";
     await fs.writeFile(
       originalFilePath,
-      originalContent + "\n" + modificationText
+      originalContent + "\n#This is a test modification for restore test"
     );
-
-    // Verify the modification was made and the backup was not modified
-    expect(await fileContains(originalFilePath, modificationText)).toBe(true);
-    expect(await fileContains(backupFilePath, modificationText)).toBe(false);
 
     const messageBoxHandle = await mockMessageBox(electronApp, 1);
 

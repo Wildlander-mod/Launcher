@@ -113,6 +113,7 @@
                 <BaseButton
                   type="warning"
                   size="large"
+                  data-testid="restore-mo2-profiles"
                   @click="restoreProfiles"
                 >
                   Restore

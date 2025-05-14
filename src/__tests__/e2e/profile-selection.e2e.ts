@@ -9,14 +9,25 @@ import {
 import { getUserPreferences, setUserPreference } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { PROFILES, selectProfile } from "./util/profile";
+import { mockMessageBox } from "./util/mocks";
+import type { ElectronApplication } from "playwright";
+import fs from "fs/promises";
+import path from "path";
+import {
+  waitForClickEventsEnabled,
+  waitForMessageBoxShown,
+} from "./util/app-state";
 
-test.describe("Profile Selection", () => {
+test.describe("Profiles", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
   let mockFiles: MockFilesPaths;
+  let electronApp: ElectronApplication;
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
+    ({ window, closeTestApp, mockFiles, electronApp } = await startTestApp(
+      test
+    ));
     await setModpackAndWaitForAppLoaded(window, mockFiles);
   });
 
@@ -29,7 +40,7 @@ test.describe("Profile Selection", () => {
     await expect(profileDropdown).toBeVisible();
   });
 
-  test.describe("profile selection updates preferences", () => {
+  test.describe("Profile selection", () => {
     const profiles = [
       { profile: PROFILES.STANDARD, label: PROFILES.STANDARD.text },
       { profile: PROFILES.PERFORMANCE, label: PROFILES.PERFORMANCE.text },
@@ -49,7 +60,7 @@ test.describe("Profile Selection", () => {
     }
   });
 
-  test.describe("hidden profiles", () => {
+  test.describe("Hidden profiles", () => {
     const hiddenProfiles = Object.values(PROFILES).filter(
       (profile) => profile.hidden
     );
@@ -111,6 +122,54 @@ test.describe("Profile Selection", () => {
       const profilePreference = userPreferences[USER_PREFERENCE_KEYS.PRESET];
 
       expect(profilePreference).toBe(selectedProfileValue);
+    });
+  });
+
+  test.describe("Restore profiles ", () => {
+    test("should restore MO2 profiles when clicking the Restore MO2 Profiles button", async () => {
+      const profileToTest = PROFILES.PERFORMANCE;
+      const fileToModify = "plugins.txt";
+      const primaryFilePath = path.join(
+        `${mockFiles.mockModpackPath}/profiles/${profileToTest.value}/${fileToModify}`
+      );
+      const backupFilePath = path.join(
+        `${mockFiles.mockModpackPath}/launcher/_backups/profiles/${profileToTest.value}/${fileToModify}`
+      );
+
+      await window
+        .getByTestId("navigation-container")
+        .getByText("Advanced")
+        .click();
+      await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+
+      await selectProfile(window, PROFILES.PERFORMANCE);
+
+      const originalPrimaryContent = await fs.readFile(
+        primaryFilePath,
+        "utf-8"
+      );
+      const backupContent = await fs.readFile(backupFilePath, "utf-8");
+
+      await fs.writeFile(
+        primaryFilePath,
+        originalPrimaryContent +
+          "\n# This is a test modification for MO2 profile restore test"
+      );
+
+      const messageBoxHandle = await mockMessageBox(electronApp, 1);
+
+      await window.getByTestId("restore-mo2-profiles").click();
+
+      await waitForMessageBoxShown(messageBoxHandle);
+      await waitForClickEventsEnabled(window);
+
+      const restoredContent = await fs.readFile(primaryFilePath, "utf-8");
+      const currentBackupContent = await fs.readFile(backupFilePath, "utf-8");
+
+      // Verify the content of the restored file matches the backup file
+      expect(restoredContent).toBe(currentBackupContent);
+      // Verify the backup file was not modified during the restore process
+      expect(currentBackupContent).toBe(backupContent);
     });
   });
 });
