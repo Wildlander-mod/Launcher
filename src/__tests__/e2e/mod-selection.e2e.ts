@@ -2,6 +2,8 @@ import { expect, Page, test } from "@playwright/test";
 import {
   CloseTestApp,
   MockFilesPaths,
+  createMockFiles,
+  setModpackAndWaitForAppLoaded,
   startTestApp,
   waitForModDirectorySelect,
 } from "./util/setup";
@@ -10,6 +12,10 @@ import { getUserPreferences } from "./util/user-preferences";
 import { mockErrorDialog } from "./util/mocks";
 import { waitForDialogShown } from "./util/app-state";
 import fs from "fs";
+import {
+  createDirectoryStructure,
+  createWabbajackInstallSettings,
+} from "./util/generate-modpack-files";
 
 test.describe("Mod Selection", () => {
   let window: Page;
@@ -102,6 +108,79 @@ test.describe("Mod Selection", () => {
       const userPreferencesPath = `${mockFiles.mockFilesPath}/config/userPreferences.json`;
       const fileContents = fs.readFileSync(userPreferencesPath, "utf-8");
       expect(JSON.parse(fileContents)).toEqual({});
+    });
+  });
+
+  test.describe("Advanced Page Mod Selection", () => {
+    let newMockFiles: MockFilesPaths;
+
+    test.beforeEach(async () => {
+      // Create a new set of mock files to swap to
+      newMockFiles = await createMockFiles(test);
+
+      ({ window, closeTestApp, electronApp, mockFiles } = await startTestApp(
+        test
+      ));
+
+      // Add the new modpack to the Wabbajack settings
+      createDirectoryStructure(
+        {
+          Wabbajack: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            saved_settings: {
+              ["install-settings-9876543210.json"]: JSON.stringify(
+                createWabbajackInstallSettings(newMockFiles.mockModpackPath)
+              ),
+            },
+          },
+        },
+        mockFiles.mockAppDataLocalPath
+      );
+
+      await setModpackAndWaitForAppLoaded(window, mockFiles);
+    });
+
+    test.afterEach(async () => {
+      await closeTestApp();
+    });
+
+    test("should select a different modpack from the advanced page", async () => {
+      await window
+        .getByTestId("navigation-container")
+        .getByText("Advanced")
+        .click();
+      await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+
+      const modDirectory = window.getByTestId("mod-directory");
+      await expect(modDirectory).toBeVisible();
+      const modDirectorySelectTestId = "mod-directory-select";
+      await window.getByTestId(modDirectorySelectTestId).click();
+
+      const { mockModpackPath } = newMockFiles;
+
+      const pageLoadedPromise = new Promise<void>((resolve) =>
+        window.on("load", () => resolve())
+      );
+
+      // Select the option with the new modpack path
+      const optionsContainer = window
+        .getByTestId(modDirectorySelectTestId)
+        .getByTestId("dropdown-options");
+      await optionsContainer.getByText(mockModpackPath).click();
+
+      // Wait for the page to have been reloaded. This happens after the modpack has been selected.
+      await pageLoadedPromise;
+
+      // Verify the mod directory dropdown shows the new selection
+      const currentSelection = await window
+        .getByTestId(modDirectorySelectTestId)
+        .getByTestId("dropdown-head")
+        .textContent();
+      expect(currentSelection).toContain(mockModpackPath);
+
+      // Get the user preferences and verify the mod directory is set correctly
+      const userPreferences = await getUserPreferences(mockFiles.mockFilesPath);
+      expect(userPreferences.MOD_DIRECTORY).toBe(mockModpackPath);
     });
   });
 });

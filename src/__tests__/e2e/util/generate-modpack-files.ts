@@ -147,36 +147,34 @@ export const mockModpack: DirectoryStructure = {
  * Wabbajack saves its settings to APPDATA.
  * If working on a system that isn't windows, this can be useful to mock APPDATA.
  */
+export const createWabbajackInstallSettings = (
+  installPath: string,
+  version = "1.1.0"
+) => ({
+  ModListLocation: installPath,
+  InstallLocation: installPath,
+  DownloadLocation: installPath,
+  Metadata: {
+    title: "Wildlander",
+    description:
+      "Wildlander is a modlist that aims to make Skyrim more immersive and challenging while also making it more beautiful and realistic.",
+    version,
+    repositoryName: "Wildlander",
+  },
+});
+
 export const getMockAPPDATALocal = (
   installPath: string
 ): DirectoryStructure => ({
   Wabbajack: {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     saved_settings: {
-      "install-settings-1234567890123456.json": JSON.stringify({
-        ModListLocation: installPath,
-        InstallLocation: installPath,
-        DownloadLocation: installPath,
-        Metadata: {
-          title: "Wildlander",
-          description:
-            "Wildlander is a modlist that aims to make Skyrim more immersive and challenging while also making it more beautiful and realistic.",
-          version: "1.1.0",
-          repositoryName: "Wildlander",
-        },
-      }),
-      "install-settings-invalid.json": JSON.stringify({
-        ModListLocation: "/invalid/path",
-        InstallLocation: "/invalid/path",
-        DownloadLocation: "/invalid/path",
-        Metadata: {
-          title: "Wildlander",
-          description:
-            "Wildlander is a modlist that aims to make Skyrim more immersive and challenging while also making it more beautiful and realistic.",
-          version: "1.0.0",
-          repositoryName: "Wildlander",
-        },
-      }),
+      "install-settings-1234567890123456.json": JSON.stringify(
+        createWabbajackInstallSettings(installPath)
+      ),
+      "install-settings-invalid.json": JSON.stringify(
+        createWabbajackInstallSettings("/invalid/path", "1.0.0")
+      ),
     },
   },
 });
