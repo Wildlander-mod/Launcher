@@ -21,6 +21,7 @@ import {
   waitForMessageBoxShown,
 } from "./util/app-state";
 import { isPluginEnabled } from "./util/modlist";
+import { PAGES, navigateAndWait } from "./util/navigation";
 
 /**
  * Hardcoded ENB presets configuration based on the mock namesENB.json file
@@ -241,11 +242,7 @@ test.describe("Shader Options", () => {
       `${mockFiles.mockModpackPath}/launcher/_backups/ENB Presets/${ENB_PRESETS.LOW.value}/${fileToModify}`
     );
 
-    await window
-      .getByTestId("navigation-container")
-      .getByText("Advanced")
-      .click();
-    await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+    await navigateAndWait(window, PAGES.ADVANCED);
 
     // Select a shader preset to ensure we're starting from a known state
     await selectEnb(window, ENB_PRESETS.LOW);

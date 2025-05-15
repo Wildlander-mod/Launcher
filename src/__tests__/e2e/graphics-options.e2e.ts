@@ -17,6 +17,7 @@ import {
 import { mockMessageBox } from "./util/mocks";
 import type { ElectronApplication } from "playwright";
 import path from "path";
+import { PAGES, navigateAndWait } from "./util/navigation";
 
 /**
  * Hardcoded graphics presets configuration
@@ -188,11 +189,7 @@ test.describe("Graphics Options", () => {
         "\n#This is a test modification for graphics restore test"
     );
 
-    await window
-      .getByTestId("navigation-container")
-      .getByText("Advanced")
-      .click();
-    await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+    await navigateAndWait(window, PAGES.ADVANCED);
 
     const messageBoxHandle = await mockMessageBox(electronApp, 1);
 

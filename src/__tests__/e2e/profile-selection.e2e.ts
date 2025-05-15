@@ -17,6 +17,7 @@ import {
   waitForClickEventsEnabled,
   waitForMessageBoxShown,
 } from "./util/app-state";
+import { PAGES, navigateAndWait } from "./util/navigation";
 
 test.describe("Profiles", () => {
   let window: Page;
@@ -136,11 +137,7 @@ test.describe("Profiles", () => {
         `${mockFiles.mockModpackPath}/launcher/_backups/profiles/${profileToTest.value}/${fileToModify}`
       );
 
-      await window
-        .getByTestId("navigation-container")
-        .getByText("Advanced")
-        .click();
-      await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+      await navigateAndWait(window, PAGES.ADVANCED);
 
       await selectProfile(window, PROFILES.PERFORMANCE);
 

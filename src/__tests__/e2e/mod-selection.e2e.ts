@@ -16,6 +16,7 @@ import {
   createDirectoryStructure,
   createWabbajackInstallSettings,
 } from "./util/generate-modpack-files";
+import { PAGES, navigateAndWait } from "./util/navigation";
 
 test.describe("Mod Selection", () => {
   let window: Page;
@@ -145,16 +146,10 @@ test.describe("Mod Selection", () => {
     });
 
     test("should select a different modpack from the advanced page", async () => {
-      await window
-        .getByTestId("navigation-container")
-        .getByText("Advanced")
-        .click();
-      await window.getByTestId("page-advanced").waitFor({ state: "visible" });
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
 
-      const modDirectory = window.getByTestId("mod-directory");
-      await expect(modDirectory).toBeVisible();
       const modDirectorySelectTestId = "mod-directory-select";
-      await window.getByTestId(modDirectorySelectTestId).click();
+      await advancedPage.getByTestId(modDirectorySelectTestId).click();
 
       const { mockModpackPath } = newMockFiles;
 

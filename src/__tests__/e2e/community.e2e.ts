@@ -5,6 +5,7 @@ import {
   MockFilesPaths,
   CloseTestApp,
 } from "./util/setup";
+import { PAGES, navigateAndWait } from "./util/navigation";
 
 test.describe("Community", () => {
   let window: Page;
@@ -27,10 +28,7 @@ test.describe("Community", () => {
     await setModpackAndWaitForAppLoaded(window, mockFiles);
 
     // Navigate to the Community page
-    await window
-      .getByTestId("navigation-container")
-      .getByText("Community")
-      .click();
+    await navigateAndWait(window, PAGES.COMMUNITY);
   });
   test.afterEach(async () => {
     await closeTestApp();

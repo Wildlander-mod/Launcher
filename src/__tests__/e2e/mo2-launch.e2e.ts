@@ -25,6 +25,7 @@ import { IIniObjectSection, parse } from "js-ini";
 import { getDisplayTweaksIni } from "./util/modlist";
 import { selectResolution } from "./util/resolution";
 import path from "path";
+import { PAGES, navigateAndWait } from "./util/navigation";
 
 /**
  * Reads the MO2 settings file and returns the selected profile
@@ -72,14 +73,7 @@ test.describe("MO2 Launch", () => {
     ));
     await setModpackAndWaitForAppLoaded(window, mockFiles);
 
-    await window
-      .getByTestId("navigation-container")
-      .getByText("Advanced")
-      .click();
-
-    await window.getByTestId("page-advanced").waitFor({ state: "visible" });
-
-    const advancedPage = window.getByTestId("page-advanced");
+    const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
     launchButton = advancedPage.getByTestId("launch-mo2");
   });
 

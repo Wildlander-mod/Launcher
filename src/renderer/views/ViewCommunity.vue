@@ -1,7 +1,9 @@
 <template>
-  <AppPageContent>
-    <Community />
-  </AppPageContent>
+  <span data-testid="page-community">
+    <AppPageContent>
+      <Community />
+    </AppPageContent>
+  </span>
 </template>
 
 <script lang="ts">
