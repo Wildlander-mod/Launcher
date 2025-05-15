@@ -81,7 +81,7 @@ export class SystemService {
   async clearApplicationLogs() {
     this.logger.transports?.file.getFile().clear();
     /*
-    Due to the fact that the renderer proc has little to no node func / lib access,
+    Due to the fact that the renderer process has little to no node func / lib access,
     the renderer logs have to be manually cleared here.
     Because even if the entire logging object is exposed to the renderer it is unable to clear the file.
     */

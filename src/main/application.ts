@@ -1,7 +1,7 @@
 import { StartupService } from "@/main/services/startup.service";
 import type { Constructor } from "@loopback/context";
 import { WindowService } from "@/main/services/window.service";
-import { LoggerBinding } from "@/main/logger";
+import { LoggerBinding, newLogInstance } from "@/main/logger";
 import { BootMixin } from "@loopback/boot";
 import { Application } from "@loopback/core";
 import type { Controller } from "@/main/decorators/controller.decorator";
@@ -98,7 +98,7 @@ export class LauncherApplication extends BootMixin(Application) {
   }
 
   private bindLogger() {
-    this.bind(LoggerBinding).to(logger.create("launcher"));
+    this.bind(LoggerBinding).to(newLogInstance("main"));
   }
 
   private bindStaticValues() {

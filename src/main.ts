@@ -7,7 +7,7 @@ import { newLogInstance } from "./main/logger";
 import type { ProcessWithGlobals } from "./main/types/process-globals";
 import { promisify } from "util";
 
-const logger = newLogInstance("Startup logger");
+const logger = newLogInstance("startup");
 
 if (process.env["MULTIPLE_INSTANCE"] !== "true") {
   const isSingleInstance = app.requestSingleInstanceLock();

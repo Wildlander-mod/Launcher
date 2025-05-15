@@ -8,7 +8,7 @@ Follow all generic and project specific instructions in this document.
 - Prefer `const` over `let` where possible to ensure immutability
 - Always declare variables at the lowest scope possible to prevent polluting the outer scope
 - Only suggest upgrading libraries when absolutely necessary for functionality
-- Avoid unnecessary comments that just repeat what the code already clearly expresses
+- Avoid unnecessary comments that just repeat what the code already clearly expresses. Do not add a comment if the method name that is being called is clear.
 
 ## TypeScript Practices
 

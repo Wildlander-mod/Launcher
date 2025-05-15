@@ -26,8 +26,11 @@ const UUID = (): string => {
 };
 
 export interface MockFilesPaths {
+  // The full path to the mock files inside the playwright directory
   mockFilesPath: string;
+  // The path to the mock modpack directory "/{mockFilesPath}/mock-modpack-install"
   mockModpackPath: string;
+  // The path to a mock %APP_DATA% that will be set on the Electron instance "/${mockFilesPath}/local"
   mockAppDataLocalPath: string;
 }
 
@@ -81,6 +84,7 @@ export const startTestApp = async (
       MULTIPLE_INSTANCE: "true",
       // Disable this to open dev tools by default
       IS_TEST: "true",
+      LOG_PATH: `${mockFilesPath}/logs`,
     },
     // recordVideo: { dir: "test-results" },
   });

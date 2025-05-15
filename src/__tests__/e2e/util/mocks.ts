@@ -247,3 +247,26 @@ export const replaceChildProcessExecWithManualResolveMock = async (
     };
   }, ChildProcessBinding.key);
 };
+
+/**
+ * Mocks the electron.shell.openPath method
+ * @param electronApp - The Electron application instance from Playwright
+ * @returns A JSHandle to a function that returns the path argument
+ */
+export const mockElectronShell = async (
+  electronApp: ElectronApplication
+): Promise<JSHandle<() => { pathArgument: string }>> => {
+  return electronApp.evaluateHandle(({ shell }) => {
+    let pathArgument = "";
+
+    shell.openPath = (path: string) => {
+      pathArgument = path;
+      return Promise.resolve("");
+    };
+
+    // Return a function to retrieve the captured arguments later
+    return () => ({
+      pathArgument,
+    });
+  });
+};
