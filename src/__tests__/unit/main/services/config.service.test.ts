@@ -5,6 +5,8 @@ import Store from "electron-store";
 import sinon from "sinon";
 import log, { ElectronLog } from "electron-log";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { Context } from "@loopback/core";
+import { ConfigBinding } from "@/main/bindings/config.binding";
 
 describe("Config service #main #service", () => {
   let mockStore: Store<UserPreferences>;
@@ -12,12 +14,15 @@ describe("Config service #main #service", () => {
   let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
   let configService: ConfigService;
   let originalEnv: NodeJS.ProcessEnv;
+  let mockContext: sinon.SinonStubbedInstance<Context>;
 
   let mockUserConfig: string;
   let preferenceFile: string;
 
   beforeEach(() => {
     originalEnv = Object.assign({}, process.env);
+
+    mockContext = sinon.createStubInstance(Context);
 
     mockUserConfig = "/mock/config";
     preferenceFile = "userPreferences";
@@ -48,7 +53,9 @@ describe("Config service #main #service", () => {
       on: sinon.stub(),
     });
 
-    configService = new ConfigService(mockLogger, mockStore);
+    mockContext.getSync.withArgs(ConfigBinding).returns(mockStore);
+
+    configService = new ConfigService(mockLogger, mockContext);
   });
 
   afterEach(() => {

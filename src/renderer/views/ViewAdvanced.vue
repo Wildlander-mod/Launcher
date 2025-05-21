@@ -67,7 +67,11 @@
                   modpack for changes to take effect.
                 </template>
                 <div class="c-settings__action">
-                  <BaseButton type="default" size="large" @click="editConfig"
+                  <BaseButton
+                    type="default"
+                    size="large"
+                    data-testid="edit-config-button"
+                    @click="editConfig"
                     >Edit
                   </BaseButton>
                 </div>

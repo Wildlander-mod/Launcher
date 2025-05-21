@@ -7,7 +7,7 @@ import {
 } from "./util/setup";
 import type { ElectronApplication } from "playwright";
 import { PAGES, navigateAndWait } from "./util/navigation";
-import { mockElectronShell } from "./util/mocks";
+import { mockElectronShell, mockUserPreferencesStore } from "./util/mocks";
 import fs from "fs/promises";
 import path from "path";
 
@@ -101,6 +101,23 @@ test.describe("Launcher actions", () => {
       expect(path.normalize(shellDetails.pathArgument)).toEqual(
         path.normalize(crashLogsPath)
       );
+    });
+
+    test("should call openInEditor when clicking the edit config button", async () => {
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      // Create a mock for the Store<UserPreferences> object and bind it to ConfigBinding
+      const storeHandle = await mockUserPreferencesStore(electronApp);
+
+      await advancedPage
+        .getByText("Edit launcher config")
+        .locator("..")
+        .getByTestId("edit-config-button")
+        .click();
+
+      // Verify openInEditor was called
+      const storeDetails = await storeHandle.evaluate((h) => h());
+      expect(storeDetails.openInEditorCalled).toBe(true);
     });
   });
 

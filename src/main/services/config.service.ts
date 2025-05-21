@@ -6,6 +6,7 @@ import { BindingScope, inject, injectable } from "@loopback/context";
 import { Logger, LoggerBinding } from "@/main/logger";
 import fs from "fs";
 import { ConfigBinding } from "@/main/bindings/config.binding";
+import { Context } from "@loopback/core";
 
 export const appRoot = path.resolve(`${__dirname}/../../`);
 export interface UserPreferences {
@@ -32,8 +33,7 @@ export type PreferenceWithValidator = {
 export class ConfigService {
   constructor(
     @inject(LoggerBinding) private logger: Logger,
-    @inject(ConfigBinding)
-    private readonly config: Store<UserPreferences>
+    @inject.context() private context: Context
   ) {}
 
   static getNewUserPreferencesStore(): Store<UserPreferences> {
@@ -41,6 +41,11 @@ export class ConfigService {
       name: "userPreferences",
       ...(process.env["CONFIG_PATH"] && { cwd: process.env["CONFIG_PATH"] }),
     });
+  }
+
+  // Get config from the context dynamically so it can be mocked
+  private getConfig(): Store<UserPreferences> {
+    return this.context.getSync<Store<UserPreferences>>(ConfigBinding);
   }
 
   skyrimDirectory() {
@@ -52,7 +57,8 @@ export class ConfigService {
   }
 
   modDirectory() {
-    return this.config.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
+    const config = this.getConfig();
+    return config.get(USER_PREFERENCE_KEYS.MOD_DIRECTORY);
   }
 
   backupDirectory() {
@@ -66,7 +72,8 @@ export class ConfigService {
   getPreference<T = UserPreferences[keyof UserPreferences]>(
     key: keyof UserPreferences
   ): T {
-    return this.config.get(key) as unknown as T;
+    const config = this.getConfig();
+    return config.get(key) as unknown as T;
   }
 
   launcherDirectory() {
@@ -74,12 +81,14 @@ export class ConfigService {
   }
 
   hasPreference(key: keyof UserPreferences) {
-    return this.config.has(key);
+    const config = this.getConfig();
+    return config.has(key);
   }
 
   deletePreference(key: keyof UserPreferences) {
     this.logger.debug(`Deleting preference: ${key}`);
-    return this.config.delete(key);
+    const config = this.getConfig();
+    return config.delete(key);
   }
 
   setPreference(key: keyof UserPreferences | string, value: unknown) {
@@ -90,7 +99,8 @@ export class ConfigService {
     } else {
       this.logger.debug(`Setting preference ${key} to ${value}`);
     }
-    return this.config.set(key, value);
+    const config = this.getConfig();
+    return config.set(key, value);
   }
 
   /**
@@ -99,9 +109,10 @@ export class ConfigService {
   async setDefaultPreferences(
     preferences: PreferenceWithValidator
   ): Promise<void> {
+    const config = this.getConfig();
     this.logger.debug("Setting default user preferences");
     this.logger.debug(`Current preferences`);
-    this.logger.debug(this.getPreferences().store);
+    this.logger.debug(config.store);
     for (const [key, { value, validate }] of Object.entries(preferences)) {
       const valid = validate ? await validate() : true;
       if (!valid) {
@@ -109,19 +120,20 @@ export class ConfigService {
           `Current ${key} preference is invalid. Setting to default: ${value}`
         );
       }
-      if ((!this.config.has(key) || !valid) && value) {
+      if ((!config.has(key) || !valid) && value) {
         this.setPreference(key, value);
       }
     }
     this.logger.debug("New preferences");
-    this.logger.debug(this.getPreferences().store);
+    this.logger.debug(config.store);
   }
 
   getPreferences() {
-    return this.config;
+    return this.getConfig();
   }
 
   editPreferences() {
-    return this.config.openInEditor();
+    const config = this.getConfig();
+    return config.openInEditor();
   }
 }

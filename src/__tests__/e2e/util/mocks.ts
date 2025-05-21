@@ -8,6 +8,7 @@ import {
   ProcessKill,
   ProcessKillBinding,
 } from "../../../main/bindings/process-kill.binding";
+import { ConfigBinding } from "../../../main/bindings/config.binding";
 
 /**
  * Creates a mock for the child process exec method
@@ -270,3 +271,36 @@ export const mockElectronShell = async (
     });
   });
 };
+
+/**
+ * Mocks the Store<UserPreferences> object and binds it to ConfigBinding
+ * @param electronApp The electron application
+ * @returns A handle to access whether openInEditor was called
+ */
+export async function mockUserPreferencesStore(
+  electronApp: ElectronApplication
+) {
+  return electronApp.evaluateHandle(({}, configBindingKey) => {
+    const processGlobals = (process as ProcessWithGlobals)._globals_;
+
+    let openInEditorCalled = false;
+
+    // Create a mock Store<UserPreferences> object
+    const mockStore = {
+      openInEditor: () => {
+        openInEditorCalled = true;
+        return undefined;
+      },
+    };
+
+    // Replace the binding with our mock
+    (processGlobals.launcherApplication as LauncherApplication)
+      .bind(configBindingKey)
+      .to(mockStore);
+
+    // Return a function that provides access to the mock's state
+    return () => ({
+      openInEditorCalled,
+    });
+  }, ConfigBinding.key);
+}
