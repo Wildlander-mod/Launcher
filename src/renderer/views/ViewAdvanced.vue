@@ -88,10 +88,11 @@
               </div>
             </div>
             <div class="l-row c-settings__actions c-settings__section">
-              <div class="c-settings__label">Check pre-requisites</div>
+              <div class="c-settings__label">Check prerequisites</div>
               <div class="c-settings__action c-settings__action--toggle">
                 <Toggle
                   v-model="checkPrerequisites"
+                  data-testid="check-prerequisites-toggle"
                   @click="setCheckPrerequisites"
                 />
               </div>

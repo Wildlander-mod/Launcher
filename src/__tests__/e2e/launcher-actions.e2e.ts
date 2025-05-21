@@ -10,6 +10,8 @@ import { PAGES, navigateAndWait } from "./util/navigation";
 import { mockElectronShell, mockUserPreferencesStore } from "./util/mocks";
 import fs from "fs/promises";
 import path from "path";
+import { getUserPreferences, setUserPreference } from "./util/user-preferences";
+import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 
 test.describe("Launcher actions", () => {
   let electronApp: ElectronApplication;
@@ -118,6 +120,33 @@ test.describe("Launcher actions", () => {
       // Verify openInEditor was called
       const storeDetails = await storeHandle.evaluate((h) => h());
       expect(storeDetails.openInEditorCalled).toBe(true);
+    });
+
+    test("should update check prerequisites preference when toggle is changed", async () => {
+      await setUserPreference(
+        mockFiles.mockFilesPath,
+        USER_PREFERENCE_KEYS.CHECK_PREREQUISITES,
+        true
+      );
+
+      const initialPreferences = await getUserPreferences(
+        mockFiles.mockFilesPath
+      );
+      expect(initialPreferences[USER_PREFERENCE_KEYS.CHECK_PREREQUISITES]).toBe(
+        true
+      );
+
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      await advancedPage.getByTestId("check-prerequisites-toggle").click();
+
+      // Get updated user preferences and verify CHECK_PREREQUISITES is now false
+      const updatedPreferences = await getUserPreferences(
+        mockFiles.mockFilesPath
+      );
+      expect(updatedPreferences[USER_PREFERENCE_KEYS.CHECK_PREREQUISITES]).toBe(
+        false
+      );
     });
   });
 
