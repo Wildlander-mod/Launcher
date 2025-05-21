@@ -77,6 +77,14 @@ test.describe("Launcher actions", () => {
       // Verify files are now empty
       expect(mainContentAfter.trim().length).toBe(0);
       expect(rendererContentAfter.trim().length).toBe(0);
+      if (
+        mainContentAfter.trim().length > 0 ||
+        rendererContentAfter.trim().length > 0
+      ) {
+        console.log(
+          `mainContentAfter: ${mainContentAfter}\nrendererContentAfter: ${rendererContentAfter}`
+        );
+      }
     });
 
     test("should open crash logs when clicking the open button", async () => {

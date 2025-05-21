@@ -14,7 +14,6 @@ import {
 import {
   mockMessageBox,
   mockProcessKill,
-  replaceChildProcessExecWithManualResolveMock,
   replaceChildProcessExecWithMock,
   replacePsListWithMock,
 } from "./util/mocks";
@@ -25,7 +24,7 @@ import { IIniObjectSection, parse } from "js-ini";
 import { getDisplayTweaksIni } from "./util/modlist";
 import { selectResolution } from "./util/resolution";
 import path from "path";
-import { PAGES, navigateAndWait } from "./util/navigation";
+import { navigateAndWait, PAGES } from "./util/navigation";
 
 /**
  * Reads the MO2 settings file and returns the selected profile
@@ -59,7 +58,6 @@ const getMO2SelectedProfile = async (
     `Could not extract profile name from ${selectedProfileSetting}`
   );
 };
-
 test.describe("MO2 Launch", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
@@ -81,21 +79,19 @@ test.describe("MO2 Launch", () => {
     await closeTestApp();
   });
 
-  test("should show the MO2 launch button on the advanced page", async () => {
+  test("should launch MO2 from the advanced page", async () => {
     await expect(launchButton).toBeVisible();
-
-    const disabledPromise = waitForClickEventsDisabled(window);
 
     const execHandle = await replaceChildProcessExecWithMock(electronApp);
 
     await launchButton.click();
 
-    await disabledPromise;
+    await execHandle.evaluate((handle) => handle.resolveExec());
 
     await waitForClickEventsEnabled(window);
 
     // Retrieve the file path from the mock exec function
-    const file = await execHandle.evaluate((f) => f());
+    const file = await execHandle.evaluate((handle) => handle.getCommand());
 
     expect(file).toBe(
       `"${path.join(mockFiles.mockModpackPath, "ModOrganizer.exe")}"`
@@ -156,7 +152,7 @@ test.describe("MO2 Launch", () => {
       },
     ]);
 
-    await replaceChildProcessExecWithMock(electronApp);
+    const execHandle = await replaceChildProcessExecWithMock(electronApp);
 
     // Mock process.kill to capture what it was called with
     const processKillHandle = await mockProcessKill(electronApp);
@@ -164,13 +160,8 @@ test.describe("MO2 Launch", () => {
     // Mock message box to return response number 1 (user selects "Close MO2 and continue")
     await mockMessageBox(electronApp, 1);
 
-    // Wait for click events to be disabled when the dialog is shown
-    const disabledPromise = waitForClickEventsDisabled(window);
-
     await launchButton.click();
-
-    // Wait for the UI to be disabled (dialog is shown)
-    await disabledPromise;
+    await execHandle.evaluate((handle) => handle.resolveExec());
 
     // Wait for click events to be enabled again (dialog is closed)
     await waitForClickEventsEnabled(window);
@@ -190,15 +181,11 @@ test.describe("MO2 Launch", () => {
 
     const selectedProfile = await selectProfile(window, PROFILES.STANDARD);
 
-    await replaceChildProcessExecWithMock(electronApp);
-
-    // Wait for click events to be disabled when launching
-    const disabledPromise = waitForClickEventsDisabled(window);
+    const execHandle = await replaceChildProcessExecWithMock(electronApp);
 
     await launchButton.click();
 
-    // Wait for the UI to be disabled (launching)
-    await disabledPromise;
+    await execHandle.evaluate((handle) => handle.resolveExec());
 
     // Wait for click events to be enabled again (launch complete)
     await waitForClickEventsEnabled(window);
@@ -217,15 +204,11 @@ test.describe("MO2 Launch", () => {
       height: 1080,
     });
 
-    await replaceChildProcessExecWithMock(electronApp);
-
-    // Wait for click events to be disabled when launching
-    const disabledPromise = waitForClickEventsDisabled(window);
+    const execHandle = await replaceChildProcessExecWithMock(electronApp);
 
     await launchButton.click();
 
-    // Wait for the UI to be disabled (launching)
-    await disabledPromise;
+    await execHandle.evaluate((handle) => handle.resolveExec());
 
     // Wait for click events to be enabled again (launch complete)
     await waitForClickEventsEnabled(window);
@@ -279,10 +262,8 @@ test.describe("MO2 Launch", () => {
 
     const processKillHandle = await mockProcessKill(electronApp);
 
-    // Use the manual resolve mock to simulate a long-running exec
-    const execHandle = await replaceChildProcessExecWithManualResolveMock(
-      electronApp
-    );
+    // Use the mock to simulate a long-running exec
+    const execHandle = await replaceChildProcessExecWithMock(electronApp);
 
     await launchButton.click();
 

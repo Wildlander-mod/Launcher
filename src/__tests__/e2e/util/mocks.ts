@@ -11,46 +11,6 @@ import {
 import { ConfigBinding } from "../../../main/bindings/config.binding";
 
 /**
- * Creates a mock for the child process exec method
- * @param electronApp - The Electron application instance from Playwright
- * @returns A JSHandle to a function that returns the command passed to exec
- * @example
- * ```js
- *    const handle = await replaceChildProcessExecWithMock(electronApp);
- *    const command = await handle(x => x());
- *```
- */
-export const replaceChildProcessExecWithMock = async (
-  electronApp: ElectronApplication
-): Promise<JSHandle<() => string>> => {
-  return electronApp.evaluateHandle(async ({}, childProcessBinding) => {
-    const processGlobals = (process as ProcessWithGlobals)._globals_;
-
-    let file: string;
-
-    // Replace the exec method with a mock that stores the file path to retrieve later
-    const childProcessMock = {
-      exec: async (command: string) => {
-        file = command;
-        return { stdout: "", stderr: "" };
-      },
-    };
-
-    // The exec method is `promisified` by default, so we need to override the custom method to use our mock
-    childProcessMock.exec[processGlobals.promisifyCustomSymbol] =
-      childProcessMock.exec;
-
-    // Replace the child process with a mock
-    (processGlobals.launcherApplication as LauncherApplication)
-      .bind(childProcessBinding)
-      .to(childProcessMock);
-
-    // Return a function that can be used with `evaluate` to retrieve the file path
-    return () => file;
-  }, ChildProcessBinding.key);
-};
-
-/**
  * Mocks the dialog.showErrorBox method in Electron
  * @param electronApp - The Electron application instance from Playwright
  * @returns A JSHandle to a function that returns the error dialog arguments
@@ -201,14 +161,32 @@ export async function mockProcessKill(electronApp: ElectronApplication) {
  * Creates a mock for the child process exec method that allows manual resolution
  * @param electronApp - The Electron application instance from Playwright
  * @returns A JSHandle to functions that allow controlling the exec promise
+ * @example
+ * ```js
+ *    const execHandle = await replaceChildProcessExecWithMock(electronApp);
+ *    await execHandle.evaluate(handle => handle.resolveExec());
+ *    const command = await execHandle.evaluate(handle => handle.getCommand());
+ * ```
  */
-export const replaceChildProcessExecWithManualResolveMock = async (
+export const replaceChildProcessExecWithMock = async (
   electronApp: ElectronApplication
 ): Promise<
   JSHandle<{
+    /**
+     * @returns The command that was passed to the exec method
+     * @example `await execHandle.evaluate(handle => handle.getCommand());`
+     */
     getCommand: () => string;
-    resolveExec: () => void;
-    getResolved: () => boolean;
+    /**
+     * Resolves the exec promise with a default value
+     * @example `await execHandle.evaluate(handle => handle.resolveExec());`
+     */
+    resolveExec: () => Promise<void>;
+    /**
+     * @returns A promise that resolves when the exec method has been called
+     * @example `await execHandle.evaluate(handle => handle.waitForExec());`
+     */
+    waitForExec: () => Promise<void>;
   }>
 > => {
   return electronApp.evaluateHandle(async ({}, childProcessBinding) => {
@@ -216,7 +194,22 @@ export const replaceChildProcessExecWithManualResolveMock = async (
 
     let command: string;
     let resolvePromise: (value: { stdout: string; stderr: string }) => void;
-    let isResolved = false;
+    const waitForExec = () =>
+      new Promise((resolve, reject) => {
+        const timeout = setTimeout(
+          () => reject("Timeout waiting for exec"),
+          30000
+        );
+        const check = () => {
+          if (command) {
+            clearTimeout(timeout);
+            resolve();
+          } else {
+            setTimeout(check, 500);
+          }
+        };
+        check();
+      });
 
     // Replace the exec method with a mock that returns a promise that can be manually resolved
     const childProcessMock = {
@@ -224,7 +217,6 @@ export const replaceChildProcessExecWithManualResolveMock = async (
         command = cmd;
         return new Promise<{ stdout: string; stderr: string }>((resolve) => {
           resolvePromise = (value) => {
-            isResolved = true;
             resolve(value);
           };
         });
@@ -243,8 +235,11 @@ export const replaceChildProcessExecWithManualResolveMock = async (
     // Return functions that can be used to control the exec promise
     return {
       getCommand: () => command,
-      resolveExec: () => resolvePromise({ stdout: "", stderr: "" }),
-      getResolved: () => isResolved,
+      resolveExec: async () => {
+        await waitForExec();
+        resolvePromise({ stdout: "", stderr: "" });
+      },
+      waitForExec,
     };
   }, ChildProcessBinding.key);
 };
