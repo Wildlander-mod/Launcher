@@ -82,6 +82,7 @@
               <div class="c-settings__action c-settings__action--toggle">
                 <Toggle
                   v-model="showHiddenProfiles"
+                  data-testid="show-hidden-profiles-toggle"
                   @click="setShowHiddenProfiles"
                 />
               </div>

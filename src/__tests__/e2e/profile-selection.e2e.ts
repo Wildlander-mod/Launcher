@@ -124,6 +124,30 @@ test.describe("Profiles", () => {
 
       expect(profilePreference).toBe(selectedProfileValue);
     });
+
+    test("should show hidden profiles when toggling the switch on Advanced page", async () => {
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      await advancedPage.getByTestId("show-hidden-profiles-toggle").click();
+
+      // Verify that the user preference has been updated
+      const userPreferences = await getUserPreferences(mockFiles.mockFilesPath);
+      expect(userPreferences[USER_PREFERENCE_KEYS.SHOW_HIDDEN_PROFILE]).toBe(
+        true
+      );
+
+      const profileDropdown = window.getByTestId("profile-dropdown");
+      await profileDropdown.getByTestId("dropdown-head").click();
+
+      const optionsContainer = profileDropdown.getByTestId("dropdown-options");
+
+      // Check that hidden profiles are now visible
+      for (const profile of hiddenProfiles) {
+        await expect(
+          optionsContainer.getByText(profile.text, { exact: true })
+        ).toBeVisible();
+      }
+    });
   });
 
   test.describe("Restore profiles ", () => {
