@@ -20,7 +20,11 @@ export default defineConfig({
   /* Run tests in a single file in parallel,  */
   fullyParallel: true,
 
-  workers: process.env["CI"] ? 1 : 3,
+  workers: process.env["WORKERS"]
+    ? parseInt(process.env["WORKERS"])
+    : process.env["CI"]
+    ? 1
+    : 3,
 
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env["CI"],
@@ -49,6 +53,13 @@ export default defineConfig({
   },
 
   outputDir: ".playwright/test-results",
+
+  expect: {
+    toHaveScreenshot: {
+      // Remove the platform from screenshots so that it works across platforms
+      pathTemplate: "{snapshotDir}/{testFileName}-snapshots/{arg}{ext}",
+    },
+  },
 
   /* Run your local dev server before starting the tests */
   webServer: {

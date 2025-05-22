@@ -8,6 +8,7 @@ import fs from "fs/promises";
 import { _electron as electron, Page, test as Test } from "@playwright/test";
 import type { ElectronApplication } from "playwright";
 import { randomBytes } from "crypto";
+import path from "path";
 
 export type CloseTestApp = () => Promise<void>;
 
@@ -41,12 +42,15 @@ export interface MockFilesPaths {
  * - mock modpack install
  */
 export const createMockFiles = async (
-  test: typeof Test
+  test: typeof Test,
+  modpackPath?: string
 ): Promise<MockFilesPaths> => {
   // Create an area for the Electron app to store config/files.
-  const mockFilesPath = `${config().paths.mockFiles}/${
-    test.info().titlePath[1]
-  }/${UUID()}`;
+  const mockFilesPath = path.join(
+    config().paths.mockFiles,
+    test.info().titlePath[1],
+    modpackPath ?? UUID()
+  );
   await fs.mkdir(mockFilesPath, { recursive: true });
   const mockModpackPath = `${mockFilesPath}/mock-modpack-install`;
   const mockAppDataLocalPath = `${mockFilesPath}/local`;
@@ -65,7 +69,8 @@ export const createMockFiles = async (
 };
 
 export const startTestApp = async (
-  test: typeof Test
+  test: typeof Test,
+  modpackPath?: string
 ): Promise<{
   mockFiles: MockFilesPaths;
   window: Page;
@@ -73,12 +78,13 @@ export const startTestApp = async (
   closeTestApp: CloseTestApp;
 }> => {
   const { mockFilesPath, mockModpackPath, mockAppDataLocalPath } =
-    await createMockFiles(test);
+    await createMockFiles(test, modpackPath);
 
   // Launch Electron app.
   const electronApp = await electron.launch({
     args: [`${config().paths.instrumented}/main.js`],
     env: {
+      ...process.env,
       CONFIG_PATH: `${mockFilesPath}/config`,
       APPDATA: `${mockFilesPath}/APPDATA`,
       MULTIPLE_INSTANCE: "true",

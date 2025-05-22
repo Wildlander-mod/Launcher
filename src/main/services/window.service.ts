@@ -77,15 +77,17 @@ export class WindowService {
         showSaveImageAs: true,
       });
 
-      // Create the browser window.
+      const width = 1000;
+      const height = 580;
+
       this.window = new this.electron.BrowserWindow({
         frame: false,
-        height: 580,
-        minHeight: 580,
-        maxHeight: 580,
-        width: 1000,
-        minWidth: 1000,
-        maxWidth: 1000,
+        height,
+        minHeight: height,
+        maxHeight: height,
+        width,
+        minWidth: width,
+        maxWidth: width,
         resizable: false,
         maximizable: false,
         // disable initial window from showing so focus can be prevented while developing

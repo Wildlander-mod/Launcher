@@ -4,56 +4,26 @@ import {
   setModpackAndWaitForAppLoaded,
   MockFilesPaths,
 } from "./util/setup";
+import {
+  mockPosts,
+  mockPatreonEndpoint,
+  mockLastUpdated,
+  mockPatreonError,
+  mockLastUpdatedError,
+} from "./util/patreon";
 
 test.describe("News", () => {
   let window: Page;
   let closeTestApp: ReturnType<typeof startTestApp>["closeTestApp"];
   let mockFiles: MockFilesPaths;
 
-  // Mock data for tests
-  const mockPosts = [
-    {
-      title: "Test Post 1",
-      content: "This is test post 1",
-      published: "2023-01-01T00:00:00Z",
-      url: "/test-post-1",
-      tags: ["test", "news"],
-    },
-    {
-      title: "Test Post 2",
-      content: "This is test post 2",
-      published: "2023-01-02T00:00:00Z",
-      url: "/test-post-2",
-      tags: ["test", "announcement"],
-    },
-  ];
-
-  const emptyMockPosts = { posts: [] };
-
-  const mockLastUpdated = {
-    // This value comes from the API so it cannot be changed to fit the convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    last_updated: Math.floor(Date.now() / 1000), // Current time in seconds
-  };
-
   test.beforeEach(async () => {
     ({ window, closeTestApp, mockFiles } = await startTestApp(test));
     await setModpackAndWaitForAppLoaded(window, mockFiles);
 
     // Mock the API responses
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({ posts: mockPosts }),
-      });
-    });
-
-    await window.route("**/api/last-updated", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify(mockLastUpdated),
-      });
-    });
+    await mockPatreonEndpoint(window, { posts: mockPosts });
+    await mockLastUpdated(window);
 
     // Clear localStorage before each test to ensure a clean state
     await window.evaluate(() => {
@@ -89,36 +59,13 @@ test.describe("News", () => {
     const parsedCache = JSON.parse(cache as string);
     expect(parsedCache).toEqual({
       age: expect.any(Number),
-      content: [
-        {
-          title: "Test Post 1",
-          content: "This is test post 1",
-          published: "2023-01-01T00:00:00Z",
-          url: "/test-post-1",
-          tags: ["test", "news"],
-        },
-        {
-          title: "Test Post 2",
-          content: "This is test post 2",
-          published: "2023-01-02T00:00:00Z",
-          url: "/test-post-2",
-          tags: ["test", "announcement"],
-        },
-      ],
+      content: mockPosts,
     });
   });
 
   test("should display cached data first and update with new results when cache is outdated", async () => {
     // Set up a mock for last-updated that indicates the cache is outdated
-    await window.route("**/api/last-updated", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          last_updated: Math.floor(Date.now() / 1000) - 1800,
-        }), // 30 minutes after the cache
-      });
-    });
+    await mockLastUpdated(window, -1800); // 30 minutes in the past
 
     // First load to populate the cache with a timestamp from 1 hour ago
     await window.evaluate(() => {
@@ -151,12 +98,7 @@ test.describe("News", () => {
     ];
 
     // Mock the API to return the updated posts
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({ posts: updatedMockPosts }),
-      });
-    });
+    await mockPatreonEndpoint(window, { posts: updatedMockPosts });
 
     // Reload the page
     await window.reload();
@@ -168,16 +110,8 @@ test.describe("News", () => {
 
   test("should only use cached data when it is not outdated and not call the patreon endpoint", async () => {
     // Set up a mock for last-updated that indicates the cache is still valid
-    const oneHourAgo = Date.now() / 1000 - 3600; // 1 hour ago
-    await window.route("**/api/last-updated", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          last_updated: oneHourAgo,
-        }),
-      });
-    });
+    const oneHourAgo = -3600; // 1 hour ago in seconds
+    await mockLastUpdated(window, oneHourAgo);
 
     // Populate the cache with a later timestamp
     await window.evaluate(() => {
@@ -225,12 +159,7 @@ test.describe("News", () => {
 
   test("should show error message when patreon API fails", async () => {
     // Mock the patreon API to return an error
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 500,
-        body: "Internal Server Error",
-      });
-    });
+    await mockPatreonError(window);
 
     // Reload the page
     await window.reload();
@@ -244,12 +173,7 @@ test.describe("News", () => {
 
   test("should fetch posts directly when last-updated API fails and there's no cache", async () => {
     // Mock the last-updated API to return an error
-    await window.route("**/api/last-updated", (route) => {
-      return route.fulfill({
-        status: 500,
-        body: "Internal Server Error",
-      });
-    });
+    await mockLastUpdatedError(window);
 
     // Reload the page
     await window.reload();
@@ -265,12 +189,7 @@ test.describe("News", () => {
 
   test("should handle empty news list gracefully", async () => {
     // Mock the patreon API to return an empty list
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify(emptyMockPosts),
-      });
-    });
+    await mockPatreonEndpoint(window, { posts: [] });
 
     // Reload the page
     await window.reload();
@@ -304,12 +223,7 @@ test.describe("News", () => {
     });
 
     // Mock the last-updated API to return an error
-    await window.route("**/api/last-updated", (route) => {
-      return route.fulfill({
-        status: 500,
-        body: "Internal Server Error",
-      });
-    });
+    await mockLastUpdatedError(window);
 
     // Reload the page
     await window.reload();
@@ -343,15 +257,7 @@ test.describe("News", () => {
     });
 
     // Set up a mock for last-updated that indicates the cache is outdated
-    await window.route("**/api/last-updated", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          last_updated: Math.floor(Date.now() / 1000), // Current time, definitely newer than cache
-        }),
-      });
-    });
+    await mockLastUpdated(window); // Current time, definitely newer than cache
 
     // Set up new posts to be fetched
     const newMockPosts = [
@@ -365,12 +271,7 @@ test.describe("News", () => {
     ];
 
     // Mock the patreon API to return the new posts
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({ posts: newMockPosts }),
-      });
-    });
+    await mockPatreonEndpoint(window, { posts: newMockPosts });
 
     // Reload the page
     await window.reload();
@@ -386,14 +287,6 @@ test.describe("News", () => {
 
     expect(cache).not.toBeNull();
     const parsedCache = JSON.parse(cache as string);
-    expect(parsedCache.content).toEqual([
-      {
-        title: "Brand New Post",
-        content: "This is a brand new post",
-        published: "2023-01-05T00:00:00Z",
-        url: "/brand-new-post",
-        tags: ["test", "new"],
-      },
-    ]);
+    expect(parsedCache.content).toEqual(newMockPosts);
   });
 });

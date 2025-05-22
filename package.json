@@ -12,6 +12,7 @@
     "start": "vue-cli-service electron:serve",
     "start:dev": "nodemon",
     "start:renderer": "vue-cli-service serve src/renderer/index.ts",
+    "start:main": "electron dist/main.js",
     "prebuild": "npm run compile",
     "build": "vue-cli-service electron:build",
     "lint": "npm run lint:typescript && npm run lint:eslint && npm run lint:styles && npm run lint:prettier",
@@ -29,7 +30,10 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "lb-nyc cross-env TS_NODE_PROJECT=./src/__tests__/tsconfig.json lb-mocha",
     "pretest:e2e": "npm run compile --ignore-scripts && npm run postcompile",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --grep-invert @screenshot",
+    "test:e2e:screenshot": "docker compose run --rm --build e2e-tests",
+    "test:e2e:screenshot:update": "docker compose run --rm --build e2e-tests-update-screenshots",
+    "test:e2e:screenshot:ci": "docker compose run --build e2e-tests-ci",
     "test:e2e:show-report": "npx playwright show-report .playwright/report",
     "generate:modpack-files": "ts-node src/__tests__/e2e/util/generate-modpack-files.ts"
   },
@@ -80,7 +84,7 @@
     "@loopback/build": "^9.0.10",
     "@loopback/eslint-config": "^14.0.2",
     "@loopback/testlab": "^5.0.10",
-    "@playwright/test": "^1.43.1",
+    "@playwright/test": "^1.52.0",
     "@tsconfig/node16-strictest": "^1.0.4",
     "@tsconfig/strictest": "^2.0.1",
     "@types/electron-devtools-installer": "^2.2.0",
@@ -131,6 +135,7 @@
     "node-sass": "^6.0.1",
     "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
+    "playwright": "^1.52.0",
     "prettier": "^2.8.7",
     "reflect-metadata": "^0.1.13",
     "sass-loader": "^10.2.0",
@@ -142,7 +147,8 @@
     "tsconfig-paths": "^4.0.0",
     "typescript": "~4.9.5",
     "vue-cli-plugin-electron-builder": "~2.1.1",
-    "vue-property-decorator": "^10.0.0-rc.3"
+    "vue-property-decorator": "^10.0.0-rc.3",
+    "xvfb-maybe": "^0.2.1"
   },
   "commitlint": {
     "extends": [

@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+
+# Test output
+.nyc_output
+.playwright
+coverage
+
+# Build directories
+build
+dist
+
+# Mock files
+mock-files
+
+# Docker files
+Dockerfile
+docker-compose.yml
+docker-compose.yaml
+
+.github
+.junie
+.idea
+

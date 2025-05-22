@@ -5,43 +5,25 @@ import {
   MockFilesPaths,
   CloseTestApp,
 } from "./util/setup";
+import {
+  mockPatrons,
+  mockPatreonEndpoint,
+  mockPatreonError,
+  addPatronsToLocalStorage,
+} from "./util/patreon";
+import { Patron } from "../../renderer/services/patreon.service";
 
 test.describe("Patrons", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
   let mockFiles: MockFilesPaths;
 
-  // Mock data for tests
-  const mockPatrons = [
-    {
-      name: "Test Super Patron 1",
-      tier: "Super Patron",
-    },
-    {
-      name: "Test Super Patron 2",
-      tier: "Super Patron",
-    },
-    {
-      name: "Test Patron 1",
-      tier: "Patron",
-    },
-    {
-      name: "Test Patron 2",
-      tier: "Patron",
-    },
-  ];
-
   test.beforeEach(async () => {
     ({ window, closeTestApp, mockFiles } = await startTestApp(test));
     await setModpackAndWaitForAppLoaded(window, mockFiles);
 
     // Mock the API responses
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({ patrons: mockPatrons }),
-      });
-    });
+    await mockPatreonEndpoint(window, { patrons: mockPatrons });
 
     // Clear localStorage before each test to ensure a clean state
     await window.evaluate(() => {
@@ -94,7 +76,7 @@ test.describe("Patrons", () => {
 
   test("should use cached data when available", async () => {
     // First load to populate the cache with a recent timestamp
-    const cachedPatrons = [
+    const cachedPatrons: Patron[] = [
       {
         name: "Cached Super Patron",
         tier: "Super Patron",
@@ -105,24 +87,10 @@ test.describe("Patrons", () => {
       },
     ];
 
-    // Set the cache with a very recent timestamp to ensure it's used
-    await window.evaluate((patrons) => {
-      localStorage.setItem(
-        "patreon.patrons",
-        JSON.stringify({
-          age: Date.now(),
-          content: patrons,
-        })
-      );
-    }, cachedPatrons);
+    await addPatronsToLocalStorage(window, cachedPatrons);
 
     // Mock the patreon endpoint to return an error
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 500,
-        body: "Internal Server Error",
-      });
-    });
+    await mockPatreonError(window);
 
     // Reload the page
     await window.reload();
@@ -141,12 +109,7 @@ test.describe("Patrons", () => {
 
   test("should show error message when patreon API fails", async () => {
     // Mock the patreon API to return an error
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 500,
-        body: "Internal Server Error",
-      });
-    });
+    await mockPatreonError(window);
 
     // Reload the page
     await window.reload();
@@ -182,12 +145,7 @@ test.describe("Patrons", () => {
     }, cachedPatrons);
 
     // Mock the patreon API to return an error
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 500,
-        body: "Internal Server Error",
-      });
-    });
+    await mockPatreonError(window);
 
     // Reload the page
     await window.reload();
@@ -238,12 +196,7 @@ test.describe("Patrons", () => {
     ];
 
     // Mock the patreon API to return the new patrons
-    await window.route("**/api/patreon", (route) => {
-      return route.fulfill({
-        status: 200,
-        body: JSON.stringify({ patrons: newPatrons }),
-      });
-    });
+    await mockPatreonEndpoint(window, { patrons: newPatrons });
 
     // Reload the page
     await window.reload();
