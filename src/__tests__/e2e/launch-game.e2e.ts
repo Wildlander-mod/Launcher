@@ -117,13 +117,19 @@ test.describe("Launch Game", () => {
     await execHandle.evaluate((handle) => handle.waitForExec());
 
     const lockGuiAfterLaunch = await getMO2LockGuiSetting(mockFiles);
-    expect(lockGuiAfterLaunch).toBe(false);
+    expect(
+      lockGuiAfterLaunch,
+      "MO2 lock_gui setting should be disabled when game is launched"
+    ).toBe(false);
 
     await execHandle.evaluate((handle) => handle.resolveExec());
     await waitForClickEventsEnabled(window);
 
     const lockGuiAfterPostLaunch = await getMO2LockGuiSetting(mockFiles);
-    expect(lockGuiAfterPostLaunch).toBe(true);
+    expect(
+      lockGuiAfterPostLaunch,
+      "MO2 lock_gui setting should be restored to enabled after game exit"
+    ).toBe(true);
   });
 
   test("should copy Skyrim launch logs after game completion", async () => {
@@ -156,7 +162,10 @@ test.describe("Launch Game", () => {
     const copiedContent = await fsPromises.readFile(copiedLogPath, "utf-8");
 
     // Assert that the content matches
-    expect(copiedContent).toBe(uniqueContent);
+    expect(
+      copiedContent,
+      "Graphics files should be correctly synced back to preset directory after game completion"
+    ).toBe(uniqueContent);
   });
 
   test("should sync ENB files from game to presets after game completion", async () => {
@@ -196,7 +205,10 @@ test.describe("Launch Game", () => {
     const copiedContent = await fsPromises.readFile(copiedEnbFilePath, "utf-8");
 
     // Assert that the content matches
-    expect(copiedContent).toBe(uniqueContent);
+    expect(
+      copiedContent,
+      "Skyrim launch logs should be correctly copied after game completion"
+    ).toBe(uniqueContent);
   });
 
   test("should sync graphics files from game to profile after game completion", async () => {
@@ -233,6 +245,9 @@ test.describe("Launch Game", () => {
     const copiedContent = await fsPromises.readFile(presetFilePath, "utf-8");
 
     // Assert that the content matches
-    expect(copiedContent).toBe(uniqueContent);
+    expect(
+      copiedContent,
+      "ENB files should be correctly synced back to preset directory after game completion"
+    ).toBe(uniqueContent);
   });
 });

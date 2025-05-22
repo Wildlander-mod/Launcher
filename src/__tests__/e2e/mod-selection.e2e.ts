@@ -165,14 +165,20 @@ test.describe("Mod Selection", () => {
         potatoProfilePath,
         performanceProfilePath
       );
-      expect(performanceProfileMatches).toBe(true);
+      expect(
+        performanceProfileMatches,
+        "Performance profile content should match potato profile content"
+      ).toBe(true);
 
       // Verify the standard profile content matches the high profile
       const standardProfileMatches = await filesExist(
         highProfilePath,
         standardProfilePath
       );
-      expect(standardProfileMatches).toBe(true);
+      expect(
+        standardProfileMatches,
+        "Standard profile content should match high profile content"
+      ).toBe(true);
     });
 
     test("should set default user preferences when a modpack is selected", async () => {
@@ -233,20 +239,29 @@ test.describe("Mod Selection", () => {
 
       // Verify content matches between source and backup directories
       const enbContentMatches = await filesExist(enbPresetsDir, enbBackupDir);
-      expect(enbContentMatches).toBe(true);
+      expect(
+        enbContentMatches,
+        "ENB presets content should be correctly backed up"
+      ).toBe(true);
 
       const graphicsContentMatches = await filesExist(
         graphicsPresetsDir,
         graphicsBackupDir
       );
-      expect(graphicsContentMatches).toBe(true);
+      expect(
+        graphicsContentMatches,
+        "Graphics presets content should be correctly backed up"
+      ).toBe(true);
 
       const profilesContentMatches = await filesExist(
         profilesDir,
         profilesBackupDir,
         ["Skyrim.ini", "SkyrimCustom.ini", "SkyrimPrefs.ini"]
       );
-      expect(profilesContentMatches).toBe(true);
+      expect(
+        profilesContentMatches,
+        "Profile configuration files should be correctly backed up"
+      ).toBe(true);
     });
 
     test("should copy default ENB preset files to game directory when a modpack is first selected", async () => {
@@ -263,7 +278,10 @@ test.describe("Mod Selection", () => {
 
       // Verify that all files from the default ENB preset source directory have been copied to the game directory
       const enbFilesExist = await filesExist(enbSourceDir, gameDir);
-      expect(enbFilesExist).toBe(true);
+      expect(
+        enbFilesExist,
+        "ENB preset files should be copied to the game directory"
+      ).toBe(true);
     });
 
     test("should apply correct resolution-specific configurations when a modpack is first selected", async () => {
@@ -278,7 +296,10 @@ test.describe("Mod Selection", () => {
       expect(displayTweaksIni.Render.Resolution).toBe("1920x1080");
 
       // Check that BorderlessUpscale is set to true (since a 16:9 resolution is selected on a mocked 16:9 screen)
-      expect(displayTweaksIni.Render.BorderlessUpscale).toBe(true);
+      expect(
+        displayTweaksIni.Render.BorderlessUpscale,
+        "BorderlessUpscale should be enabled for 16:9 resolution"
+      ).toBe(true);
 
       // Verify widescreen mods and plugin state for 16:9 resolution
       // Check that the 21:9 resolution support mod is disabled
@@ -286,21 +307,30 @@ test.describe("Mod Selection", () => {
         "Wildlander 21-9 Resolution Support",
         mockFiles
       );
-      expect(is219ModEnabled).toBe(false);
+      expect(
+        is219ModEnabled,
+        "21:9 resolution support mod should be disabled for 16:9 resolution"
+      ).toBe(false);
 
       // Check that the 32:9 resolution support mod is disabled
       const is329ModEnabled = await isModEnabled(
         "Wildlander 32-9 Resolution Support",
         mockFiles
       );
-      expect(is329ModEnabled).toBe(false);
+      expect(
+        is329ModEnabled,
+        "32:9 resolution support mod should be disabled for 16:9 resolution"
+      ).toBe(false);
 
       // Check that the widescreen plugin is disabled
       const isWidescreenPluginEnabled = await isPluginEnabled(
         "widescreen_skyui_fix.esp",
         mockFiles
       );
-      expect(isWidescreenPluginEnabled).toBe(false);
+      expect(
+        isWidescreenPluginEnabled,
+        "Widescreen SkyUI fix plugin should be disabled for 16:9 resolution"
+      ).toBe(false);
     });
 
     test("should apply correct graphics configurations when a modpack is first selected", async () => {
@@ -320,7 +350,10 @@ test.describe("Mod Selection", () => {
 
       // Verify all graphics files were copied correctly
       const graphicsFilesExist = await filesExist(graphicsDir, profileDir);
-      expect(graphicsFilesExist).toBe(true);
+      expect(
+        graphicsFilesExist,
+        "Graphics preset files should be correctly copied to the profile directory"
+      ).toBe(true);
     });
   });
 
