@@ -1,9 +1,5 @@
 import { Page, test, expect } from "@playwright/test";
-import {
-  startTestApp,
-  setModpackAndWaitForAppLoaded,
-  MockFilesPaths,
-} from "./util/setup";
+import { startTestApp, setModpackAndWaitForAppLoaded } from "./util/setup";
 import {
   mockPosts,
   mockPatreonEndpoint,
@@ -15,11 +11,10 @@ import {
 test.describe("News", () => {
   let window: Page;
   let closeTestApp: ReturnType<typeof startTestApp>["closeTestApp"];
-  let mockFiles: MockFilesPaths;
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    ({ window, closeTestApp } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window);
 
     // Mock the API responses
     await mockPatreonEndpoint(window, { posts: mockPosts });

@@ -5,7 +5,12 @@ import {
 } from "./generate-modpack-files";
 import { config } from "./config";
 import fs from "fs/promises";
-import { _electron as electron, Page, test as Test } from "@playwright/test";
+import {
+  _electron as electron,
+  expect,
+  Page,
+  test as Test,
+} from "@playwright/test";
 import type { ElectronApplication } from "playwright";
 import { randomBytes } from "crypto";
 import path from "path";
@@ -192,23 +197,11 @@ export const waitForAppLoaded = async (window: Page): Promise<void> => {
  * This is useful for tests that need to set the modpack directory before loading the app
  *
  * @param window The Playwright page object
- * @param mockFiles The mock files object containing paths
  */
 export const setModpackAndWaitForAppLoaded = async (
-  window: Page,
-  mockFiles: MockFilesPaths
+  window: Page
 ): Promise<void> => {
-  const { mockFilesPath, mockModpackPath } = mockFiles;
-
-  await fs.mkdir(`${mockFilesPath}/config`, { recursive: true });
-  await fs.writeFile(
-    `${mockFilesPath}/config/userPreferences.json`,
-    JSON.stringify({
-      MOD_DIRECTORY: `${mockModpackPath}`,
-    })
-  );
-
-  await waitForAppLoaded(window);
+  await selectFirstModpack(window);
 };
 
 /**
@@ -223,6 +216,34 @@ export const waitForModDirectorySelect = async (
   await window.getByTestId("mod-directory-select").waitFor({
     state: "visible",
   });
+};
+
+/**
+ * Selects the first modpack option from the dropdown and returns its path
+ *
+ * @param window The Playwright page object
+ * @returns The path of the selected modpack
+ */
+export const selectFirstModpack = async (window: Page): Promise<string> => {
+  const modDirectorySelectTestId = "mod-directory-select";
+
+  // Open the dropdown
+  await window.getByTestId(modDirectorySelectTestId).click();
+
+  // Get the first option
+  const firstOption = window
+    .getByTestId(modDirectorySelectTestId)
+    .getByTestId("dropdown-option-0");
+
+  // Get the mod directory path from the first option
+  const modDirectoryPath = await firstOption.textContent();
+
+  // Select the first option
+  await firstOption.click();
+
+  await expect(window.getByTestId("page-home")).toBeVisible();
+
+  return modDirectoryPath;
 };
 
 /**

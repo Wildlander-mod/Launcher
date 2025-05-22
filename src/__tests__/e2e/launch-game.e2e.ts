@@ -81,7 +81,7 @@ test.describe("Launch Game", () => {
     ({ window, closeTestApp, electronApp, mockFiles } = await startTestApp(
       test
     ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
     launchGameButton = window.getByTestId("launch-game");
     execHandle = await replaceChildProcessExecWithMock(electronApp);
   });

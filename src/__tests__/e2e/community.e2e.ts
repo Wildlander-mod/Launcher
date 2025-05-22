@@ -2,7 +2,6 @@ import { Page, test, expect } from "@playwright/test";
 import {
   startTestApp,
   setModpackAndWaitForAppLoaded,
-  MockFilesPaths,
   CloseTestApp,
 } from "./util/setup";
 import { PAGES, navigateAndWait } from "./util/navigation";
@@ -10,7 +9,6 @@ import { PAGES, navigateAndWait } from "./util/navigation";
 test.describe("Community", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
-  let mockFiles: MockFilesPaths;
 
   // Define test data for better organization and maintainability
   const links = [
@@ -24,8 +22,8 @@ test.describe("Community", () => {
   ];
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    ({ window, closeTestApp } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window);
 
     // Navigate to the Community page
     await navigateAndWait(window, PAGES.COMMUNITY);

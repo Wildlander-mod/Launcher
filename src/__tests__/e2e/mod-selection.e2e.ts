@@ -3,6 +3,7 @@ import {
   CloseTestApp,
   createMockFiles,
   MockFilesPaths,
+  selectFirstModpack,
   setModpackAndWaitForAppLoaded,
   startTestApp,
   waitForModDirectorySelect,
@@ -30,31 +31,6 @@ import {
   isPluginEnabled,
   getDisplayTweaksIni,
 } from "./util/modlist";
-
-/**
- * Selects the first modpack option from the dropdown and returns its path
- */
-async function selectFirstModpack(window: Page): Promise<string> {
-  const modDirectorySelectTestId = "mod-directory-select";
-
-  // Open the dropdown
-  await window.getByTestId(modDirectorySelectTestId).click();
-
-  // Get the first option
-  const firstOption = window
-    .getByTestId(modDirectorySelectTestId)
-    .getByTestId("dropdown-option-0");
-
-  // Get the mod directory path from the first option
-  const modDirectoryPath = await firstOption.textContent();
-
-  // Select the first option
-  await firstOption.click();
-
-  await expect(window.getByTestId("page-home")).toBeVisible();
-
-  return modDirectoryPath;
-}
 
 test.describe("Mod Selection", () => {
   let window: Page;
@@ -383,7 +359,7 @@ test.describe("Mod Selection", () => {
         mockFiles.mockAppDataLocalPath
       );
 
-      await setModpackAndWaitForAppLoaded(window, mockFiles);
+      await setModpackAndWaitForAppLoaded(window);
     });
 
     test.afterEach(async () => {

@@ -2,7 +2,6 @@ import { Page, test, expect } from "@playwright/test";
 import {
   startTestApp,
   setModpackAndWaitForAppLoaded,
-  MockFilesPaths,
   CloseTestApp,
 } from "./util/setup";
 import {
@@ -16,11 +15,10 @@ import { Patron } from "../../renderer/services/patreon.service";
 test.describe("Patrons", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
-  let mockFiles: MockFilesPaths;
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    ({ window, closeTestApp } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window);
 
     // Mock the API responses
     await mockPatreonEndpoint(window, { patrons: mockPatrons });

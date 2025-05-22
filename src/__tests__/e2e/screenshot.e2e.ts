@@ -1,7 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import {
   CloseTestApp,
-  MockFilesPaths,
   setModpackAndWaitForAppLoaded,
   startTestApp,
 } from "./util/setup";
@@ -19,18 +18,14 @@ import {
 test.describe("UI Visual Regression", { tag: "@screenshot" }, () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
-  let mockFiles: MockFilesPaths;
 
   test.afterEach(async () => {
     await closeTestApp();
   });
 
   test("should match the visual snapshot after modpack selection", async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(
-      test,
-      "modpack-path-home"
-    ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    ({ window, closeTestApp } = await startTestApp(test, "modpack-path-home"));
+    await setModpackAndWaitForAppLoaded(window);
 
     await mockPatreonEndpoint(window);
 
@@ -47,22 +42,22 @@ test.describe("UI Visual Regression", { tag: "@screenshot" }, () => {
   });
 
   test("should match the visual snapshot of the Community page", async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(
+    ({ window, closeTestApp } = await startTestApp(
       test,
       "modpack-path-community"
     ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
 
     await navigateAndWait(window, PAGES.COMMUNITY);
     await expect(window).toHaveScreenshot("community-page.png");
   });
 
   test("should match the visual snapshot of the Advanced page", async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(
+    ({ window, closeTestApp } = await startTestApp(
       test,
       "modpack-path-advanced"
     ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
 
     await navigateAndWait(window, PAGES.ADVANCED);
     await expect(window).toHaveScreenshot("advanced-page.png");

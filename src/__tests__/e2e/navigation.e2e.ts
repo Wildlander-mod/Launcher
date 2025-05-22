@@ -14,7 +14,7 @@ test.describe("Navigation", () => {
 
   test.beforeEach(async () => {
     ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
   });
 
   test.afterEach(async () => {

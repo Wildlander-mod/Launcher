@@ -2,14 +2,12 @@ import { expect, Page, test } from "@playwright/test";
 import {
   startTestApp,
   setModpackAndWaitForAppLoaded,
-  MockFilesPaths,
   CloseTestApp,
 } from "./util/setup";
 
 test.describe("Header", () => {
   let window: Page;
   let closeTestApp: CloseTestApp;
-  let mockFiles: MockFilesPaths;
 
   // Define test data for better organization and maintainability
   const links = [
@@ -20,8 +18,8 @@ test.describe("Header", () => {
   ];
 
   test.beforeEach(async () => {
-    ({ window, closeTestApp, mockFiles } = await startTestApp(test));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    ({ window, closeTestApp } = await startTestApp(test));
+    await setModpackAndWaitForAppLoaded(window);
   });
 
   test.afterEach(async () => {

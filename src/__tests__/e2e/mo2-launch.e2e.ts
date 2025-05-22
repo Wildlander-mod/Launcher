@@ -69,7 +69,7 @@ test.describe("MO2 Launch", () => {
     ({ window, closeTestApp, electronApp, mockFiles } = await startTestApp(
       test
     ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
 
     const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
     launchButton = advancedPage.getByTestId("launch-mo2");

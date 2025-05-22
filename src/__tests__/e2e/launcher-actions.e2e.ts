@@ -23,7 +23,7 @@ test.describe("Launcher actions", () => {
     ({ electronApp, closeTestApp, window, mockFiles } = await startTestApp(
       test
     ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
   });
 
   test.describe("Advanced", () => {

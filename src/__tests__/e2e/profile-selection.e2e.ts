@@ -29,7 +29,7 @@ test.describe("Profiles", () => {
     ({ window, closeTestApp, mockFiles, electronApp } = await startTestApp(
       test
     ));
-    await setModpackAndWaitForAppLoaded(window, mockFiles);
+    await setModpackAndWaitForAppLoaded(window);
   });
 
   test.afterEach(async () => {
