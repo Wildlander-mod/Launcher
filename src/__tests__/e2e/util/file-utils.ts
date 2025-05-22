@@ -28,11 +28,13 @@ export const fileContains = async (
  *
  * @param sourceDir The source directory path
  * @param destDir The destination directory path
+ * @param ignoreFiles Optional array of filenames to ignore in the comparison
  * @returns A promise that resolves to true if all files exist and match, false otherwise
  */
 export const filesExist = async (
   sourceDir: string,
-  destDir: string
+  destDir: string,
+  ignoreFiles: string[] = []
 ): Promise<boolean> => {
   try {
     const files = await getFilesRecursively(sourceDir);
@@ -40,6 +42,9 @@ export const filesExist = async (
     const checks = await Promise.all(
       files.map(async (file) => {
         const relativePath = path.relative(sourceDir, file);
+        if (ignoreFiles.includes(path.basename(file))) {
+          return true;
+        }
         const destPath = path.join(destDir, relativePath);
 
         try {
@@ -49,18 +54,23 @@ export const filesExist = async (
             fs.readFile(destPath),
           ]);
           return sourceContent.equals(destContent);
-        } catch {
+        } catch (error) {
+          console.error(`Error checking files ${file} and ${destPath}:`, error);
           return false;
         }
       })
     );
 
     return checks.every(Boolean);
-  } catch {
+  } catch (error) {
+    console.error("Error checking files existence:", {
+      sourceDir,
+      destDir,
+      error: error instanceof Error ? error.message : error,
+    });
     return false;
   }
 };
-
 /**
  * Recursively checks if all files from a source directory do NOT exist in a destination directory.
  * This is useful for verifying that files have been completely removed.
@@ -83,10 +93,10 @@ export const filesDoNotExist = async (
 
         try {
           await fs.access(destPath);
-          // File exists, which means it wasn't removed
+          // File exists
           return false;
         } catch {
-          // File doesn't exist, which is what we want
+          // File doesn't exist
           return true;
         }
       })
@@ -94,11 +104,15 @@ export const filesDoNotExist = async (
 
     // Return true only if ALL files do NOT exist
     return checks.every(Boolean);
-  } catch {
+  } catch (error) {
+    console.error("Error checking files non-existence:", {
+      sourceDir,
+      destDir,
+      error: error instanceof Error ? error.message : error,
+    });
     return false;
   }
 };
-
 /**
  * Recursively gets all file paths in a directory
  *

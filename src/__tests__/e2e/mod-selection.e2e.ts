@@ -1,22 +1,60 @@
 import { expect, Page, test } from "@playwright/test";
 import {
   CloseTestApp,
-  MockFilesPaths,
   createMockFiles,
+  MockFilesPaths,
   setModpackAndWaitForAppLoaded,
   startTestApp,
   waitForModDirectorySelect,
 } from "./util/setup";
 import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
-import { mockErrorDialog } from "./util/mocks";
+import { mockErrorDialog, mockScreenResolution } from "./util/mocks";
 import { waitForDialogShown } from "./util/app-state";
 import fs from "fs";
+import fsPromises from "fs/promises";
 import {
   createDirectoryStructure,
   createWabbajackInstallSettings,
 } from "./util/generate-modpack-files";
-import { PAGES, navigateAndWait } from "./util/navigation";
+import { navigateAndWait, PAGES } from "./util/navigation";
+import { filesExist } from "./util/file-utils";
+import path from "path";
+import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { ENB_PRESETS } from "./util/enb";
+import { PROFILES } from "./util/profile";
+import { GRAPHICS_PRESETS } from "./util/graphics";
+import type { Resolution } from "../../shared/types/Resolution";
+import {
+  isModEnabled,
+  isPluginEnabled,
+  getDisplayTweaksIni,
+} from "./util/modlist";
+
+/**
+ * Selects the first modpack option from the dropdown and returns its path
+ */
+async function selectFirstModpack(window: Page): Promise<string> {
+  const modDirectorySelectTestId = "mod-directory-select";
+
+  // Open the dropdown
+  await window.getByTestId(modDirectorySelectTestId).click();
+
+  // Get the first option
+  const firstOption = window
+    .getByTestId(modDirectorySelectTestId)
+    .getByTestId("dropdown-option-0");
+
+  // Get the mod directory path from the first option
+  const modDirectoryPath = await firstOption.textContent();
+
+  // Select the first option
+  await firstOption.click();
+
+  await expect(window.getByTestId("page-home")).toBeVisible();
+
+  return modDirectoryPath;
+}
 
 test.describe("Mod Selection", () => {
   let window: Page;
@@ -52,21 +90,7 @@ test.describe("Mod Selection", () => {
     });
 
     test("should select a mod directory from the initial selection", async () => {
-      const modDirectorySelectTestId = "mod-directory-select";
-
-      // Get the mod directory path from the first option
-      await window.getByTestId(modDirectorySelectTestId).click();
-      const firstOption = window
-        .getByTestId(modDirectorySelectTestId)
-        .getByTestId("dropdown-option-0");
-
-      const modDirectoryPath = await firstOption.textContent();
-
-      // Select the first option
-      await firstOption.click();
-
-      // Verify we're redirected to the home page after selection
-      await expect(window.getByTestId("page-home")).toBeVisible();
+      const modDirectoryPath = await selectFirstModpack(window);
 
       // Get the user preferences
       const userPreferences = await getUserPreferences(mockFiles.mockFilesPath);
@@ -109,6 +133,194 @@ test.describe("Mod Selection", () => {
       const userPreferencesPath = `${mockFiles.mockFilesPath}/config/userPreferences.json`;
       const fileContents = fs.readFileSync(userPreferencesPath, "utf-8");
       expect(JSON.parse(fileContents)).toEqual({});
+    });
+
+    test("should automatically create graphics profiles when a modpack is selected", async () => {
+      const modDirectoryPath = await selectFirstModpack(window);
+      const profilesDirectory = path.join(modDirectoryPath, "profiles");
+      const standardProfilePath = path.join(
+        profilesDirectory,
+        "0_Wildlander-STANDARD"
+      );
+      const performanceProfilePath = path.join(
+        profilesDirectory,
+        "0_Wildlander-PERFORMANCE"
+      );
+      const potatoProfilePath = path.join(
+        profilesDirectory,
+        "1_Wildlander-POTATO"
+      );
+      const highProfilePath = path.join(profilesDirectory, "1_Wildlander-HIGH");
+
+      // Verify the new profile directories have been created
+      expect(async () => {
+        await fsPromises.access(standardProfilePath);
+      }).not.toThrow();
+      expect(async () => {
+        await fsPromises.access(performanceProfilePath);
+      }).not.toThrow();
+
+      // Verify the performance profile content matches the potato profile
+      const performanceProfileMatches = await filesExist(
+        potatoProfilePath,
+        performanceProfilePath
+      );
+      expect(performanceProfileMatches).toBe(true);
+
+      // Verify the standard profile content matches the high profile
+      const standardProfileMatches = await filesExist(
+        highProfilePath,
+        standardProfilePath
+      );
+      expect(standardProfileMatches).toBe(true);
+    });
+
+    test("should set default user preferences when a modpack is selected", async () => {
+      await mockScreenResolution(electronApp, { width: 1920, height: 1080 });
+
+      const modDirectoryPath = await selectFirstModpack(window);
+
+      const userPreferences = await getUserPreferences(mockFiles.mockFilesPath);
+
+      // Verify the mod directory is set correctly
+      expect(userPreferences[USER_PREFERENCE_KEYS.MOD_DIRECTORY]).toBe(
+        modDirectoryPath
+      );
+
+      // Verify the ENB profile is set to the default value
+      expect(userPreferences[USER_PREFERENCE_KEYS.ENB_PROFILE]).toBe(
+        ENB_PRESETS.ULTRA.value
+      );
+
+      // Verify the profile is set to the default value
+      expect(userPreferences[USER_PREFERENCE_KEYS.PRESET]).toBe(
+        PROFILES.STANDARD.value
+      );
+
+      // Verify the resolution is set to the mocked screen resolution
+      const resolution = userPreferences[
+        USER_PREFERENCE_KEYS.RESOLUTION
+      ] as Resolution;
+      expect(resolution).toEqual({
+        width: 1920,
+        height: 1080,
+      });
+
+      // Verify the graphics preset is set to the default value
+      expect(userPreferences[USER_PREFERENCE_KEYS.GRAPHICS]).toBe(
+        GRAPHICS_PRESETS.ULTRA.value
+      );
+    });
+
+    test("should backup assets when a modpack is first selected", async () => {
+      const modDirectoryPath = await selectFirstModpack(window);
+
+      // Define source and backup directories
+      const launcherDir = path.join(modDirectoryPath, "launcher");
+      const backupsDir = path.join(launcherDir, "_backups");
+
+      // ENB presets
+      const enbPresetsDir = path.join(launcherDir, "ENB Presets");
+      const enbBackupDir = path.join(backupsDir, "ENB Presets");
+
+      // Graphics presets
+      const graphicsPresetsDir = path.join(launcherDir, "Graphics Presets");
+      const graphicsBackupDir = path.join(backupsDir, "graphics");
+
+      // Profiles
+      const profilesDir = path.join(modDirectoryPath, "profiles");
+      const profilesBackupDir = path.join(backupsDir, "profiles");
+
+      // Verify content matches between source and backup directories
+      const enbContentMatches = await filesExist(enbPresetsDir, enbBackupDir);
+      expect(enbContentMatches).toBe(true);
+
+      const graphicsContentMatches = await filesExist(
+        graphicsPresetsDir,
+        graphicsBackupDir
+      );
+      expect(graphicsContentMatches).toBe(true);
+
+      const profilesContentMatches = await filesExist(
+        profilesDir,
+        profilesBackupDir,
+        ["Skyrim.ini", "SkyrimCustom.ini", "SkyrimPrefs.ini"]
+      );
+      expect(profilesContentMatches).toBe(true);
+    });
+
+    test("should copy default ENB preset files to game directory when a modpack is first selected", async () => {
+      const modDirectoryPath = await selectFirstModpack(window);
+
+      const defaultEnbPreset = ENB_PRESETS.ULTRA.value;
+      const launcherDir = path.join(modDirectoryPath, "launcher");
+      const enbSourceDir = path.join(
+        launcherDir,
+        "ENB Presets",
+        defaultEnbPreset
+      );
+      const gameDir = path.join(modDirectoryPath, "Stock Game");
+
+      // Verify that all files from the default ENB preset source directory have been copied to the game directory
+      const enbFilesExist = await filesExist(enbSourceDir, gameDir);
+      expect(enbFilesExist).toBe(true);
+    });
+
+    test("should apply correct resolution-specific configurations when a modpack is first selected", async () => {
+      await mockScreenResolution(electronApp, { width: 1920, height: 1080 });
+
+      await selectFirstModpack(window);
+
+      // Verify SSEDisplayTweaks.ini has been updated with the correct resolution
+      const displayTweaksIni = await getDisplayTweaksIni(mockFiles);
+
+      // Check that the resolution matches the mocked screen resolution
+      expect(displayTweaksIni.Render.Resolution).toBe("1920x1080");
+
+      // Check that BorderlessUpscale is set to true (since a 16:9 resolution is selected on a mocked 16:9 screen)
+      expect(displayTweaksIni.Render.BorderlessUpscale).toBe(true);
+
+      // Verify widescreen mods and plugin state for 16:9 resolution
+      // Check that the 21:9 resolution support mod is disabled
+      const is219ModEnabled = await isModEnabled(
+        "Wildlander 21-9 Resolution Support",
+        mockFiles
+      );
+      expect(is219ModEnabled).toBe(false);
+
+      // Check that the 32:9 resolution support mod is disabled
+      const is329ModEnabled = await isModEnabled(
+        "Wildlander 32-9 Resolution Support",
+        mockFiles
+      );
+      expect(is329ModEnabled).toBe(false);
+
+      // Check that the widescreen plugin is disabled
+      const isWidescreenPluginEnabled = await isPluginEnabled(
+        "widescreen_skyui_fix.esp",
+        mockFiles
+      );
+      expect(isWidescreenPluginEnabled).toBe(false);
+    });
+
+    test("should apply correct graphics configurations when a modpack is first selected", async () => {
+      const modDirectoryPath = await selectFirstModpack(window);
+
+      const graphicsDir = path.join(
+        modDirectoryPath,
+        "launcher",
+        "Graphics Presets",
+        GRAPHICS_PRESETS.ULTRA.value
+      );
+      const profileDir = path.join(
+        modDirectoryPath,
+        "profiles",
+        PROFILES.STANDARD.value
+      );
+
+      // Verify all graphics files were copied correctly
+      const graphicsFilesExist = await filesExist(graphicsDir, profileDir);
+      expect(graphicsFilesExist).toBe(true);
     });
   });
 

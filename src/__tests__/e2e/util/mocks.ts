@@ -9,6 +9,7 @@ import {
   ProcessKillBinding,
 } from "../../../main/bindings/process-kill.binding";
 import { ConfigBinding } from "../../../main/bindings/config.binding";
+import type { Resolution } from "../../../shared/types/Resolution";
 
 /**
  * Mocks the dialog.showErrorBox method in Electron
@@ -299,3 +300,31 @@ export async function mockUserPreferencesStore(
     });
   }, ConfigBinding.key);
 }
+
+/**
+ * Helper function to mock the screen resolution
+ * @param electronApp The Electron application instance
+ * @param resolution The resolution object with width and height properties
+ */
+export const mockScreenResolution = async (
+  electronApp: ElectronApplication,
+  resolution: Resolution
+) => {
+  // Mock the screen.getPrimaryDisplay method to return the specified resolution
+  await electronApp.evaluate(({ screen }, { width, height }) => {
+    const originalGetPrimaryDisplay = screen.getPrimaryDisplay;
+
+    // Override the getPrimaryDisplay method
+    screen.getPrimaryDisplay = () => {
+      // Create a mock display with the specified resolution
+      return {
+        ...originalGetPrimaryDisplay(),
+        size: {
+          width,
+          height,
+        },
+        scaleFactor: 1,
+      };
+    };
+  }, resolution);
+};
