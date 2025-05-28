@@ -26,6 +26,9 @@ export default defineConfig({
     ? 1
     : 3,
 
+  /* Enable automatic project-based sharding */
+  shard: process.env.SHARD ? JSON.parse(process.env.SHARD) : undefined,
+
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env["CI"],
   /* Retry on CI only */
@@ -39,7 +42,9 @@ export default defineConfig({
         open: "never",
       },
     ],
-    ...(process.env["CI"] ? [["github"]] : []),
+    ...(process.env["CI"]
+      ? [["github"], ["blob", { outputDir: ".playwright/blob-report" }]]
+      : []),
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
