@@ -19,7 +19,7 @@ RUN groupadd -r ${APP_USER} && \
 # Install xvfb to support virtual display for Electron
 RUN apt-get update && \
     apt-get install -y curl gnupg xvfb build-essential && \
-    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
 WORKDIR ${APP_HOME}

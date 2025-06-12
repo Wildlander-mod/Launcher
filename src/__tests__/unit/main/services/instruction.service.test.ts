@@ -9,8 +9,8 @@ import { ProfileService } from "@/main/services/profile.service";
 import { WabbajackService } from "@/main/services/wabbajack.service";
 import type { ElectronLog } from "electron-log";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { mockDirent } from "@/__tests__/unit/helpers/mocks/dirent.mock";
 import mockFs from "mock-fs";
+import { Dirent } from "fs-extra";
 import fs from "fs/promises";
 import os from "os";
 import type { AdditionalInstructions } from "@/shared/types/additional-instructions";
@@ -24,8 +24,10 @@ describe("Instruction service #main #service", () => {
   let mockProfileService: StubbedInstanceWithSinonAccessor<ProfileService>;
   let mockWabbajackService: StubbedInstanceWithSinonAccessor<WabbajackService>;
   let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockDirent: Omit<Dirent, "name">;
 
   beforeEach(() => {
+    mockDirent = createStubInstance(Dirent);
     mockProfileService = createStubInstance(ProfileService);
     mockWabbajackService = createStubInstance(WabbajackService);
     mockLogger = getMockLogger();

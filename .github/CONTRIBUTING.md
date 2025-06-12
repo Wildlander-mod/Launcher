@@ -2,7 +2,7 @@
 
 ## Install dependencies
 
-_Note: currently only supports Node 16 and requires python 2.7_
+_Note: currently only supports Node 18 and requires python 2.7_
 
 ### Install python
 
