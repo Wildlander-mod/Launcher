@@ -14,11 +14,11 @@ module.exports = {
       externals: Object.keys(dependencies),
       bundleMainProcess: false,
       mainProcessFile: "dist/main.js",
-      rendererProcessFile: "src/renderer/index.ts",
+      rendererProcessFile: "src/renderer/src/index.ts",
       outputDir: "dist",
       builderOptions: {
         productName: "Wildlander Launcher",
-        icon: "public/images/logos/wildlander-icon-light.png",
+        icon: "src/renderer/src/assets/images/logos/wildlander-icon-light.png",
         publish: {
           provider: "github",
           releaseType: "release",
@@ -31,6 +31,11 @@ module.exports = {
           {
             from: "../main",
             to: "./main",
+            filter: ["!*.map*"],
+          },
+          {
+            from: "../preload",
+            to: "./preload",
             filter: ["!*.map*"],
           },
           {
@@ -50,7 +55,7 @@ module.exports = {
         ],
         extraResources: [
           {
-            from: "./src/assets/tools",
+            from: "./resources/tools/",
             to: "tools",
             filter: ["**/*"],
           },

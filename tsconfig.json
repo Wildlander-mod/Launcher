@@ -24,6 +24,9 @@
       "path": "./src/main"
     },
     {
+      "path": "./src/preload"
+    },
+    {
       "path": "./src/shared"
     },
     {

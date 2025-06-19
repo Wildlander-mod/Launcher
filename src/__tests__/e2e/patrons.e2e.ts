@@ -10,7 +10,7 @@ import {
   mockPatreonError,
   addPatronsToLocalStorage,
 } from "./util/patreon";
-import { Patron } from "../../renderer/services/patreon.service";
+import { Patron } from "../../renderer/src/services/patreon.service";
 
 test.describe("Patrons", () => {
   let window: Page;

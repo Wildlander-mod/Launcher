@@ -99,8 +99,6 @@ describe("Modpack service #main #service", () => {
     it("should get the modpack metadata", async () => {
       expect(modpackService.getModpackMetadata()).to.deepEqual({
         name: "Wildlander",
-        logo: "/images/logos/wildlander-full-light.svg",
-        backgroundImage: "/images/default-background.png",
         website: "https://www.wildlandermod.com",
         wiki: "https://wiki.wildlandermod.com/",
         patreon: "https://www.patreon.com/dylanbperry",

@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "outDir": "../../dist/preload",
+    "resolveJsonModule": true
+  },
+  "include": ["./index.ts"],
+  "references": [
+    {
+      "path": "../main"
+    }
+  ]
+}

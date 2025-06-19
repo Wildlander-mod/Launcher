@@ -1,93 +1,212 @@
-Follow all generic and project specific instructions in this document.
+# Junie Development Guidelines
 
-# Generic Instructions
+## Core Principles
 
-## Code Quality Practices
+### 1. TypeScript Strict Settings
 
-- Always prioritize clean, readable, and maintainable code when working with Junie AI
-- Prefer `const` over `let` where possible to ensure immutability
-- Always declare variables at the lowest scope possible to prevent polluting the outer scope
-- Only suggest upgrading libraries when absolutely necessary for functionality
-- Avoid unnecessary comments that just repeat what the code already clearly expresses. Do not add a comment if the method name that is being called is clear.
+- **Always follow TypeScript strict settings** in all projects
 
-## TypeScript Practices
+### 2. Plan-First Development Approach
 
-- Adhere to TypeScript strict settings as configured in the project
-- Avoid using `any` type to maintain type safety and code quality
+- **Junie's DEFAULT behavior is to ONLY create plans and then STOP**
+- **Junie must NEVER proceed with implementation unless explicitly told to do so**
+- **Never proceed with implementation until the plan is approved**
+- **Implementation is NOT part of Junie's default workflow - it requires explicit instruction**
+- Plans must be comprehensive and detailed before any code changes
+- Implementation should only begin after explicit approval of the plan
 
-## Code Generation Instructions
+### 3. Plan Management
 
-- Remove any output or script files used solely by Junie, including those from previous steps
-- When iterating on changes, ensure old unused implementations are properly removed
-- When renaming files, always remove the old unused versions to maintain a clean codebase and prevent confusion or
-  potential bugs from having multiple versions of the same functionality
-- After each code generation, run appropriate tests to validate your changes (see Validation Workflow below)
-- After each code generation, validate your code with the appropriate linting tools
-- Avoid inserting code between a comment and the method or section it is referencing
+- **Always create a plan stored as markdown in `.junie/plans/`**
+- Plans should be updated as Junie makes progress
+- **Plans should be updated after implementation to include implementation details**
+- **Plans should be kept local and not committed to version control**
 
-## Testing Instructions
+## Plan Structure Requirements
 
-- Focus on clear, concise tests that verify functionality rather than implementation details
-- Design each test to be specific with a single, focused assertion when possible
-- Always use descriptive test names that clearly communicate the test's purpose
-- Avoid testing implementation details that may change frequently and lead to brittle tests
-- When writing tests, consider edge cases, boundary conditions, and error scenarios
-- Always run all tests before submitting code changes to ensure no regressions
-- Ensure that tests always focus on the behaviour of the code being tested
-- Do not use divs when adding test IDs, use span or other inline elements that do not impact styling instead
-- Do not add comments that simply restate what the test assertion already clearly shows
-- Tests are considered a failure if they show "x failed" even if they also show "y passed" at the end
+Based on the reference `.junie/plan.md`, all plans must include the following sections:
 
-## Validation Workflow Instructions
+### Required Plan Sections
 
-- First attempt to run tests natively in the IDE before using command line test commands
-- After generating code with Junie, always validate your changes by running appropriate tests.
-- First, limit your tests to the specific area of code you modified. If only one e2e tests file has been changed, only
-  run the tests for that file.
-- After validating the specific tests, run all tests to ensure overall functionality unless the change was to a single
-  test file and nothing else.
-- When tests fail:
-    - Analyze failure messages carefully to identify root causes
-    - Make targeted modifications to address specific issues
-    - Re-run failing tests to verify your fixes
-    - Once fixed, run all tests to ensure complete validation
-    - Repeat the test-fix-validate cycle until all tests pass successfully
-    - Ensure that coverage thresholds defined in the test output are always met before finalizing changes.
+#### 1. **Overview**
 
-# Project-Specific Instructions
+- Brief description of the task/feature/refactoring
+- High-level goals and objectives
 
-## Test Environment Instructions
+#### 2. **Current State Analysis**
 
-- The project uses both e2e tests and unit tests.
-- For detailed debugging with e2e tests, use: `DEBUG=true npm run test:e2e`
-- Test coverage information from e2e and unit tests helps identify untested code paths
-- When expected code paths aren't covered, add specific tests to improve coverage
+- Analysis of existing code/system
+- Identification of current issues or areas for improvement
+- Assessment of existing components, files, and structure
 
-## Project Commands
+#### 3. **Implementation Plan**
 
-- Lint - `npm run lint`
-- Fix lint issues - `npm run lint:fix`
-- All tests (unit and e2e) - `npm run test`
-- Unit tests - `npm run test:unit`
-- E2E tests - `npm run test:e2e`
+- Detailed phases with numbered tasks
+- Clear task breakdown with sub-tasks
+- Progress tracking with checkmarks (✓ for completed, ! for failed, * for in progress)
+- Each phase should have specific deliverables
 
-## E2E Testing Instructions
+#### 4. **File Structure (Target)**
 
-- Tests are implemented with Playwright.
-- Always use data-testids and `window.getByTestId` when selecting elements
-- Exception: When testing user actions like clicking text, you may use that text explicitly
-- If a needed data-testid doesn't exist, add it to the relevant file
-- If a test times out trying to load http://localhost:8080/#/auto-update it means that the page has reloaded too quick
-  before it loaded the application.
-- When analyzing test results, scan the ENTIRE output for failure indicators, not just the final summary
-- ANY occurrence of "x failed" or "Error:" in the output indicates test failures that must be addressed
-- Test timeouts (e.g., "Timed out 5000ms waiting for...") are considered failures
-- Never report tests as passing if there are ANY failure messages in the output
-- When tests fail, always include the specific error messages and stack traces in your analysis
-- The presence of both "x failed" and "y passed" in the output means the tests have failed
+- Clear representation of the intended file/directory structure
+- Use code blocks with tree structure visualization
+- Show both existing and new files
 
-## Project Concepts
+#### 5. **Key Principles**
 
-The main and renderer process communicate via the ipc handler. All events are defined in .events files.
-If a renderer method calls the service with an event name, that name can be used to find the associated controller in
-the main process.
+- List of guiding principles for the implementation
+- Best practices to follow
+- Design patterns or architectural decisions
+
+#### 6. **Success Criteria**
+
+- Measurable outcomes that define completion
+- Testing requirements
+- Performance or quality benchmarks
+
+#### 7. **Implementation Summary** (Post-Implementation)
+
+- Summary of what was accomplished
+- Key benefits achieved
+- Any deviations from the original plan
+- Lessons learned
+
+#### 8. **Notes**
+
+- Important considerations
+- Dependencies or prerequisites
+- Risk mitigation strategies
+
+### Plan Formatting Guidelines
+
+#### Task Tracking
+
+- Use `[✓]` for completed tasks
+- Use `[!]` for failed tasks
+- Use `[*]` for tasks in progress
+- Use `[ ]` for pending tasks
+- Maintain hierarchical progress tracking (parent tasks reflect sub-task status)
+
+#### Code Examples
+
+- Use proper markdown code blocks with language specification
+- Include file paths and line numbers when relevant
+- Show before/after comparisons when applicable
+
+#### File References
+
+- Always use full file paths
+- Use backticks for inline file references
+- Group related files logically
+
+## Workflow Process
+
+### Phase 1: Planning (Junie's Default Behavior)
+
+1. **Create comprehensive plan** in `.junie/plans/[task-name].md`
+2. **Include all required sections** as outlined above
+3. **STOP and wait for explicit approval** - do NOT proceed to implementation
+4. **This is where Junie's default workflow ends** - implementation requires separate instruction
+5. **Address feedback** and update plan if necessary
+
+### Phase 2: Implementation (Only After Approval)
+
+1. **Follow the approved plan** step by step
+2. **Update plan progress** as tasks are completed
+3. **Document any deviations** from the original plan
+4. **Test thoroughly** at each milestone
+
+### Phase 3: Post-Implementation
+
+1. **Update plan with implementation details**
+2. **Complete the Implementation Summary section**
+3. **Document lessons learned and best practices**
+4. **Run all tests** to ensure the implementation doesn't break existing functionality
+5. **Make a commit using conventional commit format** to document the successful implementation
+6. **Archive or organize plans** for future reference
+
+## Quality Standards
+
+### Code Quality
+
+- All code must pass TypeScript strict checks
+- Follow established coding standards and conventions
+- Include proper error handling and edge case management
+- Write comprehensive tests for new functionality
+
+### Documentation
+
+- Plans must be clear, detailed, and actionable
+- Use proper markdown formatting
+- Include diagrams or visual aids when helpful
+- Keep plans updated and accurate
+
+### Testing
+
+- All implementations must include appropriate tests
+- Existing tests must continue to pass
+- Edge cases and error scenarios must be covered
+- Performance implications should be considered
+
+## Plan Storage and Organization
+
+### Directory Structure
+
+```
+.junie/
+├── guidelines.md (this file)
+├── plans/
+│   ├── [task-name].md
+│   ├── [feature-name].md
+│   └── archived/
+│       └── [completed-tasks].md
+└── templates/
+    └── plan-template.md
+```
+
+### Naming Conventions
+
+- Use kebab-case for plan file names
+- Include date prefix for time-sensitive plans: `2024-01-15-feature-name.md`
+- Use descriptive names that clearly indicate the scope
+
+## Best Practices
+
+### Planning Best Practices
+
+- Break down complex tasks into manageable phases
+- Consider dependencies and prerequisites
+- Plan for testing and validation
+- Include rollback strategies for risky changes
+
+### Implementation Best Practices
+
+- Follow the plan strictly unless approved deviations occur
+- Test incrementally as you progress
+- Update documentation alongside code changes
+- Maintain clean commit history with descriptive messages
+- **Always run `npm run lint:fix` at the end of each implementation block and fix any linting issues that arise**
+
+### Version Control Best Practices
+
+- **Commit regularly** every time there is a working implementation with passing tests and linting passing
+- Maintain clean commit history with descriptive messages
+- Follow established branching strategies and workflows
+- Include meaningful commit messages that explain the "why" behind changes
+
+### Communication Best Practices
+
+- Plans should be self-explanatory to other developers
+- Use clear, concise language
+- Include context and rationale for decisions
+- Document assumptions and constraints
+
+## Compliance
+
+All Junie development work must adhere to these guidelines. Any deviations must be:
+
+1. Documented with clear justification
+2. Approved by appropriate stakeholders
+3. Updated in the relevant plan documentation
+
+These guidelines ensure consistent, high-quality development practices and maintainable project documentation.

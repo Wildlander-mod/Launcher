@@ -97,7 +97,7 @@ export class WindowService {
           // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
           nodeIntegration: false,
           contextIsolation: true,
-          preload: path.join(appRoot, "main/preload.js"),
+          preload: path.join(appRoot, "preload/index.js"),
         },
       });
     } catch (error) {

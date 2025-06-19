@@ -11,7 +11,7 @@
     "prestart": "npm run compile",
     "start": "vue-cli-service electron:serve",
     "start:dev": "nodemon",
-    "start:renderer": "vue-cli-service serve src/renderer/index.ts",
+    "start:renderer": "vue-cli-service serve src/renderer/src/index.ts",
     "start:main": "electron dist/main.js",
     "prebuild": "npm run compile",
     "build": "vue-cli-service electron:build",

@@ -8,7 +8,7 @@
     "src/main/controllers/**/*",
     "src/renderer/**/*",
     "src/main.ts",
-    "src/main/preload.ts",
+    "src/preload/index.ts",
     "src/main/application.ts",
     "src/main/logger.ts"
   ],
