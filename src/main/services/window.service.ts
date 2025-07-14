@@ -160,18 +160,24 @@ export class WindowService {
   }
 
   async navigateInWindow(url: string) {
-    // If the browser window is already open, a URL change will cause electron to think the request is aborted.
-    // When the app loads a URL, the hash is changed immediately. If the window is already open,
-    // electron considers this a change in URl and a failure so it errors.
-    // If the window is open, just navigate from the browser instead.
     this.logger.debug(`Loading url: ${url}`);
-    if (this.window.isVisible()) {
-      await this.window.webContents.executeJavaScript(
-        `window.location.href = '${url}'`
-      );
-      this.window.reload();
-    } else {
+
+    const windowOpen = this.window.isVisible();
+
+    try {
       await this.window.loadURL(url);
+    } catch (error) {
+      if ((error as { code?: string })?.code === "ERR_FAILED" && windowOpen) {
+        // If the browser window is already open, a URL change will cause electron to think the request is aborted.
+        // When the app loads a URL, the hash is changed immediately.
+        // If the window is already open, electron considers this a change in URL and a failure so it errors.
+        // Reload the window to continue the navigation
+        // TODO this is only necessary because of the hash based history. Replacing this with non-hash history should solve this
+        this.logger.debug(`Window already open. Reloading window`);
+        this.window.reload();
+      } else {
+        throw error;
+      }
     }
   }
 

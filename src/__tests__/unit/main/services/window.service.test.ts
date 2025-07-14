@@ -279,22 +279,115 @@ describe("Window service #main #service", () => {
       sinon.assert.calledWith(loadURLStub, "test");
     });
 
-    it("should reload if the window is already visible", async () => {
-      const executeJavaScriptStub = sinon.stub();
+    it("should handle ERR_FAILED error with visible window by reloading", async () => {
+      const loadURLStub = sinon.stub();
       const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      // Create error with ERR_FAILED code
+      const errFailedError = new Error("Navigation failed") as Error & {
+        code: string;
+      };
+      errFailedError.code = "ERR_FAILED";
+      loadURLStub.rejects(errFailedError);
+
       windowService.setWindow({
-        webContents: {
-          executeJavaScript: executeJavaScriptStub,
-        },
-        isVisible: () => true,
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
         reload: reloadStub,
       } as unknown as BrowserWindow);
+
+      // Should not throw error
       await windowService.navigateInWindow("test");
-      sinon.assert.calledWith(
-        executeJavaScriptStub,
-        "window.location.href = 'test'"
-      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
       sinon.assert.calledOnce(reloadStub);
+      sinon.assert.calledWith(
+        mockLogger.debug,
+        "Window already open. Reloading window"
+      );
+    });
+
+    it("should re-throw other errors", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      // Create error with different code
+      const otherError = new Error("Other navigation error") as Error & {
+        code: string;
+      };
+      otherError.code = "OTHER_ERROR";
+      loadURLStub.rejects(otherError);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should throw the error
+      await expect(windowService.navigateInWindow("test")).to.be.rejectedWith(
+        otherError
+      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.notCalled(reloadStub);
+    });
+
+    it("should re-throw ERR_FAILED error when window is not visible", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(false);
+
+      // Create error with ERR_FAILED code
+      const errFailedError = new Error("Navigation failed") as Error & {
+        code: string;
+      };
+      errFailedError.code = "ERR_FAILED";
+      loadURLStub.rejects(errFailedError);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should throw the error because window is not visible
+      await expect(windowService.navigateInWindow("test")).to.be.rejectedWith(
+        errFailedError
+      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.notCalled(reloadStub);
+    });
+
+    it("should re-throw errors without code property", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      // Create error without code property
+      const errorWithoutCode = new Error("Error without code");
+      loadURLStub.rejects(errorWithoutCode);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should throw the error because it doesn't have code property
+      await expect(windowService.navigateInWindow("test")).to.be.rejectedWith(
+        errorWithoutCode
+      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.notCalled(reloadStub);
     });
   });
 });
