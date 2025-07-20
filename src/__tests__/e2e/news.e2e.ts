@@ -10,7 +10,7 @@ import {
 
 test.describe("News", () => {
   let window: Page;
-  let closeTestApp: ReturnType<typeof startTestApp>["closeTestApp"];
+  let closeTestApp: Awaited<ReturnType<typeof startTestApp>>["closeTestApp"];
 
   test.beforeEach(async () => {
     ({ window, closeTestApp } = await startTestApp(test));

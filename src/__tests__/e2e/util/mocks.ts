@@ -1,8 +1,9 @@
-import { ProcessWithGlobals } from "../../../main/types/process-globals";
-import { LauncherApplication } from "../../../main/application";
+import type { ProcessWithGlobals } from "../../../main/types/process-globals";
+import type { LauncherApplication } from "../../../main/application";
 import type { ElectronApplication, JSHandle } from "playwright";
 import { ChildProcessBinding } from "../../../main/bindings/child-process.binding";
-import psList, { ProcessDescriptor } from "ps-list";
+import type psList from "ps-list";
+import type { ProcessDescriptor } from "ps-list";
 import { PsListBinding } from "../../../main/bindings/psList.binding";
 import {
   ProcessKill,
@@ -10,6 +11,7 @@ import {
 } from "../../../main/bindings/process-kill.binding";
 import { ConfigBinding } from "../../../main/bindings/config.binding";
 import type { Resolution } from "../../../shared/types/Resolution";
+import type child_process from "child_process";
 
 /**
  * Mocks the dialog.showErrorBox method in Electron
@@ -69,7 +71,8 @@ export const mockMessageBox = async (
     dialog.showMessageBox = (options) => {
       messageBoxShown = true;
       messageBoxTitle = options.title ?? "";
-      messageBoxMessage = options.message ?? "";
+      messageBoxMessage =
+        options && "message" in options ? options.message ?? "" : "";
       return Promise.resolve({ response, checkboxChecked: false });
     };
 
@@ -106,7 +109,9 @@ export async function replacePsListWithMock(
       };
 
       // The psList method is `promisified` by default, so we need to override the custom method to use our mock
-      mockPsList[processGlobals.promisifyCustomSymbol] = mockPsList.exec;
+      (mockPsList as unknown as Record<symbol, unknown>)[
+        processGlobals.promisifyCustomSymbol
+      ] = mockPsList;
 
       // Replace the binding with our mock
       (processGlobals.launcherApplication as LauncherApplication)
@@ -139,8 +144,8 @@ export async function mockProcessKill(electronApp: ElectronApplication) {
     // Create a mock process.kill function that records what it was called with
     const mockKill: ProcessKill = (pid, signal) => {
       calls++;
-      lastCalledWith = { pid, signal };
-      allCalledWith.push({ pid, signal });
+      lastCalledWith = signal !== undefined ? { pid, signal } : { pid };
+      allCalledWith.push(signal !== undefined ? { pid, signal } : { pid });
       return true; // process.kill returns true if the process exists
     };
 
@@ -196,7 +201,7 @@ export const replaceChildProcessExecWithMock = async (
     let command: string;
     let resolvePromise: (value: { stdout: string; stderr: string }) => void;
     const waitForExec = () =>
-      new Promise((resolve, reject) => {
+      new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(
           () => reject("Timeout waiting for exec"),
           30000
@@ -213,20 +218,29 @@ export const replaceChildProcessExecWithMock = async (
       });
 
     // Replace the exec method with a mock that returns a promise that can be manually resolved
-    const childProcessMock = {
-      exec: async (cmd: string) => {
-        command = cmd;
-        return new Promise<{ stdout: string; stderr: string }>((resolve) => {
-          resolvePromise = (value) => {
-            resolve(value);
-          };
-        });
-      },
+    const mockExecFunction = async (cmd: string) => {
+      command = cmd;
+      return new Promise<{ stdout: string; stderr: string }>((resolve) => {
+        resolvePromise = (value) => {
+          resolve(value);
+        };
+      });
+    };
+
+    // Add the __promisify__ property to match typeof child_process.exec
+    const childProcessMock: {
+      exec: typeof child_process.exec;
+    } = {
+      exec: Object.assign(mockExecFunction, {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        __promisify__: mockExecFunction,
+      }) as unknown as typeof child_process.exec,
     };
 
     // The exec method is `promisified` by default, so we need to override the custom method to use our mock
-    childProcessMock.exec[processGlobals.promisifyCustomSymbol] =
-      childProcessMock.exec;
+    (childProcessMock.exec as unknown as Record<symbol, unknown>)[
+      processGlobals.promisifyCustomSymbol
+    ] = childProcessMock.exec;
 
     // Replace the child process with a mock
     (processGlobals.launcherApplication as LauncherApplication)

@@ -167,11 +167,14 @@ test.describe("Launcher actions", () => {
       await minimizeButton.click();
 
       // Verify the window is minimized using Electron API
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       await new Promise((resolve) => setTimeout(resolve, 500)); // Add a small delay
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const isMinimized = await electronApp.evaluate(({ BrowserWindow }) => {
-        return BrowserWindow.getAllWindows()[0].isMinimized();
+        const browserWindow = BrowserWindow.getAllWindows()[0];
+        if (!browserWindow) {
+          throw new Error("No window found");
+        }
+        return browserWindow.isMinimized();
       });
 
       expect(isMinimized).toBe(true);

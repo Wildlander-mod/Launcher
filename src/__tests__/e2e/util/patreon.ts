@@ -1,6 +1,6 @@
-import { Page } from "@playwright/test";
-import { Patron } from "../../../renderer/src/services/patreon.service";
-import { Post } from "../../../renderer/src/services/posts.service";
+import type { Page } from "@playwright/test";
+import type { Patron } from "../../../renderer/src/services/patreon.service";
+import type { Post } from "../../../renderer/src/services/posts.service";
 
 // Mock data for news posts
 export const mockPosts: Post[] = [

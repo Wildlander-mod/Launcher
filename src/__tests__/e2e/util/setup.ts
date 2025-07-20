@@ -53,7 +53,7 @@ export const createMockFiles = async (
   // Create an area for the Electron app to store config/files.
   const mockFilesPath = path.join(
     config().paths.mockFiles,
-    test.info().titlePath[1],
+    test.info().titlePath[1] as string,
     modpackPath ?? UUID()
   );
   await fs.mkdir(mockFilesPath, { recursive: true });
@@ -123,7 +123,7 @@ export const startTestApp = async (
       const offset = 200;
       const win = BrowserWindow.getAllWindows()[0];
       if (win) {
-        const [x, y] = win.getPosition();
+        const [x, y] = win.getPosition() as [number, number];
         // Generate random direction: up, down, left, right, or diagonal
         const randomX = Math.random() > 0.5 ? offset : -offset;
         const randomY = Math.random() > 0.5 ? offset : -offset;
@@ -133,17 +133,15 @@ export const startTestApp = async (
   }
 
   const closeTestApp = async () => {
-    await saveCoverage(
-      window,
-      "renderer",
-      () => (window as WindowWithCoverage).__coverage__
+    const rendererCoverage = await window.evaluate(
+      () => (window as unknown as WindowWithCoverage).__coverage__
     );
+    await saveCoverage("renderer", rendererCoverage);
 
-    await saveCoverage(
-      electronApp,
-      "main",
-      () => (global as GlobalWithCoverage).__coverage__
+    const mainCoverage = await electronApp.evaluate(
+      () => (global as unknown as GlobalWithCoverage).__coverage__
     );
+    await saveCoverage("main", mainCoverage);
 
     await electronApp.close();
   };
@@ -161,15 +159,12 @@ export const startTestApp = async (
 };
 
 const saveCoverage = async (
-  page: Page | ElectronApplication,
   preface: "main" | "renderer",
-  coverageCallback: () => Record<string, unknown>
+  coverage: Record<string, unknown>
 ) => {
   await fs.mkdir(config().paths.coverage, {
     recursive: true,
   });
-
-  const coverage = await page.evaluate(coverageCallback);
 
   await fs.writeFile(
     `${config().paths.coverage}/${preface}-${UUID()}.json`,
@@ -237,6 +232,10 @@ export const selectFirstModpack = async (window: Page): Promise<string> => {
 
   // Get the mod directory path from the first option
   const modDirectoryPath = await firstOption.textContent();
+
+  if (!modDirectoryPath) {
+    throw new Error("Mod directory path not found");
+  }
 
   // Select the first option
   await firstOption.click();

@@ -17,7 +17,7 @@ import { Options, Vue } from "vue-class-component";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import type { SelectOption } from "./BaseDropdown.vue";
 import BaseLabel from "./BaseLabel.vue";
-import modpack from "@/shared/wildlander/modpack.json";
+import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import { Prop } from "vue-property-decorator";
 import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
@@ -31,7 +31,7 @@ import AppDropdownFileSelect from "./AppDropdownFileSelect.vue";
 export default class ModDirectory extends Vue {
   modDirectory!: SelectOption | null;
   modpacks: SelectOption[] | null = null;
-  @Prop({ default: `${modpack.name} installation folder` })
+  @Prop({ default: `${WildlanderModpack.name} installation folder` })
   label!: string;
 
   private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);

@@ -36,7 +36,7 @@ async function displayCoverage(): Promise<void> {
 
   const sourceMap = new SourceMaps({
     cache: false,
-    cacheDir: `${config().paths.coverage}/cache`,
+    cacheDirectory: `${config().paths.coverage}/cache`,
   });
   // Remap the electron main process coverage data to ensure sourcemaps are respected
   mainCoverageMap.data = await sourceMap.remapCoverage(mainCoverageMap.data);

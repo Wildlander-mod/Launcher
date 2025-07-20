@@ -7,7 +7,7 @@ import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import type { Resolution } from "@/shared/types/Resolution";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
-import { name as modpackName } from "@/shared/wildlander/modpack.json";
+import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import { InstructionService } from "@/main/services/instruction.service";
 import { Logger, LoggerBinding } from "@/main/logger";
 import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
@@ -324,6 +324,6 @@ export class ResolutionService {
   private skyrimGraphicsSettingsPath() {
     return `${this.configService.getPreference(
       USER_PREFERENCE_KEYS.MOD_DIRECTORY
-    )}/mods/${modpackName}/SKSE/Plugins/SSEDisplayTweaks.ini`;
+    )}/mods/${WildlanderModpack.name}/SKSE/Plugins/SSEDisplayTweaks.ini`;
   }
 }

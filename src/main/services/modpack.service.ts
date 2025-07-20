@@ -1,6 +1,6 @@
 import fs from "fs";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import modpack from "@/shared/wildlander/modpack.json";
+import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import type { IsModpackValidResponse } from "@/main/controllers/modpack/mopack.events";
 import type { Modpack } from "@/shared/types/modpack-metadata";
 import { service } from "@loopback/core";
@@ -45,7 +45,7 @@ export class ModpackService {
   }
 
   getModpackMetadata(): Modpack {
-    return modpack;
+    return WildlanderModpack;
   }
 
   deleteModpackDirectory() {

@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 type ClassOptions = {
   /** The testid of the element to check */
@@ -40,12 +40,24 @@ export const waitForClass = async (window: Page, options: ClassOptions) => {
 
   // If the class does not exist, wait for it to be added or removed
   return window.evaluate(
-    ([i, c, exists]: [string, string, boolean]) => {
+    ({ testId: i, className: c, shouldExist: exists }) => {
       return new Promise((resolve, reject) => {
         const element = document.querySelector(`[data-testid="${i}"]`);
 
-        const observer = new MutationObserver((mutations) => {
+        if (!element) {
+          reject(new Error(`Element with testId "${i}" not found`));
+          return;
+        }
+
+        const observer = new MutationObserver(() => {
           // Check if the expected condition is met
+          if (!element) {
+            observer.disconnect();
+            reject(
+              new Error(`Element with testId "${i}" was removed from DOM`)
+            );
+            return;
+          }
           if (!!element.classList.contains(c) === exists) {
             observer.disconnect();
             resolve(true);
@@ -61,6 +73,12 @@ export const waitForClass = async (window: Page, options: ClassOptions) => {
         // Set a timeout to avoid hanging indefinitely if the mutation never occurs
         setTimeout(() => {
           observer.disconnect();
+          if (!element) {
+            reject(
+              new Error(`Element with testId "${i}" was removed from DOM`)
+            );
+            return;
+          }
           const currentClasses = Array.from(element.classList).join(", ");
           const action = exists ? "be added to" : "be removed from";
           reject(
@@ -71,6 +89,6 @@ export const waitForClass = async (window: Page, options: ClassOptions) => {
         }, 5000);
       });
     },
-    [testId, className, shouldExist]
+    { testId, className, shouldExist }
   );
 };

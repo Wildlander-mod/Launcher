@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "dist/renderer.tsbuildinfo",
+    "jsx": "preserve",
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "src/renderer/**/*.vue",
+    "src/renderer/**/*.tsx",
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.json",
+    "src/**/*.d.ts",
+
+    // Tests require the DOM for `evaluate` calls
+    "src/__tests__/**/*.ts",
+    "src/__tests__/**/*.json"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.main.json"
+    }
+  ]
+}

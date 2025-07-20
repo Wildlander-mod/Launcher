@@ -18,7 +18,7 @@ module.exports = {
       outputDir: "dist",
       builderOptions: {
         productName: "Wildlander Launcher",
-        icon: "src/renderer/src/assets/images/logos/wildlander-icon-light.png",
+        icon: "public/images/logos/wildlander-icon-light.png",
         publish: {
           provider: "github",
           releaseType: "release",
@@ -46,11 +46,7 @@ module.exports = {
           {
             from: "../",
             to: ".",
-            filter: [
-              "preload.*",
-              "modpack.json",
-              "additional-instructions.json",
-            ],
+            filter: ["preload.*", "additional-instructions.json"],
           },
         ],
         extraResources: [

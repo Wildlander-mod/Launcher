@@ -15,7 +15,6 @@
 import { Options, Vue } from "vue-class-component";
 import TheTitleBar from "./components/TheTitleBar.vue";
 import AppPage from "./components/AppPage.vue";
-import defaultBackground from "./assets/images/default-background.png";
 
 @Options({
   components: {
@@ -24,7 +23,7 @@ import defaultBackground from "./assets/images/default-background.png";
   },
 })
 export default class App extends Vue {
-  backgroundImage = defaultBackground;
+  backgroundImage = "/images/default-background.png";
 }
 </script>
 

@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { waitForClass } from "./element";
 import type { JSHandle } from "playwright";
 
@@ -70,7 +70,7 @@ export const waitForLaunchButtonEnabled = async (window: Page) => {
 export const waitForClickEventsDisabled = async (
   window: Page
 ): Promise<void> => {
-  return waitForClass(window, {
+  await waitForClass(window, {
     testId: "app-page",
     className: "u-disable-click-events",
     shouldExist: true,
@@ -86,7 +86,7 @@ export const waitForClickEventsDisabled = async (
 export const waitForClickEventsEnabled = async (
   window: Page
 ): Promise<void> => {
-  return waitForClass(window, {
+  await waitForClass(window, {
     testId: "app-page",
     className: "u-disable-click-events",
     shouldExist: false,

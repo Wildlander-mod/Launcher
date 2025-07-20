@@ -4,19 +4,35 @@
       href="https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww"
       class="c-resource l-flex"
     >
-      <ImageWithText :image-source="youtubeLogo" alt="" text="YouTube" />
+      <ImageWithText
+        image-source="/images/logos/youtube.svg"
+        alt=""
+        text="YouTube"
+      />
     </BaseLink>
     <BaseLink
       href="https://www.twitch.tv/dylanbperry"
       class="c-resource l-flex"
     >
-      <ImageWithText :image-source="twitchLogo" alt="" text="Twitch" />
+      <ImageWithText
+        image-source="/images/logos/twitch.svg"
+        alt=""
+        text="Twitch"
+      />
     </BaseLink>
     <BaseLink href="https://discord.gg/8VkDrfq" class="c-resource l-flex">
-      <ImageWithText :image-source="discordLogo" alt="" text="Discord" />
+      <ImageWithText
+        image-source="/images/logos/discord.svg"
+        alt=""
+        text="Discord"
+      />
     </BaseLink>
     <BaseLink href="https://reddit.com/r/wildlander" class="c-resource l-flex">
-      <ImageWithText :image-source="redditLogo" alt="" text="Reddit" />
+      <ImageWithText
+        image-source="/images/logos/reddit.svg"
+        alt=""
+        text="Reddit"
+      />
     </BaseLink>
   </div>
 </template>
@@ -28,11 +44,7 @@ import AppPage from "./AppPage.vue";
 import BaseLink from "./BaseLink.vue";
 import ImageWithText from "./ImageWithText.vue";
 import type { Modpack } from "@/shared/types/modpack-metadata";
-import modpack from "@/shared/wildlander/modpack.json";
-import youtubeLogo from "../assets/images/logos/youtube.svg";
-import twitchLogo from "../assets/images/logos/twitch.svg";
-import discordLogo from "../assets/images/logos/discord.svg";
-import redditLogo from "../assets/images/logos/reddit.svg";
+import { WildlanderModpack } from "@/shared/wildlander/modpack";
 
 @Options({
   components: {
@@ -44,13 +56,9 @@ import redditLogo from "../assets/images/logos/reddit.svg";
 })
 export default class Community extends Vue {
   modpack!: Modpack;
-  youtubeLogo = youtubeLogo;
-  twitchLogo = twitchLogo;
-  discordLogo = discordLogo;
-  redditLogo = redditLogo;
 
   override async created() {
-    this.modpack = modpack;
+    this.modpack = WildlanderModpack;
   }
 }
 </script>

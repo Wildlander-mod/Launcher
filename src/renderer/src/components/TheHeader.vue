@@ -46,20 +46,19 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import type { Modpack } from "@/shared/types/modpack-metadata";
-import modpack from "@/shared/wildlander/modpack.json";
+import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import BaseLink from "./BaseLink.vue";
 import BaseImage from "./BaseImage.vue";
-import defaultLogo from "../assets/images/logos/wildlander-full-light.svg";
 
 @Options({
   components: { BaseLink, BaseImage },
 })
 export default class TheHeader extends Vue {
   modpack!: Modpack;
-  defaultLogo = defaultLogo;
+  defaultLogo = "/images/logos/wildlander-full-light.svg";
 
   override created() {
-    this.modpack = modpack;
+    this.modpack = WildlanderModpack;
   }
 }
 </script>

@@ -9,7 +9,7 @@ import fs from "fs/promises";
 
 test.describe("Navigation", () => {
   let window: Page;
-  let closeTestApp: ReturnType<typeof startTestApp>["closeTestApp"];
+  let closeTestApp: Awaited<ReturnType<typeof startTestApp>>["closeTestApp"];
   let mockFiles: MockFilesPaths;
 
   test.beforeEach(async () => {

@@ -10,7 +10,7 @@ import {
   mockPatreonError,
   addPatronsToLocalStorage,
 } from "./util/patreon";
-import { Patron } from "../../renderer/src/services/patreon.service";
+import type { Patron } from "../../renderer/src/services/patreon.service";
 
 test.describe("Patrons", () => {
   let window: Page;
@@ -182,7 +182,7 @@ test.describe("Patrons", () => {
     }, oldPatrons);
 
     // Set up new patrons to be fetched
-    const newPatrons = [
+    const newPatrons: Patron[] = [
       {
         name: "New Super Patron",
         tier: "Super Patron",

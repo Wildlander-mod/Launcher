@@ -1,41 +1,15 @@
 {
-  "extends": "@tsconfig/node16-strictest/tsconfig.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "target": "ES2021",
-    "module": "CommonJS",
-    "importHelpers": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "resolveJsonModule": true,
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
+  "files": [],
   "references": [
     {
-      "path": "./src/renderer"
+      "path": "./tsconfig.main.json"
     },
     {
-      "path": "./src/main"
-    },
-    {
-      "path": "./src/preload"
-    },
-    {
-      "path": "./src/shared"
-    },
-    {
-      "path": "./src/__tests__"
+      "path": "./tsconfig.renderer.json"
     }
   ],
-  "include": ["src/main.ts"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "files": true
+  "compilerOptions": {
+    // Needed for tsc-alias
+    "outDir": "dist"
   }
 }

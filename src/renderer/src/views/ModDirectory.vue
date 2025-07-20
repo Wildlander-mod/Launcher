@@ -29,7 +29,6 @@ import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import type { Modpack } from "@/shared/types/modpack-metadata";
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import ModDirectory from "../components/ModDirectory.vue";
-import defaultLogo from "../assets/images/logos/wildlander-full-light.svg";
 
 @Options({
   components: { BaseLink, BaseImage, AppModal, ModDirectory },
@@ -38,7 +37,7 @@ export default class ModDirectoryView extends Vue {
   ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
   modpackMetadata: Modpack | null = null;
-  defaultLogo = defaultLogo;
+  defaultLogo = "/images/logos/wildlander-full-light.svg";
 
   override async created() {
     this.modpackMetadata = await this.ipcService.invoke(

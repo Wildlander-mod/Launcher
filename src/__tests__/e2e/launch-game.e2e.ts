@@ -49,7 +49,7 @@ const getMO2LockGuiSetting = async (
   mockFiles: MockFilesPaths
 ): Promise<IniValue> => {
   const { settings } = await getMO2Settings(mockFiles);
-  return (settings.Settings as IIniObjectSection)?.lock_gui;
+  return (settings.Settings as IIniObjectSection)?.lock_gui as IniValue;
 };
 
 /**

@@ -1,6 +1,6 @@
 import fsPromises from "fs/promises";
 import fs from "fs";
-import { UserPreferences } from "../../../main/services/config.service";
+import type { UserPreferences } from "../../../main/services/config.service";
 
 /**
  * Gets the user preferences from the userPreferences.json file.

@@ -32,3 +32,5 @@ mock-files
 
 # Playwright
 .playwright
+
+.junie/plans

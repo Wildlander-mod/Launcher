@@ -2,7 +2,7 @@ import { getUserPreferences } from "./user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import fs from "fs/promises";
 import * as os from "os";
-import { MockFilesPaths } from "./setup";
+import type { MockFilesPaths } from "./setup";
 import { IIniObjectSection, parse } from "js-ini";
 
 /**
