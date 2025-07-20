@@ -5,8 +5,7 @@ module.exports = {
     mocha: true,
   },
   parserOptions: {
-    parser: "@typescript-eslint/parser",
-    project: "../../tsconfig.eslint.json",
+    project: "../../tsconfig.renderer.json",
     tsconfigRootDir: __dirname,
   },
 };
