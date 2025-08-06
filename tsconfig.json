@@ -9,7 +9,6 @@
     }
   ],
   "compilerOptions": {
-    // Needed for tsc-alias
     "outDir": "dist"
   }
 }

@@ -88,7 +88,7 @@ export default class AppPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-app__page {
   margin-top: $size-spacing--titlebar;

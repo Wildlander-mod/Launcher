@@ -67,5 +67,3 @@ export default class AppDropdownFileSelect extends Vue {
   }
 }
 </script>
-
-<style scoped lang="scss"></style>

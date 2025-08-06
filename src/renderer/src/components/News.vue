@@ -73,7 +73,7 @@ export default class News extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-news {
   font-size: $font-size--small;

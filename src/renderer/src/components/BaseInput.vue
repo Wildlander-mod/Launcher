@@ -40,7 +40,7 @@ export default class BaseInput extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-input {
   height: $size-action-height;

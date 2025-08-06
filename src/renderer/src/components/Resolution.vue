@@ -125,7 +125,7 @@ export default class Resolution extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-resolution__info-icon {
   margin-right: $size-spacing--small;

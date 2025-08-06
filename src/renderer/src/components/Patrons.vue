@@ -78,7 +78,7 @@ export default class Patrons extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 // The size and positioning of the "star" icons are heavily tied together
 // Changing the size of one will likely need all of these adjusting to fit

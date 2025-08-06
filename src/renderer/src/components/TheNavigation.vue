@@ -260,7 +260,7 @@ export default class TheNavigation extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-navigation {
   backdrop-filter: $background-blur--more;

@@ -28,7 +28,7 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 $size-scrollbar: 16px;
 $colour-scrollbar-arrows: white;
@@ -77,13 +77,13 @@ body {
   background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#{$colour-scrollbar-arrows}"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"/></svg>');
 }
 
-::-webkit-scrollbar-button:vertical:single-button:decrement:hover,
-::-webkit-scrollbar-button:vertical:single-button:increment:hover {
-  background-color: $colour-background--dark;
-}
-
 // Down arrow
 ::-webkit-scrollbar-button:single-button:vertical:increment {
   background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#{$colour-scrollbar-arrows}"><path d="M24 24H0V0h24v24z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"/></svg>');
+}
+
+::-webkit-scrollbar-button:vertical:single-button:decrement:hover,
+::-webkit-scrollbar-button:vertical:single-button:increment:hover {
+  background-color: $colour-background--dark;
 }
 </style>

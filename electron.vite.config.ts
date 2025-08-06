@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import { defineConfig, externalizeDepsPlugin, swcPlugin } from "electron-vite";
 import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
         },
         output: {
           preserveModules: true,
-          preserveModulesRoot: "main",
+          preserveModulesRoot: "src/main",
         },
       },
     },
@@ -31,12 +31,19 @@ export default defineConfig({
     },
   },
   renderer: {
+    plugins: [vue()],
+    build: {
+      rollupOptions: {
+        external: [
+          '@/main/logger',
+        ]
+      }
+    },
     resolve: {
       alias: {
         "@": resolve(__dirname, "src"),
         "@renderer": resolve(__dirname, "src/renderer/src"),
       },
     },
-    plugins: [vue()],
   },
 });

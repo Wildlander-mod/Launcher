@@ -117,7 +117,7 @@ export default class BaseDropdown extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 $selectFocus: rgba(255, 255, 255, 0.1);
 $selectHeight: $size-action-height;

@@ -64,7 +64,7 @@ export default class TheHeader extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 // Specific margin to enable the logo to sit more visually aligned with the links
 // This is due to the logo having a heavily weighted top compared to the bottom

@@ -20,7 +20,7 @@ export default class BaseList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-list {
   display: flex;

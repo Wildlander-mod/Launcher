@@ -26,7 +26,7 @@ export default class ImageWithText extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-svg-with-text__text {
   margin-top: $size-spacing;

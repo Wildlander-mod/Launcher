@@ -162,7 +162,7 @@ import {
 } from "../services/event.service";
 import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
 import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
-import Toggle from "@vueform/toggle/src/Toggle";
+import Toggle from "@vueform/toggle";
 import { CONFIG_EVENTS } from "@/main/controllers/config/config.events";
 import Popper from "vue3-popper";
 import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
@@ -306,7 +306,7 @@ export default class Settings extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-settings {
   line-height: $line-height__body;

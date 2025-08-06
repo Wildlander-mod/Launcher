@@ -5,125 +5,55 @@
 ### 1. TypeScript Strict Settings
 
 - **Always follow TypeScript strict settings** in all projects
+- **Note:** Use `vue-tsc` instead of `tsc` for Vue projects
 
-### 2. Plan-First Development Approach
+### 2. Planning When Requested
 
-- **Junie's DEFAULT behavior is to ONLY create plans and then STOP**
-- **Junie must NEVER proceed with implementation unless explicitly told to do so**
-- **Never proceed with implementation until the plan is approved**
-- **Implementation is NOT part of Junie's default workflow - it requires explicit instruction**
-- Plans must be comprehensive and detailed before any code changes
-- Implementation should only begin after explicit approval of the plan
+- **By default, Junie should proceed directly to implementation unless a plan is specifically requested**
+- When plans are requested, they must be comprehensive and detailed before any code changes
+- Plans should be approved before implementation begins when they are created
+- For complex tasks, consider requesting a plan to ensure proper structure and approach
 
 ### 3. Plan Management
 
-- **Always create a plan stored as markdown in `.junie/plans/`**
+- **When creating a plan, store it as markdown in `.junie/plans/`**
+- **Plan creations and changes should be committed to git** to maintain a proper development history
 - Plans should be updated as Junie makes progress
 - **Plans should be updated after implementation to include implementation details**
-- **Plans should be kept local and not committed to version control**
+- **Plans should be kept local**
+- **Completed plans should be moved to `.junie/plans/completed/` to maintain organization**
+- **Abandoned plans should be moved to `.junie/plans/archived/` to maintain organization**
+- **Note:** Once plans are moved to `completed/` or `archived/` directories, git will no longer track them as these directories are gitignored
+- **Important:** When updating implementation plans, do not remove completed items from the plan. Only check off items as completed to maintain a complete record of all work done.
+- **Note:** When iterating on an already existing plan, implementation should be done directly without creating a new plan. Update the original plan.
+- **Note:** When instructed to update multiple plan phases, Junie should update the plan as it goes along and not at the end.
 
 ## Plan Structure Requirements
 
-Based on the reference `.junie/plan.md`, all plans must include the following sections:
-
-### Required Plan Sections
-
-#### 1. **Overview**
-
-- Brief description of the task/feature/refactoring
-- High-level goals and objectives
-
-#### 2. **Current State Analysis**
-
-- Analysis of existing code/system
-- Identification of current issues or areas for improvement
-- Assessment of existing components, files, and structure
-
-#### 3. **Implementation Plan**
-
-- Detailed phases with numbered tasks
-- Clear task breakdown with sub-tasks
-- Progress tracking with checkmarks (✓ for completed, ! for failed, * for in progress)
-- Each phase should have specific deliverables
-
-#### 4. **File Structure (Target)**
-
-- Clear representation of the intended file/directory structure
-- Use code blocks with tree structure visualization
-- Show both existing and new files
-
-#### 5. **Key Principles**
-
-- List of guiding principles for the implementation
-- Best practices to follow
-- Design patterns or architectural decisions
-
-#### 6. **Success Criteria**
-
-- Measurable outcomes that define completion
-- Testing requirements
-- Performance or quality benchmarks
-
-#### 7. **Implementation Summary** (Post-Implementation)
-
-- Summary of what was accomplished
-- Key benefits achieved
-- Any deviations from the original plan
-- Lessons learned
-
-#### 8. **Notes**
-
-- Important considerations
-- Dependencies or prerequisites
-- Risk mitigation strategies
-
-### Plan Formatting Guidelines
-
-#### Task Tracking
-
-- Use `[✓]` for completed tasks
-- Use `[!]` for failed tasks
-- Use `[*]` for tasks in progress
-- Use `[ ]` for pending tasks
-- Maintain hierarchical progress tracking (parent tasks reflect sub-task status)
-
-#### Code Examples
-
-- Use proper markdown code blocks with language specification
-- Include file paths and line numbers when relevant
-- Show before/after comparisons when applicable
-
-#### File References
-
-- Always use full file paths
-- Use backticks for inline file references
-- Group related files logically
+For detailed plan structure requirements and formatting guidelines, see the plan template at `.junie/templates/plan.template.plan.md`.
 
 ## Workflow Process
 
-### Phase 1: Planning (Junie's Default Behavior)
+### Phase 1: Planning (Only When Requested)
 
-1. **Create comprehensive plan** in `.junie/plans/[task-name].md`
-2. **Include all required sections** as outlined above
+1. **Create comprehensive plan** in `.junie/plans/[task-name].plan.md`
+2. **Include all required sections** as outlined in the plan template
 3. **STOP and wait for explicit approval** - do NOT proceed to implementation
-4. **This is where Junie's default workflow ends** - implementation requires separate instruction
-5. **Address feedback** and update plan if necessary
+4. **Address feedback** and update plan if necessary
 
-### Phase 2: Implementation (Only After Approval)
+### Phase 2: Implementation (Junie's Default Behavior)
 
-1. **Follow the approved plan** step by step
-2. **Update plan progress** as tasks are completed
-3. **Document any deviations** from the original plan
+1. **Follow the approved plan** step by step (if a plan exists)
+2. **Update plan progress** as tasks are completed (if a plan exists)
+3. **Document any deviations** from the original plan (if applicable)
 4. **Test thoroughly** at each milestone
 
 ### Phase 3: Post-Implementation
 
-1. **Update plan with implementation details**
-2. **Complete the Implementation Summary section**
+1. **Update plan with implementation details** (if a plan exists)
+2. **Complete the Implementation Summary section** (if a plan exists)
 3. **Document lessons learned and best practices**
-4. **Run all tests** to ensure the implementation doesn't break existing functionality
-5. **Make a commit using conventional commit format** to document the successful implementation
-6. **Archive or organize plans** for future reference
+4. **Move completed plans to `.junie/plans/completed/`** to maintain organization (if a plan exists)
 
 ## Quality Standards
 
@@ -136,10 +66,11 @@ Based on the reference `.junie/plan.md`, all plans must include the following se
 
 ### Documentation
 
-- Plans must be clear, detailed, and actionable
+- Plans must be clear, detailed, and actionable (when created)
 - Use proper markdown formatting
 - Include diagrams or visual aids when helpful
-- Keep plans updated and accurate
+- Keep plans updated and accurate (when they exist)
+- **Note:** Ignore syntax errors in formatted code blocks when they are used for illustrative purposes in documentation
 
 ### Testing
 
@@ -147,8 +78,7 @@ Based on the reference `.junie/plan.md`, all plans must include the following se
 - Existing tests must continue to pass
 - Edge cases and error scenarios must be covered
 - Performance implications should be considered
-
-## Plan Storage and Organization
+- **E2E Test IDs:** All e2e test IDs should be abstracted as page object class properties (static readonly) to ensure maintainability and reusability
 
 ### Directory Structure
 
@@ -158,16 +88,40 @@ Based on the reference `.junie/plan.md`, all plans must include the following se
 ├── plans/
 │   ├── [task-name].md
 │   ├── [feature-name].md
-│   └── archived/
-│       └── [completed-tasks].md
+│   ├── archived/
+│   │   └── [abandoned-plans].md
+│   └── completed/
+│       └── [successfully-completed-plans].md
 └── templates/
-    └── plan-template.md
+    └── plan.template.md
 ```
+
+### Directory Purpose
+
+- **`plans/`**: Active plans currently being worked on
+- **`plans/archived/`**: Abandoned plans moved here to maintain organization
+- **`plans/completed/`**: Successfully completed plans moved here to maintain organization
+
+### Directory Usage Guidelines
+
+**When to use `completed/`:**
+- Plans that have been successfully implemented and all success criteria met
+- Plans where all phases have been completed as intended
+- Plans that resulted in working, tested solutions
+
+**When to use `archived/`:**
+- Plans that were abandoned before completion
+- Plans that were started but not finished due to changing requirements
+- Plans that Junie is told to abandon during development
+- Plans moved manually when no longer relevant
+
+**Automation:**
+- Junie will automatically move plans to `archived/` when explicitly told to abandon a plan
+- Users can manually move plans between directories as needed
 
 ### Naming Conventions
 
 - Use kebab-case for plan file names
-- Include date prefix for time-sensitive plans: `2024-01-15-feature-name.md`
 - Use descriptive names that clearly indicate the scope
 
 ## Best Practices
@@ -178,25 +132,28 @@ Based on the reference `.junie/plan.md`, all plans must include the following se
 - Consider dependencies and prerequisites
 - Plan for testing and validation
 - Include rollback strategies for risky changes
+- **Always include an analysis phase as the first phase in every plan** to ensure proper understanding of the current state, requirements, and constraints before proceeding with implementation
 
 ### Implementation Best Practices
 
-- Follow the plan strictly unless approved deviations occur
+- Follow the plan strictly unless approved deviations occur (if a plan exists)
+- **When told to continue with a plan implementation, implement only the next minor phase one at a time** (e.g., implement just 2.1 and not all of phase 2)
+- **When implementing more than one phase, update the plan alongside implementation changes and not just at the end** to maintain accurate progress tracking and documentation
 - Test incrementally as you progress
 - Update documentation alongside code changes
-- Maintain clean commit history with descriptive messages
 - **Always run `npm run lint:fix` at the end of each implementation block and fix any linting issues that arise**
+- **Run tests after each change** to ensure functionality remains intact and no regressions are introduced
+- **Commit each working phase** to maintain a clear development history and enable easy rollback if needed
 
 ### Version Control Best Practices
 
-- **Commit regularly** every time there is a working implementation with passing tests and linting passing
 - Maintain clean commit history with descriptive messages
 - Follow established branching strategies and workflows
 - Include meaningful commit messages that explain the "why" behind changes
 
 ### Communication Best Practices
 
-- Plans should be self-explanatory to other developers
+- Plans should be self-explanatory to other developers (when created)
 - Use clear, concise language
 - Include context and rationale for decisions
 - Document assumptions and constraints
@@ -207,6 +164,6 @@ All Junie development work must adhere to these guidelines. Any deviations must 
 
 1. Documented with clear justification
 2. Approved by appropriate stakeholders
-3. Updated in the relevant plan documentation
+3. Updated in the relevant plan documentation (if a plan exists)
 
 These guidelines ensure consistent, high-quality development practices and maintainable project documentation.

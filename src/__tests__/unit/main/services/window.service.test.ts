@@ -166,6 +166,16 @@ describe("Window service #main #service", () => {
   });
 
   describe("load", () => {
+
+    beforeEach(() => {
+      // TODO this is only needed while vue-cli still exists
+      process.env["VUECLI"] = "true";
+    });
+
+    afterEach(() => {
+      process.env = { ...originalEnv };
+    });
+
     it("should load the local url if in development", async () => {
       windowService = new WindowService(
         mockLogger,

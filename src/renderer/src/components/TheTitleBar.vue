@@ -36,7 +36,7 @@ export default class TheTitleBar extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-title-bar {
   height: $size-spacing--titlebar;

@@ -35,7 +35,7 @@ export default class BaseLink extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-link {
   color: $colour-text;

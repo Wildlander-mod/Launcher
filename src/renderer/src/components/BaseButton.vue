@@ -27,7 +27,7 @@ export default class BaseButton extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-button {
   background-color: $colour-background--dark;

@@ -26,5 +26,3 @@ import Patrons from "../components/Patrons.vue";
 })
 export default class ViewHome extends Vue {}
 </script>
-
-<style lang="scss" scoped></style>

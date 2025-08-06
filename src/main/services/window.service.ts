@@ -2,11 +2,10 @@ import type Electron from "electron";
 import { BrowserWindow, protocol } from "electron";
 import { URL } from "url";
 import { readFile } from "fs";
-import path from "path";
+import path, { join } from "path";
 import { appRoot } from "@/main/services/config.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { Logger, LoggerBinding } from "@/main/logger";
-import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 import {
   ContextMenu,
@@ -14,6 +13,7 @@ import {
 } from "@/main/bindings/context-menu.binding";
 import { service } from "@loopback/core";
 import { Dialog, DialogProvider } from "@/main/services/dialog.service";
+import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -118,7 +118,12 @@ export class WindowService {
   async load(urlPath: string) {
     try {
       if (this.isDevelopment) {
-        const url = new URL(`http://localhost:8080/#${urlPath}`).toString();
+        // HMR for renderer base on electron-vite cli.
+        // Load the remote URL for development or the local html file for production.
+        // TODO remove localhost once vue-cli is removed
+        const host =
+          process.env["ELECTRON_RENDERER_URL"] ?? "http://localhost:8080/";
+        const url = new URL(`${host}#${urlPath}`).toString();
         await this.navigateInWindow(url);
         if (!process.env["IS_TEST"]) {
           this.window.webContents.openDevTools();
@@ -126,6 +131,13 @@ export class WindowService {
         // Show window without setting focus
         this.window.showInactive();
       } else {
+        // TODO remove elseif once vue cli is removed and add test once this is default
+        /* istanbul ignore next */
+        if (process.env["VUECLI"] !== "true") {
+          await this.window.loadFile(join(__dirname, "../renderer/index.html"));
+          return;
+        }
+
         this.createProtocol("app");
         // Load the index.html when not in development
         const url = new URL(`app://./index.html/#${urlPath}`).toString();

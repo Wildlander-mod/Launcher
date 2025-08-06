@@ -22,6 +22,7 @@ import contextMenu from "electron-context-menu";
 import { ContextMenuBinding } from "@/main/bindings/context-menu.binding";
 import { ConfigBinding } from "@/main/bindings/config.binding";
 import { ConfigService } from "@/main/services/config.service";
+import { is } from "@electron-toolkit/utils";
 
 const serviceNamespace = "services";
 
@@ -104,7 +105,7 @@ export class LauncherApplication extends BootMixin(Application) {
   private bindStaticValues() {
     this.bind(ElectronBinding).to(electron);
     this.bind(VersionBinding).to(app.getVersion());
-    this.bind(IsDevelopmentBinding).to(!app.isPackaged);
+    this.bind(IsDevelopmentBinding).to(is.dev);
     this.bind(ChildProcessBinding).to(child_process);
     this.bind(PsListBinding).to(psList);
     this.bind(ProcessKillBinding).to(process.kill);

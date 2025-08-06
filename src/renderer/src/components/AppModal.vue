@@ -70,7 +70,7 @@ export default class AppModal extends Vue {
 </script>
 
 <style lang="scss">
-@import "~@/renderer/src/assets/scss";
+@import "@/renderer/src/assets/scss/index";
 
 .c-modal {
   display: flex;
