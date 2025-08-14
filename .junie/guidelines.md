@@ -141,6 +141,8 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 - Follow the plan strictly unless approved deviations occur (if a plan exists)
 - **When told to continue with a plan implementation, implement only the next minor phase one at a time** (e.g., implement just 2.1 and not all of phase 2)
 - **When implementing more than one phase, update the plan alongside implementation changes and not just at the end** to maintain accurate progress tracking and documentation
+- **When implementing code that will be modified in a later phase, add a comment explaining this** and remove the comment after making the planned changes
+
 - Test incrementally as you progress
 - Update documentation alongside code changes
 - **Always run `npm run lint:fix` at the end of each implementation block and fix any linting issues that arise**
