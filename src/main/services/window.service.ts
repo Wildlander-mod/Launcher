@@ -2,7 +2,7 @@ import type Electron from "electron";
 import { BrowserWindow, protocol } from "electron";
 import { URL } from "url";
 import { readFile } from "fs";
-import path, { join } from "path";
+import path from "path";
 import { appRoot } from "@/main/services/config.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { Logger, LoggerBinding } from "@/main/logger";
@@ -134,7 +134,9 @@ export class WindowService {
         // TODO remove elseif once vue cli is removed and add test once this is default
         /* istanbul ignore next */
         if (process.env["VUECLI"] !== "true") {
-          await this.window.loadFile(join(__dirname, "../renderer/index.html"));
+          await this.window.loadFile(
+            path.join(__dirname, "../renderer/index.html")
+          );
           return;
         }
 

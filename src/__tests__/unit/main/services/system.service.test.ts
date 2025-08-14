@@ -10,7 +10,8 @@ import { ErrorService } from "@/main/services/error.service";
 import type psList from "ps-list";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import * as shutDownCommands from "electron-shutdown-command";
-import type { ElectronLog, LogFile } from "electron-log";
+import type { Logger } from "@/main/logger";
+import type { LogFile } from "electron-log";
 import fs, { promises as fsPromises } from "fs";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import fetchInstalledSoftware from "fetch-installed-software";
@@ -31,7 +32,7 @@ import {
 describe("System service #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;
   let mockErrorService: StubbedInstanceWithSinonAccessor<ErrorService>;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
 
   let shellStub: sinon.SinonStub;
   let systemService: SystemService;

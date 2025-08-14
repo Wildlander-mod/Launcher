@@ -23,7 +23,7 @@ import {
   DISABLE_LOADING_EVENT,
   ENABLE_LOADING_EVENT,
 } from "../services/event.service";
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 
 @Options({
   components: { BaseDropdown },

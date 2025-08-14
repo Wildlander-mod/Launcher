@@ -24,7 +24,7 @@ import os from "os";
 import fs from "fs/promises";
 import Store from "electron-store";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 
 describe("ModOrganizer service #main #service", () => {
   let mockEnbService: StubbedInstanceWithSinonAccessor<EnbService>;
@@ -37,7 +37,7 @@ describe("ModOrganizer service #main #service", () => {
   let mockGraphicsService: StubbedInstanceWithSinonAccessor<GraphicsService>;
   let mockDialog: StubbedInstanceWithSinonAccessor<Dialog>;
   let modOrganizerService: ModOrganizerService;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
 
   beforeEach(() => {
     mockEnbService = createStubInstance(EnbService);

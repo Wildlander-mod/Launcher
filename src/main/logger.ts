@@ -1,19 +1,17 @@
 import { BindingKey } from "@loopback/core";
-import log, { ElectronLog } from "electron-log";
+import log from "electron-log/main";
+import path from "path";
 
-export type Logger = ElectronLog;
+export type Logger = typeof log;
 export const LoggerBinding = BindingKey.create<Logger>("bindings.logger");
 
-export const newLogInstance = (id: string) => {
-  const instance = log.create(id);
-  if (process.env["LOG_PATH"]) {
-    // If there is an explicit log path set, use it
-    instance.transports.file.resolvePath = () =>
-      `${process.env["LOG_PATH"]}/${id}.log`;
-  }
-  return instance;
-};
+log.initialize();
 
-// Export an instance of the logger that the renderer can use because it doesn't use dependency injection.
-// It is exposed in the preload script
-export const logger = newLogInstance("renderer");
+const defaultFilePath = path.dirname(log.transports.file.getFile().path);
+const filepath = process.env["LOG_PATH"] ?? defaultFilePath;
+
+log.transports.file.resolvePathFn = (_, message) => {
+  return message?.variables?.processType === "renderer"
+    ? path.join(filepath, "renderer.log")
+    : path.join(filepath, "main.log");
+};

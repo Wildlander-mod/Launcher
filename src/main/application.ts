@@ -1,7 +1,7 @@
 import { StartupService } from "@/main/services/startup.service";
 import type { Constructor } from "@loopback/context";
 import { WindowService } from "@/main/services/window.service";
-import { LoggerBinding, newLogInstance } from "@/main/logger";
+import { LoggerBinding } from "@/main/logger";
 import { BootMixin } from "@loopback/boot";
 import { Application } from "@loopback/core";
 import type { Controller } from "@/main/decorators/controller.decorator";
@@ -23,6 +23,7 @@ import { ContextMenuBinding } from "@/main/bindings/context-menu.binding";
 import { ConfigBinding } from "@/main/bindings/config.binding";
 import { ConfigService } from "@/main/services/config.service";
 import { is } from "@electron-toolkit/utils";
+import log from "electron-log/main";
 
 const serviceNamespace = "services";
 
@@ -99,7 +100,7 @@ export class LauncherApplication extends BootMixin(Application) {
   }
 
   private bindLogger() {
-    this.bind(LoggerBinding).to(newLogInstance("main"));
+    this.bind(LoggerBinding).to(log);
   }
 
   private bindStaticValues() {

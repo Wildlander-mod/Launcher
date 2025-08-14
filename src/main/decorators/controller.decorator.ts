@@ -1,6 +1,6 @@
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 import type { Constructor } from "@loopback/context";
-import log from "electron-log";
+import log from "electron-log/main";
 import "reflect-metadata";
 
 export interface Controller {
@@ -8,7 +8,6 @@ export interface Controller {
 }
 
 const HandlersMetadataKey = Symbol("handlers");
-const logger = log.create("decorator");
 type HandlerMap = Map<string, (...args: unknown[]) => unknown>;
 
 /* istanbul ignore next */
@@ -37,7 +36,7 @@ export function controller<T extends Constructor<object>>(baseClass: T) {
           this
         );
         handlers.forEach((method, channel) => {
-          logger.silly(`Registered handler "${channel}"`);
+          log.silly(`Registered handler "${channel}"`);
           ipcMain.handle(
             channel,
             (event: IpcMainInvokeEvent, ...args: unknown[]) =>

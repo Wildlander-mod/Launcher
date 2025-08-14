@@ -7,7 +7,7 @@ import {
   type StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
 import { ErrorService } from "@/main/services/error.service";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import { getAutoUpdaterMock } from "@/__tests__/unit/helpers/mocks/autoUpdater.mock";
 import { UPDATE_EVENTS } from "@/main/controllers/update/update.events";
@@ -20,7 +20,7 @@ describe("Updateservice #main #service", () => {
   let updateService: UpdateService;
   let mockErrorService: StubbedInstanceWithSinonAccessor<ErrorService>;
   let mockWindowService: StubbedInstanceWithSinonAccessor<WindowService>;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
   let autoUpdaterStub: StubbedInstanceWithSinonAccessor<AppUpdater>;
   let mockElectron: typeof Electron;
   let versionStub: sinon.SinonStub;

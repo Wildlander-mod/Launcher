@@ -1,5 +1,5 @@
 import { WindowService } from "@/main/services/window.service";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import sinon from "sinon";
 import {
@@ -13,7 +13,7 @@ import { getMockDialog } from "@/__tests__/unit/helpers/mocks/dialog.mock";
 describe("Window service #main #service", () => {
   let windowService: WindowService;
 
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
   let mockElectron: ReturnType<typeof getMockElectron>;
   let mockContextMenu: sinon.SinonStub;
   let mockDialog: StubbedInstanceWithSinonAccessor<Electron.Dialog>;
@@ -166,7 +166,6 @@ describe("Window service #main #service", () => {
   });
 
   describe("load", () => {
-
     beforeEach(() => {
       // TODO this is only needed while vue-cli still exists
       process.env["VUECLI"] = "true";

@@ -37,7 +37,7 @@ import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
 import type { Resolution as ResolutionType } from "@/shared/types/Resolution";
 import BaseLink from "./BaseLink.vue";
 import BaseInput from "./BaseInput.vue";
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import { asyncFilter } from "@/shared/util/asyncFilter";
 import { RESOLUTION_EVENTS } from "@/main/controllers/resolution/resolution.events";

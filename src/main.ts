@@ -1,28 +1,26 @@
 import { app, dialog, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
+import log from "electron-log/main";
 import { LauncherApplication } from "./main/application";
 import { ErrorService } from "./main/services/error.service";
 import { WindowService } from "./main/services/window.service";
-import { newLogInstance } from "./main/logger";
 import type { ProcessWithGlobals } from "./main/types/process-globals";
 import { promisify } from "util";
-
-const logger = newLogInstance("startup");
 
 if (process.env["MULTIPLE_INSTANCE"] !== "true") {
   const isSingleInstance = app.requestSingleInstanceLock();
   if (!isSingleInstance) {
-    logger.debug("Secondary instance opened, quitting");
+    log.debug("Secondary instance opened, quitting");
     app.quit();
   }
 }
 
 // Ensure it's easy to tell where the logs for this application start
 const initialLog = `|             ${new Date().toLocaleString()}             |`;
-logger.debug("-".repeat(initialLog.length));
-logger.debug(initialLog);
-logger.debug("-".repeat(initialLog.length));
-autoUpdater.logger = require("electron-log");
+log.debug("-".repeat(initialLog.length));
+log.debug(initialLog);
+log.debug("-".repeat(initialLog.length));
+autoUpdater.logger = log;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -72,6 +70,9 @@ const start = async () => {
 // Some APIs can only be used after this event occurs.
 // TODO this should probably use `app.whenReady().then(()` instead
 app.on("ready", () => {
+  // Initialize electron-log IPC before window creation (required for v5)
+  log.initialize();
+
   start()
     .then((launcherApplication) => {
       // In test mode, add some additional properties to the process object to be used later
@@ -85,9 +86,9 @@ app.on("ready", () => {
         };
       }
     })
-    .then(() => logger.debug("App started"))
+    .then(() => log.debug("App started"))
     .catch((error) => {
-      const errorService = new ErrorService(logger, dialog);
+      const errorService = new ErrorService(log, dialog);
       errorService.handleError(
         "Failed to start application",
         (error as Error).message

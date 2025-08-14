@@ -1,5 +1,5 @@
 import type { CacheService } from "./cache.service";
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 
 export class PatreonService {
   private patrons: Patron[] = [];

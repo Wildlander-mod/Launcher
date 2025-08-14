@@ -17,7 +17,7 @@
 import { Options, Vue } from "vue-class-component";
 import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
 import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
 

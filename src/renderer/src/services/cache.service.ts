@@ -1,4 +1,4 @@
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 
 /**
  * The CacheService class is a simple wrapper around window.localStorage

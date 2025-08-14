@@ -1,6 +1,9 @@
 const dependencies = require("./package.json").dependencies;
 
 module.exports = {
+  // Electron log v5+ contains optional chaining which is not supported by default
+  transpileDependencies: ['electron-log'],
+  
   configureWebpack: {
     externals: {
       // TODO can this be removed?

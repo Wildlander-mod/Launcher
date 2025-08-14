@@ -132,7 +132,7 @@ import Resolution from "./Resolution.vue";
 import ProfileSelection from "./ProfileSelection.vue";
 import ENB from "./ENB.vue";
 import { MOD_ORGANIZER_EVENTS } from "@/main/controllers/modOrganizer/modOrganizer.events";
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
 import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";

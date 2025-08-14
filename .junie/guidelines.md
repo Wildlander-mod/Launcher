@@ -17,7 +17,6 @@
 ### 3. Plan Management
 
 - **When creating a plan, store it as markdown in `.junie/plans/`**
-- **Plan creations and changes should be committed to git** to maintain a proper development history
 - Plans should be updated as Junie makes progress
 - **Plans should be updated after implementation to include implementation details**
 - **Plans should be kept local**
@@ -129,6 +128,9 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 ### Planning Best Practices
 
 - Break down complex tasks into manageable phases
+- **Phases should always focus on creating working solutions** - each phase must end with the application in a functional state
+- **Phases do not have to complete whole tasks** but should always result in a working application
+- **Later phases can remove or edit code from previous phases** to continue improving the solution while maintaining functionality
 - Consider dependencies and prerequisites
 - Plan for testing and validation
 - Include rollback strategies for risky changes
@@ -143,13 +145,6 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 - Update documentation alongside code changes
 - **Always run `npm run lint:fix` at the end of each implementation block and fix any linting issues that arise**
 - **Run tests after each change** to ensure functionality remains intact and no regressions are introduced
-- **Commit each working phase** to maintain a clear development history and enable easy rollback if needed
-
-### Version Control Best Practices
-
-- Maintain clean commit history with descriptive messages
-- Follow established branching strategies and workflows
-- Include meaningful commit messages that explain the "why" behind changes
 
 ### Communication Best Practices
 

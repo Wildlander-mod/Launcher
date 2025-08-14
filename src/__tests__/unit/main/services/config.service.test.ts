@@ -3,7 +3,7 @@ import { expect } from "@loopback/testlab";
 import mockFs from "mock-fs";
 import Store from "electron-store";
 import sinon from "sinon";
-import log, { ElectronLog } from "electron-log";
+import log from "electron-log/main";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { Context } from "@loopback/core";
 import { ConfigBinding } from "@/main/bindings/config.binding";
@@ -11,7 +11,7 @@ import { ConfigBinding } from "@/main/bindings/config.binding";
 describe("Config service #main #service", () => {
   let mockStore: Store<UserPreferences>;
   let mockModDirectory: string;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<typeof log>;
   let configService: ConfigService;
   let originalEnv: NodeJS.ProcessEnv;
   let mockContext: sinon.SinonStubbedInstance<Context>;

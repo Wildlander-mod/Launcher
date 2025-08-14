@@ -1,4 +1,4 @@
-import { logger } from "@/main/logger";
+import logger from "electron-log/renderer";
 import type { CacheService } from "./cache.service";
 
 export class PostsService {

@@ -7,7 +7,7 @@ import {
 import { InstructionService } from "@/main/services/instruction.service";
 import { ProfileService } from "@/main/services/profile.service";
 import { WabbajackService } from "@/main/services/wabbajack.service";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import mockFs from "mock-fs";
 import { Dirent } from "fs-extra";
@@ -23,7 +23,7 @@ describe("Instruction service #main #service", () => {
   let instructionService: InstructionService;
   let mockProfileService: StubbedInstanceWithSinonAccessor<ProfileService>;
   let mockWabbajackService: StubbedInstanceWithSinonAccessor<WabbajackService>;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
   let mockDirent: Omit<Dirent, "name">;
 
   beforeEach(() => {

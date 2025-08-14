@@ -12,7 +12,7 @@ import { ErrorService } from "@/main/services/error.service";
 import { WindowService } from "@/main/services/window.service";
 import { GraphicsService } from "@/main/services/graphics.service";
 import { MigrationService } from "@/main/services/migration.service";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 import { ModpackService } from "@/main/services/modpack.service";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
@@ -28,7 +28,7 @@ describe("Launcher service #main #service", () => {
   let mockWindowService: StubbedInstanceWithSinonAccessor<WindowService>;
   let mockGraphicsService: StubbedInstanceWithSinonAccessor<GraphicsService>;
   let mockMigrationService: StubbedInstanceWithSinonAccessor<MigrationService>;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
 
   beforeEach(() => {
     mockEnbService = createStubInstance(EnbService);

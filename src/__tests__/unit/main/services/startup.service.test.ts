@@ -14,7 +14,7 @@ import { BlacklistService } from "@/main/services/blacklist.service";
 import { ErrorService } from "@/main/services/error.service";
 import { WindowService } from "@/main/services/window.service";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 import type electron from "electron";
 import os from "os";
 
@@ -27,7 +27,7 @@ describe("Startup service #main #service", () => {
   let mockBlacklistService: StubbedInstanceWithSinonAccessor<BlacklistService>;
   let mockErrorService: StubbedInstanceWithSinonAccessor<ErrorService>;
   let mockWindowService: StubbedInstanceWithSinonAccessor<WindowService>;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
 
   let startupService: StartupService;
 

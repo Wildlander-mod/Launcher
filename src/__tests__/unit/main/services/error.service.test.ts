@@ -1,5 +1,5 @@
 import { ErrorService } from "@/main/services/error.service";
-import type { ElectronLog } from "electron-log";
+import type { Logger } from "@/main/logger";
 import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
 import { getMockDialog } from "@/__tests__/unit/helpers/mocks/dialog.mock";
 import { sinon, StubbedInstanceWithSinonAccessor } from "@loopback/testlab";
@@ -7,7 +7,7 @@ import type { Dialog } from "electron";
 
 describe("Error service #main #service", () => {
   let errorService: ErrorService;
-  let mockLogger: sinon.SinonStubbedInstance<ElectronLog>;
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
   let mockDialog: StubbedInstanceWithSinonAccessor<Dialog>;
 
   beforeEach(() => {
