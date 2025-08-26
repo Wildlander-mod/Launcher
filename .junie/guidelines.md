@@ -29,7 +29,7 @@
 
 ## Plan Structure Requirements
 
-For detailed plan structure requirements and formatting guidelines, see the plan template at `.junie/templates/plan.template.plan.md`.
+For detailed plan structure requirements and formatting guidelines, see the plan template at `.junie/templates/plan.template.md`.
 
 ## Workflow Process
 
@@ -70,6 +70,7 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 - Include diagrams or visual aids when helpful
 - Keep plans updated and accurate (when they exist)
 - **Note:** Ignore syntax errors in formatted code blocks when they are used for illustrative purposes in documentation
+- **Code Formatting:** Always include a bullet point list of simple steps above code sections. Code should appear below bullet points and should not be included within bullet point lists themselves
 
 ### Testing
 

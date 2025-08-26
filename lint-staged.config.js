@@ -1,6 +1,6 @@
 module.exports = {
   "*.{ts,tsx,js,jsx,vue,json,scss,css}": [
-    "npm run lint:fix",
+    () => "npm run lint:fix",
     () => "npm run test:unit",
   ],
   "*.scss": ["npm run lint:styles"],

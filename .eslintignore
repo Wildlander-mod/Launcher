@@ -1,6 +1,7 @@
 .github
 node_modules/
-wallaby.js
+wallaby.main.js
+wallaby.renderer.js
 babel.config.js
 lint-staged.config.js
 vue.config.js

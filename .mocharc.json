@@ -10,5 +10,7 @@
   ],
   "reporter": "spec",
   "extensions": ["ts"],
-  "spec": ["src/__tests__/**/*.test.ts"]
+  "spec": [
+    "src/__tests__/**/!(*renderer*)/*.test.ts"
+  ]
 }

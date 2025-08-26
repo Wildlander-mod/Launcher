@@ -1,6 +1,7 @@
 <template>
   <div
     class="c-app"
+    data-testid="app"
     :style="[
       backgroundImage && { 'background-image': `url(${backgroundImage})` },
     ]"

@@ -8,7 +8,10 @@ module.exports = function (w) {
       "tsconfig.json",
       "tsconfig.base.json",
     ],
-    tests: ["src/__tests__/unit/**/*.test.ts"],
+    tests: [
+      "src/__tests__/unit/main/**/*.test.ts",
+      "src/__tests__/unit/shared/**/*.test.ts"
+    ],
 
     testFramework: "mocha",
 
