@@ -9,7 +9,7 @@
 Below is a complete list of all renderer components that require testing:
 
 ### Base Components
-- [ ] AppDropdownFileSelect.vue
+- [x] AppDropdownFileSelect.vue - completed ✓
 - [ ] AppModal.vue
 - [ ] AppPage.vue
 - [ ] AppPageContent.vue
@@ -44,8 +44,7 @@ Below is a complete list of all renderer components that require testing:
 
 Each component should have:
 - Unit tests covering all functionality
-- Props validation tests
-- Event emission tests
-- Computed properties tests
-- Method tests
-- Accessibility tests where applicable
+- Tests should focus on having single assertions per test where possible
+- Tests should be written in Jest
+- Child components should always be mocked using shallow mocking by passing shallow:true to the mount function unless the child component is required to be mocked in a specific way. 
+- If a child component is required to be mocked, a comment should be added to the test file explaining why the component is being mocked.

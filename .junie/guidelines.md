@@ -17,6 +17,7 @@
 ### 3. Plan Management
 
 - **When creating a plan, store it as markdown in `.junie/plans/`**
+- **Plan creations and changes should be committed to git** to maintain a proper development history
 - Plans should be updated as Junie makes progress
 - **Plans should be updated after implementation to include implementation details**
 - **Plans should be kept local**
@@ -37,8 +38,12 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 
 1. **Create comprehensive plan** in `.junie/plans/[task-name].plan.md`
 2. **Include all required sections** as outlined in the plan template
-3. **STOP and wait for explicit approval** - do NOT proceed to implementation
-4. **Address feedback** and update plan if necessary
+3. **Automatically perform Current State Analysis** - this analysis phase must always be completed when creating the plan, including:
+   - Analysis of existing code/system
+   - Identification of current issues or areas for improvement
+   - Assessment of existing components, files, and structure
+4. **STOP and wait for explicit approval** - do NOT proceed to implementation
+5. **Address feedback** and update plan if necessary
 
 ### Phase 2: Implementation (Junie's Default Behavior)
 
@@ -129,13 +134,9 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 ### Planning Best Practices
 
 - Break down complex tasks into manageable phases
-- **Phases should always focus on creating working solutions** - each phase must end with the application in a functional state
-- **Phases do not have to complete whole tasks** but should always result in a working application
-- **Later phases can remove or edit code from previous phases** to continue improving the solution while maintaining functionality
 - Consider dependencies and prerequisites
 - Plan for testing and validation
 - Include rollback strategies for risky changes
-- **Always include an analysis phase as the first phase in every plan** to ensure proper understanding of the current state, requirements, and constraints before proceeding with implementation
 
 ### Implementation Best Practices
 
