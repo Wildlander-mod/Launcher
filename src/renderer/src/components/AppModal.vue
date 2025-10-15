@@ -17,13 +17,18 @@
       <div
         v-if="includeCloseButton"
         class="c-modal__actions c-modal__actions--right"
+        data-testid="modal-close-button-container"
       >
         <BaseButton v-if="includeCloseButton" @click="toggleModal(false)"
           >Close
         </BaseButton>
       </div>
 
-      <div v-if="$slots.action" class="c-modal__actions u-spacing">
+      <div
+        v-if="$slots.action"
+        class="c-modal__actions u-spacing"
+        data-testid="modal-action-slot-container"
+      >
         <slot name="action"></slot>
       </div>
     </div>

@@ -4,6 +4,8 @@
 
 **Note:** Every time a component has a plan to test it, once the testing implementation is completed, this plan should be updated to reflect the completion status.
 
+**Important:** After implementing tests for each component, always run the test suite to verify the tests pass before marking the component as completed.
+
 ## Component Testing Checklist
 
 Below is a complete list of all renderer components that require testing:
