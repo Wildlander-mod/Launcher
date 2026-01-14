@@ -2,6 +2,7 @@
 node_modules
 /dist
 /coverage
+/coverage-renderer
 .nyc_output
 .tsbuildinfo
 
@@ -35,5 +36,11 @@ mock-files
 
 .junie/plans/completed/
 .junie/plans/archived/
+
+.amazonq/plans/completed/
+.amazonq/plans/archived/
+
+.claude/plans/completed/
+.claude/plans/archived/
 
 out
