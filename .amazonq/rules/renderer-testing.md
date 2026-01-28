@@ -125,3 +125,120 @@ These guidelines complement the existing testing standards in `memory-bank/guide
 - Maintain single assertion per test
 - Use descriptive test names
 - Follow the established test structure
+
+## Best Practices
+
+### Shallow Mounting Configuration
+- Always use `shallow: true` by default
+- Enable `renderStubDefaultSlot: true` in global config to render default slot content
+- This allows testing component behavior without rendering child components
+
+### Component Mocking
+- Mock external components using `stubs` in mount options, not `jest.mock()`
+- Define mock components as simple objects with template strings
+- Pass stubs via `global.stubs` in mount configuration
+
+```typescript
+// Good: Mock as stub
+const MockPopper = {
+  name: "Popper",
+  template: "<div><slot name='content' /><slot /></div>",
+};
+
+const wrapper = mount(MyComponent, {
+  shallow: true,
+  global: {
+    stubs: {
+      Popper: MockPopper,
+    },
+    renderStubDefaultSlot: true,
+  },
+});
+
+// Bad: Using jest.mock()
+jest.mock("vue3-popper", () => ({
+  default: { /* ... */ },
+}));
+```
+
+### Directive Mocking
+- Mock custom directives via `global.directives` in mount options
+- Keep directive mocks as simple as possible - capture the handler for explicit invocation
+- Use proper TypeScript types for directive parameters
+
+```typescript
+let clickAwayHandler: (() => void) | undefined;
+
+const wrapper = mount(MyComponent, {
+  shallow: true,
+  global: {
+    directives: {
+      "click-away": {
+        mounted(_el: HTMLElement, binding: { value: () => void }) {
+          clickAwayHandler = binding.value;
+        },
+      },
+    },
+  },
+});
+
+// Later in test
+clickAwayHandler?.(); // Explicitly trigger the directive behavior
+```
+
+### Test Organization
+- Use `beforeEach` to set up common mounting configuration when duplicated across tests
+- Declare wrapper variable at describe block level for shared access
+- Keep test-specific setup in individual test cases
+
+```typescript
+describe("MyComponent", () => {
+  let wrapper: ReturnType<typeof mount>;
+
+  beforeEach(() => {
+    wrapper = mount(MyComponent, {
+      shallow: true,
+      props: { /* common props */ },
+      global: {
+        stubs: { /* common stubs */ },
+        renderStubDefaultSlot: true,
+      },
+    });
+  });
+
+  it("should do something", async () => {
+    // Test implementation
+  });
+});
+```
+
+### Simulating User Actions
+- Always trigger events on elements, never call component methods directly
+- For directive behavior (like click-away), capture and explicitly invoke the handler
+- Wait for Vue's reactivity with `await wrapper.vm.$nextTick()` when needed
+- Use `byTestId()` utility function for selecting elements by data-testid
+- Abstract selectors to a const object for reusability
+
+```typescript
+import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+
+// Selectors
+const selectors = {
+  button: byTestId("submit-button"),
+  input: byTestId("email-input"),
+  error: byTestId("error-message"),
+};
+
+// Good: Use abstracted selectors
+await wrapper.find(selectors.button).trigger('click');
+const element = wrapper.find(selectors.input);
+
+// Good: Explicitly invoke directive handlers
+clickAwayHandler?.();
+
+// Bad: Manual selector strings
+await wrapper.find('[data-testid="button"]').trigger('click'); // Don't do this
+
+// Bad: Call methods directly
+wrapper.vm.handleClick(); // Don't do this
+```
