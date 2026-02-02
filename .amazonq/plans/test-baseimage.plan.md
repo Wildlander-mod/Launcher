@@ -26,74 +26,11 @@ The BaseImage.vue component is a minimal Vue component that:
 
 ### 1. Observable Rendering (Prop-Driven Visual Changes)
 
-#### 1.1 Image Source Display
-- [ ] **Should render image with correct source**
+- [x] **Should render image with all props correctly bound to attributes**
   - Verify img element displays with provided imageSource
-  - Test with various URL formats (relative, absolute, data URLs)
-  - Test with empty string shows empty src
-
-#### 1.2 Alt Text Display
-- [ ] **Should render image with correct alt text**
   - Verify img element has provided alt text
-  - Test with descriptive text
-  - Test with empty string (decorative images)
-
-#### 1.3 Dimension Display
-- [ ] **Should render image with specified height when provided**
   - Verify img element has height attribute when height prop provided
-  - Test with various positive numbers
-  - Verify no height attribute when prop not provided
-
-- [ ] **Should render image with specified width when provided**
   - Verify img element has width attribute when width prop provided
-  - Test with various positive numbers
-  - Verify no width attribute when prop not provided
-
-### 2. Dynamic Behavior Tests
-
-#### 2.1 Prop Changes (Observable Results)
-- [ ] **Should update image source when imageSource prop changes**
-  - Change imageSource prop and verify src attribute updates
-  - Test switching between different image URLs
-
-- [ ] **Should update dimensions when height/width props change**
-  - Change height prop and verify height attribute updates
-  - Change width prop and verify width attribute updates
-  - Remove height/width props and verify attributes removed
-
-### 3. Edge Cases (Observable Results)
-
-#### 3.1 Invalid Image Sources
-- [ ] **Should render img element with invalid URL**
-  - Test with non-existent image paths
-  - Test with malformed URLs
-  - Verify img element still renders (browser handles broken images)
-
-#### 3.2 Boundary Values (Observable Results)
-- [ ] **Should handle extreme dimensions**
-  - Test very large width/height values render correctly
-  - Test zero dimensions render correctly
-
-#### 3.3 Special Characters (Observable Results)
-- [ ] **Should handle special characters in alt text**
-  - Test alt text with special characters displays correctly
-  - Test Unicode characters in alt text
-  - Test HTML entities in alt text
-
-### 4. Accessibility (Observable Results)
-
-#### 4.1 Alt Text Presence
-- [ ] **Should always render alt attribute**
-  - Verify alt attribute exists on img element
-  - Test with descriptive alt text
-  - Test with empty alt text (decorative images)
-
-### 5. Component Has Dynamic Behavior
-
-**Note:** This component has minimal dynamic behavior. Most tests verify prop-driven attribute rendering, which is acceptable for this simple presentational component. The component should still be tested to ensure:
-- Props correctly affect rendered attributes
-- Prop changes trigger re-renders with updated attributes
-- Edge cases don't break rendering
 
 ## Test Implementation Strategy
 
