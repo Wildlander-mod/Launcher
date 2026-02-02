@@ -34,31 +34,48 @@ describe("BaseDropdown #renderer #component", () => {
 
   const defaultSelection = defaultOptions[0];
 
+  const createWrapper = (
+    overrides: {
+      props?: Record<string, unknown>;
+      slots?: Record<string, string>;
+      clickAwayHandler?: (handler: () => void) => void;
+    } = {}
+  ) => {
+    let clickAwayHandler: (() => void) | undefined;
+
+    const wrapper = mount(BaseDropdown, {
+      shallow: true,
+      props: {
+        options: defaultOptions,
+        currentSelection: defaultSelection,
+        ...overrides.props,
+      },
+      ...(overrides.slots && { slots: overrides.slots }),
+      global: {
+        stubs: {
+          Popper: MockPopper,
+        },
+        directives: {
+          "click-away": {
+            mounted(_el: HTMLElement, binding: { value: () => void }) {
+              clickAwayHandler = binding.value;
+              overrides.clickAwayHandler?.(binding.value);
+            },
+          },
+        },
+        renderStubDefaultSlot: true,
+      },
+    });
+
+    return { wrapper, clickAwayHandler };
+  };
+
   describe("Opening and Closing Dropdown", () => {
     let wrapper: ReturnType<typeof mount>;
     let clickAwayHandler: (() => void) | undefined;
 
     beforeEach(() => {
-      wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted(_el: HTMLElement, binding: { value: () => void }) {
-                clickAwayHandler = binding.value;
-              },
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      ({ wrapper, clickAwayHandler } = createWrapper());
     });
 
     it("should open dropdown when clicking the head", async () => {
@@ -92,24 +109,7 @@ describe("BaseDropdown #renderer #component", () => {
     let wrapper: ReturnType<typeof mount>;
 
     beforeEach(() => {
-      wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      ({ wrapper } = createWrapper());
     });
 
     it("should select option when clicking it", async () => {
@@ -134,24 +134,12 @@ describe("BaseDropdown #renderer #component", () => {
         { text: "Option 2", value: 2, disabled: true },
       ];
 
-      wrapper = mount(BaseDropdown, {
-        shallow: true,
+      ({ wrapper } = createWrapper({
         props: {
           options: optionsWithDisabled,
           currentSelection: optionsWithDisabled[0],
         },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      }));
 
       await wrapper.find(selectors.dropdown).trigger("click");
       await wrapper.find(selectors.disabledOption(1)).trigger("click");
@@ -165,24 +153,12 @@ describe("BaseDropdown #renderer #component", () => {
         { text: "Option 2", value: 2, disabled: true },
       ];
 
-      wrapper = mount(BaseDropdown, {
-        shallow: true,
+      ({ wrapper } = createWrapper({
         props: {
           options: optionsWithDisabled,
           currentSelection: optionsWithDisabled[0],
         },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      }));
 
       await wrapper.find(selectors.dropdown).trigger("click");
       await wrapper.find(selectors.disabledOption(1)).trigger("click");
@@ -198,24 +174,12 @@ describe("BaseDropdown #renderer #component", () => {
         { text: "Option 3", value: 3 },
       ];
 
-      wrapper = mount(BaseDropdown, {
-        shallow: true,
+      ({ wrapper } = createWrapper({
         props: {
           options: optionsWithHidden,
           currentSelection: optionsWithHidden[0],
         },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      }));
 
       expect(wrapper.find(selectors.option(0)).text()).toBe("Option 1");
       expect(wrapper.find(selectors.option(1)).text()).toBe("Option 3");
@@ -225,24 +189,7 @@ describe("BaseDropdown #renderer #component", () => {
 
   describe("Current Selection Display", () => {
     it("should display current selection text", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper();
 
       expect(wrapper.find(selectors.dropdown).text()).toContain("Option 1");
     });
@@ -250,25 +197,7 @@ describe("BaseDropdown #renderer #component", () => {
 
   describe("Size Variations", () => {
     it("should apply small styling when small prop is true", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-          small: true,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper({ props: { small: true } });
 
       expect(wrapper.find(selectors.options).classes()).toContain(
         "c-select__options--small"
@@ -276,25 +205,7 @@ describe("BaseDropdown #renderer #component", () => {
     });
 
     it("should apply fixed width when grow prop is false", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-          grow: false,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper({ props: { grow: false } });
 
       expect(wrapper.find(".c-select").classes()).toContain(
         "c-select--fixed-width"
@@ -302,25 +213,7 @@ describe("BaseDropdown #renderer #component", () => {
     });
 
     it("should not apply fixed width when grow prop is true", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-          grow: true,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper({ props: { grow: true } });
 
       expect(wrapper.find(".c-select").classes()).not.toContain(
         "c-select--fixed-width"
@@ -330,24 +223,7 @@ describe("BaseDropdown #renderer #component", () => {
 
   describe("Options Rendering", () => {
     it("should render all visible options", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper();
 
       expect(wrapper.find(selectors.option(0)).exists()).toBe(true);
       expect(wrapper.find(selectors.option(1)).exists()).toBe(true);
@@ -360,22 +236,10 @@ describe("BaseDropdown #renderer #component", () => {
         { text: "Option 2", value: 2, disabled: true },
       ];
 
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
+      const { wrapper } = createWrapper({
         props: {
           options: optionsWithDisabled,
           currentSelection: optionsWithDisabled[0],
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
         },
       });
 
@@ -387,25 +251,7 @@ describe("BaseDropdown #renderer #component", () => {
 
   describe("Tooltip Behavior", () => {
     it("should show tooltip when showTooltip is true and dropdown is open", async () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-          showTooltip: true,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper({ props: { showTooltip: true } });
 
       await wrapper.find(selectors.dropdown).trigger("click");
 
@@ -413,48 +259,14 @@ describe("BaseDropdown #renderer #component", () => {
     });
 
     it("should hide tooltip when showTooltip is false", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-          showTooltip: false,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper({ props: { showTooltip: false } });
 
       expect(wrapper.findComponent(MockPopper).props("show")).toBe(false);
     });
 
     it("should enable hover tooltip when showTooltipOnHover is true", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-          showTooltipOnHover: true,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
+      const { wrapper } = createWrapper({
+        props: { showTooltipOnHover: true },
       });
 
       expect(wrapper.findComponent(MockPopper).props("hover")).toBe(true);
@@ -463,24 +275,7 @@ describe("BaseDropdown #renderer #component", () => {
 
   describe("Loading State", () => {
     it("should hide options during initial loading", () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper();
 
       expect(wrapper.find(selectors.options).classes()).toContain(
         "c-select__options--loading"
@@ -488,24 +283,7 @@ describe("BaseDropdown #renderer #component", () => {
     });
 
     it("should show options after first open", async () => {
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
-      });
+      const { wrapper } = createWrapper();
 
       await wrapper.find(selectors.dropdown).trigger("click");
 
@@ -518,26 +296,8 @@ describe("BaseDropdown #renderer #component", () => {
   describe("Slot Content", () => {
     it("should render slot content in tooltip", () => {
       const slotContent = "<div class='tooltip-content'>Test Tooltip</div>";
-      const wrapper = mount(BaseDropdown, {
-        shallow: true,
-        props: {
-          options: defaultOptions,
-          currentSelection: defaultSelection,
-        },
-        slots: {
-          default: slotContent,
-        },
-        global: {
-          stubs: {
-            Popper: MockPopper,
-          },
-          directives: {
-            "click-away": {
-              mounted() {},
-            },
-          },
-          renderStubDefaultSlot: true,
-        },
+      const { wrapper } = createWrapper({
+        slots: { default: slotContent },
       });
 
       expect(wrapper.html()).toContain("Test Tooltip");
