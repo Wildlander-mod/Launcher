@@ -13,6 +13,7 @@ interface SelectOption {
 const MockPopper = {
   name: "Popper",
   template: "<div><slot name='content' /><slot /></div>",
+  props: ["show", "hover", "arrow", "interactive", "placement"],
 };
 
 // Selectors
@@ -219,6 +220,327 @@ describe("BaseDropdown #renderer #component", () => {
       expect(wrapper.find(selectors.option(0)).text()).toBe("Option 1");
       expect(wrapper.find(selectors.option(1)).text()).toBe("Option 3");
       expect(wrapper.find(selectors.option(2)).exists()).toBe(false);
+    });
+  });
+
+  describe("Current Selection Display", () => {
+    it("should display current selection text", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(selectors.dropdown).text()).toContain("Option 1");
+    });
+  });
+
+  describe("Size Variations", () => {
+    it("should apply small styling when small prop is true", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+          small: true,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(selectors.options).classes()).toContain(
+        "c-select__options--small"
+      );
+    });
+
+    it("should apply fixed width when grow prop is false", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+          grow: false,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(".c-select").classes()).toContain(
+        "c-select--fixed-width"
+      );
+    });
+
+    it("should not apply fixed width when grow prop is true", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+          grow: true,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(".c-select").classes()).not.toContain(
+        "c-select--fixed-width"
+      );
+    });
+  });
+
+  describe("Options Rendering", () => {
+    it("should render all visible options", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(selectors.option(0)).exists()).toBe(true);
+      expect(wrapper.find(selectors.option(1)).exists()).toBe(true);
+      expect(wrapper.find(selectors.option(2)).exists()).toBe(true);
+    });
+
+    it("should show disabled styling for disabled options", () => {
+      const optionsWithDisabled: SelectOption[] = [
+        { text: "Option 1", value: 1 },
+        { text: "Option 2", value: 2, disabled: true },
+      ];
+
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: optionsWithDisabled,
+          currentSelection: optionsWithDisabled[0],
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(selectors.disabledOption(1)).classes()).toContain(
+        "c-select__option--disabled"
+      );
+    });
+  });
+
+  describe("Tooltip Behavior", () => {
+    it("should show tooltip when showTooltip is true and dropdown is open", async () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+          showTooltip: true,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      await wrapper.find(selectors.dropdown).trigger("click");
+
+      expect(wrapper.findComponent(MockPopper).props("show")).toBe(true);
+    });
+
+    it("should hide tooltip when showTooltip is false", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+          showTooltip: false,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.findComponent(MockPopper).props("show")).toBe(false);
+    });
+
+    it("should enable hover tooltip when showTooltipOnHover is true", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+          showTooltipOnHover: true,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.findComponent(MockPopper).props("hover")).toBe(true);
+    });
+  });
+
+  describe("Loading State", () => {
+    it("should hide options during initial loading", () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.find(selectors.options).classes()).toContain(
+        "c-select__options--loading"
+      );
+    });
+
+    it("should show options after first open", async () => {
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      await wrapper.find(selectors.dropdown).trigger("click");
+
+      expect(wrapper.find(selectors.options).classes()).not.toContain(
+        "c-select__options--loading"
+      );
+    });
+  });
+
+  describe("Slot Content", () => {
+    it("should render slot content in tooltip", () => {
+      const slotContent = "<div class='tooltip-content'>Test Tooltip</div>";
+      const wrapper = mount(BaseDropdown, {
+        shallow: true,
+        props: {
+          options: defaultOptions,
+          currentSelection: defaultSelection,
+        },
+        slots: {
+          default: slotContent,
+        },
+        global: {
+          stubs: {
+            Popper: MockPopper,
+          },
+          directives: {
+            "click-away": {
+              mounted() {},
+            },
+          },
+          renderStubDefaultSlot: true,
+        },
+      });
+
+      expect(wrapper.html()).toContain("Test Tooltip");
     });
   });
 });

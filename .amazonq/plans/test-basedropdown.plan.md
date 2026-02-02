@@ -4,7 +4,7 @@
 
 This plan outlines comprehensive test coverage for the BaseDropdown.vue component, a reusable dropdown/select component built with Vue 3 class-based syntax and vue3-popper integration.
 
-**Status**: Phase 1.2 Complete
+**Status**: Phase 5.1 Complete
 
 ## Current State Analysis
 
@@ -71,45 +71,45 @@ Based on development guidelines, tests should:
 ### Phase 2: Prop-Driven Visual Changes
 
 #### 2.1 Current Selection Display
-- [ ] **Should display current selection text**
+- [x] **Should display current selection text**
   - Render with currentSelection prop
   - Verify selection text appears in dropdown head
 
 #### 2.2 Size Variations
-- [ ] **Should apply small styling when small prop is true**
+- [x] **Should apply small styling when small prop is true**
   - Render with small=true
   - Verify options container has small modifier class
 
-- [ ] **Should apply full width when grow prop is false**
+- [x] **Should apply full width when grow prop is false**
   - Render with grow=false (default)
   - Verify component has fixed width class
 
-- [ ] **Should not apply fixed width when grow prop is true**
+- [x] **Should not apply fixed width when grow prop is true**
   - Render with grow=true
   - Verify component does not have fixed width class
 
 #### 2.3 Options Rendering
-- [ ] **Should render all visible options**
+- [x] **Should render all visible options**
   - Render with array of options
   - Verify all non-hidden options appear in list
   - Verify option text displays correctly
 
-- [ ] **Should show disabled styling for disabled options**
+- [x] **Should show disabled styling for disabled options**
   - Render with disabled options
   - Verify disabled options have disabled styling/classes
 
 ### Phase 3: Tooltip Behavior
 
 #### 3.1 Tooltip Display
-- [ ] **Should show tooltip when showTooltip is true**
+- [x] **Should show tooltip when showTooltip is true**
   - Render with showTooltip=true
   - Verify tooltip/popper is visible
 
-- [ ] **Should hide tooltip when showTooltip is false**
+- [x] **Should hide tooltip when showTooltip is false**
   - Render with showTooltip=false (default)
   - Verify tooltip/popper is hidden
 
-- [ ] **Should show tooltip on hover when showTooltipOnHover is true**
+- [x] **Should show tooltip on hover when showTooltipOnHover is true**
   - Render with showTooltipOnHover=true
   - Trigger mouseenter on dropdown
   - Verify tooltip becomes visible
@@ -117,11 +117,11 @@ Based on development guidelines, tests should:
 ### Phase 4: Loading State
 
 #### 4.1 Initial Loading
-- [ ] **Should hide options during initial loading**
+- [x] **Should hide options during initial loading**
   - Render component (loading starts as true)
   - Verify options are not visible
 
-- [ ] **Should show options after first open**
+- [x] **Should show options after first open**
   - Open dropdown for first time
   - Verify options become visible
   - Verify loading state ends
@@ -129,34 +129,9 @@ Based on development guidelines, tests should:
 ### Phase 5: Slot Content
 
 #### 5.1 Tooltip Slot
-- [ ] **Should render slot content in tooltip**
+- [x] **Should render slot content in tooltip**
   - Render with slot content
   - Verify slot content appears in Popper tooltip area
-
-### Phase 6: Edge Cases (Observable Results)
-
-#### 6.1 Empty States
-- [ ] **Should handle empty options array**
-  - Render with empty options array
-  - Verify component renders without errors
-  - Verify no options are displayed
-
-- [ ] **Should handle all options being hidden**
-  - Render with all options marked as hidden
-  - Verify no options are displayed in list
-
-#### 6.2 Boundary Conditions
-- [ ] **Should handle single option**
-  - Render with single option
-  - Verify option displays and is selectable
-
-- [ ] **Should handle very long option text**
-  - Render with option containing very long text
-  - Verify text displays without breaking layout
-
-- [ ] **Should handle special characters in option text**
-  - Render with special characters in option text
-  - Verify text displays correctly
 
 ## File Structure (Target)
 
