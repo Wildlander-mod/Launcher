@@ -2,6 +2,7 @@
   <div class="l-column">
     <BaseLabel :label="label" :centered="centered" />
     <input
+      data-testid="base-input"
       type="text"
       :readonly="readonly"
       class="c-input"
