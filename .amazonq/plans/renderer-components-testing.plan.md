@@ -16,7 +16,7 @@ Below is a complete list of all renderer components that require testing:
 - [ ] AppPage.vue
 - [ ] AppPageContent.vue
 - [ ] BaseButton.vue
-- [ ] BaseDropdown.vue
+- [x] BaseDropdown.vue - completed ✓
 - [ ] BaseImage.vue
 - [ ] BaseInput.vue
 - [ ] BaseLabel.vue
