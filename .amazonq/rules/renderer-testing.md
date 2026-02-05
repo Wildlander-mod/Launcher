@@ -117,6 +117,7 @@ it('should show tooltip when hovering over icon', async () => {
 - Slots have no custom logic (simple pass-through)
 - No conditional rendering or computed values
 - No user interactions or events
+- Static components that always render the same child components without conditions
 
 ## Integration with Existing Standards
 
