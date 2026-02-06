@@ -20,7 +20,7 @@ type OverloadUnionRecursive<
           >
         | ((...args: TArgs) => TReturn)
   : never;
-type OverloadUnion<TOverload extends (...args: any[]) => any> = Exclude<
+type OverloadUnion<TOverload extends (...args: never[]) => unknown> = Exclude<
   OverloadUnionRecursive<
     // The "() => never" signature must be hoisted to the "front" of the
     // intersection, for two reasons: a) because recursion stops when it is
@@ -32,9 +32,7 @@ type OverloadUnion<TOverload extends (...args: any[]) => any> = Exclude<
   TOverload extends () => never ? never : () => never
 >;
 
-export type OverloadParameters<T extends (...args: any[]) => any> = Parameters<
-  OverloadUnion<T>
->;
-export type OverloadReturnType<T extends (...args: any[]) => any> = ReturnType<
-  OverloadUnion<T>
->;
+export type OverloadParameters<T extends (...args: never[]) => unknown> =
+  Parameters<OverloadUnion<T>>;
+export type OverloadReturnType<T extends (...args: never[]) => unknown> =
+  ReturnType<OverloadUnion<T>>;
