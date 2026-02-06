@@ -108,6 +108,15 @@ describe("AppPage", () => {
       expect(wrapper.findComponent(TheNavigation).exists()).toBe(true);
     });
 
+    it("should handle route with undefined meta", async () => {
+      mockRoute.name = "no-meta";
+      delete (mockRoute as { meta?: unknown }).meta;
+
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.findComponent(TheNavigation).exists()).toBe(true);
+    });
+
     it("should update navigation visibility when route changes", async () => {
       mockRoute.name = "settings";
       mockRoute.meta.preload = false;

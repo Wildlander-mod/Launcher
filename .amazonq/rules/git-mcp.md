@@ -16,6 +16,18 @@ The Git MCP provides better integration and should be used for all git operation
 - Resetting staged changes (`git_reset`)
 - Repository initialization (`git_init`)
 
+## Retry Strategy
+
+If a Git MCP operation fails:
+
+1. **First attempt**: Try the operation with the Git MCP tool
+2. **On error**: Enable verbose debugging to understand the failure
+3. **Second attempt**: Retry with different parameters or approach based on error details
+4. **Third attempt**: Try an alternative Git MCP tool if one exists for the operation
+5. **Last resort**: Only after multiple Git MCP attempts fail, fall back to bash commands
+
+Always exhaust Git MCP options before using bash.
+
 ### Available Git MCP Tools
 
 - `git_status` - Show working tree status

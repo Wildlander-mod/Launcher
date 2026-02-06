@@ -7,36 +7,39 @@
       :readonly="readonly"
       class="c-input"
       :value="value"
-      @input="input"
-      @click="click"
+      @input="handleInput"
+      @click="handleClick"
     />
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { Emit, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import BaseLabel from "./BaseLabel.vue";
 
-@Options({
-  components: { BaseLabel },
-  emits: ["input", "click"],
-})
-export default class BaseInput extends Vue {
-  @Prop({ required: true }) label!: string;
-  @Prop({ default: false }) readonly!: boolean;
-  @Prop({ default: false }) centered!: boolean;
-  @Prop() value!: string;
+interface Props {
+  label: string;
+  readonly?: boolean;
+  centered?: boolean;
+  value?: string;
+}
 
-  @Emit()
-  input(event: Event) {
-    return event.target as HTMLInputElement;
-  }
+withDefaults(defineProps<Props>(), {
+  readonly: false,
+  centered: false,
+  value: "",
+});
 
-  @Emit()
-  click(event: Event) {
-    return event.target as HTMLInputElement;
-  }
+const emit = defineEmits<{
+  (e: "input", target: HTMLInputElement): void;
+  (e: "click", target: HTMLInputElement): void;
+}>();
+
+function handleInput(event: Event): void {
+  emit("input", event.target as HTMLInputElement);
+}
+
+function handleClick(event: Event): void {
+  emit("click", event.target as HTMLInputElement);
 }
 </script>
 
