@@ -12,25 +12,27 @@
   </a>
 </template>
 
-<script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
-export default class BaseLink extends Vue {
-  @Prop({ required: true }) href!: string;
-  @Prop() underline!: boolean;
-  @Prop({ default: false }) hoverStyle!: boolean;
+interface Props {
+  href: string;
+  underline?: boolean;
+  hoverStyle?: boolean;
+}
 
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const props = withDefaults(defineProps<Props>(), {
+  hoverStyle: false,
+});
 
-  // By default, electron will try to open links in the same window.
-  // Links need to be opened in the users default browsers instead
-  openLink(event: Event) {
-    event.preventDefault();
-    this.ipcService.invoke(SYSTEM_EVENTS.OPEN_LINK_IN_BROWSER, this.href);
-  }
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+
+// By default, electron will try to open links in the same window.
+// Links need to be opened in the users default browsers instead
+function openLink(event: Event): void {
+  event.preventDefault();
+  ipcService.invoke(SYSTEM_EVENTS.OPEN_LINK_IN_BROWSER, props.href);
 }
 </script>
 
