@@ -1,6 +1,7 @@
 <template>
   <div class="c-page-content l-column">
     <div
+      data-testid="page-content-body"
       class="c-page-content__body"
       :class="{
         'c-page-content__body--large-spacing': spacing,
