@@ -12,14 +12,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-
-export default class BaseList extends Vue {
-  @Prop() title!: string;
-  @Prop({ required: true }) items!: string[];
-}
+<script setup lang="ts">
+defineProps<{
+  title?: string;
+  items: string[];
+}>();
 </script>
 
 <style lang="scss" scoped>
