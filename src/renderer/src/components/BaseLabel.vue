@@ -8,15 +8,11 @@
   </label>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-
-@Options({})
-export default class BaseLabel extends Vue {
-  @Prop() centered!: boolean;
-  @Prop() label!: string;
-}
+<script setup lang="ts">
+defineProps<{
+  centered?: boolean;
+  label: string;
+}>();
 </script>
 
 <style scoped lang="scss">
