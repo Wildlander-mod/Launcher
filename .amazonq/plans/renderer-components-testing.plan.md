@@ -21,7 +21,7 @@ Below is a complete list of all renderer components that require testing:
 - [x] BaseInput.vue - completed ✓
 - [x] BaseLabel.vue - completed ✓
 - [x] BaseLink.vue - completed ✓
-- [ ] BaseList.vue
+- [x] BaseList.vue - completed ✓
 
 ### Feature Components
 - [ ] Community.vue

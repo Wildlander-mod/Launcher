@@ -1,9 +1,12 @@
 <template>
   <div class="c-list">
-    <div class="c-list__title">
+    <div class="c-list__title" data-testid="list-title">
       <slot></slot>
     </div>
-    <ul class="c-list__content u-list--bare u-small-scrollbar">
+    <ul
+      class="c-list__content u-list--bare u-small-scrollbar"
+      data-testid="list-content"
+    >
       <li v-for="element in items" :key="element.key">{{ element }}</li>
     </ul>
   </div>
