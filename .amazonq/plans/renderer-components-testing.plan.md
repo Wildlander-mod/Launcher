@@ -38,7 +38,7 @@ Below is a complete list of all renderer components that require testing:
 - [ ] Resolution.vue
 
 ### Layout Components
-- [ ] TheHeader.vue
+- [x] TheHeader.vue - completed ✓
 - [ ] TheNavigation.vue
 - [ ] TheTitleBar.vue
 

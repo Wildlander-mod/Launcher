@@ -31,7 +31,7 @@
           >Roadmap</BaseLink
         >
       </div>
-      <div v-if="modpack.wiki" class="c-header__link l-center-vertically">
+      <div v-if="modpack.patreon" class="c-header__link l-center-vertically">
         <BaseLink
           :href="modpack.patreon"
           :hover-style="true"
