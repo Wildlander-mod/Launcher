@@ -3,6 +3,42 @@ name: renderer-test
 description: Write renderer unit tests for Vue components. Use when writing or updating tests for renderer components in this project.
 ---
 
+## Workflow
+
+### Step 1: Check for an existing plan
+
+Before doing anything else, check whether a plan already exists for the component under test in `.claude/plans/`. Plans follow the naming convention `[component-name-kebab-case].plan.md`.
+
+### Step 2: If no plan exists — ask qualifying questions first
+
+If no plan exists, **do not create the plan or write any tests yet**. First ask the user the following qualifying questions to gather the context needed to write a thorough plan:
+
+1. Are there any specific behaviours, edge cases, or user interactions you want prioritised in the tests?
+2. Are there any IPC events or external dependencies that should be mocked in a particular way?
+3. Are there any existing patterns or constraints in the codebase (e.g. class-based component workarounds) that should be noted?
+4. Is there anything that should explicitly **not** be tested for this component?
+
+Wait for the user's answers before proceeding.
+
+### Step 3: Create the plan
+
+Using the answers from the qualifying questions and your analysis of the component, create a plan at `.claude/plans/[component-name].plan.md` following the plan template at `.claude/templates/plan.template.md`.
+
+The plan must include:
+- **Overview**: What is being tested and why
+- **Current State Analysis**: Component structure, dynamic behaviours, IPC calls, events, props, child components
+- **Implementation Plan**: Phased breakdown of test groups (e.g. rendering, interactions, lifecycle, modals)
+- **Key Principles**: Testing standards specific to this component
+- **Success Criteria**: What passing tests must cover
+
+**STOP after creating the plan and wait for explicit approval before writing any tests.**
+
+### Step 4: Implement tests (after plan approval)
+
+Once the plan is approved, write the tests following the plan and the guidelines below.
+
+---
+
 Write renderer unit tests following these guidelines:
 
 ## Core Principles

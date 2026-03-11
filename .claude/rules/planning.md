@@ -1,38 +1,38 @@
-# Amazon Q Development Guidelines
+# Claude Development Guidelines
 
 ## Core Principles
 
 ### 1. Planning When Requested
 
-- **By default, Amazon Q should proceed directly to implementation unless a plan is specifically requested**
+- **By default, Claude should proceed directly to implementation unless a plan is specifically requested**
 - When plans are requested, they must be comprehensive and detailed before any code changes
 - Plans should be approved before implementation begins when they are created
 - For complex tasks, consider requesting a plan to ensure proper structure and approach
 
 ### 2. Plan Management
 
-- **When creating a plan, store it as markdown in `.amazonq/plans/`**
+- **When creating a plan, store it as markdown in `.claude/plans/`**
 - **Plan creations and changes should be committed to git** to maintain a proper development history
-- Plans should be updated as Amazon Q makes progress
+- Plans should be updated as Claude makes progress
 - **Plans should be updated after implementation to include implementation details**
-- **Completed plans should be moved to `.amazonq/plans/completed/` to maintain organization**
-- **Abandoned plans should be moved to `.amazonq/plans/archived/` to maintain organization**
+- **Completed plans should be moved to `.claude/plans/completed/` to maintain organization**
+- **Abandoned plans should be moved to `.claude/plans/archived/` to maintain organization**
 - **Note:** Once plans are moved to `completed/` or `archived/` directories, git will no longer track them as these directories are gitignored
 - **Important:** When updating implementation plans, do not remove completed items from the plan. Only check off items as completed to maintain a complete record of all work done.
 - **Note:** When iterating on an already existing plan, implementation should be done directly without creating a new plan. Update the original plan.
-- **Note:** When instructed to update multiple plan phases, Amazon Q should update the plan as it goes along and not at the end.
+- **Note:** When instructed to update multiple plan phases, Claude should update the plan as it goes along and not at the end.
 
 ## Plan Structure Requirements
 
-For detailed plan structure requirements and formatting guidelines, see the plan template at `.amazonq/templates/plan.template.md`.
+For detailed plan structure requirements and formatting guidelines, see the plan template at `.claude/templates/plan.template.md`.
 
 ## Workflow Process
 
 ### Phase 1: Planning (Only When Requested)
 
-1. **Setup workspace first** following `.amazonq/rules/environment.md` guidelines:
+1. **Setup workspace first** following `.claude/rules/environment.md` guidelines:
    - Create branch with proper naming convention
-2. **Create comprehensive plan** in `.amazonq/plans/[task-name].plan.md`
+2. **Create comprehensive plan** in `.claude/plans/[task-name].plan.md`
 3. **Include all required sections** as outlined in the plan template
 4. **Automatically perform Current State Analysis** - this analysis phase must always be completed when creating the plan, including:
    - Analysis of existing code/system
@@ -41,7 +41,7 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 5. **STOP and wait for explicit approval** - do NOT proceed to implementation
 6. **Address feedback** and update plan if necessary
 
-### Phase 2: Implementation (Amazon Q's Default Behavior)
+### Phase 2: Implementation (Claude's Default Behavior)
 
 1. **Follow the approved plan** step by step (if a plan exists)
 2. **Update plan progress** as tasks are completed (if a plan exists)
@@ -53,7 +53,7 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 1. **Update plan with implementation details** (if a plan exists)
 2. **Complete the Implementation Summary section** (if a plan exists)
 3. **Document lessons learned and best practices**
-4. **Move completed plans to `.amazonq/plans/completed/`** to maintain organization (if a plan exists)
+4. **Move completed plans to `.claude/plans/completed/`** to maintain organization (if a plan exists)
 
 ## Quality Standards
 
@@ -83,7 +83,7 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 ### Directory Structure
 
 ```
-.amazonq/
+.claude/
 ├── rules/
 │   └── planning.md (this file)
 ├── plans/
@@ -115,12 +115,12 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 
 - Plans that were abandoned before completion
 - Plans that were started but not finished due to changing requirements
-- Plans that Amazon Q is told to abandon during development
+- Plans that Claude is told to abandon during development
 - Plans moved manually when no longer relevant
 
 **Automation:**
 
-- Amazon Q will automatically move plans to `archived/` when explicitly told to abandon a plan
+- Claude will automatically move plans to `archived/` when explicitly told to abandon a plan
 - Users can manually move plans between directories as needed
 
 ### Naming Conventions
@@ -166,7 +166,7 @@ For detailed plan structure requirements and formatting guidelines, see the plan
 
 ## Compliance
 
-All Amazon Q development work must adhere to these guidelines. Any deviations must be:
+All development work must adhere to these guidelines. Any deviations must be:
 
 1. Documented with clear justification
 2. Approved by appropriate stakeholders
