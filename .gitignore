@@ -37,8 +37,8 @@ mock-files
 .junie/plans/completed/
 .junie/plans/archived/
 
-.amazonq/plans/completed/
-.amazonq/plans/archived/
+.claude/plans/completed/
+.claude/plans/archived/
 
 .claude/plans/completed/
 .claude/plans/archived/
