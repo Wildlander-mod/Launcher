@@ -38,6 +38,13 @@ jest.mock("@/main/controllers/dialog/dialog.events", () => ({
   DIALOG_EVENTS: { ERROR: "ERROR" },
 }));
 
+jest.mock("electron-log/renderer", () => ({
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+}));
+
 const mockInjectStrict = injectStrict as jest.MockedFunction<
   typeof injectStrict
 >;
