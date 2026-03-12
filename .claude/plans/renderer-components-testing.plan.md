@@ -24,7 +24,7 @@ Below is a complete list of all renderer components that require testing:
 - [x] BaseList.vue - completed ✓
 
 ### Feature Components
-- [ ] Community.vue
+- [x] Community.vue - completed ✓
 - [ ] ENB.vue
 - [ ] GraphicsSelection.vue
 - [ ] ImageWithText.vue

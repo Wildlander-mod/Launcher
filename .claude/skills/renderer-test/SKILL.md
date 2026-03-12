@@ -5,6 +5,10 @@ description: Write renderer unit tests for Vue components. Use when writing or u
 
 ## Workflow
 
+### Step 0: Determine the target component
+
+If no component was specified by the user, read `.claude/plans/renderer-components-testing.plan.md` and pick the next unchecked component from the checklist (i.e. the first item without `[x]`). Inform the user which component was selected before proceeding.
+
 ### Step 1: Check for an existing plan
 
 Before doing anything else, check whether a plan already exists for the component under test in `.claude/plans/`. Plans follow the naming convention `[component-name-kebab-case].plan.md`.
