@@ -1,10 +1,10 @@
+import { mocked } from "ts-jest/utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import AppPage from "@/renderer/src/components/AppPage.vue";
 import TheNavigation from "@/renderer/src/components/TheNavigation.vue";
 import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
 import { injectStrict } from "@/renderer/src/services/service-container";
-import { mocked } from "ts-jest";
 import { reactive } from "vue";
 import { type RouteLocationNormalizedLoaded, useRoute } from "vue-router";
 import { createMockEventService } from "@/__tests__/unit/renderer/utils/mock-event-service";
