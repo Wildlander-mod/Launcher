@@ -27,7 +27,7 @@ Below is a complete list of all renderer components that require testing:
 - [x] Community.vue - completed ✓
 - [x] ENB.vue - completed ✓
 - [x] GraphicsSelection.vue - completed ✓
-- [ ] ImageWithText.vue
+- [x] ImageWithText.vue - completed ✓
 - [ ] LauncherVersion.vue
 - [ ] MO2RunningModal.vue
 - [ ] ModDirectory.vue
