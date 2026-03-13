@@ -13,14 +13,9 @@ If no component was specified by the user, read `.claude/plans/renderer-componen
 
 Before doing anything else, check whether a plan already exists for the component under test in `.claude/plans/`. Plans follow the naming convention `[component-name-kebab-case].plan.md`.
 
-### Step 2: If no plan exists — ask qualifying questions first
+### Step 2: If no plan exists — gather context first
 
-If no plan exists, **do not create the plan or write any tests yet**. First ask the user the following qualifying questions to gather the context needed to write a thorough plan:
-
-1. Are there any specific behaviours, edge cases, or user interactions you want prioritised in the tests?
-2. Are there any IPC events or external dependencies that should be mocked in a particular way?
-3. Are there any existing patterns or constraints in the codebase (e.g. class-based component workarounds) that should be noted?
-4. Is there anything that should explicitly **not** be tested for this component?
+If no plan exists, **do not create the plan or write any tests yet**. First read the component source file to understand its structure. Then ask the user any questions needed to fill gaps in your understanding before writing a thorough plan. Only ask questions where the component itself doesn't make the answer clear — focus on intent, priorities, and constraints the user may have in mind that aren't visible in the code.
 
 Wait for the user's answers before proceeding.
 
