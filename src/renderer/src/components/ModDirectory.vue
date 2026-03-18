@@ -29,7 +29,7 @@ import AppDropdownFileSelect from "./AppDropdownFileSelect.vue";
   components: { AppDropdownFileSelect, BaseLabel },
 })
 export default class ModDirectory extends Vue {
-  modDirectory!: SelectOption | null;
+  modDirectory: SelectOption | null = null;
   modpacks: SelectOption[] | null = null;
   @Prop({ default: `${WildlanderModpack.name} installation folder` })
   label!: string;
