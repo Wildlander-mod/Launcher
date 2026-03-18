@@ -45,7 +45,7 @@ Below is a complete list of all renderer components that require testing:
 ### Views
 - [x] AutoUpdate.vue - completed ✓
 - [x] ViewAdvanced.vue - completed ✓
-- [ ] ViewCommunity.vue
+- [x] ViewCommunity.vue - completed ✓
 - [ ] ViewHome.vue
 
 NOTE - The navigation is throwing console errors and isn't 100% covered. This should be done next!!!!!!!
