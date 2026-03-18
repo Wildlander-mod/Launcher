@@ -67,12 +67,11 @@ export default class Resolution extends Vue {
       ).length > 0;
 
     this.resolutions = await this.resolutionsToSelectOptions(resolutions);
-    this.selectedResolution =
-      (
-        await this.resolutionsToSelectOptions([
-          await this.getResolutionPreference(),
-        ])
-      )[0] || null;
+    this.selectedResolution = (
+      await this.resolutionsToSelectOptions([
+        await this.getResolutionPreference(),
+      ])
+    )[0];
   }
 
   private async resolutionsToSelectOptions(

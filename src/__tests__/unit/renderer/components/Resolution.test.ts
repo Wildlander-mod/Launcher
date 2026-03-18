@@ -153,6 +153,28 @@ describe("Resolution #renderer #component", () => {
     });
   });
 
+  describe("disabled flag fallback", () => {
+    it("should default disabled to false when IS_UNSUPPORTED_RESOLUTION returns null", async () => {
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "GET_RESOLUTIONS")
+          return Promise.resolve(mockResolutions);
+        if (event === "GET_RESOLUTION_PREFERENCE")
+          return Promise.resolve(mockPreference);
+        if (event === "IS_UNSUPPORTED_RESOLUTION") return Promise.resolve(null);
+        return Promise.resolve(null);
+      });
+
+      const wrapper = createWrapper();
+      await flushPromises();
+
+      const options = wrapper
+        .findComponent({ name: "BaseDropdown" })
+        .props("options") as { disabled: boolean }[];
+
+      expect(options.every((o) => o.disabled === false)).toBe(true);
+    });
+  });
+
   describe("ultrawide warning", () => {
     it("should not show the ultrawide warning when no resolutions are unsupported", async () => {
       mockIpcService.invoke.mockImplementation((event: string) => {
