@@ -16,7 +16,7 @@ Below is a complete list of all renderer services and entry files that require t
 - [x] ipc.service.ts - completed ✓
 - [x] message.service.ts - completed ✓
 - [x] modal.service.ts - completed ✓
-- [ ] modpack.service.ts
+- [x] modpack.service.ts - completed ✓
 - [ ] patreon.service.ts
 - [ ] posts.service.ts
 - [ ] service-container.ts
