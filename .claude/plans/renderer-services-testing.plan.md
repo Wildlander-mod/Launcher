@@ -15,7 +15,7 @@ Below is a complete list of all renderer services and entry files that require t
 - [x] event.service.ts - skipped (no logic; only re-exports a mitt instance and string constants) ✓
 - [x] ipc.service.ts - completed ✓
 - [x] message.service.ts - completed ✓
-- [ ] modal.service.ts
+- [x] modal.service.ts - completed ✓
 - [ ] modpack.service.ts
 - [ ] patreon.service.ts
 - [ ] posts.service.ts
