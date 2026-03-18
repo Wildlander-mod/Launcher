@@ -28,6 +28,7 @@
                   class="c-settings__multi-button"
                   type="default"
                   size="grow"
+                  data-testid="open-app-logs"
                   @click="openLogPath"
                 >
                   Open
@@ -36,6 +37,7 @@
                   class="c-settings__multi-button"
                   type="default"
                   size="grow"
+                  data-testid="clear-app-logs"
                   @click="clearLogs"
                 >
                   Clear
@@ -48,6 +50,7 @@
                 <BaseButton
                   type="default"
                   size="large"
+                  data-testid="open-crash-logs"
                   @click="openCrashLogPath"
                 >
                   Open
