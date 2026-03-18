@@ -34,7 +34,7 @@ Below is a complete list of all renderer components that require testing:
 - [x] NavigationItem.vue - completed ✓
 - [x] News.vue - completed ✓
 - [x] Patrons.vue - completed ✓
-- [ ] ProfileSelection.vue
+- [x] ProfileSelection.vue - completed ✓
 - [ ] Resolution.vue
 
 ### Layout Components
