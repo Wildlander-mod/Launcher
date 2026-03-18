@@ -1,17 +1,26 @@
 <template>
   <AppModal name="autoUpdate">
     <div class="l-column l-center">
-      <div v-if="checkingForUpdate" class="c-auto-update__loading">
+      <div
+        v-if="checkingForUpdate"
+        data-testid="auto-update-loading"
+        class="c-auto-update__loading"
+      >
         Checking for update...
       </div>
       <template v-else>
-        <p class="u-text">There is a new version of the launcher available.</p>
-        <p class="u-text">
-          The application will download an update and restart automatically
-          before continuing.
-        </p>
-
-        Download progress {{ downloadProgress }}%
+        <div data-testid="auto-update-content">
+          <p class="u-text">
+            There is a new version of the launcher available.
+          </p>
+          <p class="u-text">
+            The application will download an update and restart automatically
+            before continuing.
+          </p>
+          <p data-testid="auto-update-progress">
+            Download progress {{ downloadProgress }}%
+          </p>
+        </div>
       </template>
     </div>
   </AppModal>

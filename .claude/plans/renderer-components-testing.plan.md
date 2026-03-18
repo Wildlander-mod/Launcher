@@ -43,7 +43,7 @@ Below is a complete list of all renderer components that require testing:
 - [x] TheTitleBar.vue - completed ✓
 
 ### Views
-- [ ] AutoUpdate.vue
+- [x] AutoUpdate.vue - completed ✓
 - [ ] ViewAdvanced.vue
 - [ ] ViewCommunity.vue
 - [ ] ViewHome.vue
