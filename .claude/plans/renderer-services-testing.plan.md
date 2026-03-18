@@ -12,8 +12,8 @@ Below is a complete list of all renderer services and entry files that require t
 
 ### Services
 - [x] cache.service.ts - completed ✓
-- [ ] event.service.ts
-- [ ] ipc.service.ts
+- [x] event.service.ts - skipped (no logic; only re-exports a mitt instance and string constants) ✓
+- [x] ipc.service.ts - completed ✓
 - [ ] message.service.ts
 - [ ] modal.service.ts
 - [ ] modpack.service.ts
