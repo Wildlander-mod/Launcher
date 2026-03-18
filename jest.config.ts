@@ -25,6 +25,7 @@ const config: Config.InitialOptions = {
   collectCoverageFrom: [
     "src/renderer/**/*.{js,ts,vue}",
     "!src/renderer/**/*.d.ts",
+    "!src/renderer/.eslintrc.js",
   ],
 
   // The directory where Jest should output its coverage files

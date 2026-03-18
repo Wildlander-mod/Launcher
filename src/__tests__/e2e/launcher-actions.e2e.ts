@@ -130,6 +130,26 @@ test.describe("Launcher actions", () => {
       expect(storeDetails.openInEditorCalled).toBe(true);
     });
 
+    test("should show check prerequisites toggle as on when preference is not set", async () => {
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      const toggle = advancedPage.getByTestId("check-prerequisites-toggle");
+      await expect(toggle).toHaveAttribute("aria-checked", "true");
+    });
+
+    test("should show check prerequisites toggle as off when preference is set to false", async () => {
+      await setUserPreference(
+        mockFiles.mockFilesPath,
+        USER_PREFERENCE_KEYS.CHECK_PREREQUISITES,
+        false
+      );
+
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      const toggle = advancedPage.getByTestId("check-prerequisites-toggle");
+      await expect(toggle).toHaveAttribute("aria-checked", "false");
+    });
+
     test("should update check prerequisites preference when toggle is changed", async () => {
       await setUserPreference(
         mockFiles.mockFilesPath,

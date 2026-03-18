@@ -198,8 +198,23 @@ describe("ViewAdvanced #renderer #view", () => {
       expect(wrapper.vm.showHiddenProfiles).toBe(false);
     });
 
-    it("should set checkPrerequisites to true even when IPC returns false", async () => {
-      mockIpcService.invoke.mockResolvedValue(false);
+    it("should set checkPrerequisites to false when IPC returns false", async () => {
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "GET_CHECK_PREREQUISITES") return Promise.resolve(false);
+        return Promise.resolve(false);
+      });
+
+      const wrapper = createWrapper();
+      await flushPromises();
+
+      expect(wrapper.vm.checkPrerequisites).toBe(false);
+    });
+
+    it("should set checkPrerequisites to true when IPC returns true", async () => {
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "GET_CHECK_PREREQUISITES") return Promise.resolve(true);
+        return Promise.resolve(false);
+      });
 
       const wrapper = createWrapper();
       await flushPromises();
@@ -207,9 +222,10 @@ describe("ViewAdvanced #renderer #view", () => {
       expect(wrapper.vm.checkPrerequisites).toBe(true);
     });
 
-    it("should set checkPrerequisites to true when IPC returns true", async () => {
+    it("should default checkPrerequisites to true when IPC returns undefined", async () => {
       mockIpcService.invoke.mockImplementation((event: string) => {
-        if (event === "GET_CHECK_PREREQUISITES") return Promise.resolve(true);
+        if (event === "GET_CHECK_PREREQUISITES")
+          return Promise.resolve(undefined);
         return Promise.resolve(false);
       });
 

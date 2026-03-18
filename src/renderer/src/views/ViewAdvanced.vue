@@ -193,7 +193,7 @@ export default class Settings extends Vue {
     );
 
     this.checkPrerequisites =
-      (await this.ipcService.invoke(LAUNCHER_EVENTS.GET_CHECK_PREREQUISITES)) ||
+      (await this.ipcService.invoke(LAUNCHER_EVENTS.GET_CHECK_PREREQUISITES)) ??
       true;
   }
 
