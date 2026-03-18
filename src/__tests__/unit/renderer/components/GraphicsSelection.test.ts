@@ -157,6 +157,18 @@ describe("GraphicsSelection #renderer #component", () => {
           .props("currentSelection")
       ).toEqual(mockSelectOptions[0]);
     });
+
+    it("should not render the dropdown when no graphics options are available", async () => {
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "GET_GRAPHICS") return Promise.resolve([]);
+        return Promise.resolve(null);
+      });
+
+      const wrapper = createWrapper();
+      await flushPromises();
+
+      expect(wrapper.find(selectors.graphicsDropdown).exists()).toBe(false);
+    });
   });
 
   describe("graphics selection change", () => {

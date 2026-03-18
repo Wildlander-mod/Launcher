@@ -79,7 +79,7 @@ const createWrapper = () =>
   mount(TheNavigation, {
     shallow: true,
     global: {
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: { "router-link": RouterLinkStub },
       renderStubDefaultSlot: true,
     },
   });
@@ -643,6 +643,16 @@ describe("TheNavigation #renderer #component", () => {
       const items = wrapper.findAllComponents({ name: "NavigationItem" });
 
       expect(items[2]?.text()).toContain("Advanced");
+    });
+
+    it("should call navigate when the Home NavigationItem is clicked", async () => {
+      const wrapper = createWrapper();
+      await flushPromises();
+
+      const items = wrapper.findAllComponents({ name: "NavigationItem" });
+      await items[0]?.trigger("click");
+
+      expect(mockNavigate).toHaveBeenCalled();
     });
   });
 

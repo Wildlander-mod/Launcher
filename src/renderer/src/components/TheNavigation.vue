@@ -145,11 +145,6 @@ import LauncherVersion from "./LauncherVersion.vue";
 import GraphicsSelection from "./GraphicsSelection.vue";
 
 @Component({
-  methods: {
-    logger() {
-      return logger;
-    },
-  },
   components: {
     GraphicsSelection,
     LauncherVersion,
