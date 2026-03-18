@@ -79,11 +79,33 @@ Object.defineProperty(window, "ipcRenderer", {
 });
 ```
 
-**`window.localStorage`** — use `jest.spyOn`:
+**`window.localStorage`** — `jest.spyOn` does not work on localStorage in jsdom as its methods are not configurable. Replace the entire object via `Object.defineProperty` instead:
 
 ```typescript
-jest.spyOn(window.localStorage, "getItem").mockReturnValue(null);
-jest.spyOn(window.localStorage, "setItem");
+const mockLocalStorage = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+};
+
+Object.defineProperty(window, "localStorage", {
+  value: mockLocalStorage,
+  writable: true,
+});
+```
+
+**Time (Date)** — This project uses Jest 26, which defaults to legacy fake timers. Always pass `"modern"` explicitly and call `jest.useRealTimers()` in `beforeEach` to reset between tests:
+
+```typescript
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.useRealTimers();
+});
+
+it("should respect maxAge", () => {
+  jest.useFakeTimers("modern");
+  jest.setSystemTime(1_000_000);
+  // ...
+});
 ```
 
 **`fetch`** — replace globally:
