@@ -11,7 +11,7 @@
 Below is a complete list of all renderer services and entry files that require testing:
 
 ### Services
-- [ ] cache.service.ts
+- [x] cache.service.ts - completed ✓
 - [ ] event.service.ts
 - [ ] ipc.service.ts
 - [ ] message.service.ts
