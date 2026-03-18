@@ -40,12 +40,17 @@ Below is a complete list of all renderer components that require testing:
 ### Layout Components
 - [x] TheHeader.vue - completed ✓
 - [x] TheNavigation.vue - completed ✓
-- [x] TheTitleBar.vue
+- [x] TheTitleBar.vue - completed ✓
 
+### Views
+- [ ] AutoUpdate.vue
+- [ ] ViewAdvanced.vue
+- [ ] ViewCommunity.vue
+- [ ] ViewHome.vue
 
 NOTE - The navigation is throwing console errors and isn't 100% covered. This should be done next!!!!!!!
 
-## Total Components: 26
+## Total Components: 30
 
 Each component should have:
 - Unit tests covering all functionality
