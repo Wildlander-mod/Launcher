@@ -26,3 +26,7 @@ After every code change, use WebStorm's MCP server to verify the changes are cor
 - **WebStorm MCP**: Code correctness and compilation verification
 - **Wallaby MCP**: Test execution and coverage verification (see wallaby.md)
 - Both tools should be used together for comprehensive verification
+
+### Restrictions
+
+- **Do NOT use `mcp__jetbrains__execute_terminal_command`** — use the Bash tool directly instead for running terminal commands

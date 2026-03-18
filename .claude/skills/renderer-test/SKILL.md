@@ -149,3 +149,16 @@ clickAwayHandler?.();
 ## Verification
 
 After writing tests, use Wallaby MCP (`wallaby_failingTests`, `wallaby_allTestsForFile`) to verify they pass. If Wallaby returns empty results, start the `"Wallaby Renderer"` run configuration via JetBrains MCP first.
+
+## Commit
+
+Once all tests pass, commit the changes. The commit must include:
+- The new test file
+- The overall testing plan at `.claude/plans/renderer-components-testing.plan.md` (with the component's checklist item now checked off)
+
+Do **not** include the component-specific plan file in the commit.
+
+Use a commit message in the format:
+```
+test(renderer-unit): add unit tests for [ComponentName] component
+```
