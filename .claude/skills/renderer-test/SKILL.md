@@ -152,7 +152,9 @@ After writing tests, use Wallaby MCP (`wallaby_failingTests`, `wallaby_allTestsF
 
 ## Commit
 
-Once all tests pass, commit the changes. The commit must include:
+Once all tests pass, move the component-specific plan to `.claude/plans/completed/` before committing.
+
+Then commit the changes. The commit must include:
 - The new test file
 - The overall testing plan at `.claude/plans/renderer-components-testing.plan.md` (with the component's checklist item now checked off)
 
