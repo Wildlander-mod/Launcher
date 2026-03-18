@@ -1,5 +1,9 @@
 <template>
-  <a class="c-nav-link" :class="{ 'c-nav-link--active': active }">
+  <a
+    class="c-nav-link"
+    :class="{ 'c-nav-link--active': active }"
+    data-testid="navigation-item"
+  >
     <slot />
   </a>
 </template>

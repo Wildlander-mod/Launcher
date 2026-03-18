@@ -31,7 +31,7 @@ Below is a complete list of all renderer components that require testing:
 - [x] LauncherVersion.vue - completed ✓
 - [x] MO2RunningModal.vue - completed ✓
 - [x] ModDirectory.vue - completed ✓
-- [ ] NavigationItem.vue
+- [x] NavigationItem.vue - completed ✓
 - [ ] News.vue
 - [ ] Patrons.vue
 - [ ] ProfileSelection.vue
