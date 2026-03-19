@@ -22,8 +22,8 @@ Below is a complete list of all renderer services and entry files that require t
 - [ ] service-container.ts
 
 ### Entry / Routing
-- [ ] index.ts
-- [ ] router/index.ts
+- [x] index.ts - completed ✓
+- [x] router/index.ts - completed ✓
 
 ## Total Files: 11
 

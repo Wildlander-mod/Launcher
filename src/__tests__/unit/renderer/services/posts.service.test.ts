@@ -51,9 +51,9 @@ describe("PostsService #renderer #service", () => {
     global.fetch = jest.fn().mockImplementation((url: string) => {
       if (url.includes("last-updated")) {
         return Promise.resolve({
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           json: jest
             .fn()
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             .mockResolvedValue({ last_updated: CACHE_AGE_SECS - 1 }),
         });
       }
@@ -121,9 +121,9 @@ describe("PostsService #renderer #service", () => {
       global.fetch = jest.fn().mockImplementation((url: string) => {
         if (url.includes("last-updated")) {
           return Promise.resolve({
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             json: jest
               .fn()
+              // eslint-disable-next-line @typescript-eslint/naming-convention
               .mockResolvedValue({ last_updated: CACHE_AGE_SECS + 1 }),
           });
         }
