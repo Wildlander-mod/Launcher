@@ -19,7 +19,7 @@ Below is a complete list of all renderer services and entry files that require t
 - [x] modpack.service.ts - completed ✓
 - [x] patreon.service.ts - completed ✓
 - [x] posts.service.ts - completed ✓
-- [ ] service-container.ts
+- [x] service-container.ts - completed ✓
 
 ### Entry / Routing
 - [x] index.ts - completed ✓
