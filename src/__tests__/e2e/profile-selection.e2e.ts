@@ -151,6 +151,36 @@ test.describe("Profiles", () => {
   });
 
   test.describe("Restore profiles ", () => {
+    test("should not restore MO2 profiles when cancelling the confirmation dialog", async () => {
+      const profileToTest = PROFILES.PERFORMANCE;
+      const fileToModify = "plugins.txt";
+      const primaryFilePath = path.join(
+        `${mockFiles.mockModpackPath}/profiles/${profileToTest.value}/${fileToModify}`
+      );
+
+      await navigateAndWait(window, PAGES.ADVANCED);
+
+      await selectProfile(window, PROFILES.PERFORMANCE);
+
+      const originalContent = await fs.readFile(primaryFilePath, "utf-8");
+      const modifiedContent =
+        originalContent +
+        "\n# This is a test modification for cancel MO2 profile restore test";
+      await fs.writeFile(primaryFilePath, modifiedContent);
+
+      const messageBoxHandle = await mockMessageBox(electronApp, 0);
+
+      await window.getByTestId("restore-mo2-profiles").click();
+
+      await waitForMessageBoxShown(messageBoxHandle);
+      await waitForClickEventsEnabled(window);
+
+      const contentAfterCancel = await fs.readFile(primaryFilePath, "utf-8");
+
+      // Verify the file was not restored after cancelling
+      expect(contentAfterCancel).toBe(modifiedContent);
+    });
+
     test("should restore MO2 profiles when clicking the Restore MO2 Profiles button", async () => {
       const profileToTest = PROFILES.PERFORMANCE;
       const fileToModify = "plugins.txt";

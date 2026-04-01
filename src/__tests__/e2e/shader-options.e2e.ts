@@ -180,6 +180,35 @@ test.describe("Shader Options", () => {
     expect(isPluginEnabledAgain).toBe(true);
   });
 
+  test("should not restore ENB presets when cancelling the confirmation dialog", async () => {
+    const fileToModify = "enbseries.ini";
+    const originalFilePath = path.join(
+      `${mockFiles.mockModpackPath}/launcher/ENB Presets/${ENB_PRESETS.LOW.value}/${fileToModify}`
+    );
+
+    await navigateAndWait(window, PAGES.ADVANCED);
+
+    await selectEnb(window, ENB_PRESETS.LOW);
+
+    const originalContent = await fs.readFile(originalFilePath, "utf-8");
+    const modifiedContent =
+      originalContent +
+      "\n#This is a test modification for cancel restore test";
+    await fs.writeFile(originalFilePath, modifiedContent);
+
+    const messageBoxHandle = await mockMessageBox(electronApp, 0);
+
+    await window.getByTestId("restore-enb-presets").click();
+
+    await waitForMessageBoxShown(messageBoxHandle);
+    await waitForClickEventsEnabled(window);
+
+    const contentAfterCancel = await fs.readFile(originalFilePath, "utf-8");
+
+    // Verify the file was not restored after cancelling
+    expect(contentAfterCancel).toBe(modifiedContent);
+  });
+
   test("should restore ENB presets when clicking the Restore ENB Presets button", async () => {
     const fileToModify = "enbseries.ini";
     const originalFilePath = path.join(

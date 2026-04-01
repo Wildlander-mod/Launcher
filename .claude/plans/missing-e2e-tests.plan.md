@@ -4,7 +4,7 @@
 
 This plan tracks the identification and addition of missing e2e tests across the Wildlander Launcher application. A full audit of existing e2e test coverage was conducted against the application's features and user flows. Five areas of missing coverage were identified, ranging from entirely untested features (auto-update) to missing edge cases in otherwise well-tested areas (cancel paths, error handling).
 
-**Status**: Not started
+**Status**: Phase 1 Complete
 
 ---
 
@@ -24,12 +24,12 @@ The gaps fall into four categories:
 ## Plan
 
 ### Phase 1: Cancel path for restore confirmation dialogs
-- [ ] 1.1 Add cancel test to `src/__tests__/e2e/shader-options.e2e.ts`
-  - [ ] 1.1.1 Test that cancelling the "Restore ENB presets" confirmation does not modify any ENB preset files
-- [ ] 1.2 Add cancel test to `src/__tests__/e2e/profile-selection.e2e.ts`
-  - [ ] 1.2.1 Test that cancelling the "Restore MO2 profiles" confirmation does not modify any profile files
-- [ ] 1.3 Add cancel test to `src/__tests__/e2e/graphics-options.e2e.ts`
-  - [ ] 1.3.1 Test that cancelling the "Restore graphics presets" confirmation does not modify any graphics preset files
+- [✓] 1.1 Add cancel test to `src/__tests__/e2e/shader-options.e2e.ts`
+  - [✓] 1.1.1 Test that cancelling the "Restore ENB presets" confirmation does not modify any ENB preset files
+- [✓] 1.2 Add cancel test to `src/__tests__/e2e/profile-selection.e2e.ts`
+  - [✓] 1.2.1 Test that cancelling the "Restore MO2 profiles" confirmation does not modify any profile files
+- [✓] 1.3 Add cancel test to `src/__tests__/e2e/graphics-options.e2e.ts`
+  - [✓] 1.3.1 Test that cancelling the "Restore graphics presets" confirmation does not modify any graphics preset files
 
 ### Phase 2: MO2 already running when launching the game
 - [ ] 2.1 Add tests to `src/__tests__/e2e/launch-game.e2e.ts`

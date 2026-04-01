@@ -110,6 +110,34 @@ test.describe("Graphics Options", () => {
     await expect(launchButton).not.toHaveClass(/c-button--disabled/);
   });
 
+  test("should not restore graphics presets when cancelling the confirmation dialog", async () => {
+    await selectGraphics(window, GRAPHICS_PRESETS.HIGH);
+
+    const fileToModify = "SkyrimPrefs.ini";
+    const originalFilePath = path.join(
+      `${mockFiles.mockModpackPath}/launcher/Graphics Presets/${GRAPHICS_PRESETS.HIGH.value}/${fileToModify}`
+    );
+    const originalContent = await fs.readFile(originalFilePath, "utf-8");
+    const modifiedContent =
+      originalContent +
+      "\n#This is a test modification for cancel graphics restore test";
+    await fs.writeFile(originalFilePath, modifiedContent);
+
+    await navigateAndWait(window, PAGES.ADVANCED);
+
+    const messageBoxHandle = await mockMessageBox(electronApp, 0);
+
+    await window.getByTestId("restore-graphics-presets").click();
+
+    await waitForMessageBoxShown(messageBoxHandle);
+    await waitForClickEventsEnabled(window);
+
+    const contentAfterCancel = await fs.readFile(originalFilePath, "utf-8");
+
+    // Verify the file was not restored after cancelling
+    expect(contentAfterCancel).toBe(modifiedContent);
+  });
+
   test("should restore graphics presets when clicking the Restore Graphics Presets button", async () => {
     // Select the High Graphics preset to ensure we're starting from a known state
     await selectGraphics(window, GRAPHICS_PRESETS.HIGH);
