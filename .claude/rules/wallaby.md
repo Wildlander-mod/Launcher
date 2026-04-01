@@ -4,6 +4,10 @@
 
 When working with tests, use the Wallaby MCP server to verify test execution and coverage.
 
+### Scope
+
+**Wallaby only tracks unit tests** (renderer and main process). It does **not** track e2e tests (`src/__tests__/e2e/`). After changing e2e tests, run them directly via `npm run test:e2e` or by targeting specific files with the Playwright CLI.
+
 ### When to Use Wallaby
 
 - **REQUIRED: After any implementation changes** - Always check for failing tests using `wallaby_failingTests`
