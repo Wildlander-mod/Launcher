@@ -329,6 +329,29 @@ export async function mockUserPreferencesStore(
 }
 
 /**
+ * Sends an IPC event to the renderer process via webContents.send
+ * @param electronApp - The Electron application instance from Playwright
+ * @param channel - The IPC channel name to send on
+ * @param payload - Optional payload to send with the event
+ */
+export const sendIpcToRenderer = async (
+  electronApp: ElectronApplication,
+  channel: string,
+  payload?: unknown
+): Promise<void> => {
+  await electronApp.evaluate(
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    ({ BrowserWindow }, { ipcChannel, ipcPayload }) => {
+      const win = BrowserWindow.getAllWindows()[0];
+      if (win) {
+        win.webContents.send(ipcChannel, ipcPayload);
+      }
+    },
+    { ipcChannel: channel, ipcPayload: payload }
+  );
+};
+
+/**
  * Helper function to mock the screen resolution
  * @param electronApp The Electron application instance
  * @param resolution The resolution object with width and height properties
