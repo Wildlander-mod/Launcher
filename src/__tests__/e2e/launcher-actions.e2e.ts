@@ -7,7 +7,16 @@ import {
 } from "./util/setup";
 import type { ElectronApplication } from "playwright";
 import { PAGES, navigateAndWait } from "./util/navigation";
-import { mockElectronShell, mockUserPreferencesStore } from "./util/mocks";
+import {
+  mockElectronShell,
+  mockErrorDialog,
+  mockUserPreferencesStore,
+  replaceChildProcessExecWithMock,
+} from "./util/mocks";
+import {
+  waitForClickEventsEnabled,
+  waitForDialogShown,
+} from "./util/app-state";
 import fs from "fs/promises";
 import path from "path";
 import { getUserPreferences, setUserPreference } from "./util/user-preferences";
@@ -29,6 +38,27 @@ test.describe("Launcher actions", () => {
   test.describe("Advanced", () => {
     test.afterEach(async () => {
       await closeTestApp();
+    });
+
+    test("should show error dialog when MO2 fails to launch", async () => {
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      const errorDialogHandle = await mockErrorDialog(electronApp);
+      const execHandle = await replaceChildProcessExecWithMock(electronApp);
+
+      await advancedPage.getByTestId("launch-mo2").click();
+
+      await execHandle.evaluate((handle) =>
+        handle.rejectExec("spawn MO2 failed")
+      );
+
+      await waitForClickEventsEnabled(window);
+
+      const errorDetails = await waitForDialogShown(errorDialogHandle);
+
+      expect(errorDetails.dialogShown).toBe(true);
+      expect(errorDetails.title).toBe("Failed to launch MO2");
+      expect(errorDetails.content).toContain("spawn MO2 failed");
     });
 
     test("should open application logs when clicking the open button", async () => {

@@ -5,7 +5,11 @@ import {
   setModpackAndWaitForAppLoaded,
   startTestApp,
 } from "./util/setup";
-import { mockMessageBox, replaceChildProcessExecWithMock } from "./util/mocks";
+import {
+  mockErrorDialog,
+  mockMessageBox,
+  replaceChildProcessExecWithMock,
+} from "./util/mocks";
 import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
@@ -16,6 +20,7 @@ import {
   gameExited,
   gameLaunched,
   waitForClickEventsEnabled,
+  waitForDialogShown,
   waitForMessageBoxShown,
 } from "./util/app-state";
 import { isPluginEnabled } from "./util/modlist";
@@ -207,6 +212,27 @@ test.describe("Shader Options", () => {
 
     // Verify the file was not restored after cancelling
     expect(contentAfterCancel).toBe(modifiedContent);
+  });
+
+  test("should show error dialog when restoring ENB presets fails", async () => {
+    const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+    const errorDialogHandle = await mockErrorDialog(electronApp);
+    await mockMessageBox(electronApp, 1);
+
+    // Delete the backup directory to cause the restore to fail
+    const backupEnbDir = `${mockFiles.mockModpackPath}/launcher/_backups/ENB Presets`;
+    await fs.rm(backupEnbDir, { recursive: true });
+
+    await advancedPage.getByTestId("restore-enb-presets").click();
+
+    await waitForClickEventsEnabled(window);
+
+    const errorDetails = await waitForDialogShown(errorDialogHandle);
+
+    expect(errorDetails.dialogShown).toBe(true);
+    expect(errorDetails.title).toBe("Error restoring ENB files");
+    expect(errorDetails.content).toContain("no such file or directory");
   });
 
   test("should restore ENB presets when clicking the Restore ENB Presets button", async () => {

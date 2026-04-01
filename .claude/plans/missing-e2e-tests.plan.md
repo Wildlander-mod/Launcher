@@ -4,7 +4,7 @@
 
 This plan tracks the identification and addition of missing e2e tests across the Wildlander Launcher application. A full audit of existing e2e test coverage was conducted against the application's features and user flows. Five areas of missing coverage were identified, ranging from entirely untested features (auto-update) to missing edge cases in otherwise well-tested areas (cancel paths, error handling).
 
-**Status**: Phase 2.1 Complete
+**Status**: Phase 3.4 Complete
 
 ---
 
@@ -38,24 +38,60 @@ The gaps fall into four categories:
   - [✓] 2.1.3 Test that MO2 processes are killed and the game launches when the user confirms the kill action
 
 ### Phase 3: Error handling on Advanced page actions
-- [ ] 3.1 Add error tests to `src/__tests__/e2e/launcher-actions.e2e.ts`
-  - [ ] 3.1.1 Test that an error dialog is shown when MO2 fails to launch
-- [ ] 3.2 Add error tests to `src/__tests__/e2e/shader-options.e2e.ts`
-  - [ ] 3.2.1 Test that an error dialog is shown when restoring ENB presets fails
-- [ ] 3.3 Add error tests to `src/__tests__/e2e/profile-selection.e2e.ts`
-  - [ ] 3.3.1 Test that an error dialog is shown when restoring MO2 profiles fails
-- [ ] 3.4 Add error tests to `src/__tests__/e2e/graphics-options.e2e.ts`
-  - [ ] 3.4.1 Test that an error dialog is shown when restoring graphics presets fails
+- [✓] 3.1 Add error tests to `src/__tests__/e2e/launcher-actions.e2e.ts`
+  - [✓] 3.1.1 Test that an error dialog is shown when MO2 fails to launch
+- [✓] 3.2 Add error tests to `src/__tests__/e2e/shader-options.e2e.ts`
+  - [✓] 3.2.1 Test that an error dialog is shown when restoring ENB presets fails
+- [✓] 3.3 Add error tests to `src/__tests__/e2e/profile-selection.e2e.ts`
+  - [✓] 3.3.1 Test that an error dialog is shown when restoring MO2 profiles fails
+- [✓] 3.4 Add error tests to `src/__tests__/e2e/graphics-options.e2e.ts`
+  - [✓] 3.4.1 Test that an error dialog is shown when restoring graphics presets fails
 
 ### Phase 4: Auto-update flow tests
-> **Note: Further analysis required.** It is not yet clear how to reliably trigger IPC events (`UPDATE_AVAILABLE`, `DOWNLOAD_PROGRESS`) from within the Playwright/Electron test environment. The existing `mocks.ts` patterns using `electronApp.evaluate` should be investigated before implementation begins.
-- [ ] 4.1 Investigate IPC event emission from within the test environment
-  - [ ] 4.1.1 Determine how to emit events from the Electron main process to the renderer during tests
-  - [ ] 4.1.2 Establish whether a new mock utility is needed in `mocks.ts`
+
+#### Analysis findings
+
+**Component (`AutoUpdate.vue`):** Three UI states, all driven passively by IPC — no user interactions. All required `data-testid` attributes are already present: `auto-update-loading`, `auto-update-content`, `auto-update-progress`.
+
+**Startup flow:** `UpdateService.update()` is called during app startup. It loads the `/auto-update` route into the main `BrowserWindow`, then resolves (continuing startup) when either `UPDATE_NOT_AVAILABLE` fires or `shouldUpdate()` returns false. In tests `IS_TEST: "true"` → `isDevelopment: true` → `shouldUpdate()` returns false, so the app skips the update check and immediately navigates away. `waitForPreloadComplete` in `setup.ts` already handles this timing.
+
+**IPC channels (from `update.events.ts`):**
+- `update-available` — main → renderer, no payload
+- `download-progress` — main → renderer, payload: `number` (0–100, floored)
+- `update-not-available` — internal to main process only; not forwarded to renderer
+- `update-downloaded` — internal; triggers `quitAndInstall()` automatically — must **never** be fired in tests
+
+**How to emit IPC events in tests:** `webContents.send()` can be called directly via `electronApp.evaluate`, bypassing `UpdateService` and `autoUpdater` entirely:
+
+```typescript
+await electronApp.evaluate(({ BrowserWindow }, channel) => {
+  BrowserWindow.getAllWindows()[0].webContents.send(channel);
+}, 'update-available');
+```
+
+This is the same pattern as `mockErrorDialog` and `mockMessageBox`, which override Electron APIs inside `electronApp.evaluateHandle`. A small `sendIpcToRenderer` helper in `mocks.ts` is sufficient — no new mock infrastructure is needed.
+
+**How to reach the `/auto-update` route in tests:** After `startTestApp`, navigate to the route programmatically before calling `setModpackAndWaitForAppLoaded`. The component's `created()` hook re-registers IPC listeners on every navigation to the route.
+
+**Testing strategy — what to test vs. what to skip:**
+
+| Scenario | Test? | Reason |
+|---|---|---|
+| Component shows loading state initially | Yes | Verifiable without any IPC events |
+| `UPDATE_AVAILABLE` transitions loading → content | Yes | Core UI state transition |
+| `DOWNLOAD_PROGRESS` updates percentage in DOM | Yes | Core UI state transition; verify with a specific value |
+| `UPDATE_NOT_AVAILABLE` / app navigates away | Skip | Internal to main process; not visible in renderer |
+| `UPDATE_DOWNLOADED` / `quitAndInstall()` | **Never** | Would kill the Electron process mid-test |
+| Error dialog on `autoUpdater` failure | Skip | Covered by unit tests; low value since `shouldUpdate()` is false in test env anyway |
+
+**What this does NOT test (and that's fine):** Whether `autoUpdater.checkForUpdates()` contacts a server, whether electron-updater fires events correctly, or whether `quitAndInstall()` restarts the process. These are third-party library behaviours. The e2e tests give confidence that the UI correctly reflects update state when the main process sends the appropriate signals.
+
+- [ ] 4.1 Add `sendIpcToRenderer` helper to `src/__tests__/e2e/util/mocks.ts`
+  - [ ] 4.1.1 Helper accepts `electronApp`, a channel name, and an optional payload; calls `webContents.send()` from the main process via `electronApp.evaluate`
 - [ ] 4.2 Create `src/__tests__/e2e/auto-update.e2e.ts`
-  - [ ] 4.2.1 Test that the auto-update modal shows the "Checking for update..." loading state on open
-  - [ ] 4.2.2 Test that the `UPDATE_AVAILABLE` event transitions the modal from loading to the update-available content
-  - [ ] 4.2.3 Test that the `DOWNLOAD_PROGRESS` event updates the displayed download percentage
+  - [ ] 4.2.1 Test that navigating to `/auto-update` shows the "Checking for update..." loading state
+  - [ ] 4.2.2 Test that sending `update-available` transitions the modal from loading state to update-available content
+  - [ ] 4.2.3 Test that sending `download-progress` with a value (e.g. 42) updates the displayed percentage in `auto-update-progress`
 
 ---
 
@@ -78,7 +114,7 @@ src/__tests__/e2e/
 - Each new test should follow the existing pattern: `beforeEach` sets up via `startTestApp` + `setModpackAndWaitForAppLoaded`, `afterEach` calls `closeTestApp`
 - Use existing mock utilities (`mockMessageBox`, `mockErrorDialog`, `replacePsListWithMock`, `replaceChildProcessExecWithMock`) rather than introducing new ones
 - Cancel path tests should assert file contents are unchanged, not just that no error was thrown
-- Auto-update tests (Phase 4) require further analysis before implementation — see the note in Phase 4
+- Auto-update tests use `sendIpcToRenderer` (a new thin helper) to emit IPC events directly via `webContents.send()` — no `autoUpdater` mocking required
 
 ---
 
@@ -95,4 +131,4 @@ src/__tests__/e2e/
 ## Notes
 
 - Phase 2 (MO2 running on game launch) should reference `mo2-launch.e2e.ts` for patterns around `replacePsListWithMock` and `waitForMessageBoxShown`
-- Phase 4 (auto-update) requires upfront analysis before writing any tests — the mechanism for emitting IPC events from the main process to the renderer in a Playwright/Electron test context is not yet established
+- Phase 4 (auto-update): IPC events are emitted directly via `electronApp.evaluate` + `webContents.send()`, bypassing `UpdateService` and `autoUpdater` entirely. `UPDATE_DOWNLOADED` must never be emitted in tests as it triggers `quitAndInstall()` and kills the process.

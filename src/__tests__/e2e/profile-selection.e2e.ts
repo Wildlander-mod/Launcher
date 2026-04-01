@@ -9,12 +9,13 @@ import {
 import { getUserPreferences, setUserPreference } from "./util/user-preferences";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { PROFILES, selectProfile } from "./util/profile";
-import { mockMessageBox } from "./util/mocks";
+import { mockErrorDialog, mockMessageBox } from "./util/mocks";
 import type { ElectronApplication } from "playwright";
 import fs from "fs/promises";
 import path from "path";
 import {
   waitForClickEventsEnabled,
+  waitForDialogShown,
   waitForMessageBoxShown,
 } from "./util/app-state";
 import { PAGES, navigateAndWait } from "./util/navigation";
@@ -179,6 +180,27 @@ test.describe("Profiles", () => {
 
       // Verify the file was not restored after cancelling
       expect(contentAfterCancel).toBe(modifiedContent);
+    });
+
+    test("should show error dialog when restoring MO2 profiles fails", async () => {
+      const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+      const errorDialogHandle = await mockErrorDialog(electronApp);
+      await mockMessageBox(electronApp, 1);
+
+      // Delete the backup directory to cause the restore to fail
+      const backupProfilesDir = `${mockFiles.mockModpackPath}/launcher/_backups/profiles`;
+      await fs.rm(backupProfilesDir, { recursive: true });
+
+      await advancedPage.getByTestId("restore-mo2-profiles").click();
+
+      await waitForClickEventsEnabled(window);
+
+      const errorDetails = await waitForDialogShown(errorDialogHandle);
+
+      expect(errorDetails.dialogShown).toBe(true);
+      expect(errorDetails.title).toBe("Error restoring MO2 profiles");
+      expect(errorDetails.content).toContain("no such file or directory");
     });
 
     test("should restore MO2 profiles when clicking the Restore MO2 Profiles button", async () => {

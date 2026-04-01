@@ -189,6 +189,11 @@ export const replaceChildProcessExecWithMock = async (
      */
     resolveExec: () => Promise<void>;
     /**
+     * Rejects the exec promise with the given error message
+     * @example `await execHandle.evaluate(handle => handle.rejectExec("error message"));`
+     */
+    rejectExec: (errorMessage: string) => Promise<void>;
+    /**
      * @returns A promise that resolves when the exec method has been called
      * @example `await execHandle.evaluate(handle => handle.waitForExec());`
      */
@@ -200,6 +205,7 @@ export const replaceChildProcessExecWithMock = async (
 
     let command: string;
     let resolvePromise: (value: { stdout: string; stderr: string }) => void;
+    let rejectPromise: (error: Error) => void;
     const waitForExec = () =>
       new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(
@@ -217,14 +223,17 @@ export const replaceChildProcessExecWithMock = async (
         check();
       });
 
-    // Replace the exec method with a mock that returns a promise that can be manually resolved
+    // Replace the exec method with a mock that returns a promise that can be manually resolved or rejected
     const mockExecFunction = async (cmd: string) => {
       command = cmd;
-      return new Promise<{ stdout: string; stderr: string }>((resolve) => {
-        resolvePromise = (value) => {
-          resolve(value);
-        };
-      });
+      return new Promise<{ stdout: string; stderr: string }>(
+        (resolve, reject) => {
+          resolvePromise = (value) => {
+            resolve(value);
+          };
+          rejectPromise = reject;
+        }
+      );
     };
 
     // Add the __promisify__ property to match typeof child_process.exec
@@ -253,6 +262,10 @@ export const replaceChildProcessExecWithMock = async (
       resolveExec: async () => {
         await waitForExec();
         resolvePromise({ stdout: "", stderr: "" });
+      },
+      rejectExec: async (errorMessage: string) => {
+        await waitForExec();
+        rejectPromise(new Error(errorMessage));
       },
       waitForExec,
     };

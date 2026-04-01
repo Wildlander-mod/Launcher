@@ -10,9 +10,10 @@ import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import fs from "fs/promises";
 import {
   waitForClickEventsEnabled,
+  waitForDialogShown,
   waitForMessageBoxShown,
 } from "./util/app-state";
-import { mockMessageBox } from "./util/mocks";
+import { mockErrorDialog, mockMessageBox } from "./util/mocks";
 import type { ElectronApplication } from "playwright";
 import path from "path";
 import { PAGES, navigateAndWait } from "./util/navigation";
@@ -136,6 +137,27 @@ test.describe("Graphics Options", () => {
 
     // Verify the file was not restored after cancelling
     expect(contentAfterCancel).toBe(modifiedContent);
+  });
+
+  test("should show error dialog when restoring graphics presets fails", async () => {
+    const advancedPage = await navigateAndWait(window, PAGES.ADVANCED);
+
+    const errorDialogHandle = await mockErrorDialog(electronApp);
+    await mockMessageBox(electronApp, 1);
+
+    // Delete the backup directory to cause the restore to fail
+    const backupGraphicsDir = `${mockFiles.mockModpackPath}/launcher/_backups/graphics`;
+    await fs.rm(backupGraphicsDir, { recursive: true });
+
+    await advancedPage.getByTestId("restore-graphics-presets").click();
+
+    await waitForClickEventsEnabled(window);
+
+    const errorDetails = await waitForDialogShown(errorDialogHandle);
+
+    expect(errorDetails.dialogShown).toBe(true);
+    expect(errorDetails.title).toBe("Error restoring graphics presets");
+    expect(errorDetails.content).toContain("no such file or directory");
   });
 
   test("should restore graphics presets when clicking the Restore Graphics Presets button", async () => {
