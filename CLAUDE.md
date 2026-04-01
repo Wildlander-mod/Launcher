@@ -89,6 +89,5 @@ All project-specific rules are in `.claude/rules/`:
 - `planning.md` — when/how to create and manage implementation plans
 - `environment.md` — branch naming convention (`{type}/{jira-id}_{description}`)
 - `typescript.md` — no type assertions
-- `wallaby.md` — mandatory test verification via Wallaby MCP after changes
-- `wallaby-fallback.md` — fallback when Wallaby MCP returns empty results
+- `wallaby.md` — Wallaby MCP test verification and empty-result fallback
 - `webstorm-verification.md` — code verification via WebStorm MCP after changes
