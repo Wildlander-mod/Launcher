@@ -4,7 +4,7 @@
 
 This plan tracks the identification and addition of missing e2e tests across the Wildlander Launcher application. A full audit of existing e2e test coverage was conducted against the application's features and user flows. Five areas of missing coverage were identified, ranging from entirely untested features (auto-update) to missing edge cases in otherwise well-tested areas (cancel paths, error handling).
 
-**Status**: Phase 1 Complete
+**Status**: Phase 2.1 Complete
 
 ---
 
@@ -32,10 +32,10 @@ The gaps fall into four categories:
   - [✓] 1.3.1 Test that cancelling the "Restore graphics presets" confirmation does not modify any graphics preset files
 
 ### Phase 2: MO2 already running when launching the game
-- [ ] 2.1 Add tests to `src/__tests__/e2e/launch-game.e2e.ts`
-  - [ ] 2.1.1 Test that the MO2-already-running dialog is shown when MO2 is detected as running before game launch
-  - [ ] 2.1.2 Test that the game does not launch when the user cancels the MO2-already-running dialog
-  - [ ] 2.1.3 Test that MO2 processes are killed and the game launches when the user confirms the kill action
+- [✓] 2.1 Add tests to `src/__tests__/e2e/launch-game.e2e.ts`
+  - [✓] 2.1.1 Test that the MO2-already-running dialog is shown when MO2 is detected as running before game launch
+  - [✓] 2.1.2 Test that the game does not launch when the user cancels the MO2-already-running dialog
+  - [✓] 2.1.3 Test that MO2 processes are killed and the game launches when the user confirms the kill action
 
 ### Phase 3: Error handling on Advanced page actions
 - [ ] 3.1 Add error tests to `src/__tests__/e2e/launcher-actions.e2e.ts`

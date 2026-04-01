@@ -6,8 +6,17 @@ import {
   startTestApp,
 } from "./util/setup";
 import type { ElectronApplication } from "playwright";
-import { waitForClickEventsEnabled } from "./util/app-state";
-import { replaceChildProcessExecWithMock } from "./util/mocks";
+import {
+  waitForClickEventsDisabled,
+  waitForClickEventsEnabled,
+  waitForMessageBoxShown,
+} from "./util/app-state";
+import {
+  mockMessageBox,
+  mockProcessKill,
+  replaceChildProcessExecWithMock,
+  replacePsListWithMock,
+} from "./util/mocks";
 import { MO2_NAMES } from "@/shared/enums/mo2";
 import { PROFILES, selectProfile } from "./util/profile";
 import {
@@ -209,6 +218,96 @@ test.describe("Launch Game", () => {
       copiedContent,
       "Skyrim launch logs should be correctly copied after game completion"
     ).toBe(uniqueContent);
+  });
+
+  test("should show MO2 already running dialog when MO2 is running before game launch", async () => {
+    await replacePsListWithMock(electronApp, [
+      {
+        name: MO2_NAMES.MO2EXE,
+        pid: 12345,
+        ppid: 1,
+        cmd: "ModOrganizer.exe",
+        cpu: 0,
+        memory: 0,
+      },
+    ]);
+
+    const messageBoxHandle = await mockMessageBox(electronApp, 0);
+
+    const disabledPromise = waitForClickEventsDisabled(window);
+
+    await launchGameButton.click();
+
+    await disabledPromise;
+
+    const messageBoxDetails = await waitForMessageBoxShown(messageBoxHandle);
+
+    expect(messageBoxDetails).toEqual({
+      messageBoxShown: true,
+      messageBoxTitle: "Mod Organizer running",
+      messageBoxMessage:
+        "Mod Organizer 2 is already running. This could launch the wrong mod list. Would you like to close it first?",
+    });
+  });
+
+  test("should not launch game when user cancels the MO2-already-running dialog", async () => {
+    await replacePsListWithMock(electronApp, [
+      {
+        name: MO2_NAMES.MO2EXE,
+        pid: 12345,
+        ppid: 1,
+        cmd: "ModOrganizer.exe",
+        cpu: 0,
+        memory: 0,
+      },
+    ]);
+
+    // Response 0 = Cancel
+    await mockMessageBox(electronApp, 0);
+
+    const disabledPromise = waitForClickEventsDisabled(window);
+
+    await launchGameButton.click();
+
+    // Wait for the dialog to appear then disappear (flow has completed)
+    await disabledPromise;
+    await waitForClickEventsEnabled(window);
+
+    const command = await execHandle.evaluate((handle) => handle.getCommand());
+
+    expect(command).toBeUndefined();
+  });
+
+  test("should kill MO2 processes and launch game when user confirms the MO2-already-running dialog", async () => {
+    const mockPid = 12345;
+
+    await replacePsListWithMock(electronApp, [
+      {
+        name: MO2_NAMES.MO2EXE,
+        pid: mockPid,
+        ppid: 1,
+        cmd: "ModOrganizer.exe",
+        cpu: 0,
+        memory: 0,
+      },
+    ]);
+
+    const processKillHandle = await mockProcessKill(electronApp);
+
+    // Response 1 = "Close MO2 and continue"
+    await mockMessageBox(electronApp, 1);
+
+    await launchGameButton.click();
+
+    await execHandle.evaluate((handle) => handle.resolveExec());
+    await waitForClickEventsEnabled(window);
+
+    const processKillState = await processKillHandle.evaluate((f) => f());
+    expect(processKillState.calls).toBeGreaterThan(0);
+    expect(processKillState.lastCalledWith?.pid).toBe(mockPid);
+
+    const command = await execHandle.evaluate((handle) => handle.getCommand());
+    expect(command).toBeDefined();
   });
 
   test("should sync graphics files from game to profile after game completion", async () => {
