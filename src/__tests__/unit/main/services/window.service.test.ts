@@ -166,11 +166,6 @@ describe("Window service #main #service", () => {
   });
 
   describe("load", () => {
-    beforeEach(() => {
-      // TODO this is only needed while vue-cli still exists
-      process.env["VUECLI"] = "true";
-    });
-
     afterEach(() => {
       process.env = { ...originalEnv };
     });
@@ -233,27 +228,29 @@ describe("Window service #main #service", () => {
       sinon.assert.calledOnce(showInactiveStub);
     });
 
-    it("should load the app url if not in development", async () => {
+    it("should load the index.html file if not in development", async () => {
+      const loadFileStub = sinon.stub().resolves();
       const showStub = sinon.stub();
 
       windowService.setWindow({
+        loadFile: loadFileStub,
         show: showStub,
       } as unknown as BrowserWindow);
 
-      const navigateStub = sinon.stub(windowService, "navigateInWindow");
-      const createProtocolStub = sinon.stub(windowService, "createProtocol");
-
       await windowService.load("/test");
 
-      sinon.assert.calledWith(navigateStub, "app://./index.html/#/test");
-      sinon.assert.calledOnce(createProtocolStub);
+      sinon.assert.calledOnce(loadFileStub);
       sinon.assert.calledOnce(showStub);
     });
 
     it("should handle the error if loading the local url fails", async () => {
       const error = new Error("test error");
-      const createProtocolStub = sinon.stub(windowService, "createProtocol");
-      createProtocolStub.throws(error);
+      const loadFileStub = sinon.stub().rejects(error);
+
+      windowService.setWindow({
+        loadFile: loadFileStub,
+      } as unknown as BrowserWindow);
+
       await windowService.load("/test");
       sinon.assert.calledWith(mockDialog.stubs.showMessageBoxSync, {
         type: "error",
@@ -265,8 +262,12 @@ describe("Window service #main #service", () => {
 
     it("should handle unknown errors", async () => {
       const mockNonError = { message: "test error" };
-      const createProtocolStub = sinon.stub(windowService, "createProtocol");
-      createProtocolStub.throws(mockNonError);
+      const loadFileStub = sinon.stub().rejects(mockNonError);
+
+      windowService.setWindow({
+        loadFile: loadFileStub,
+      } as unknown as BrowserWindow);
+
       await windowService.load("/test");
       sinon.assert.calledWith(mockDialog.stubs.showMessageBoxSync, {
         type: "error",

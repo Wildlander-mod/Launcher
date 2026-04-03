@@ -8,7 +8,7 @@ import fs from "fs";
 import { ConfigBinding } from "@/main/bindings/config.binding";
 import { Context } from "@loopback/core";
 
-export const appRoot = path.resolve(`${__dirname}/../../`);
+export const appRoot = path.resolve(`${__dirname}/../`);
 export interface UserPreferences {
   [USER_PREFERENCE_KEYS.MOD_DIRECTORY]: string;
   [USER_PREFERENCE_KEYS.PRESET]: string;

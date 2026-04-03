@@ -1,7 +1,6 @@
 import type Electron from "electron";
-import { BrowserWindow, protocol } from "electron";
+import type { BrowserWindow } from "electron";
 import { URL } from "url";
-import { readFile } from "fs";
 import path from "path";
 import { appRoot } from "@/main/services/config.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
@@ -120,7 +119,6 @@ export class WindowService {
       if (this.isDevelopment) {
         // HMR for renderer base on electron-vite cli.
         // Load the remote URL for development or the local html file for production.
-        // TODO remove localhost once vue-cli is removed
         const host =
           process.env["ELECTRON_RENDERER_URL"] ?? "http://localhost:8080/";
         const url = new URL(`${host}#${urlPath}`).toString();
@@ -131,19 +129,9 @@ export class WindowService {
         // Show window without setting focus
         this.window.showInactive();
       } else {
-        // TODO remove elseif once vue cli is removed and add test once this is default
-        /* istanbul ignore next */
-        if (process.env["VUECLI"] !== "true") {
-          await this.window.loadFile(
-            path.join(__dirname, "../renderer/index.html")
-          );
-          return;
-        }
-
-        this.createProtocol("app");
-        // Load the index.html when not in development
-        const url = new URL(`app://./index.html/#${urlPath}`).toString();
-        await this.navigateInWindow(url);
+        await this.window.loadFile(
+          path.join(__dirname, "../renderer/index.html")
+        );
         this.window.show();
       }
     } catch (error) {
@@ -193,46 +181,5 @@ export class WindowService {
         throw error;
       }
     }
-  }
-
-  // TODO this method is untested because it is essentially a library method.
-  // TODO this needs clarifying and simplifying
-  /**
-   * Taken from vue-cli-plugin-electron-builder to remove import/export because the plugin doesn't ship a dist.
-   * If imported directly, it causes issues when dynamically requiring services that might require this file
-   */
-  /* istanbul ignore next */
-  createProtocol(scheme: string) {
-    protocol.registerBufferProtocol(scheme, (request, respond) => {
-      let pathName = new URL(request.url).pathname;
-      pathName = decodeURI(pathName); // Needed in case URL contains spaces
-
-      readFile(path.join(appRoot, pathName), (error, data) => {
-        if (error) {
-          this.logger.error(
-            `Failed to read ${pathName} on ${scheme} protocol`,
-            error
-          );
-        }
-        const extension = path.extname(pathName).toLowerCase();
-        let mimeType = "";
-
-        if (extension === ".js") {
-          mimeType = "text/javascript";
-        } else if (extension === ".html") {
-          mimeType = "text/html";
-        } else if (extension === ".css") {
-          mimeType = "text/css";
-        } else if (extension === ".svg" || extension === ".svgz") {
-          mimeType = "image/svg+xml";
-        } else if (extension === ".json") {
-          mimeType = "application/json";
-        } else if (extension === ".wasm") {
-          mimeType = "application/wasm";
-        }
-
-        respond({ mimeType, data });
-      });
-    });
   }
 }
