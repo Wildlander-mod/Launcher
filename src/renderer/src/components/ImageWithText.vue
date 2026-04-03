@@ -10,19 +10,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import BaseImage from "./BaseImage.vue";
 
-@Options({
-  components: { BaseImage },
-})
-export default class ImageWithText extends Vue {
-  @Prop({ required: true }) imageSource!: string;
-  @Prop({ required: true }) alt!: string;
-  @Prop({ required: true }) text!: string;
-}
+defineProps<{
+  imageSource: string;
+  alt: string;
+  text: string;
+}>();
 </script>
 
 <style scoped lang="scss">

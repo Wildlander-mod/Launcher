@@ -149,9 +149,8 @@
   </span>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import AppPage from "../components/AppPage.vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import AppPageContent from "../components/AppPageContent.vue";
 import BaseButton from "../components/BaseButton.vue";
 import ModDirectory from "../components/ModDirectory.vue";
@@ -170,141 +169,129 @@ import { CONFIG_EVENTS } from "@/main/controllers/config/config.events";
 import Popper from "vue3-popper";
 import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
 
-@Options({
-  components: {
-    ModDirectory,
-    AppPage,
-    AppPageContent,
-    BaseButton,
-    Toggle,
-    Popper,
-  },
-})
-export default class Settings extends Vue {
-  private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-  private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
-  private showHiddenProfiles = false;
-  private checkPrerequisites = true;
+const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+const messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  override async created() {
-    this.showHiddenProfiles = await this.ipcService.invoke(
-      PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
-    );
+const showHiddenProfiles = ref(false);
+const checkPrerequisites = ref(true);
 
-    this.checkPrerequisites =
-      (await this.ipcService.invoke(LAUNCHER_EVENTS.GET_CHECK_PREREQUISITES)) ??
-      true;
+onMounted(async () => {
+  showHiddenProfiles.value = await ipcService.invoke(
+    PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
+  );
+
+  checkPrerequisites.value =
+    (await ipcService.invoke(LAUNCHER_EVENTS.GET_CHECK_PREREQUISITES)) ?? true;
+});
+
+async function launchMO2() {
+  eventService.emit(ENABLE_LOADING_EVENT);
+  try {
+    await ipcService.invoke(MOD_ORGANIZER_EVENTS.LAUNCH_MO2);
+  } catch (error) {
+    await messageService.error({
+      title: "Failed to launch MO2",
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
+  eventService.emit(DISABLE_LOADING_EVENT);
+}
 
-  async launchMO2() {
-    this.eventService.emit(ENABLE_LOADING_EVENT);
+async function restoreENBPresets() {
+  eventService.emit(ENABLE_LOADING_EVENT);
+
+  const { response } = await messageService.confirmation(
+    "Restoring ENB presets will reset any changes you have made to any ENBs. This cannot be undone. Are you sure?",
+    ["Cancel", "Restore ENB presets"]
+  );
+  if (response === 1) {
     try {
-      await this.ipcService.invoke(MOD_ORGANIZER_EVENTS.LAUNCH_MO2);
+      await ipcService.invoke(ENB_EVENTS.RESTORE_ENB_PRESETS);
     } catch (error) {
-      await this.messageService.error({
-        title: "Failed to launch MO2",
-        error: (error as Error).message,
+      await messageService.error({
+        title: "Error restoring ENB files",
+        error: error instanceof Error ? error.message : String(error),
       });
     }
-    this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
-  async restoreENBPresets() {
-    this.eventService.emit(ENABLE_LOADING_EVENT);
+  eventService.emit(DISABLE_LOADING_EVENT);
+}
 
-    const { response } = await this.messageService.confirmation(
-      "Restoring ENB presets will reset any changes you have made to any ENBs. This cannot be undone. Are you sure?",
-      ["Cancel", "Restore ENB presets"]
-    );
-    if (response === 1) {
-      try {
-        await this.ipcService.invoke(ENB_EVENTS.RESTORE_ENB_PRESETS);
-      } catch (error) {
-        await this.messageService.error({
-          title: "Error restoring ENB files",
-          error: (error as Error).message,
-        });
-      }
+async function restoreProfiles() {
+  eventService.emit(ENABLE_LOADING_EVENT);
+
+  const { response } = await messageService.confirmation(
+    "Restoring MO2 profiles will reset any changes you have made to any profiles. This cannot be undone. Are you sure?",
+    ["Cancel", "Restore MO2 profiles"]
+  );
+
+  if (response === 1) {
+    try {
+      await ipcService.invoke(PROFILE_EVENTS.RESTORE_PROFILES);
+    } catch (error) {
+      await messageService.error({
+        title: "Error restoring MO2 profiles",
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
-
-    this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
-  async restoreProfiles() {
-    this.eventService.emit(ENABLE_LOADING_EVENT);
+  eventService.emit(DISABLE_LOADING_EVENT);
+}
 
-    const { response } = await this.messageService.confirmation(
-      "Restoring MO2 profiles will reset any changes you have made to any profiles. This cannot be undone. Are you sure?",
-      ["Cancel", "Restore MO2 profiles"]
-    );
+async function restoreGraphics() {
+  eventService.emit(ENABLE_LOADING_EVENT);
 
-    if (response === 1) {
-      try {
-        await this.ipcService.invoke(PROFILE_EVENTS.RESTORE_PROFILES);
-      } catch (error) {
-        await this.messageService.error({
-          title: "Error restoring MO2 profiles",
-          error: (error as Error).message,
-        });
-      }
+  const { response } = await messageService.confirmation(
+    "Restoring graphics presets will reset any changes you have made to any presets. This cannot be undone. Are you sure?",
+    ["Cancel", "Restore graphics presets"]
+  );
+
+  if (response === 1) {
+    try {
+      await ipcService.invoke(GRAPHICS_EVENTS.RESTORE_GRAPHICS);
+    } catch (error) {
+      await messageService.error({
+        title: "Error restoring graphics presets",
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
-
-    this.eventService.emit(DISABLE_LOADING_EVENT);
   }
 
-  async restoreGraphics() {
-    this.eventService.emit(ENABLE_LOADING_EVENT);
+  eventService.emit(DISABLE_LOADING_EVENT);
+}
 
-    const { response } = await this.messageService.confirmation(
-      "Restoring graphics presets will reset any changes you have made to any presets. This cannot be undone. Are you sure?",
-      ["Cancel", "Restore graphics presets"]
-    );
+async function openLogPath() {
+  await ipcService.invoke(SYSTEM_EVENTS.OPEN_APPLICATION_LOGS);
+}
 
-    if (response === 1) {
-      try {
-        await this.ipcService.invoke(GRAPHICS_EVENTS.RESTORE_GRAPHICS);
-      } catch (error) {
-        await this.messageService.error({
-          title: "Error restoring graphics presets",
-          error: (error as Error).message,
-        });
-      }
-    }
+async function clearLogs() {
+  // clear logs (main & renderer) via event
+  await ipcService.invoke(SYSTEM_EVENTS.CLEAR_APP_LOGS);
+}
 
-    this.eventService.emit(DISABLE_LOADING_EVENT);
-  }
+async function openCrashLogPath() {
+  await ipcService.invoke(SYSTEM_EVENTS.OPEN_CRASH_LOGS);
+}
 
-  async openLogPath() {
-    await this.ipcService.invoke(SYSTEM_EVENTS.OPEN_APPLICATION_LOGS);
-  }
+async function setShowHiddenProfiles() {
+  await ipcService.invoke(
+    PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES,
+    showHiddenProfiles.value
+  );
+}
 
-  async clearLogs() {
-    // clear logs (main & renderer) via event
-    await this.ipcService.invoke(SYSTEM_EVENTS.CLEAR_APP_LOGS);
-  }
+async function setCheckPrerequisites() {
+  await ipcService.invoke(
+    LAUNCHER_EVENTS.SET_CHECK_PREREQUISITES,
+    checkPrerequisites.value
+  );
+}
 
-  async openCrashLogPath() {
-    await this.ipcService.invoke(SYSTEM_EVENTS.OPEN_CRASH_LOGS);
-  }
-
-  async setShowHiddenProfiles() {
-    await this.ipcService.invoke(
-      PROFILE_EVENTS.SET_SHOW_HIDDEN_PROFILES,
-      this.showHiddenProfiles
-    );
-  }
-
-  async setCheckPrerequisites() {
-    await this.ipcService.invoke(
-      LAUNCHER_EVENTS.SET_CHECK_PREREQUISITES,
-      this.checkPrerequisites
-    );
-  }
-
-  async editConfig() {
-    await this.ipcService.invoke(CONFIG_EVENTS.EDIT_CONFIG);
-  }
+async function editConfig() {
+  await ipcService.invoke(CONFIG_EVENTS.EDIT_CONFIG);
 }
 </script>
 

@@ -160,6 +160,16 @@ describe("AutoUpdate #renderer #view", () => {
       expect(wrapper.find(selectors.progress).text()).toContain("42%");
     });
 
+    it("should display 'Unknown' when DOWNLOAD_PROGRESS fires with a non-number value", async () => {
+      const wrapper = createWrapper();
+
+      triggerListener(ipcListeners, "download-progress", "bad-value");
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find(selectors.loading).exists()).toBe(false);
+      expect(wrapper.find(selectors.progress).text()).toContain("Unknown");
+    });
+
     it("should update the progress value when DOWNLOAD_PROGRESS fires again", async () => {
       const wrapper = createWrapper();
 

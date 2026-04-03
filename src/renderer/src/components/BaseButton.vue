@@ -11,19 +11,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-
+<script setup lang="ts">
 export type ButtonSizes = "large" | "small" | "grow";
 export type ButtonTypes = "primary" | "default" | "warning";
 
-@Component({})
-export default class BaseButton extends Vue {
-  @Prop({ default: "small" }) size!: ButtonSizes;
-  @Prop({ default: "default" }) type!: ButtonTypes;
-  @Prop({ default: false }) disabled!: boolean;
-}
+withDefaults(
+  defineProps<{
+    size?: ButtonSizes;
+    type?: ButtonTypes;
+    disabled?: boolean;
+  }>(),
+  {
+    size: "small",
+    type: "default",
+    disabled: false,
+  }
+);
 </script>
 
 <style lang="scss" scoped>

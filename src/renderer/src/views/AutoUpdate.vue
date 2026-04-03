@@ -26,38 +26,28 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
-import AppPageContent from "../components/AppPageContent.vue";
-import BaseButton from "../components/BaseButton.vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import AppModal from "../components/AppModal.vue";
 import { UPDATE_EVENTS } from "@/main/controllers/update/update.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
-@Component({
-  components: {
-    BaseButton,
-    AppModal,
-    PageContent: AppPageContent,
-  },
-})
-export default class AutoUpdate extends Vue {
-  downloadProgress = 0;
-  checkingForUpdate = true;
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const downloadProgress = ref<number | string>(0);
+const checkingForUpdate = ref(true);
 
-  override async created() {
-    this.ipcService.on(UPDATE_EVENTS.UPDATE_AVAILABLE, () => {
-      this.checkingForUpdate = false;
-    });
+onMounted(() => {
+  ipcService.on(UPDATE_EVENTS.UPDATE_AVAILABLE, () => {
+    checkingForUpdate.value = false;
+  });
 
-    this.ipcService.on(UPDATE_EVENTS.DOWNLOAD_PROGRESS, (progress) => {
-      this.checkingForUpdate = false;
-      this.downloadProgress = progress as number;
-    });
-  }
-}
+  ipcService.on(UPDATE_EVENTS.DOWNLOAD_PROGRESS, (progress) => {
+    checkingForUpdate.value = false;
+    downloadProgress.value =
+      typeof progress === "number" ? progress : "Unknown";
+  });
+});
 </script>
 
 <style scoped lang="scss">

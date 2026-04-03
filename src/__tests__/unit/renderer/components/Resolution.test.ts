@@ -240,6 +240,34 @@ describe("Resolution #renderer #component", () => {
       );
     });
 
+    it("should not call SET_RESOLUTION_PREFERENCE when the selected value is not a ResolutionType", async () => {
+      const wrapper = createWrapper();
+      await flushPromises();
+
+      wrapper
+        .findComponent({ name: "BaseDropdown" })
+        .vm.$emit("selected", { text: "invalid", value: "not-a-resolution" });
+      await flushPromises();
+
+      expect(mockIpcService.invoke).not.toHaveBeenCalledWith(
+        "SET_RESOLUTION_PREFERENCE",
+        expect.anything()
+      );
+    });
+
+    it("should still emit resolution-loading events when selected value is not a ResolutionType", async () => {
+      const wrapper = createWrapper();
+      await flushPromises();
+
+      wrapper
+        .findComponent({ name: "BaseDropdown" })
+        .vm.$emit("selected", { text: "invalid", value: "not-a-resolution" });
+      await flushPromises();
+
+      expect(wrapper.emitted("resolution-loading")).toContainEqual([true]);
+      expect(wrapper.emitted("resolution-loading")).toContainEqual([false]);
+    });
+
     it("should update currentSelection to the newly selected resolution", async () => {
       const wrapper = createWrapper();
       await flushPromises();

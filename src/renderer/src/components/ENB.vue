@@ -13,9 +13,10 @@
   </BaseDropdown>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
+import type { NonEmptyArray } from "@/shared/types/non-empty-array";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
 import { ENB_EVENTS } from "@/main/controllers/enb/enb.events";
@@ -25,61 +26,56 @@ import {
 } from "../services/event.service";
 import logger from "electron-log/renderer";
 
-@Options({
-  components: { BaseDropdown },
-})
-export default class ENB extends Vue {
-  selectedEnb: SelectOption | null = null;
-  enbPresets: SelectOption[] | null = null;
-  eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-  ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const emit = defineEmits<{
+  "enb-loading": [loading: boolean];
+}>();
 
-  override async created() {
-    this.enbPresets = this.directoryMapToSelectOptions(
-      await this.getEnbPresets()
-    );
-    this.selectedEnb = await this.getInitialEnb(this.enbPresets);
+const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+
+const selectedEnb = ref<SelectOption | null>(null);
+const enbPresets = ref<NonEmptyArray<SelectOption> | null>(null);
+
+onMounted(async () => {
+  enbPresets.value = directoryMapToSelectOptions(await getEnbPresets());
+  selectedEnb.value = await getInitialEnb(enbPresets.value);
+});
+
+async function getInitialEnb(
+  enbs: NonEmptyArray<SelectOption>
+): Promise<SelectOption> {
+  const enbPreference = await ipcService.invoke(ENB_EVENTS.GET_ENB_PREFERENCE);
+  return enbs.find((enb) => enb.value === enbPreference) ?? enbs[0];
+}
+
+async function getEnbPresets(): Promise<FriendlyDirectoryMap[]> {
+  return [
+    ...(await ipcService.invoke<FriendlyDirectoryMap[]>(
+      ENB_EVENTS.GET_ENB_PRESETS
+    )),
+  ];
+}
+
+function directoryMapToSelectOptions(
+  directoryMap: FriendlyDirectoryMap[]
+): SelectOption[] {
+  return directoryMap.map(({ friendly, real }) => ({
+    text: friendly,
+    value: real,
+  }));
+}
+
+async function onEnbChanged(option: SelectOption) {
+  logger.debug(`User selected enb ${option.value}`);
+  eventService.emit(ENABLE_LOADING_EVENT);
+  emit("enb-loading", true);
+
+  if (option.value !== selectedEnb.value?.value) {
+    await ipcService.invoke(ENB_EVENTS.SET_ENB_PREFERENCE, option.value);
+    selectedEnb.value = option;
   }
 
-  async getInitialEnb(enbs: SelectOption[]): Promise<SelectOption> {
-    const enbPreference = await this.ipcService.invoke(
-      ENB_EVENTS.GET_ENB_PREFERENCE
-    );
-    return (
-      enbs.find((enb) => enb.value === enbPreference) ??
-      (enbs[0] as SelectOption)
-    );
-  }
-
-  async getEnbPresets(): Promise<FriendlyDirectoryMap[]> {
-    return [
-      ...(await this.ipcService.invoke<FriendlyDirectoryMap[]>(
-        ENB_EVENTS.GET_ENB_PRESETS
-      )),
-    ];
-  }
-
-  directoryMapToSelectOptions(
-    directoryMap: FriendlyDirectoryMap[]
-  ): SelectOption[] {
-    return directoryMap.map(({ friendly, real }) => ({
-      text: friendly,
-      value: real,
-    }));
-  }
-
-  async onEnbChanged(option: SelectOption) {
-    logger.debug(`User selected enb ${option.value}`);
-    this.eventService.emit(ENABLE_LOADING_EVENT);
-    this.$emit("enb-loading", true);
-
-    if (option.value !== this.selectedEnb?.value) {
-      await this.ipcService.invoke(ENB_EVENTS.SET_ENB_PREFERENCE, option.value);
-      this.selectedEnb = option;
-    }
-
-    this.$emit("enb-loading", false);
-    this.eventService.emit(DISABLE_LOADING_EVENT);
-  }
+  emit("enb-loading", false);
+  eventService.emit(DISABLE_LOADING_EVENT);
 }
 </script>

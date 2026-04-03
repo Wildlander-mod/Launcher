@@ -26,21 +26,11 @@
   </template>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
+<script setup lang="ts">
 import Popper from "vue3-popper";
-import { Prop } from "vue-property-decorator";
 import BaseLink from "./BaseLink.vue";
 
-@Component({
-  components: {
-    BaseLink,
-    Popper,
-  },
-})
-export default class LauncherVersion extends Vue {
-  @Prop() version: string | null = null;
-}
+withDefaults(defineProps<{ version?: string | null }>(), { version: null });
 </script>
 
 <style scoped lang="scss">

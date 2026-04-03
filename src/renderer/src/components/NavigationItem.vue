@@ -8,13 +8,10 @@
   </a>
 </template>
 
-<script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-
-export default class NavigationItem extends Vue {
-  @Prop() active!: boolean;
-}
+<script setup lang="ts">
+defineProps<{
+  active?: boolean;
+}>();
 </script>
 
 <style scoped lang="scss">

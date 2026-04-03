@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="c-resources l-row">
     <BaseLink
@@ -37,30 +38,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import AppPageContent from "./AppPageContent.vue";
-import AppPage from "./AppPage.vue";
+<script setup lang="ts">
 import BaseLink from "./BaseLink.vue";
 import ImageWithText from "./ImageWithText.vue";
-import type { Modpack } from "@/shared/types/modpack-metadata";
-import { WildlanderModpack } from "@/shared/wildlander/modpack";
-
-@Options({
-  components: {
-    ImageWithText,
-    BaseLink,
-    AppPageContent,
-    AppPage,
-  },
-})
-export default class Community extends Vue {
-  modpack!: Modpack;
-
-  override async created() {
-    this.modpack = WildlanderModpack;
-  }
-}
 </script>
 
 <style scoped lang="scss">

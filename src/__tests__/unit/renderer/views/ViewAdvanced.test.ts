@@ -280,6 +280,22 @@ describe("ViewAdvanced #renderer #view", () => {
       );
     });
 
+    it("should use String(error) when LAUNCH_MO2 throws a non-Error value", async () => {
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "LAUNCH_MO2") return Promise.reject("plain error");
+        return Promise.resolve(false);
+      });
+
+      const wrapper = createWrapper();
+
+      await wrapper.find(selectors.launchMO2).trigger("click");
+      await flushPromises();
+
+      expect(mockMessageService.error).toHaveBeenCalledWith(
+        expect.objectContaining({ error: "plain error" })
+      );
+    });
+
     it("should emit DISABLE_LOADING_EVENT even when LAUNCH_MO2 throws", async () => {
       mockIpcService.invoke.mockImplementation((event: string) => {
         if (event === "LAUNCH_MO2")
@@ -433,6 +449,24 @@ describe("ViewAdvanced #renderer #view", () => {
       );
     });
 
+    it("should use String(error) when RESTORE_ENB_PRESETS throws a non-Error value", async () => {
+      mockMessageService.confirmation.mockResolvedValue({ response: 1 });
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "RESTORE_ENB_PRESETS")
+          return Promise.reject("plain error");
+        return Promise.resolve(false);
+      });
+
+      const wrapper = createWrapper();
+
+      await wrapper.find(selectors.restoreEnbPresets).trigger("click");
+      await flushPromises();
+
+      expect(mockMessageService.error).toHaveBeenCalledWith(
+        expect.objectContaining({ error: "plain error" })
+      );
+    });
+
     it("should emit DISABLE_LOADING_EVENT after the user confirms", async () => {
       mockMessageService.confirmation.mockResolvedValue({ response: 1 });
 
@@ -519,6 +553,23 @@ describe("ViewAdvanced #renderer #view", () => {
       );
     });
 
+    it("should use String(error) when RESTORE_PROFILES throws a non-Error value", async () => {
+      mockMessageService.confirmation.mockResolvedValue({ response: 1 });
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "RESTORE_PROFILES") return Promise.reject("plain error");
+        return Promise.resolve(false);
+      });
+
+      const wrapper = createWrapper();
+
+      await wrapper.find(selectors.restoreMO2Profiles).trigger("click");
+      await flushPromises();
+
+      expect(mockMessageService.error).toHaveBeenCalledWith(
+        expect.objectContaining({ error: "plain error" })
+      );
+    });
+
     it("should emit DISABLE_LOADING_EVENT after the user confirms", async () => {
       mockMessageService.confirmation.mockResolvedValue({ response: 1 });
 
@@ -602,6 +653,23 @@ describe("ViewAdvanced #renderer #view", () => {
 
       expect(mockMessageService.error).toHaveBeenCalledWith(
         expect.objectContaining({ title: "Error restoring graphics presets" })
+      );
+    });
+
+    it("should use String(error) when RESTORE_GRAPHICS throws a non-Error value", async () => {
+      mockMessageService.confirmation.mockResolvedValue({ response: 1 });
+      mockIpcService.invoke.mockImplementation((event: string) => {
+        if (event === "RESTORE_GRAPHICS") return Promise.reject("plain error");
+        return Promise.resolve(false);
+      });
+
+      const wrapper = createWrapper();
+
+      await wrapper.find(selectors.restoreGraphicsPresets).trigger("click");
+      await flushPromises();
+
+      expect(mockMessageService.error).toHaveBeenCalledWith(
+        expect.objectContaining({ error: "plain error" })
       );
     });
 

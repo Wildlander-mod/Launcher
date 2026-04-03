@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <BaseDropdown
     v-if="resolutions !== null && selectedResolution !== null"
@@ -31,8 +32,8 @@
   </BaseDropdown>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
 import type { Resolution as ResolutionType } from "@/shared/types/Resolution";
 import BaseLink from "./BaseLink.vue";
@@ -41,84 +42,85 @@ import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import { asyncFilter } from "@/shared/util/asyncFilter";
 import { RESOLUTION_EVENTS } from "@/main/controllers/resolution/resolution.events";
 
-@Options({
-  components: { BaseLink, BaseDropdown },
-})
-export default class Resolution extends Vue {
-  selectedResolution: SelectOption | null = null;
-  resolutions: SelectOption[] | null = null;
-  containsUltrawide = false;
+function isResolutionType(value: unknown): value is ResolutionType {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "width" in value &&
+    "height" in value
+  );
+}
 
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const emit = defineEmits<{
+  "resolution-loading": [loading: boolean];
+}>();
 
-  override async created() {
-    const resolutions = await this.getResolutions();
-    this.containsUltrawide =
-      (
-        await asyncFilter(resolutions, async ({ width, height }) => {
-          return this.ipcService.invoke(
-            RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION,
-            {
-              width,
-              height,
-            }
-          );
-        })
-      ).length > 0;
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-    this.resolutions = await this.resolutionsToSelectOptions(resolutions);
-    this.selectedResolution = (
-      await this.resolutionsToSelectOptions([
-        await this.getResolutionPreference(),
-      ])
-    )[0];
-  }
+const selectedResolution = ref<SelectOption | null>(null);
+const resolutions = ref<SelectOption[] | null>(null);
+const containsUltrawide = ref(false);
 
-  private async resolutionsToSelectOptions(
-    resolutions: ResolutionType[]
-  ): Promise<SelectOption[]> {
-    return Promise.all(
-      resolutions.map(async ({ height, width }) => ({
-        text: `${width} x ${height}`,
-        value: { width, height },
-        disabled:
-          (await this.ipcService.invoke(
-            RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION,
-            {
-              width,
-              height,
-            }
-          )) ?? false,
-      }))
-    );
-  }
+onMounted(async () => {
+  const rawResolutions = await getResolutions();
+  containsUltrawide.value =
+    (
+      await asyncFilter(rawResolutions, async ({ width, height }) => {
+        return ipcService.invoke(RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION, {
+          width,
+          height,
+        });
+      })
+    ).length > 0;
 
-  async getResolutionPreference(): Promise<ResolutionType> {
-    return this.ipcService.invoke<ResolutionType>(
-      RESOLUTION_EVENTS.GET_RESOLUTION_PREFERENCE
-    );
-  }
+  resolutions.value = await resolutionsToSelectOptions(rawResolutions);
+  selectedResolution.value = (
+    await resolutionsToSelectOptions([await getResolutionPreference()])
+  )[0];
+});
 
-  async getResolutions(): Promise<ResolutionType[]> {
-    return this.ipcService.invoke(RESOLUTION_EVENTS.GET_RESOLUTIONS);
-  }
+async function resolutionsToSelectOptions(
+  resolutionList: ResolutionType[]
+): Promise<SelectOption[]> {
+  return Promise.all(
+    resolutionList.map(async ({ height, width }) => ({
+      text: `${width} x ${height}`,
+      value: { width, height },
+      disabled:
+        (await ipcService.invoke(RESOLUTION_EVENTS.IS_UNSUPPORTED_RESOLUTION, {
+          width,
+          height,
+        })) ?? false,
+    }))
+  );
+}
 
-  async onResolutionSelected(option: SelectOption) {
-    logger.debug(`User selected resolution ${JSON.stringify(option.value)}`);
+async function getResolutionPreference(): Promise<ResolutionType> {
+  return ipcService.invoke<ResolutionType>(
+    RESOLUTION_EVENTS.GET_RESOLUTION_PREFERENCE
+  );
+}
 
-    // Emit event to indicate resolution change is starting
-    this.$emit("resolution-loading", true);
+async function getResolutions(): Promise<ResolutionType[]> {
+  return ipcService.invoke(RESOLUTION_EVENTS.GET_RESOLUTIONS);
+}
 
-    const value = option.value as ResolutionType;
-    await this.ipcService.invoke(RESOLUTION_EVENTS.SET_RESOLUTION_PREFERENCE, {
-      height: value.height,
-      width: value.width,
+async function onResolutionSelected(option: SelectOption) {
+  logger.debug(`User selected resolution ${JSON.stringify(option.value)}`);
+
+  // Emit event to indicate resolution change is starting
+  emit("resolution-loading", true);
+
+  if (isResolutionType(option.value)) {
+    await ipcService.invoke(RESOLUTION_EVENTS.SET_RESOLUTION_PREFERENCE, {
+      height: option.value.height,
+      width: option.value.width,
     });
-    this.selectedResolution = option;
-
-    // Emit event to indicate resolution change is complete
-    this.$emit("resolution-loading", false);
   }
+  selectedResolution.value = option;
+
+  // Emit event to indicate resolution change is complete
+  emit("resolution-loading", false);
 }
 </script>
 

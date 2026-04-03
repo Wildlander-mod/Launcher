@@ -35,41 +35,49 @@
   </vue-final-modal>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, watch, onMounted, inject } from "vue";
+import type { VueFinalModalProperty } from "vue-final-modal";
+import { $vfm as moduleLevelVfm } from "vue-final-modal";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
-import type { ModalService } from "../services/modal.service";
 import BaseButton from "./BaseButton.vue";
 
-@Options({
-  components: {
-    BaseButton,
-  },
-})
-export default class AppModal extends Vue {
-  @Prop({ required: true }) name!: string;
-  @Prop({ default: true }) showModal!: boolean;
-  @Prop() includeCloseButton = false;
-  model = false;
+// vue-final-modal v3 provides $vfm via app.provide('$vfm', ...) so inject() works
+// in both production and tests (using global.provide in test utils).
+const $vfm = inject<VueFinalModalProperty>("$vfm", moduleLevelVfm);
 
-  modalService!: ModalService;
-
-  override created() {
-    this.modalService = injectStrict(SERVICE_BINDINGS.MODAL_SERVICE);
+const props = withDefaults(
+  defineProps<{
+    name: string;
+    showModal?: boolean;
+    includeCloseButton?: boolean;
+  }>(),
+  {
+    showModal: true,
+    includeCloseButton: false,
   }
+);
 
-  override mounted() {
-    this.toggleModal(this.showModal);
+const model = ref(false);
+
+const modalService = injectStrict(SERVICE_BINDINGS.MODAL_SERVICE);
+
+onMounted(() => {
+  toggleModal(props.showModal);
+});
+
+watch(
+  () => props.showModal,
+  (showModal) => {
+    toggleModal(showModal);
   }
+);
 
-  @Watch("showModal")
-  toggleModal(showModal: boolean) {
-    if (showModal) {
-      this.modalService.openModal(this.name, this.$vfm);
-    } else {
-      this.modalService.closeModal(this.name, this.$vfm);
-    }
+function toggleModal(showModal: boolean) {
+  if (showModal) {
+    modalService.openModal(props.name, $vfm);
+  } else {
+    modalService.closeModal(props.name, $vfm);
   }
 }
 </script>

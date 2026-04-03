@@ -13,61 +13,58 @@
   </BaseDropdown>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
 import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
 import logger from "electron-log/renderer";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
 
-@Options({
-  components: { BaseDropdown },
-  emits: ["graphics-loading"],
-})
-export default class GraphicsSelection extends Vue {
-  selectedGraphics: SelectOption | null = null;
-  graphics: SelectOption[] | null = null;
+const emit = defineEmits<{
+  "graphics-loading": [loading: boolean];
+}>();
 
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  override async created() {
-    this.graphics = await this.getGraphics();
-    this.selectedGraphics =
-      (await this.getInitialGraphics(this.graphics)) ?? null;
-  }
+const selectedGraphics = ref<SelectOption | null>(null);
+const graphics = ref<SelectOption[] | null>(null);
 
-  async onGraphicsSelected(option: SelectOption) {
-    logger.debug(`User selected graphics ${option.value}`);
+onMounted(async () => {
+  graphics.value = await getGraphics();
+  selectedGraphics.value = (await getInitialGraphics(graphics.value)) ?? null;
+});
 
-    this.$emit("graphics-loading", true);
+async function onGraphicsSelected(option: SelectOption) {
+  logger.debug(`User selected graphics ${option.value}`);
 
-    await this.ipcService.invoke(GRAPHICS_EVENTS.SET_GRAPHICS, option.value);
-    this.selectedGraphics = option;
+  emit("graphics-loading", true);
 
-    this.$emit("graphics-loading", false);
-  }
+  await ipcService.invoke(GRAPHICS_EVENTS.SET_GRAPHICS, option.value);
+  selectedGraphics.value = option;
 
-  async getInitialGraphics(graphics: SelectOption[]) {
-    const graphicsPreference = await this.ipcService.invoke(
-      GRAPHICS_EVENTS.GET_GRAPHICS_PREFERENCE
-    );
+  emit("graphics-loading", false);
+}
 
-    return (
-      graphics.find((selection) => selection.value === graphicsPreference) ??
-      graphics[0]
-    );
-  }
+async function getInitialGraphics(graphicsList: SelectOption[]) {
+  const graphicsPreference = await ipcService.invoke(
+    GRAPHICS_EVENTS.GET_GRAPHICS_PREFERENCE
+  );
 
-  async getGraphics() {
-    return (
-      (await this.ipcService.invoke(
-        GRAPHICS_EVENTS.GET_GRAPHICS
-      )) as FriendlyDirectoryMap[]
-    ).map(({ friendly, real }) => ({
-      text: friendly,
-      value: real,
-    }));
-  }
+  return (
+    graphicsList.find((selection) => selection.value === graphicsPreference) ??
+    graphicsList[0]
+  );
+}
+
+async function getGraphics() {
+  return (
+    await ipcService.invoke<FriendlyDirectoryMap[]>(
+      GRAPHICS_EVENTS.GET_GRAPHICS
+    )
+  ).map(({ friendly, real }) => ({
+    text: friendly,
+    value: real,
+  }));
 }
 </script>

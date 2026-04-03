@@ -10,60 +10,70 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+export const optionSelectedEvent = "file-selected";
+</script>
+
+<script setup lang="ts">
+import { ref } from "vue";
 import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
-import { Prop } from "vue-property-decorator";
-import BaseLabel from "./BaseLabel.vue";
 import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
 import type { OpenDialogReturnValue } from "electron";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
 const selectAnotherFile = "SELECT_ANOTHER_FILE";
-export const optionSelectedEvent = "file-selected";
 
-@Options({
-  components: { BaseLabel, BaseDropdown },
-})
-export default class AppDropdownFileSelect extends Vue {
-  @Prop({ required: true }) private options!: SelectOption[];
-  @Prop({ required: true }) private defaultText!: string;
-  @Prop() private currentSelection!: SelectOption | null;
-  @Prop() label!: string;
+const props = defineProps<{
+  options: SelectOption[];
+  defaultText: string;
+  currentSelection?: SelectOption | null;
+  label?: string;
+}>();
 
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const emit = defineEmits<{
+  "file-selected": [value: unknown];
+}>();
 
-  override created() {
-    this.options.push({
-      text:
-        this.options.length === 0
-          ? "Select folder..."
-          : "Choose another folder...",
-      value: selectAnotherFile,
-    });
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-    // Add the default option if none is selected
-    if (!this.currentSelection) {
-      this.options.unshift({
-        text: this.defaultText,
-        value: null,
-        disabled: true,
-        hidden: true,
-      });
+// Build local copy so we don't mutate the prop
+const options = ref<SelectOption[]>([...props.options]);
+
+const selectText =
+  options.value.length === 0 ? "Select folder..." : "Choose another folder...";
+
+if (props.currentSelection === null) {
+  // Explicit null (no selection made yet): show placeholder as first/current item
+  options.value.unshift({
+    text: props.defaultText,
+    value: null,
+    disabled: true,
+    hidden: true,
+  });
+  options.value.push({ text: selectText, value: selectAnotherFile });
+} else if (props.currentSelection === undefined) {
+  // Not provided: append placeholder then SELECT_ANOTHER so real options stay at front
+  options.value.push({
+    text: props.defaultText,
+    value: null,
+    disabled: true,
+    hidden: true,
+  });
+  options.value.push({ text: selectText, value: selectAnotherFile });
+} else {
+  options.value.push({ text: selectText, value: selectAnotherFile });
+}
+
+async function optionSelected({ value }: SelectOption) {
+  if (value === selectAnotherFile) {
+    const dialogResponse = await ipcService.invoke<OpenDialogReturnValue>(
+      DIALOG_EVENTS.DIRECTORY_SELECT
+    );
+    if (!dialogResponse.canceled) {
+      // Only one directory is allowed to be selected so use the first filepath
+      emit(optionSelectedEvent, dialogResponse.filePaths[0]);
     }
-  }
-
-  async optionSelected({ value }: SelectOption) {
-    if (value === selectAnotherFile) {
-      const dialogResponse = (await this.ipcService.invoke(
-        DIALOG_EVENTS.DIRECTORY_SELECT
-      )) as OpenDialogReturnValue;
-      if (!dialogResponse.canceled) {
-        // Only one directory is allowed to be selected so use the first filepath
-        this.$emit(optionSelectedEvent, dialogResponse.filePaths[0]);
-      }
-    } else {
-      this.$emit(optionSelectedEvent, value);
-    }
+  } else {
+    emit(optionSelectedEvent, value);
   }
 }
 </script>

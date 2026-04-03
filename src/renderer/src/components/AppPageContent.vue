@@ -13,16 +13,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-
-export default class AppPageContent extends Vue {
-  @Prop({ required: false }) title!: string;
-  @Prop({ default: true }) spacing!: boolean;
-  @Prop({ default: false }) center!: boolean;
-  @Prop({ default: false }) scrollable!: boolean;
-}
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    spacing?: boolean;
+    center?: boolean;
+    scrollable?: boolean;
+  }>(),
+  {
+    spacing: true,
+    center: false,
+    scrollable: false,
+  }
+);
 </script>
 
 <style lang="scss" scoped>

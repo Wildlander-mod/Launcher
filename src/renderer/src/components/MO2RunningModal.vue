@@ -19,41 +19,36 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import AppModal from "./AppModal.vue";
 import BaseButton from "./BaseButton.vue";
 import { MOD_ORGANIZER_EVENTS } from "@/main/controllers/modOrganizer/modOrganizer.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
-@Options({
-  components: { AppModal, BaseButton },
-})
-export default class MO2Modal extends Vue {
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  mo2Running = false;
+const mo2Running = ref(false);
 
-  override async created() {
-    await this.checkIfRunning();
-    this.watchMO2Running();
-  }
+onMounted(async () => {
+  await checkIfRunning();
+  watchMO2Running();
+});
 
-  watchMO2Running() {
-    setTimeout(async () => {
-      await this.checkIfRunning();
-      this.watchMO2Running();
-    }, 1000);
-  }
+function watchMO2Running() {
+  setTimeout(async () => {
+    await checkIfRunning();
+    watchMO2Running();
+  }, 1000);
+}
 
-  async checkIfRunning() {
-    this.mo2Running = await this.ipcService.invoke(
-      MOD_ORGANIZER_EVENTS.IS_MO2_RUNNING
-    );
-  }
+async function checkIfRunning() {
+  mo2Running.value = await ipcService.invoke(
+    MOD_ORGANIZER_EVENTS.IS_MO2_RUNNING
+  );
+}
 
-  async closeMO2() {
-    await this.ipcService.invoke(MOD_ORGANIZER_EVENTS.CLOSE_MO2);
-  }
+async function closeMO2() {
+  await ipcService.invoke(MOD_ORGANIZER_EVENTS.CLOSE_MO2);
 }
 </script>

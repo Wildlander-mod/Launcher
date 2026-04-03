@@ -20,8 +20,8 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import AppModal from "../components/AppModal.vue";
 import BaseImage from "../components/BaseImage.vue";
 import BaseLink from "../components/BaseLink.vue";
@@ -30,21 +30,16 @@ import type { Modpack } from "@/shared/types/modpack-metadata";
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import ModDirectory from "../components/ModDirectory.vue";
 
-@Options({
-  components: { BaseLink, BaseImage, AppModal, ModDirectory },
-})
-export default class ModDirectoryView extends Vue {
-  ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  modpackMetadata: Modpack | null = null;
-  defaultLogo = "/images/logos/wildlander-full-light.svg";
+const modpackMetadata = ref<Modpack | null>(null);
+const defaultLogo = "/images/logos/wildlander-full-light.svg";
 
-  override async created() {
-    this.modpackMetadata = await this.ipcService.invoke(
-      MODPACK_EVENTS.GET_MODPACK_METADATA
-    );
-  }
-}
+onMounted(async () => {
+  modpackMetadata.value = await ipcService.invoke(
+    MODPACK_EVENTS.GET_MODPACK_METADATA
+  );
+});
 </script>
 
 <style scoped lang="scss">

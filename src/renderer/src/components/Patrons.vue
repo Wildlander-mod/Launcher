@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="c-patrons" data-testid="patrons-container">
     <BaseList
@@ -39,42 +40,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import BaseList from "./BaseList.vue";
-import type { PatreonService } from "../services/patreon.service";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
-import BaseLink from "./BaseLink.vue";
 
-@Component({
-  components: {
-    BaseList,
-    BaseLink,
-  },
-})
-export default class Patrons extends Vue {
-  patreonService!: PatreonService;
-  superPatrons: string[] = [];
-  otherPatrons: string[] = [];
-  failedToGetPatrons = false;
+const patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
 
-  override async created() {
-    this.patreonService = injectStrict(SERVICE_BINDINGS.PATRON_SERVICE);
+const superPatrons = ref<string[]>([]);
+const otherPatrons = ref<string[]>([]);
+const failedToGetPatrons = ref(false);
 
-    try {
-      const patrons = await this.patreonService.getPatrons();
-      this.superPatrons = patrons
-        .filter((patron) => patron.tier === "Super Patron")
-        .map((patron) => patron.name);
+onMounted(async () => {
+  try {
+    const patrons = await patreonService.getPatrons();
+    superPatrons.value = patrons
+      .filter((patron) => patron.tier === "Super Patron")
+      .map((patron) => patron.name);
 
-      this.otherPatrons = patrons
-        .filter((patron) => patron.tier === "Patron")
-        .map((patron) => patron.name);
-    } catch {
-      this.failedToGetPatrons = true;
-    }
+    otherPatrons.value = patrons
+      .filter((patron) => patron.tier === "Patron")
+      .map((patron) => patron.name);
+  } catch {
+    failedToGetPatrons.value = true;
   }
-}
+});
 </script>
 
 <style lang="scss" scoped>

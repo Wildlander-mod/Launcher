@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div
     v-if="!failedToGetNews && news.length > 0"
@@ -39,36 +40,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
-import BaseList from "./BaseList.vue";
-import type { Post, PostsService } from "../services/posts.service";
-import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import BaseLink from "./BaseLink.vue";
+import type { Post } from "../services/posts.service";
+import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
-@Component({
-  components: {
-    BaseList,
-    BaseLink,
-  },
-})
-export default class News extends Vue {
-  newsService!: PostsService;
-  news: Post[] = [];
-  failedToGetNews = false;
+const newsService = injectStrict(SERVICE_BINDINGS.NEWS_SERVICE);
 
-  override async created() {
-    this.newsService = injectStrict(SERVICE_BINDINGS.NEWS_SERVICE);
-    try {
-      this.news = await this.newsService.getPosts(this.updateNews);
-    } catch {
-      this.failedToGetNews = true;
-    }
+const news = ref<Post[]>([]);
+const failedToGetNews = ref(false);
+
+onMounted(async () => {
+  try {
+    news.value = await newsService.getPosts(updateNews);
+  } catch {
+    failedToGetNews.value = true;
   }
+});
 
-  updateNews(news: Post[]) {
-    this.news = news;
-  }
+function updateNews(updatedNews: Post[]) {
+  news.value = updatedNews;
 }
 </script>
 

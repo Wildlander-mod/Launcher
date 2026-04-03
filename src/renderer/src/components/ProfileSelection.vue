@@ -14,8 +14,8 @@
   </BaseDropdown>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
 import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
 import logger from "electron-log/renderer";
@@ -26,75 +26,63 @@ interface SelectOptionWithHiddenDefault extends SelectOption {
   hiddenByDefault: boolean;
 }
 
-@Options({
-  components: { BaseDropdown },
-})
-export default class ProfileSelection extends Vue {
-  selectedProfile: SelectOption | null = null;
-  profiles: SelectOptionWithHiddenDefault[] | null = null;
+const emit = defineEmits<{
+  "profile-loading": [loading: boolean];
+}>();
 
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  override async created() {
-    this.profiles = await this.getProfiles();
-    this.selectedProfile =
-      (await this.getInitialProfile(this.profiles)) ?? null;
-  }
+const selectedProfile = ref<SelectOption | null>(null);
+const profiles = ref<SelectOptionWithHiddenDefault[] | null>(null);
 
-  async onProfileSelected(option: SelectOption) {
-    logger.debug(`User selected profile ${option.value}`);
+onMounted(async () => {
+  profiles.value = await getProfiles();
+  selectedProfile.value = (await getInitialProfile(profiles.value)) ?? null;
+});
 
-    this.$emit("profile-loading", true);
+async function onProfileSelected(option: SelectOption) {
+  logger.debug(`User selected profile ${option.value}`);
 
-    await this.ipcService.invoke(
-      PROFILE_EVENTS.SET_PROFILE_PREFERENCE,
-      option.value
-    );
-    this.selectedProfile = option;
+  emit("profile-loading", true);
 
-    this.$emit("profile-loading", false);
-  }
+  await ipcService.invoke(PROFILE_EVENTS.SET_PROFILE_PREFERENCE, option.value);
+  selectedProfile.value = option;
 
-  async getInitialProfile(profiles: SelectOption[]) {
-    const profilePreference = await this.ipcService.invoke(
-      PROFILE_EVENTS.GET_PROFILE_PREFERENCE
-    );
+  emit("profile-loading", false);
+}
 
-    return (
-      profiles.find((profile) => profile.value === profilePreference) ??
-      profiles[0]
-    );
-  }
+async function getInitialProfile(profileList: SelectOption[]) {
+  const profilePreference = await ipcService.invoke(
+    PROFILE_EVENTS.GET_PROFILE_PREFERENCE
+  );
 
-  async getProfiles() {
-    return (
-      (await this.ipcService.invoke(
-        PROFILE_EVENTS.GET_PROFILES
-      )) as FriendlyDirectoryMap[]
-    ).map(
-      ({ friendly, real, hidden }) =>
-        ({
-          text: friendly,
-          value: real,
-          hidden,
-          hiddenByDefault: hidden,
-        } as SelectOptionWithHiddenDefault)
-    );
-  }
+  return (
+    profileList.find((profile) => profile.value === profilePreference) ??
+    profileList[0]
+  );
+}
 
-  async checkIfShowingHiddenProfiles() {
-    const showHiddenProfiles = await this.ipcService.invoke(
-      PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
-    );
+async function getProfiles(): Promise<SelectOptionWithHiddenDefault[]> {
+  return (
+    await ipcService.invoke<FriendlyDirectoryMap[]>(PROFILE_EVENTS.GET_PROFILES)
+  ).map(({ friendly, real, hidden }) => ({
+    text: friendly,
+    value: real,
+    hidden,
+    hiddenByDefault: hidden,
+  }));
+}
 
-    this.profiles =
-      this.profiles &&
-      this.profiles.map((profile) => {
-        return {
-          ...profile,
-          hidden: showHiddenProfiles ? false : profile.hiddenByDefault,
-        };
-      });
-  }
+async function checkIfShowingHiddenProfiles() {
+  const showHiddenProfiles = await ipcService.invoke(
+    PROFILE_EVENTS.GET_SHOW_HIDDEN_PROFILES
+  );
+
+  profiles.value =
+    profiles.value &&
+    profiles.value.map((profile) => ({
+      ...profile,
+      hidden: showHiddenProfiles ? false : profile.hiddenByDefault,
+    }));
 }
 </script>

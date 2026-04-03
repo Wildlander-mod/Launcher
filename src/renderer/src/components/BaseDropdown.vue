@@ -70,9 +70,8 @@
   </Popper>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref } from "vue";
 import Popper from "vue3-popper";
 
 export interface SelectOption {
@@ -82,36 +81,42 @@ export interface SelectOption {
   hidden?: boolean;
 }
 
-const selectedEvent = "selected";
-
-@Component({
-  components: { Popper },
-  emits: [selectedEvent],
-})
-export default class BaseDropdown extends Vue {
-  @Prop({ required: true }) options!: SelectOption[];
-  @Prop({ required: true }) currentSelection!: SelectOption;
-  @Prop({ default: false }) grow!: boolean;
-  @Prop({ default: false }) showTooltip!: boolean;
-  @Prop({ default: false }) showTooltipOnHover!: boolean;
-  // Whether to reduce the size of the dropdown if there isn't enough space
-  @Prop({ default: false }) small!: boolean;
-
-  isOpen = false;
-  loading = true;
-
-  select(option: SelectOption) {
-    this.isOpen = false;
-    this.$emit(selectedEvent, option);
+withDefaults(
+  defineProps<{
+    options: SelectOption[];
+    currentSelection: SelectOption;
+    grow?: boolean;
+    showTooltip?: boolean;
+    showTooltipOnHover?: boolean;
+    // Whether to reduce the size of the dropdown if there isn't enough space
+    small?: boolean;
+  }>(),
+  {
+    grow: false,
+    showTooltip: false,
+    showTooltipOnHover: false,
+    small: false,
   }
+);
 
-  toggleOpenState(open?: boolean) {
-    this.isOpen = open !== undefined ? open : !this.isOpen;
-    // To prevent the closing class from playing the animation on load, a loading class is used to hide the options.
-    // Once the dialog has been opened, it can be removed.
-    if (this.isOpen) {
-      this.loading = false;
-    }
+const emit = defineEmits<{
+  selected: [option: SelectOption];
+}>();
+
+const isOpen = ref(false);
+const loading = ref(true);
+
+function select(option: SelectOption) {
+  isOpen.value = false;
+  emit("selected", option);
+}
+
+function toggleOpenState(open?: boolean) {
+  isOpen.value = open !== undefined ? open : !isOpen.value;
+  // To prevent the closing class from playing the animation on load, a loading class is used to hide the options.
+  // Once the dialog has been opened, it can be removed.
+  if (isOpen.value) {
+    loading.value = false;
   }
 }
 </script>

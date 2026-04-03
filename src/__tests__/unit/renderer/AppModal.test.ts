@@ -39,7 +39,7 @@ const SELECTORS = {
 const mountOptions = {
   shallow: true,
   global: {
-    mocks: {
+    provide: {
       $vfm: mockVfm,
     },
     stubs: {

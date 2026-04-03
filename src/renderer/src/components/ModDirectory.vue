@@ -12,98 +12,94 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import type { SelectOption } from "./BaseDropdown.vue";
 import BaseLabel from "./BaseLabel.vue";
 import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
-import { Prop } from "vue-property-decorator";
 import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
 import { WINDOW_EVENTS } from "@/main/controllers/window/window.events";
 import { ENABLE_LOADING_EVENT } from "../services/event.service";
 import AppDropdownFileSelect from "./AppDropdownFileSelect.vue";
 
-@Options({
-  components: { AppDropdownFileSelect, BaseLabel },
-})
-export default class ModDirectory extends Vue {
-  modDirectory: SelectOption | null = null;
-  modpacks: SelectOption[] | null = null;
-  @Prop({ default: `${WildlanderModpack.name} installation folder` })
-  label!: string;
+withDefaults(defineProps<{ label?: string }>(), {
+  label: `${WildlanderModpack.name} installation folder`,
+});
 
-  private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
-  private messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
-  private modpackService = injectStrict(SERVICE_BINDINGS.MODPACK_SERVICE);
+const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+const messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const modpackService = injectStrict(SERVICE_BINDINGS.MODPACK_SERVICE);
 
-  override async created() {
-    this.modDirectory = await this.getCurrentModDirectory();
+const modDirectory = ref<SelectOption | null>(null);
+const modpacks = ref<SelectOption[] | null>(null);
 
-    const installedModpacks = await this.getInstalledModpacks();
+onMounted(async () => {
+  modDirectory.value = await getCurrentModDirectory();
 
-    if (
-      this.modDirectory !== null &&
-      !installedModpacks.includes(this.modDirectory.value as string)
-    ) {
-      installedModpacks.push(this.modDirectory.value as string);
-    }
-    this.modpacks = await this.convertModpackPathsToOptions(installedModpacks);
+  const installedModpacks = await getInstalledModpacks();
+
+  if (
+    modDirectory.value !== null &&
+    typeof modDirectory.value.value === "string" &&
+    !installedModpacks.includes(modDirectory.value.value)
+  ) {
+    installedModpacks.push(modDirectory.value.value);
   }
+  modpacks.value = convertModpackPathsToOptions(installedModpacks);
+});
 
-  async getCurrentModDirectory(): Promise<SelectOption | null> {
-    const modpack = await this.modpackService.getModpackDirectory();
-    return modpack ? this.convertModpackToOption(modpack) : null;
+async function getCurrentModDirectory(): Promise<SelectOption | null> {
+  const modpack = await modpackService.getModpackDirectory();
+  return modpack ? convertModpackToOption(modpack) : null;
+}
+
+async function getInstalledModpacks(): Promise<string[]> {
+  return ipcService.invoke<string[]>(WABBAJACK_EVENTS.GET_INSTALLED_MODPACKS);
+}
+
+function convertModpackPathsToOptions(modpackPaths: string[]): SelectOption[] {
+  return modpackPaths.map(convertModpackToOption);
+}
+
+function convertModpackToOption(modpack: string): SelectOption {
+  return { text: modpack, value: modpack };
+}
+
+async function checkModDirectoryIsValid(filepath: string): Promise<boolean> {
+  const { ok: modDirectoryOkay, missingPaths } =
+    await modpackService.isModDirectoryValid(filepath);
+
+  if (!modDirectoryOkay) {
+    await triggerError(missingPaths);
+    return false;
   }
+  return true;
+}
 
-  async getInstalledModpacks() {
-    return (await this.ipcService.invoke(
-      WABBAJACK_EVENTS.GET_INSTALLED_MODPACKS
-    )) as string[];
+async function modDirectorySet(filepath: unknown) {
+  if (
+    typeof filepath === "string" &&
+    (await checkModDirectoryIsValid(filepath))
+  ) {
+    eventService.emit(ENABLE_LOADING_EVENT);
+    await ipcService.invoke(MODPACK_EVENTS.SET_MODPACK, filepath);
+    modDirectory.value = { text: filepath, value: filepath };
+    await ipcService.invoke(WINDOW_EVENTS.RELOAD);
   }
+}
 
-  async convertModpackPathsToOptions(
-    modpacks: string[]
-  ): Promise<SelectOption[]> {
-    return modpacks.map(this.convertModpackToOption);
-  }
-
-  convertModpackToOption(modpack: string): SelectOption {
-    return { text: modpack, value: modpack };
-  }
-
-  async checkModDirectoryIsValid(filepath: string): Promise<boolean> {
-    const { ok: modDirectoryOkay, missingPaths } =
-      await this.modpackService.isModDirectoryValid(filepath);
-
-    if (!modDirectoryOkay) {
-      await this.triggerError(missingPaths);
-      return false;
-    }
-    return true;
-  }
-
-  async modDirectorySet(filepath: string) {
-    if (await this.checkModDirectoryIsValid(filepath)) {
-      this.eventService.emit(ENABLE_LOADING_EVENT);
-      await this.ipcService.invoke(MODPACK_EVENTS.SET_MODPACK, filepath);
-      this.modDirectory = { text: filepath, value: filepath };
-      await this.ipcService.invoke(WINDOW_EVENTS.RELOAD);
-    }
-  }
-
-  async triggerError(missingPaths?: string[]) {
-    const missingPathsError = missingPaths
-      ? `Missing files/directories: ${JSON.stringify(missingPaths)
-          .replace("[", "")
-          .replace("]", "")}`
-      : "";
-    await this.messageService.error({
-      title: "Invalid modpack directory selected",
-      error: `Please ensure this is a valid modpack installation directory. Remember, this is NOT the Skyrim directory, it is the mod's installation directory. ${missingPathsError}`,
-    });
-  }
+async function triggerError(missingPaths?: string[]) {
+  const missingPathsError = missingPaths
+    ? `Missing files/directories: ${JSON.stringify(missingPaths)
+        .replace("[", "")
+        .replace("]", "")}`
+    : "";
+  await messageService.error({
+    title: "Invalid modpack directory selected",
+    error: `Please ensure this is a valid modpack installation directory. Remember, this is NOT the Skyrim directory, it is the mod's installation directory. ${missingPathsError}`,
+  });
 }
 </script>

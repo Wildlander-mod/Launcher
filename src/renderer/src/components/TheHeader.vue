@@ -43,24 +43,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import type { Modpack } from "@/shared/types/modpack-metadata";
+<script setup lang="ts">
 import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import BaseLink from "./BaseLink.vue";
 import BaseImage from "./BaseImage.vue";
 
-@Options({
-  components: { BaseLink, BaseImage },
-})
-export default class TheHeader extends Vue {
-  modpack!: Modpack;
-  defaultLogo = "/images/logos/wildlander-full-light.svg";
-
-  override created() {
-    this.modpack = WildlanderModpack;
-  }
-}
+const modpack = WildlanderModpack;
+const defaultLogo = "/images/logos/wildlander-full-light.svg";
 </script>
 
 <style scoped lang="scss">

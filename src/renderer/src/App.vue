@@ -12,20 +12,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
 import TheTitleBar from "./components/TheTitleBar.vue";
 import AppPage from "./components/AppPage.vue";
 
-@Options({
-  components: {
-    AppPage,
-    TheTitleBar,
-  },
-})
-export default class App extends Vue {
-  backgroundImage = "/images/default-background.png";
-}
+const backgroundImage = "/images/default-background.png";
 </script>
 
 <style lang="scss">

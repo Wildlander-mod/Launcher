@@ -22,9 +22,8 @@
   <MO2Modal />
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 
 import TheHeader from "./TheHeader.vue";
 import TheNavigation from "./TheNavigation.vue";
@@ -35,55 +34,48 @@ import {
 } from "../services/event.service";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import { useRoute } from "vue-router";
-import { watch } from "vue";
 import MO2Modal from "./MO2RunningModal.vue";
 
-@Options({
-  components: {
-    TheHeader,
-    TheNavigation,
-    MO2Modal,
-  },
-})
-export default class AppPage extends Vue {
-  @Prop({ default: "column" }) layout!: "row" | "column";
+withDefaults(
+  defineProps<{
+    layout?: "row" | "column";
+  }>(),
+  { layout: "column" }
+);
 
-  clickEventsEnabled = true;
-  preloadRoute = true;
+const clickEventsEnabled = ref(true);
+const preloadRoute = ref(true);
 
-  private eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
+const route = useRoute();
 
-  override created() {
-    const route = useRoute();
-    watch(
-      () => route.name,
-      () => {
-        this.preloadRoute = route.meta?.["preload"] as boolean;
-      }
-    );
-
-    this.eventService.on(modalOpenedEvent, (opened: unknown) => {
-      this.setClickEventsEnabled(!opened as boolean);
-    });
-
-    this.eventService.on(ENABLE_LOADING_EVENT, () => {
-      this.setClickEventsEnabled(false);
-      this.setLoading(true);
-    });
-
-    this.eventService.on(DISABLE_LOADING_EVENT, () => {
-      this.setClickEventsEnabled(true);
-      this.setLoading(false);
-    });
+watch(
+  () => route.name,
+  () => {
+    preloadRoute.value = route.meta?.["preload"] === true;
   }
+);
 
-  setClickEventsEnabled(enabled: boolean) {
-    this.clickEventsEnabled = enabled;
-  }
+eventService.on(modalOpenedEvent, (opened: unknown) => {
+  setClickEventsEnabled(!opened);
+});
 
-  setLoading(loading: boolean) {
-    document.body.style.cursor = loading ? "progress" : "default";
-  }
+eventService.on(ENABLE_LOADING_EVENT, () => {
+  setClickEventsEnabled(false);
+  setLoading(true);
+});
+
+eventService.on(DISABLE_LOADING_EVENT, () => {
+  setClickEventsEnabled(true);
+  setLoading(false);
+});
+
+function setClickEventsEnabled(enabled: boolean) {
+  clickEventsEnabled.value = enabled;
+}
+
+function setLoading(loading: boolean) {
+  document.body.style.cursor = loading ? "progress" : "default";
 }
 </script>
 

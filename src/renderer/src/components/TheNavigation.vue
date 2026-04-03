@@ -122,8 +122,8 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-import { Options as Component, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import AppModal from "./AppModal.vue";
 import BaseLink from "./BaseLink.vue";
 import NavigationItem from "./NavigationItem.vue";
@@ -140,117 +140,100 @@ import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
 import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
 import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
 import type { Modpack } from "@/shared/types/modpack-metadata";
-import Popper from "vue3-popper";
 import LauncherVersion from "./LauncherVersion.vue";
 import GraphicsSelection from "./GraphicsSelection.vue";
 
-@Component({
-  components: {
-    GraphicsSelection,
-    LauncherVersion,
-    ENB,
-    AppModal,
-    Resolution,
-    ProfileSelection,
-    BaseLink,
-    BaseButton,
-    NavigationItem,
-    Popper,
-  },
-})
-export default class TheNavigation extends Vue {
-  private ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
+const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
-  gameRunning = false;
-  checkingPrerequisites = false;
-  installingPrerequisites = false;
-  rebootRequired = false;
-  isLoading = false;
-  launcherVersion: string | null = null;
-  modpackVersion: string | null = null;
-  modpackName: string | null = null;
+const gameRunning = ref(false);
+const checkingPrerequisites = ref(false);
+const installingPrerequisites = ref(false);
+const rebootRequired = ref(false);
+const isLoading = ref(false);
+const launcherVersion = ref<string | null>(null);
+const modpackVersion = ref<string | null>(null);
+const modpackName = ref<string | null>(null);
 
-  override async created() {
-    this.modpackVersion = await this.ipcService.invoke(
-      WABBAJACK_EVENTS.GET_MODPACK_VERSION
+onMounted(async () => {
+  modpackVersion.value = await ipcService.invoke(
+    WABBAJACK_EVENTS.GET_MODPACK_VERSION
+  );
+
+  modpackName.value = (
+    await ipcService.invoke<Modpack>(MODPACK_EVENTS.GET_MODPACK_METADATA)
+  ).name;
+
+  launcherVersion.value = await getVersion();
+});
+
+async function getVersion() {
+  return ipcService.invoke<string>(LAUNCHER_EVENTS.GET_VERSION);
+}
+
+async function checkPrerequisites(showMessage = true) {
+  if (showMessage) {
+    checkingPrerequisites.value = true;
+  }
+  const installed = await ipcService.invoke<boolean>(
+    SYSTEM_EVENTS.CHECK_PREREQUISITES
+  );
+  if (showMessage) {
+    checkingPrerequisites.value = false;
+  }
+  return installed;
+}
+
+function resetChecks() {
+  installingPrerequisites.value = false;
+  checkingPrerequisites.value = false;
+  gameRunning.value = false;
+}
+
+async function installPrerequisites() {
+  installingPrerequisites.value = true;
+  await ipcService.invoke(SYSTEM_EVENTS.INSTALL_PREREQUISITES);
+  const installed = await checkPrerequisites(false);
+  if (!installed) {
+    logger.error(`Error installing prerequisites`);
+    throw new Error(
+      `Program not available after successful install. Perhaps try restarting your PC.`
     );
-
-    this.modpackName = (
-      await this.ipcService.invoke<Modpack>(MODPACK_EVENTS.GET_MODPACK_METADATA)
-    ).name;
-
-    this.launcherVersion = await this.getVersion();
   }
+  installingPrerequisites.value = false;
+}
 
-  async getVersion() {
-    return this.ipcService.invoke<string>(LAUNCHER_EVENTS.GET_VERSION);
-  }
-
-  async checkPrerequisites(showMessage = true) {
-    if (showMessage) {
-      this.checkingPrerequisites = true;
+async function launchGame() {
+  logger.debug("Setting game to running");
+  gameRunning.value = true;
+  const installed = await checkPrerequisites();
+  if (!installed) {
+    try {
+      await installPrerequisites();
+      resetChecks();
+      rebootRequired.value = true;
+      return;
+    } catch (error) {
+      logger.error(`Error installing prerequisites: ${error}`);
+      await ipcService.invoke(DIALOG_EVENTS.ERROR, {
+        title: "Install failed",
+        error: `Failed to install prerequisites. ${error}`,
+      });
+      resetChecks();
+      return;
     }
-    const installed = await this.ipcService.invoke<boolean>(
-      SYSTEM_EVENTS.CHECK_PREREQUISITES
-    );
-    if (showMessage) {
-      this.checkingPrerequisites = false;
-    }
-    return installed;
   }
 
-  resetChecks() {
-    this.installingPrerequisites = false;
-    this.checkingPrerequisites = false;
-    this.gameRunning = false;
-  }
+  await ipcService.invoke(MOD_ORGANIZER_EVENTS.LAUNCH_GAME);
+  logger.debug("Setting game to no longer running");
+  gameRunning.value = false;
+}
 
-  async installPrerequisites() {
-    this.installingPrerequisites = true;
-    await this.ipcService.invoke(SYSTEM_EVENTS.INSTALL_PREREQUISITES);
-    const installed = await this.checkPrerequisites(false);
-    if (!installed) {
-      logger.error(`Error installing prerequisites`);
-      throw new Error(
-        `Program not available after successful install. Perhaps try restarting your PC.`
-      );
-    }
-    this.installingPrerequisites = false;
-  }
+function reboot() {
+  ipcService.invoke(SYSTEM_EVENTS.REBOOT);
+}
 
-  async launchGame() {
-    logger.debug("Setting game to running");
-    this.gameRunning = true;
-    const installed = await this.checkPrerequisites();
-    if (!installed) {
-      try {
-        await this.installPrerequisites();
-        this.resetChecks();
-        this.rebootRequired = true;
-        return;
-      } catch (error) {
-        logger.error(`Error installing prerequisites: ${error}`);
-        await this.ipcService.invoke(DIALOG_EVENTS.ERROR, {
-          title: "Install failed",
-          error: `Failed to install prerequisites. ${error}`,
-        });
-        this.resetChecks();
-        return;
-      }
-    }
-
-    await this.ipcService.invoke(MOD_ORGANIZER_EVENTS.LAUNCH_GAME);
-    logger.debug("Setting game to no longer running");
-    this.gameRunning = false;
-  }
-
-  reboot() {
-    this.ipcService.invoke(SYSTEM_EVENTS.REBOOT);
-  }
-
-  onLoading(loading: boolean) {
-    this.isLoading = loading;
-  }
+function onLoading(loading: boolean) {
+  isLoading.value = loading;
 }
 </script>
 
