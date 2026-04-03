@@ -18,6 +18,7 @@
     "start:main:old": "electron dist/main.js",
     "prebuild": "npm run compile",
     "build": "vue-cli-service electron:build",
+    "build:dist": "electron-vite build && electron-builder",
     "lint": "npm run lint:typescript && npm run lint:eslint && npm run lint:styles && npm run lint:prettier",
     "lint:fix": "npm run lint:typescript && npm run lint:eslint:fix && npm run lint:prettier:fix",
     "electron:debug:main": "electron --remote-debugging-port=9223 ./dist",
@@ -126,6 +127,7 @@
     "commitlint": "^15.0.0",
     "cross-env": "^7.0.3",
     "electron": "^16.0.5",
+    "electron-builder": "^26.8.1",
     "electron-devtools-installer": "^3.1.0",
     "electron-vite": "^3.1.0",
     "eslint": "^8.42.0",
@@ -187,5 +189,27 @@
     "pre-commit": "lint-staged",
     "commit-msg": "commitlint -e -V "
   },
-  "repository": "https://github.com/Wildlander-mod/Launcher"
+  "repository": "https://github.com/Wildlander-mod/Launcher",
+  "build": {
+    "productName": "Wildlander Launcher",
+    "icon": "public/images/logos/wildlander-icon-light.png",
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    },
+    "files": [
+      "out/**",
+      "!**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "./resources/tools/",
+        "to": "tools",
+        "filter": ["**/*"]
+      }
+    ],
+    "nsis": {
+      "deleteAppDataOnUninstall": true
+    }
+  }
 }
