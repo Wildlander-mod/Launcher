@@ -87,7 +87,7 @@ export const startTestApp = async (
 
   // Launch Electron app.
   const electronApp = await electron.launch({
-    args: [`${config().paths.instrumented}/main.js`],
+    args: [`${config().paths.instrumented}/main/index.js`],
     env: {
       ...process.env,
       CONFIG_PATH: `${mockFilesPath}/config`,
@@ -96,6 +96,7 @@ export const startTestApp = async (
       // Disable this to open dev tools by default
       IS_TEST: "true",
       LOG_PATH: `${mockFilesPath}/logs`,
+      ELECTRON_RENDERER_URL: "http://localhost:5174/",
     },
     // recordVideo: { dir: "test-results" },
   });
@@ -136,7 +137,9 @@ export const startTestApp = async (
     const rendererCoverage = await window.evaluate(
       () => (window as unknown as WindowWithCoverage).__coverage__
     );
-    await saveCoverage("renderer", rendererCoverage);
+    if (rendererCoverage) {
+      await saveCoverage("renderer", rendererCoverage);
+    }
 
     const mainCoverage = await electronApp.evaluate(
       () => (global as unknown as GlobalWithCoverage).__coverage__

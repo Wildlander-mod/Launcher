@@ -17,7 +17,7 @@ async function instrumentFiles() {
     force: true,
   });
 
-  const command = `npx lb-nyc instrument ./dist ${
+  const command = `npx lb-nyc instrument ./out ${
     config().paths.instrumented
   } --complete-copy --delete --nycrc-path src/__tests__/e2e/.nycrc`;
 

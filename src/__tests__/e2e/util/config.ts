@@ -10,6 +10,6 @@ export const config = () => ({
     coverage: `${playwrightDir}/coverage`,
     screenshots: `${playwrightDir}/screenshots/`,
     mockFiles: `${playwrightDir}/mock-files`,
-    instrumented: `${playwrightDir}/dist-instrumented`,
+    instrumented: `${playwrightDir}/out-instrumented`,
   },
 });
