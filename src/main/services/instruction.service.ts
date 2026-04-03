@@ -10,7 +10,7 @@ import { ProfileService } from "@/main/services/profile.service";
 import * as os from "os";
 import type { PathLike } from "fs-extra";
 import { WabbajackService } from "@/main/services/wabbajack.service";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 
 @injectable({
   scope: BindingScope.SINGLETON,

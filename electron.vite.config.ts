@@ -15,10 +15,6 @@ export default defineConfig({
         input: {
           index: resolve(__dirname, "src/main.ts"),
         },
-        output: {
-          preserveModules: true,
-          preserveModulesRoot: "src/main",
-        },
       },
     },
   },

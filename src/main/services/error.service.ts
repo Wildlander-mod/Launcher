@@ -1,6 +1,6 @@
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { Logger, LoggerBinding } from "@/main/logger";
-import { Dialog, DialogProvider } from "./dialog.service";
+import { type Logger, LoggerBinding } from "@/main/logger";
+import { type Dialog, DialogProvider } from "./dialog.service";
 import { service } from "@loopback/core";
 
 @injectable({

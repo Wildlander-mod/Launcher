@@ -15,7 +15,7 @@ export const optionSelectedEvent = "file-selected";
 
 <script setup lang="ts">
 import { ref } from "vue";
-import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
+import BaseDropdown, { type SelectOption } from "./BaseDropdown.vue";
 import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
 import type { OpenDialogReturnValue } from "electron";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";

@@ -8,7 +8,7 @@ import { service } from "@loopback/core";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import type { AdditionalInstruction } from "@/shared/types/additional-instructions";
 import { InstructionService } from "@/main/services/instruction.service";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { NoEnbsError } from "@/shared/errors/no-enbs.error";
 import type { NonEmptyArray } from "@/shared/types/non-empty-array";
 

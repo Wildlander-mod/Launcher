@@ -1,7 +1,7 @@
 import {
   injectable,
   /* inject, */ BindingScope,
-  Provider,
+  type Provider,
 } from "@loopback/core";
 import { dialog } from "electron";
 

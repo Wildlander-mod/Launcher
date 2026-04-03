@@ -6,7 +6,7 @@ import type { Modpack } from "@/shared/types/modpack-metadata";
 import { service } from "@loopback/core";
 import { ConfigService } from "@/main/services/config.service";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { MO2_NAMES } from "@/shared/enums/mo2";
 
 @injectable({

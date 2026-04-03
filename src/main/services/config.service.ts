@@ -3,7 +3,7 @@ import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import type { Resolution } from "@/shared/types/Resolution";
 import path from "path";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import fs from "fs";
 import { ConfigBinding } from "@/main/bindings/config.binding";
 import { Context } from "@loopback/core";

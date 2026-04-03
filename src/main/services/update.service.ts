@@ -6,10 +6,10 @@ import { WindowService } from "@/main/services/window.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { UPDATE_EVENTS } from "@/main/controllers/update/update.events";
 import { ErrorService } from "@/main/services/error.service";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
 import { AutoUpdaterBinding } from "@/main/bindings/autoUpdater.binding";
-import type { AppUpdater } from "electron-updater";
+import { AppUpdater } from "electron-updater";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 
 @injectable({

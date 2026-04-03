@@ -11,7 +11,7 @@ import { UpdateService } from "@/main/services/update.service";
 import { BlacklistService } from "@/main/services/blacklist.service";
 import { ErrorService } from "@/main/services/error.service";
 import { WindowService } from "@/main/services/window.service";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 
 interface StartupCommand {

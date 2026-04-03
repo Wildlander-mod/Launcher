@@ -5,7 +5,7 @@ import { LoggerBinding } from "@/main/logger";
 import {
   Application,
   createServiceBinding,
-  ServiceOrProviderClass,
+  type ServiceOrProviderClass,
 } from "@loopback/core";
 import type { Controller } from "@/main/decorators/controller.decorator";
 import { ErrorService } from "@/main/services/error.service";

@@ -4,14 +4,14 @@ import { URL } from "url";
 import path from "path";
 import { appRoot } from "@/main/services/config.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 import {
-  ContextMenu,
+  type ContextMenu,
   ContextMenuBinding,
 } from "@/main/bindings/context-menu.binding";
 import { service } from "@loopback/core";
-import { Dialog, DialogProvider } from "@/main/services/dialog.service";
+import { type Dialog, DialogProvider } from "@/main/services/dialog.service";
 import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
 
 @injectable({

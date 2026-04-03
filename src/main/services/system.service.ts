@@ -10,15 +10,15 @@ import { promisify } from "util";
 import { reboot } from "electron-shutdown-command";
 import { getAllInstalledSoftware } from "fetch-installed-software";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 import {
-  ChildProcess,
+  type ChildProcess,
   ChildProcessBinding,
 } from "@/main/bindings/child-process.binding";
 import { type PSList, PsListBinding } from "@/main/bindings/psList.binding";
 import {
-  ProcessKill,
+  type ProcessKill,
   ProcessKillBinding,
 } from "@/main/bindings/process-kill.binding";
 import * as os from "node:os";

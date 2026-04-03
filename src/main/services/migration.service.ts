@@ -6,7 +6,7 @@ import path from "path";
 import { ConfigService } from "@/main/services/config.service";
 import { copy } from "fs-extra";
 import { asyncFilter } from "@/shared/util/asyncFilter";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 
 @injectable({ scope: BindingScope.SINGLETON })
 export class MigrationService {

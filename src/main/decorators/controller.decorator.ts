@@ -1,4 +1,4 @@
-import { ipcMain, IpcMainInvokeEvent } from "electron";
+import { ipcMain, type IpcMainInvokeEvent } from "electron";
 import type { Constructor } from "@loopback/context";
 import log from "electron-log/main";
 import "reflect-metadata";

@@ -5,7 +5,7 @@ import fs from "fs";
 import { not as isNotJunk } from "junk";
 import { copy, existsSync } from "fs-extra";
 import { inject, service, injectable, BindingScope } from "@loopback/core";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 
 @injectable({ scope: BindingScope.SINGLETON })
 export class ProfileService {

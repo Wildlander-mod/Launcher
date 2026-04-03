@@ -1,4 +1,4 @@
-import { App, inject, InjectionKey } from "vue";
+import { type App, inject, type InjectionKey } from "vue";
 import { PatreonService } from "./patreon.service";
 import { PostsService } from "./posts.service";
 import { ModalService } from "./modal.service";

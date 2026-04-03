@@ -1,12 +1,12 @@
 import { controller, handle } from "@/main/decorators/controller.decorator";
 import {
-  IsModpackValidResponse,
+  type IsModpackValidResponse,
   MODPACK_EVENTS,
 } from "@/main/controllers/modpack/mopack.events";
 import { inject, service } from "@loopback/core";
 import { ModpackService } from "@/main/services/modpack.service";
 import { LauncherService } from "@/main/services/launcher.service";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 
 @controller
 export class ModpackController {

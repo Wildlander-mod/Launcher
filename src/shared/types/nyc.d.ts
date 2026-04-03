@@ -1,5 +1,5 @@
 declare module "nyc/lib/source-maps" {
-  import libCoverage from "istanbul-lib-coverage";
+  import type libCoverage from "istanbul-lib-coverage";
 
   interface SourceMapsOptions {
     cache?: boolean;

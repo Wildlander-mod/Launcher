@@ -7,34 +7,32 @@ export interface WabbajackModpackMetadata {
   };
 }
 
-export interface WabbajackV2SettingsFile {
+interface WabbajackV2ModlistEntry {
   $type: string;
-
-  [key: string]: {
+  Metadata: unknown;
+  ModList: {
     $type: string;
-    Metadata: unknown;
-    ModList: {
-      $type: string;
-      Archives: Array;
-      Author: string;
-      Description: string;
-      Directives: Array;
-      GameType: string;
-      Image: string;
-      ModManager: 0;
-      Name: string;
-      Readme: string;
-      WabbajackVersion: string;
-      Website: string;
-      Version: string;
-      IsNSFW: boolean;
-    };
-    InstallationPath: string;
-    DownloadPath: string;
-    WabbajackPath: string;
-    InstalledAt: string;
+    Archives: unknown[];
+    Author: string;
+    Description: string;
+    Directives: unknown[];
+    GameType: string;
+    Image: string;
+    ModManager: 0;
+    Name: string;
+    Readme: string;
+    WabbajackVersion: string;
+    Website: string;
+    Version: string;
+    IsNSFW: boolean;
   };
+  InstallationPath: string;
+  DownloadPath: string;
+  WabbajackPath: string;
+  InstalledAt: string;
 }
+
+export type WabbajackV2SettingsFile = Record<string, WabbajackV2ModlistEntry>;
 
 export interface WabbajackInstallSettings {
   ModListLocation: string;

@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
+import BaseDropdown, { type SelectOption } from "./BaseDropdown.vue";
 import type { Resolution as ResolutionType } from "@/shared/types/Resolution";
 import BaseLink from "./BaseLink.vue";
 import logger from "electron-log/renderer";

@@ -6,7 +6,7 @@ import { inject, service } from "@loopback/core";
 import { ProfileService } from "@/main/services/profile.service";
 import path from "path";
 import { copy, existsSync } from "fs-extra";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
 import { NoGraphicsError } from "@/shared/errors/no-graphics.error";
 

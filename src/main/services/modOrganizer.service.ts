@@ -1,7 +1,12 @@
 import path from "path";
 import { ConfigService } from "@/main/services/config.service";
 import fs from "fs";
-import { IIniObject, IIniObjectSection, parse, stringify } from "js-ini";
+import {
+  type IIniObject,
+  type IIniObjectSection,
+  parse,
+  stringify,
+} from "js-ini";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import { EnbService } from "@/main/services/enb.service";
 import { service } from "@loopback/core";
@@ -13,10 +18,10 @@ import { ProfileService } from "@/main/services/profile.service";
 import { SystemService } from "@/main/services/system.service";
 import { GraphicsService } from "@/main/services/graphics.service";
 import type { ModOrganizerIni } from "@/shared/types/ModOrganizer.ini";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { MO2_NAMES } from "@/shared/enums/mo2";
 import type { ProcessDescriptor } from "ps-list";
-import { Dialog, DialogProvider } from "@/main/services/dialog.service";
+import { type Dialog, DialogProvider } from "@/main/services/dialog.service";
 import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
 
 @injectable({

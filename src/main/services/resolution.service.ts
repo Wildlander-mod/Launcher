@@ -1,7 +1,7 @@
 import * as os from "os";
 import { promisify } from "util";
 import { ConfigService } from "@/main/services/config.service";
-import { IIniObjectSection, parse, stringify } from "js-ini";
+import { type IIniObjectSection, parse, stringify } from "js-ini";
 import fs from "fs";
 import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
 import type { Resolution } from "@/shared/types/Resolution";
@@ -9,12 +9,12 @@ import { BindingScope, inject, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
 import { WildlanderModpack } from "@/shared/wildlander/modpack";
 import { InstructionService } from "@/main/services/instruction.service";
-import { Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "@/main/logger";
 import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
 import { ElectronBinding } from "@/main/bindings/electron.binding";
 import type Electron from "electron";
 import {
-  ChildProcess,
+  type ChildProcess,
   ChildProcessBinding,
 } from "@/main/bindings/child-process.binding";
 

@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import BaseDropdown, { SelectOption } from "./BaseDropdown.vue";
+import BaseDropdown, { type SelectOption } from "./BaseDropdown.vue";
 import type { NonEmptyArray } from "@/shared/types/non-empty-array";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";

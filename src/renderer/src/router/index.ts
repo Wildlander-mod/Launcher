@@ -1,9 +1,9 @@
 import {
   createRouter,
   createWebHashHistory,
-  NavigationGuardWithThis,
-  RouteLocationNormalized,
-  RouteRecordRaw,
+  type NavigationGuardWithThis,
+  type RouteLocationNormalized,
+  type RouteRecordRaw,
 } from "vue-router";
 
 import ViewHome from "../views/ViewHome.vue";
