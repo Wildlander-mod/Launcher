@@ -52,7 +52,6 @@ if (!app.isPackaged) {
 
 const start = async () => {
   const launcherApplication = new LauncherApplication();
-  await launcherApplication.boot();
   await launcherApplication.start();
 
   app.on("second-instance", () => {

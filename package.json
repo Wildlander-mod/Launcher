@@ -59,7 +59,6 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "@loopback/boot": "^5.0.10",
     "@loopback/context": "^5.0.10",
     "@loopback/core": "^4.0.10",
     "@vueform/toggle": "^2.1.1",

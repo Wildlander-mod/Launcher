@@ -1,4 +1,4 @@
-import { inject, service } from "@loopback/core";
+import { inject, service, injectable, BindingScope } from "@loopback/core";
 import { GraphicsService } from "@/main/services/graphics.service";
 import { ProfileService } from "@/main/services/profile.service";
 import fs from "fs";
@@ -8,6 +8,7 @@ import { copy } from "fs-extra";
 import { asyncFilter } from "@/shared/util/asyncFilter";
 import { Logger, LoggerBinding } from "@/main/logger";
 
+@injectable({ scope: BindingScope.SINGLETON })
 export class MigrationService {
   private standardProfileName = "0_Wildlander-STANDARD";
   private performanceProfileName = "0_Wildlander-PERFORMANCE";

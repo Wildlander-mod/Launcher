@@ -4,9 +4,10 @@ import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
 import fs from "fs";
 import { not as isNotJunk } from "junk";
 import { copy, existsSync } from "fs-extra";
-import { inject, service } from "@loopback/core";
+import { inject, service, injectable, BindingScope } from "@loopback/core";
 import { Logger, LoggerBinding } from "@/main/logger";
 
+@injectable({ scope: BindingScope.SINGLETON })
 export class ProfileService {
   constructor(
     @service(ConfigService) private configService: ConfigService,

@@ -2,8 +2,11 @@ import { StartupService } from "@/main/services/startup.service";
 import type { Constructor } from "@loopback/context";
 import { WindowService } from "@/main/services/window.service";
 import { LoggerBinding } from "@/main/logger";
-import { BootMixin } from "@loopback/boot";
-import { Application } from "@loopback/core";
+import {
+  Application,
+  createServiceBinding,
+  ServiceOrProviderClass,
+} from "@loopback/core";
 import type { Controller } from "@/main/decorators/controller.decorator";
 import { ErrorService } from "@/main/services/error.service";
 import logger from "electron-log";
@@ -25,15 +28,44 @@ import { ConfigService } from "@/main/services/config.service";
 import { is } from "@electron-toolkit/utils";
 import log from "electron-log/main";
 
+// Services
+import { BlacklistService } from "@/main/services/blacklist.service";
+import { DialogProvider } from "@/main/services/dialog.service";
+import { EnbService } from "@/main/services/enb.service";
+import { GameService } from "@/main/services/game.service";
+import { GraphicsService } from "@/main/services/graphics.service";
+import { InstructionService } from "@/main/services/instruction.service";
+import { LauncherService } from "@/main/services/launcher.service";
+import { MigrationService } from "@/main/services/migration.service";
+import { ModOrganizerService } from "@/main/services/modOrganizer.service";
+import { ModpackService } from "@/main/services/modpack.service";
+import { ProfileService } from "@/main/services/profile.service";
+import { ResolutionService } from "@/main/services/resolution.service";
+import { SystemService } from "@/main/services/system.service";
+import { UpdateService } from "@/main/services/update.service";
+import { WabbajackService } from "@/main/services/wabbajack.service";
+
+// Controllers
+import { ConfigController } from "@/main/controllers/config/config.controller";
+import { DialogController } from "@/main/controllers/dialog/dialog.controller";
+import { EnbController } from "@/main/controllers/enb/enb.controller";
+import { GraphicsController } from "@/main/controllers/graphics/graphics.controller";
+import { LauncherController } from "@/main/controllers/launcher/launcher.controller";
+import { ModOrganizerController } from "@/main/controllers/modOrganizer/modOrganizer.controller";
+import { ModpackController } from "@/main/controllers/modpack/modpack.controller";
+import { ProfileController } from "@/main/controllers/profile/profile.controller";
+import { ResolutionController } from "@/main/controllers/resolution/resolution.controller";
+import { SystemController } from "@/main/controllers/system/system.controller";
+import { WabbajackController } from "@/main/controllers/wabbajack/wabbajack.controller";
+import { WindowController } from "@/main/controllers/window/window.controller";
+
 const serviceNamespace = "services";
 
-export class LauncherApplication extends BootMixin(Application) {
+export class LauncherApplication extends Application {
   constructor() {
     super();
 
     this.bindLogger();
-
-    this.projectRoot = __dirname;
 
     this.onStart(async () => {
       try {
@@ -55,24 +87,8 @@ export class LauncherApplication extends BootMixin(Application) {
     });
 
     this.bindStaticValues();
-
-    this.bootOptions = {
-      controllers: {
-        dirs: ["controllers"],
-        extensions: [".controller.ts", ".controller.js"],
-        nested: true,
-      },
-      services: {
-        dirs: ["services"],
-        extensions: [
-          ".service.ts",
-          ".service.js",
-          ".provider.ts",
-          ".provider.js",
-        ],
-        nested: true,
-      },
-    };
+    this.registerServices();
+    this.registerControllers();
   }
 
   public getServiceByClass<T>(cls: Constructor<T>): Promise<T> {
@@ -113,5 +129,52 @@ export class LauncherApplication extends BootMixin(Application) {
     this.bind(AutoUpdaterBinding).to(autoUpdater);
     this.bind(ContextMenuBinding).to(contextMenu);
     this.bind(ConfigBinding).to(ConfigService.getNewUserPreferencesStore());
+  }
+
+  private registerServices() {
+    const services: ServiceOrProviderClass<unknown>[] = [
+      BlacklistService,
+      ConfigService,
+      DialogProvider,
+      EnbService,
+      ErrorService,
+      GameService,
+      GraphicsService,
+      InstructionService,
+      LauncherService,
+      MigrationService,
+      ModOrganizerService,
+      ModpackService,
+      ProfileService,
+      ResolutionService,
+      StartupService,
+      SystemService,
+      UpdateService,
+      WabbajackService,
+      WindowService,
+    ];
+    for (const cls of services) {
+      this.add(createServiceBinding(cls));
+    }
+  }
+
+  private registerControllers() {
+    const controllers: Constructor<unknown>[] = [
+      ConfigController,
+      DialogController,
+      EnbController,
+      GraphicsController,
+      LauncherController,
+      ModOrganizerController,
+      ModpackController,
+      ProfileController,
+      ResolutionController,
+      SystemController,
+      WabbajackController,
+      WindowController,
+    ];
+    for (const cls of controllers) {
+      this.bind(`controllers.${cls.name}`).toClass(cls).tag("controller");
+    }
   }
 }
