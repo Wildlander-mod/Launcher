@@ -31,9 +31,4 @@ Renderer calls main via the preload bridge → main process controllers handle t
 
 ## Development Rules
 
-All project-specific rules are in `.claude/rules/`:
-- `planning.md` — when/how to create and manage implementation plans
-- `environment.md` — branch naming convention (`{type}/{jira-id}_{description}`)
-- `typescript.md` — no type assertions
-- `wallaby.md` — Wallaby MCP test verification and empty-result fallback
-- `webstorm-verification.md` — code verification via WebStorm MCP after changes
+All project-specific rules are in `.claude/rules/`.
