@@ -31,6 +31,7 @@ export default defineConfig({
     },
   },
   renderer: {
+    publicDir: resolve(__dirname, "public"),
     plugins: [vue()],
     build: {
       rollupOptions: {
