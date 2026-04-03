@@ -4,7 +4,7 @@
 # Using a Python base image because the current node-sass version requires Python
 # Once node-sass is removed, all Python requirements can be removed and the playwright base image can be used
 # FROM mcr.microsoft.com/playwright:v1.52.0
-FROM mcr.microsoft.com/playwright/python
+FROM --platform=linux/amd64 mcr.microsoft.com/playwright/python
 
 ARG APP_USER=app
 ARG APP_HOME=/home/${APP_USER}
@@ -41,4 +41,4 @@ RUN chown root ./node_modules/electron/dist/chrome-sandbox && \
     chmod 4755 ./node_modules/electron/dist/chrome-sandbox
 USER ${APP_USER}
 
-RUN npm run compile
+RUN npx electron-vite build
