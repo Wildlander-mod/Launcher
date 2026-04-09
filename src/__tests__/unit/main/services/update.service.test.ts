@@ -47,7 +47,14 @@ describe("Updateservice #main #service", () => {
     );
   });
 
+  let originalEnv: typeof process.env;
+
+  beforeEach(() => {
+    originalEnv = { ...process.env };
+  });
+
   afterEach(() => {
+    process.env = { ...originalEnv };
     mockFs.restore();
     sinon.restore();
   });
@@ -113,6 +120,21 @@ describe("Updateservice #main #service", () => {
 
       expect(updateService.shouldUpdate()).to.be.true();
     });
+  });
+
+  it("should not update if IS_E2E is set", () => {
+    process.env["IS_E2E"] = "true";
+
+    updateService = new UpdateService(
+      mockErrorService,
+      mockWindowService,
+      mockLogger,
+      false,
+      autoUpdaterStub,
+      mockElectron
+    );
+
+    expect(updateService.shouldUpdate()).to.be.false();
   });
 
   it("should not update if in development and devAppUpdatePath is not present", async () => {

@@ -66,12 +66,4 @@ export default defineConfig({
     },
   },
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "npm run start:renderer",
-    url: "http://localhost:5174/",
-    reuseExistingServer: !process.env["CI"],
-    stdout: "ignore",
-    stderr: "ignore",
-  },
 });

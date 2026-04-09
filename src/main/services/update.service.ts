@@ -66,6 +66,9 @@ export class UpdateService {
         "Skipping app update check because we're in development mode"
       );
       shouldUpdate = false;
+    } else if (process.env["IS_E2E"]) {
+      this.logger.debug("Skipping app update check in e2e test mode");
+      shouldUpdate = false;
     } else if (this.electron.app.getVersion().includes("-")) {
       this.logger.debug(
         "Skipping app update check because this is a pre-release version"

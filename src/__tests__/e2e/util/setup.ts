@@ -17,16 +17,6 @@ import path from "path";
 
 export type CloseTestApp = () => Promise<void>;
 
-type WindowWithCoverage = Page & {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  __coverage__: Record<string, unknown>;
-};
-
-type GlobalWithCoverage = NodeJS.Global & {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  __coverage__: Record<string, unknown>;
-};
-
 const UUID = (): string => {
   return randomBytes(16).toString("hex");
 };
@@ -87,7 +77,7 @@ export const startTestApp = async (
 
   // Launch Electron app.
   const electronApp = await electron.launch({
-    args: [`${config().paths.instrumented}/main/index.js`],
+    args: [`${config().paths.app}/main/index.js`],
     env: {
       ...process.env,
       CONFIG_PATH: `${mockFilesPath}/config`,
@@ -96,7 +86,7 @@ export const startTestApp = async (
       // Disable this to open dev tools by default
       IS_TEST: "true",
       LOG_PATH: `${mockFilesPath}/logs`,
-      ELECTRON_RENDERER_URL: "http://localhost:5174/",
+      IS_E2E: "true",
     },
     // recordVideo: { dir: "test-results" },
   });
@@ -134,18 +124,6 @@ export const startTestApp = async (
   }
 
   const closeTestApp = async () => {
-    const rendererCoverage = await window.evaluate(
-      () => (window as unknown as WindowWithCoverage).__coverage__
-    );
-    if (rendererCoverage) {
-      await saveCoverage("renderer", rendererCoverage);
-    }
-
-    const mainCoverage = await electronApp.evaluate(
-      () => (global as unknown as GlobalWithCoverage).__coverage__
-    );
-    await saveCoverage("main", mainCoverage);
-
     await electronApp.close();
   };
 
@@ -159,20 +137,6 @@ export const startTestApp = async (
     electronApp,
     closeTestApp,
   };
-};
-
-const saveCoverage = async (
-  preface: "main" | "renderer",
-  coverage: Record<string, unknown>
-) => {
-  await fs.mkdir(config().paths.coverage, {
-    recursive: true,
-  });
-
-  await fs.writeFile(
-    `${config().paths.coverage}/${preface}-${UUID()}.json`,
-    JSON.stringify(coverage, null, 2)
-  );
 };
 
 export const screenshot = async (

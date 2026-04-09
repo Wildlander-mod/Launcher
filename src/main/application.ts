@@ -122,7 +122,7 @@ export class LauncherApplication extends Application {
   private bindStaticValues() {
     this.bind(ElectronBinding).to(electron);
     this.bind(VersionBinding).to(app.getVersion());
-    this.bind(IsDevelopmentBinding).to(is.dev);
+    this.bind(IsDevelopmentBinding).to(process.env["IS_E2E"] ? false : is.dev);
     this.bind(ChildProcessBinding).to(child_process);
     this.bind(PsListBinding).to(psList);
     this.bind(ProcessKillBinding).to(process.kill);

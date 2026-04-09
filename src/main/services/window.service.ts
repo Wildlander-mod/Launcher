@@ -129,9 +129,8 @@ export class WindowService {
         // Show window without setting focus
         this.window.showInactive();
       } else {
-        await this.window.loadFile(
-          path.join(__dirname, "../renderer/index.html")
-        );
+        const filePath = path.join(__dirname, "../renderer/index.html");
+        await this.navigateInWindow(`file://${filePath}#${urlPath}`);
         this.window.show();
       }
     } catch (error) {
@@ -169,7 +168,8 @@ export class WindowService {
     try {
       await this.window.loadURL(url);
     } catch (error) {
-      if ((error as { code?: string })?.code === "ERR_FAILED" && windowOpen) {
+      const code = (error as { code?: string })?.code;
+      if ((code === "ERR_FAILED" || code === "ERR_ABORTED") && windowOpen) {
         // If the browser window is already open, a URL change will cause electron to think the request is aborted.
         // When the app loads a URL, the hash is changed immediately.
         // If the window is already open, electron considers this a change in URL and a failure so it errors.
