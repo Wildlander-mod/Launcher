@@ -238,7 +238,7 @@ function onLoading(loading: boolean) {
 </script>
 
 <style lang="scss" scoped>
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-navigation {
   backdrop-filter: $background-blur--more;

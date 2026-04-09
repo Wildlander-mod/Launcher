@@ -1,10 +1,10 @@
 import { app, dialog, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log/main";
-import { LauncherApplication } from "./main/application";
-import { ErrorService } from "./main/services/error.service";
-import { WindowService } from "./main/services/window.service";
-import type { ProcessWithGlobals } from "./main/types/process-globals";
+import { LauncherApplication } from "./application";
+import { ErrorService } from "./services/error.service";
+import { WindowService } from "./services/window.service";
+import type { ProcessWithGlobals } from "./types/process-globals";
 import { promisify } from "util";
 
 if (process.env["MULTIPLE_INSTANCE"] !== "true") {

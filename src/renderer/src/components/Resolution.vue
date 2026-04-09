@@ -125,7 +125,7 @@ async function onResolutionSelected(option: SelectOption) {
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-resolution__info-icon {
   margin-right: $size-spacing--small;

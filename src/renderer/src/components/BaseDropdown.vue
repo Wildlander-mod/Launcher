@@ -122,7 +122,7 @@ function toggleOpenState(open?: boolean) {
 </script>
 
 <style lang="scss" scoped>
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 $selectFocus: rgba(255, 255, 255, 0.1);
 $selectHeight: $size-action-height;

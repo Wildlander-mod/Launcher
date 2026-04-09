@@ -16,7 +16,7 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-label {
   font-size: $font-size--body;

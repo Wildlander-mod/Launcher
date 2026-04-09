@@ -37,7 +37,7 @@ function openLink(event: Event): void {
 </script>
 
 <style lang="scss" scoped>
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-link {
   color: $colour-text;

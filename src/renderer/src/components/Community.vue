@@ -44,7 +44,7 @@ import ImageWithText from "./ImageWithText.vue";
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-resources {
   display: flex;

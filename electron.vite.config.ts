@@ -10,13 +10,6 @@ export default defineConfig({
         "@": resolve(__dirname, "src"),
       },
     },
-    build: {
-      rollupOptions: {
-        input: {
-          index: resolve(__dirname, "src/main.ts"),
-        },
-      },
-    },
   },
   preload: {
     plugins: [externalizeDepsPlugin()],

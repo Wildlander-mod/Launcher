@@ -43,7 +43,7 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-startup__logo {
   margin-bottom: $size-spacing--x-large;

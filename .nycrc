@@ -7,7 +7,7 @@
     "**/*.eslintrc.js",
     "src/main/controllers/**/*",
     "src/renderer/**/*",
-    "src/main.ts",
+    "src/main/index.ts",
     "src/preload/index.ts",
     "src/main/application.ts",
     "src/main/logger.ts"

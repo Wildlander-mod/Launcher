@@ -32,7 +32,7 @@ async function minimize() {
 </script>
 
 <style lang="scss" scoped>
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-title-bar {
   height: $size-spacing--titlebar;

@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-svg-with-text__text {
   margin-top: $size-spacing;

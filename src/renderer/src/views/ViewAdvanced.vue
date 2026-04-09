@@ -296,7 +296,7 @@ async function editConfig() {
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "../assets/scss/index";
 
 .c-settings {
   line-height: $line-height__body;
