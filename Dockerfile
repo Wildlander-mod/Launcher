@@ -15,11 +15,11 @@ RUN groupadd -r ${APP_USER} && \
     mkdir -p ${APP_HOME}/.npm && \
     chown -R ${APP_USER}:${APP_USER} ${APP_HOME}
 
-# Install Node.js 16.x directly
+# Install Node.js 22.x
 # Install xvfb to support virtual display for Electron
 RUN apt-get update && \
     apt-get install -y curl gnupg xvfb build-essential && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs
 
 WORKDIR ${APP_HOME}
