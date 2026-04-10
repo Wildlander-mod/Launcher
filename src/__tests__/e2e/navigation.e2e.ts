@@ -6,6 +6,7 @@ import {
 } from "./util/setup";
 import path from "path";
 import fs from "fs/promises";
+import { config } from "./util/config";
 
 test.describe("Navigation", () => {
   let window: Page;
@@ -56,9 +57,10 @@ test.describe("Navigation", () => {
   });
 
   test("Should display the correct launcher version", async () => {
-    // In the test environment, the launcher version is coming from Electron's app.getVersion()
-    // which returns the Electron version (16.0.5) rather than the application version
-    const expectedLauncherVersion = "16.0.5";
+    const pkgJson = JSON.parse(
+      await fs.readFile(path.join(config().paths.root, "package.json"), "utf-8")
+    );
+    const expectedLauncherVersion = pkgJson.version;
 
     // Wait for the navigation to be visible
     await window.getByTestId("launcher-info").waitFor({ state: "visible" });

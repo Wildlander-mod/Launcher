@@ -77,7 +77,7 @@ export const startTestApp = async (
 
   // Launch Electron app.
   const electronApp = await electron.launch({
-    args: [`${config().paths.app}/main/index.js`],
+    executablePath: config().paths.executablePath,
     env: {
       ...process.env,
       CONFIG_PATH: `${mockFilesPath}/config`,
