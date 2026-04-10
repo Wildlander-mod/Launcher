@@ -41,4 +41,4 @@ RUN chown root ./node_modules/electron/dist/chrome-sandbox && \
     chmod 4755 ./node_modules/electron/dist/chrome-sandbox
 USER ${APP_USER}
 
-RUN npx electron-vite build
+RUN npx electron-vite build && npx electron-builder --dir
