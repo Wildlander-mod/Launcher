@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import ViewHome from "@/renderer/src/views/ViewHome.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import ViewHome from "../../../../renderer/src/views/ViewHome.vue";
+import { byTestId } from "../utils/test-utils";
 
 const selectors = {
   page: byTestId("page-home"),

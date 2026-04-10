@@ -2,25 +2,25 @@ import path from "path";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import fs, { createWriteStream } from "fs";
 import { Context, service } from "@loopback/core";
-import { ConfigService } from "@/main/services/config.service";
-import { ErrorService } from "@/main/services/error.service";
+import { ConfigService } from "./config.service";
+import { ErrorService } from "./error.service";
 import { pipeline } from "stream/promises";
 import fetch from "node-fetch";
 import { promisify } from "util";
 import { reboot } from "electron-shutdown-command";
 import { getAllInstalledSoftware } from "fetch-installed-software";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { ElectronBinding } from "@/main/bindings/electron.binding";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import { type Logger, LoggerBinding } from "../logger";
+import { ElectronBinding } from "../bindings/electron.binding";
 import {
   type ChildProcess,
   ChildProcessBinding,
-} from "@/main/bindings/child-process.binding";
-import { type PSList, PsListBinding } from "@/main/bindings/psList.binding";
+} from "../bindings/child-process.binding";
+import { type PSList, PsListBinding } from "../bindings/psList.binding";
 import {
   type ProcessKill,
   ProcessKillBinding,
-} from "@/main/bindings/process-kill.binding";
+} from "../bindings/process-kill.binding";
 import * as os from "node:os";
 
 @injectable({

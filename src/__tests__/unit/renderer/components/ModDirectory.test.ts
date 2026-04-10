@@ -1,14 +1,14 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import ModDirectory from "@/renderer/src/components/ModDirectory.vue";
+import ModDirectory from "../../../../renderer/src/components/ModDirectory.vue";
 import {
   injectStrict,
   SERVICE_BINDINGS,
-} from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
-import { createMockEventService } from "@/__tests__/unit/renderer/utils/mock-event-service";
-import { ENABLE_LOADING_EVENT } from "@/renderer/src/services/event.service";
+} from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
+import { createMockEventService } from "../utils/mock-event-service";
+import { ENABLE_LOADING_EVENT } from "../../../../renderer/src/services/event.service";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     EVENT_SERVICE: Symbol("EVENT_SERVICE"),
@@ -18,25 +18,25 @@ jest.mock("@/renderer/src/services/service-container", () => ({
   },
 }));
 
-jest.mock("@/main/controllers/wabbajack/wabbajack.events", () => ({
+jest.mock("../../../../main/controllers/wabbajack/wabbajack.events", () => ({
   WABBAJACK_EVENTS: {
     GET_INSTALLED_MODPACKS: "GET_INSTALLED_MODPACKS",
   },
 }));
 
-jest.mock("@/main/controllers/modpack/mopack.events", () => ({
+jest.mock("../../../../main/controllers/modpack/mopack.events", () => ({
   MODPACK_EVENTS: {
     SET_MODPACK: "SET_MODPACK",
   },
 }));
 
-jest.mock("@/main/controllers/window/window.events", () => ({
+jest.mock("../../../../main/controllers/window/window.events", () => ({
   WINDOW_EVENTS: {
     RELOAD: "RELOAD",
   },
 }));
 
-jest.mock("@/shared/wildlander/modpack", () => ({
+jest.mock("../../../../shared/wildlander/modpack", () => ({
   WildlanderModpack: { name: "Wildlander" },
 }));
 

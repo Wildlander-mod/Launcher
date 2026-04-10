@@ -1,6 +1,6 @@
 import { BindingScope, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
-import { SystemService } from "@/main/services/system.service";
+import { SystemService } from "./system.service";
 
 export interface BlacklistedProgram {
   name: string;

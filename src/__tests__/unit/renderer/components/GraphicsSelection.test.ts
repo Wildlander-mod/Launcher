@@ -1,16 +1,16 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import GraphicsSelection from "@/renderer/src/components/GraphicsSelection.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import GraphicsSelection from "../../../../renderer/src/components/GraphicsSelection.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/graphics/graphics.events", () => ({
+jest.mock("../../../../main/controllers/graphics/graphics.events", () => ({
   GRAPHICS_EVENTS: {
     GET_GRAPHICS: "GET_GRAPHICS",
     GET_GRAPHICS_PREFERENCE: "GET_GRAPHICS_PREFERENCE",

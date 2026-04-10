@@ -1,4 +1,4 @@
-import { CacheService } from "@/renderer/src/services/cache.service";
+import { CacheService } from "../../../../renderer/src/services/cache.service";
 
 jest.mock("electron-log/renderer", () => ({
   debug: jest.fn(),

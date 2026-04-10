@@ -1,5 +1,5 @@
 import path from "path";
-import { ConfigService } from "@/main/services/config.service";
+import { ConfigService } from "./config.service";
 import fs from "fs";
 import {
   type IIniObject,
@@ -7,22 +7,22 @@ import {
   parse,
   stringify,
 } from "js-ini";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { EnbService } from "@/main/services/enb.service";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import { EnbService } from "./enb.service";
 import { service } from "@loopback/core";
-import { ErrorService } from "@/main/services/error.service";
+import { ErrorService } from "./error.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { GameService } from "@/main/services/game.service";
-import { ProfileService } from "@/main/services/profile.service";
-import { SystemService } from "@/main/services/system.service";
-import { GraphicsService } from "@/main/services/graphics.service";
-import type { ModOrganizerIni } from "@/shared/types/ModOrganizer.ini";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { MO2_NAMES } from "@/shared/enums/mo2";
+import { ResolutionService } from "./resolution.service";
+import { GameService } from "./game.service";
+import { ProfileService } from "./profile.service";
+import { SystemService } from "./system.service";
+import { GraphicsService } from "./graphics.service";
+import type { ModOrganizerIni } from "../../shared/types/ModOrganizer.ini";
+import { type Logger, LoggerBinding } from "../logger";
+import { MO2_NAMES } from "../../shared/enums/mo2";
 import type { ProcessDescriptor } from "ps-list";
-import { type Dialog, DialogProvider } from "@/main/services/dialog.service";
-import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
+import { type Dialog, DialogProvider } from "./dialog.service";
+import { IsDevelopmentBinding } from "../bindings/isDevelopment.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,

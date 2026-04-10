@@ -1,16 +1,16 @@
 import mockFs from "mock-fs";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
+import type { FriendlyDirectoryMap } from "../../../../shared/types/modpack-metadata";
 import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { ConfigService } from "@/main/services/config.service";
-import { ProfileService } from "@/main/services/profile.service";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { readFilesFromDirectory } from "@/__tests__/unit/helpers/read-files";
+import { ConfigService } from "../../../../main/services/config.service";
+import { ProfileService } from "../../../../main/services/profile.service";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { readFilesFromDirectory } from "../../helpers/read-files";
 
 describe("Profile service #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;

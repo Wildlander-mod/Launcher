@@ -1,21 +1,21 @@
-import { LauncherService } from "@/main/services/launcher.service";
-import { EnbService } from "@/main/services/enb.service";
+import { LauncherService } from "../../../../main/services/launcher.service";
+import { EnbService } from "../../../../main/services/enb.service";
 import type { StubbedInstanceWithSinonAccessor } from "@loopback/testlab";
 import { createStubInstance, expect, sinon } from "@loopback/testlab";
 import {
   ConfigService,
   PreferenceWithValidator,
-} from "@/main/services/config.service";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { ProfileService } from "@/main/services/profile.service";
-import { ErrorService } from "@/main/services/error.service";
-import { WindowService } from "@/main/services/window.service";
-import { GraphicsService } from "@/main/services/graphics.service";
-import { MigrationService } from "@/main/services/migration.service";
-import type { Logger } from "@/main/logger";
-import { ModpackService } from "@/main/services/modpack.service";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+} from "../../../../main/services/config.service";
+import { ResolutionService } from "../../../../main/services/resolution.service";
+import { ProfileService } from "../../../../main/services/profile.service";
+import { ErrorService } from "../../../../main/services/error.service";
+import { WindowService } from "../../../../main/services/window.service";
+import { GraphicsService } from "../../../../main/services/graphics.service";
+import { MigrationService } from "../../../../main/services/migration.service";
+import type { Logger } from "../../../../main/logger";
+import { ModpackService } from "../../../../main/services/modpack.service";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
 
 describe("Launcher service #main #service", () => {
   let launcherService: LauncherService;

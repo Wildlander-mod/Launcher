@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { WINDOW_EVENTS } from "@/main/controllers/window/window.events";
+import { WINDOW_EVENTS } from "../../../main/controllers/window/window.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
 withDefaults(defineProps<{ grow?: boolean }>(), { grow: false });

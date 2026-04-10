@@ -1,4 +1,4 @@
-import type { Modpack } from "@/shared/types/modpack-metadata";
+import type { Modpack } from "../types/modpack-metadata";
 
 export const WildlanderModpack: Modpack = {
   name: "Wildlander",

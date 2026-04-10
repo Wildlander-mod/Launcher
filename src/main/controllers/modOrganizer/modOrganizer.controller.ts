@@ -1,6 +1,6 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { MOD_ORGANIZER_EVENTS } from "@/main/controllers/modOrganizer/modOrganizer.events";
-import { ModOrganizerService } from "@/main/services/modOrganizer.service";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { MOD_ORGANIZER_EVENTS } from "./modOrganizer.events";
+import { ModOrganizerService } from "../../services/modOrganizer.service";
 import { service } from "@loopback/core";
 
 @controller

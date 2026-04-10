@@ -17,7 +17,7 @@ import {
   replaceChildProcessExecWithMock,
   replacePsListWithMock,
 } from "./util/mocks";
-import { MO2_NAMES } from "@/shared/enums/mo2";
+import { MO2_NAMES } from "../../shared/enums/mo2";
 import { PROFILES, selectProfile } from "./util/profile";
 import {
   IIniObject,

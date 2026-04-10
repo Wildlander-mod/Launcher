@@ -1,16 +1,16 @@
-import { IpcService } from "@/renderer/src/services/ipc.service";
-import { ModpackService } from "@/renderer/src/services/modpack.service";
-import { getRouter } from "@/renderer/src/router";
+import { IpcService } from "../../../renderer/src/services/ipc.service";
+import { ModpackService } from "../../../renderer/src/services/modpack.service";
+import { getRouter } from "../../../renderer/src/router";
 import type {
   NavigationGuardWithThis,
   RouteLocationNormalized,
 } from "vue-router";
 
-jest.mock("@/renderer/src/views/ViewHome.vue", () => ({}));
-jest.mock("@/renderer/src/views/ViewCommunity.vue", () => ({}));
-jest.mock("@/renderer/src/views/ViewAdvanced.vue", () => ({}));
-jest.mock("@/renderer/src/views/AutoUpdate.vue", () => ({}));
-jest.mock("@/renderer/src/views/ModDirectory.vue", () => ({}));
+jest.mock("../../../renderer/src/views/ViewHome.vue", () => ({}));
+jest.mock("../../../renderer/src/views/ViewCommunity.vue", () => ({}));
+jest.mock("../../../renderer/src/views/ViewAdvanced.vue", () => ({}));
+jest.mock("../../../renderer/src/views/AutoUpdate.vue", () => ({}));
+jest.mock("../../../renderer/src/views/ModDirectory.vue", () => ({}));
 
 Object.defineProperty(window, "ipcRenderer", {
   value: { invoke: jest.fn(), on: jest.fn() },

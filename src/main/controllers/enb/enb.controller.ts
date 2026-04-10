@@ -1,8 +1,8 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { ENB_EVENTS } from "@/main/controllers/enb/enb.events";
-import { EnbService } from "@/main/services/enb.service";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { ENB_EVENTS } from "./enb.events";
+import { EnbService } from "../../services/enb.service";
 import { service } from "@loopback/core";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
+import type { FriendlyDirectoryMap } from "../../../shared/types/modpack-metadata";
 
 @controller
 export class EnbController {

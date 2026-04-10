@@ -1,33 +1,33 @@
-import { SystemService } from "@/main/services/system.service";
+import { SystemService } from "../../../../main/services/system.service";
 import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { ConfigService } from "@/main/services/config.service";
-import { ErrorService } from "@/main/services/error.service";
+import { ConfigService } from "../../../../main/services/config.service";
+import { ErrorService } from "../../../../main/services/error.service";
 import type psList from "ps-list";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
 import * as shutDownCommands from "electron-shutdown-command";
-import type { Logger } from "@/main/logger";
+import type { Logger } from "../../../../main/logger";
 import type { LogFile } from "electron-log";
 import fs, { promises as fsPromises } from "fs";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
 import fetchInstalledSoftware from "fetch-installed-software";
 import stream from "stream/promises";
 import nock from "nock";
 import type child_process from "child_process";
-import { getChildProcessMock } from "@/__tests__/unit/helpers/mocks/child-process.mock";
+import { getChildProcessMock } from "../../helpers/mocks/child-process.mock";
 import { afterEach } from "mocha";
 import os from "os";
 import { Context } from "@loopback/core";
-import { ChildProcessBinding } from "@/main/bindings/child-process.binding";
-import { PsListBinding } from "@/main/bindings/psList.binding";
+import { ChildProcessBinding } from "../../../../main/bindings/child-process.binding";
+import { PsListBinding } from "../../../../main/bindings/psList.binding";
 import {
   ProcessKill,
   ProcessKillBinding,
-} from "@/main/bindings/process-kill.binding";
+} from "../../../../main/bindings/process-kill.binding";
 
 describe("System service #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;

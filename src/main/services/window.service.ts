@@ -2,17 +2,17 @@ import type Electron from "electron";
 import type { BrowserWindow } from "electron";
 import { URL } from "url";
 import path from "path";
-import { appRoot } from "@/main/services/config.service";
+import { appRoot } from "./config.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { ElectronBinding } from "@/main/bindings/electron.binding";
+import { type Logger, LoggerBinding } from "../logger";
+import { ElectronBinding } from "../bindings/electron.binding";
 import {
   type ContextMenu,
   ContextMenuBinding,
-} from "@/main/bindings/context-menu.binding";
+} from "../bindings/context-menu.binding";
 import { service } from "@loopback/core";
-import { type Dialog, DialogProvider } from "@/main/services/dialog.service";
-import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
+import { type Dialog, DialogProvider } from "./dialog.service";
+import { IsDevelopmentBinding } from "../bindings/isDevelopment.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,

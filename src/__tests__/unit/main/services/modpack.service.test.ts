@@ -1,12 +1,15 @@
 import type { StubbedInstanceWithSinonAccessor } from "@loopback/testlab";
-import { ModpackService } from "@/main/services/modpack.service";
+import { ModpackService } from "../../../../main/services/modpack.service";
 import { createStubInstance, expect, sinon } from "@loopback/testlab";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { ConfigService, UserPreferences } from "@/main/services/config.service";
-import { MO2_NAMES } from "@/shared/enums/mo2";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import {
+  ConfigService,
+  UserPreferences,
+} from "../../../../main/services/config.service";
+import { MO2_NAMES } from "../../../../shared/enums/mo2";
 import mockFs from "mock-fs";
 import Store from "electron-store";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
 
 describe("Modpack service #main #service", () => {
   let modpackService: ModpackService;

@@ -1,22 +1,22 @@
 import * as os from "os";
 import { promisify } from "util";
-import { ConfigService } from "@/main/services/config.service";
+import { ConfigService } from "./config.service";
 import { type IIniObjectSection, parse, stringify } from "js-ini";
 import fs from "fs";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import type { Resolution } from "@/shared/types/Resolution";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import type { Resolution } from "../../shared/types/Resolution";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
-import { WildlanderModpack } from "@/shared/wildlander/modpack";
-import { InstructionService } from "@/main/services/instruction.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
-import { ElectronBinding } from "@/main/bindings/electron.binding";
+import { WildlanderModpack } from "../../shared/wildlander/modpack";
+import { InstructionService } from "./instruction.service";
+import { type Logger, LoggerBinding } from "../logger";
+import { IsDevelopmentBinding } from "../bindings/isDevelopment.binding";
+import { ElectronBinding } from "../bindings/electron.binding";
 import type Electron from "electron";
 import {
   type ChildProcess,
   ChildProcessBinding,
-} from "@/main/bindings/child-process.binding";
+} from "../bindings/child-process.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,

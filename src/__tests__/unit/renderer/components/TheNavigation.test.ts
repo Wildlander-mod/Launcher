@@ -1,32 +1,35 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import TheNavigation from "@/renderer/src/components/TheNavigation.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import TheNavigation from "../../../../renderer/src/components/TheNavigation.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/wabbajack/wabbajack.events", () => ({
+jest.mock("../../../../main/controllers/wabbajack/wabbajack.events", () => ({
   WABBAJACK_EVENTS: { GET_MODPACK_VERSION: "GET_MODPACK_VERSION" },
 }));
 
-jest.mock("@/main/controllers/modpack/mopack.events", () => ({
+jest.mock("../../../../main/controllers/modpack/mopack.events", () => ({
   MODPACK_EVENTS: { GET_MODPACK_METADATA: "GET_MODPACK_METADATA" },
 }));
 
-jest.mock("@/main/controllers/launcher/launcher.events", () => ({
+jest.mock("../../../../main/controllers/launcher/launcher.events", () => ({
   LAUNCHER_EVENTS: { GET_VERSION: " GET_VERSION" },
 }));
 
-jest.mock("@/main/controllers/modOrganizer/modOrganizer.events", () => ({
-  MOD_ORGANIZER_EVENTS: { LAUNCH_GAME: "LAUNCH_GAME" },
-}));
+jest.mock(
+  "../../../../main/controllers/modOrganizer/modOrganizer.events",
+  () => ({
+    MOD_ORGANIZER_EVENTS: { LAUNCH_GAME: "LAUNCH_GAME" },
+  })
+);
 
-jest.mock("@/main/controllers/system/system.events", () => ({
+jest.mock("../../../../main/controllers/system/system.events", () => ({
   SYSTEM_EVENTS: {
     CHECK_PREREQUISITES: "CHECK_PREREQUISITES",
     INSTALL_PREREQUISITES: "INSTALL_PREREQUISITES",
@@ -34,7 +37,7 @@ jest.mock("@/main/controllers/system/system.events", () => ({
   },
 }));
 
-jest.mock("@/main/controllers/dialog/dialog.events", () => ({
+jest.mock("../../../../main/controllers/dialog/dialog.events", () => ({
   DIALOG_EVENTS: { ERROR: "ERROR" },
 }));
 

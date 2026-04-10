@@ -1,16 +1,16 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import ProfileSelection from "@/renderer/src/components/ProfileSelection.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import ProfileSelection from "../../../../renderer/src/components/ProfileSelection.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/profile/profile.events", () => ({
+jest.mock("../../../../main/controllers/profile/profile.events", () => ({
   PROFILE_EVENTS: {
     GET_PROFILES: "GET_PROFILES",
     GET_PROFILE_PREFERENCE: "GET_PROFILE_PREFERENCE",

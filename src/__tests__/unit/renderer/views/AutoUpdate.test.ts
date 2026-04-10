@@ -1,16 +1,16 @@
 import { mount } from "@vue/test-utils";
-import AutoUpdate from "@/renderer/src/views/AutoUpdate.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import AutoUpdate from "../../../../renderer/src/views/AutoUpdate.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/update/update.events", () => ({
+jest.mock("../../../../main/controllers/update/update.events", () => ({
   UPDATE_EVENTS: {
     UPDATE_AVAILABLE: "update-available",
     DOWNLOAD_PROGRESS: "download-progress",

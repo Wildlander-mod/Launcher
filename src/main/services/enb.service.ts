@@ -1,16 +1,16 @@
 import fs from "fs";
-import { ConfigService } from "@/main/services/config.service";
+import { ConfigService } from "./config.service";
 import { copy, existsSync } from "fs-extra";
 import { not as isNotJunk } from "junk";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import type { FriendlyDirectoryMap } from "../../shared/types/modpack-metadata";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import { service } from "@loopback/core";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import type { AdditionalInstruction } from "@/shared/types/additional-instructions";
-import { InstructionService } from "@/main/services/instruction.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { NoEnbsError } from "@/shared/errors/no-enbs.error";
-import type { NonEmptyArray } from "@/shared/types/non-empty-array";
+import type { AdditionalInstruction } from "../../shared/types/additional-instructions";
+import { InstructionService } from "./instruction.service";
+import { type Logger, LoggerBinding } from "../logger";
+import { NoEnbsError } from "../../shared/errors/no-enbs.error";
+import type { NonEmptyArray } from "../../shared/types/non-empty-array";
 
 const noEnb = "noEnb";
 

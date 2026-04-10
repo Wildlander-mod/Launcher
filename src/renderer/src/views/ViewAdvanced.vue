@@ -155,19 +155,19 @@ import AppPageContent from "../components/AppPageContent.vue";
 import BaseButton from "../components/BaseButton.vue";
 import ModDirectory from "../components/ModDirectory.vue";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
-import { ENB_EVENTS } from "@/main/controllers/enb/enb.events";
-import { MOD_ORGANIZER_EVENTS } from "@/main/controllers/modOrganizer/modOrganizer.events";
-import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
+import { ENB_EVENTS } from "../../../main/controllers/enb/enb.events";
+import { MOD_ORGANIZER_EVENTS } from "../../../main/controllers/modOrganizer/modOrganizer.events";
+import { SYSTEM_EVENTS } from "../../../main/controllers/system/system.events";
 import {
   DISABLE_LOADING_EVENT,
   ENABLE_LOADING_EVENT,
 } from "../services/event.service";
-import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
-import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
+import { PROFILE_EVENTS } from "../../../main/controllers/profile/profile.events";
+import { GRAPHICS_EVENTS } from "../../../main/controllers/graphics/graphics.events";
 import Toggle from "@vueform/toggle";
-import { CONFIG_EVENTS } from "@/main/controllers/config/config.events";
+import { CONFIG_EVENTS } from "../../../main/controllers/config/config.events";
 import Popper from "vue3-popper";
-import { LAUNCHER_EVENTS } from "@/main/controllers/launcher/launcher.events";
+import { LAUNCHER_EVENTS } from "../../../main/controllers/launcher/launcher.events";
 
 const eventService = injectStrict(SERVICE_BINDINGS.EVENT_SERVICE);
 const messageService = injectStrict(SERVICE_BINDINGS.MESSAGE_SERVICE);

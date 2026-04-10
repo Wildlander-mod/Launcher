@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
-import LauncherVersion from "@/renderer/src/components/LauncherVersion.vue";
-import BaseLink from "@/renderer/src/components/BaseLink.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import LauncherVersion from "../../../../renderer/src/components/LauncherVersion.vue";
+import BaseLink from "../../../../renderer/src/components/BaseLink.vue";
+import { byTestId } from "../utils/test-utils";
 
 const MockPopper = {
   name: "Popper",

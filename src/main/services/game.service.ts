@@ -1,8 +1,8 @@
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { ConfigService } from "@/main/services/config.service";
+import { ConfigService } from "./config.service";
 import { service } from "@loopback/core";
 import fs from "fs";
-import { type Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "../logger";
 
 @injectable({
   scope: BindingScope.SINGLETON,

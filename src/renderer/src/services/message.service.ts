@@ -1,4 +1,4 @@
-import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
+import { DIALOG_EVENTS } from "../../../main/controllers/dialog/dialog.events";
 import logger from "electron-log/renderer";
 import type { IpcService } from "./ipc.service";
 import type { MessageBoxReturnValue } from "electron";

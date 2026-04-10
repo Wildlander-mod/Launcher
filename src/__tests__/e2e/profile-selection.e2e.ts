@@ -7,7 +7,7 @@ import {
   startTestApp,
 } from "./util/setup";
 import { getUserPreferences, setUserPreference } from "./util/user-preferences";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import { PROFILES, selectProfile } from "./util/profile";
 import { mockErrorDialog, mockMessageBox } from "./util/mocks";
 import type { ElectronApplication } from "playwright";

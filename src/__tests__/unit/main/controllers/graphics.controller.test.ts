@@ -1,5 +1,5 @@
-import { GraphicsController } from "@/main/controllers/graphics/graphics.controller";
-import { GraphicsService } from "@/main/services/graphics.service";
+import { GraphicsController } from "../../../../main/controllers/graphics/graphics.controller";
+import { GraphicsService } from "../../../../main/services/graphics.service";
 import {
   createStubInstance,
   sinon,

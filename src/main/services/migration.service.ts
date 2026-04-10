@@ -1,12 +1,12 @@
 import { inject, service, injectable, BindingScope } from "@loopback/core";
-import { GraphicsService } from "@/main/services/graphics.service";
-import { ProfileService } from "@/main/services/profile.service";
+import { GraphicsService } from "./graphics.service";
+import { ProfileService } from "./profile.service";
 import fs from "fs";
 import path from "path";
-import { ConfigService } from "@/main/services/config.service";
+import { ConfigService } from "./config.service";
 import { copy } from "fs-extra";
-import { asyncFilter } from "@/shared/util/asyncFilter";
-import { type Logger, LoggerBinding } from "@/main/logger";
+import { asyncFilter } from "../../shared/util/asyncFilter";
+import { type Logger, LoggerBinding } from "../logger";
 
 @injectable({ scope: BindingScope.SINGLETON })
 export class MigrationService {

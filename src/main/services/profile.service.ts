@@ -1,11 +1,11 @@
-import { ConfigService } from "@/main/services/config.service";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
+import { ConfigService } from "./config.service";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import type { FriendlyDirectoryMap } from "../../shared/types/modpack-metadata";
 import fs from "fs";
 import { not as isNotJunk } from "junk";
 import { copy, existsSync } from "fs-extra";
 import { inject, service, injectable, BindingScope } from "@loopback/core";
-import { type Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "../logger";
 
 @injectable({ scope: BindingScope.SINGLETON })
 export class ProfileService {

@@ -1,10 +1,10 @@
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import AppDropdownFileSelect from "@/renderer/src/components/AppDropdownFileSelect.vue";
-import BaseDropdown from "@/renderer/src/components/BaseDropdown.vue";
-import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
-import { injectStrict } from "@/renderer/src/services/service-container";
+import AppDropdownFileSelect from "../../../renderer/src/components/AppDropdownFileSelect.vue";
+import BaseDropdown from "../../../renderer/src/components/BaseDropdown.vue";
+import { DIALOG_EVENTS } from "../../../main/controllers/dialog/dialog.events";
+import { injectStrict } from "../../../renderer/src/services/service-container";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
@@ -15,7 +15,7 @@ const mockInjectStrict = injectStrict as jest.MockedFunction<
   typeof injectStrict
 >;
 
-jest.mock("@/main/controllers/dialog/dialog.events", () => ({
+jest.mock("../../../main/controllers/dialog/dialog.events", () => ({
   DIALOG_EVENTS: {
     DIRECTORY_SELECT: "DIRECTORY_SELECT",
   },

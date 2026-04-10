@@ -20,7 +20,7 @@ import {
 import fs from "fs/promises";
 import path from "path";
 import { getUserPreferences, setUserPreference } from "./util/user-preferences";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 
 test.describe("Launcher actions", () => {
   let electronApp: ElectronApplication;

@@ -1,5 +1,5 @@
 import { getUserPreferences } from "./user-preferences";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../../shared/enums/userPreferenceKeys";
 import fs from "fs/promises";
 import * as os from "os";
 import type { MockFilesPaths } from "./setup";

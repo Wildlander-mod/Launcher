@@ -16,10 +16,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import BaseDropdown, { type SelectOption } from "./BaseDropdown.vue";
-import type { NonEmptyArray } from "@/shared/types/non-empty-array";
+import type { NonEmptyArray } from "../../../shared/types/non-empty-array";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
-import { ENB_EVENTS } from "@/main/controllers/enb/enb.events";
+import type { FriendlyDirectoryMap } from "../../../shared/types/modpack-metadata";
+import { ENB_EVENTS } from "../../../main/controllers/enb/enb.events";
 import {
   DISABLE_LOADING_EVENT,
   ENABLE_LOADING_EVENT,

@@ -1,5 +1,5 @@
-import { MigrationService } from "@/main/services/migration.service";
-import { GraphicsService } from "@/main/services/graphics.service";
+import { MigrationService } from "../../../../main/services/migration.service";
+import { GraphicsService } from "../../../../main/services/graphics.service";
 import {
   createStubInstance,
   expect,
@@ -7,12 +7,12 @@ import {
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
 import mockFs from "mock-fs";
-import { ProfileService } from "@/main/services/profile.service";
+import { ProfileService } from "../../../../main/services/profile.service";
 import fs from "fs";
-import { ConfigService } from "@/main/services/config.service";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
+import { ConfigService } from "../../../../main/services/config.service";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
 import type { DirectoryItems } from "mock-fs/lib/filesystem";
-import { readFilesFromDirectory } from "@/__tests__/unit/helpers/read-files";
+import { readFilesFromDirectory } from "../../helpers/read-files";
 
 describe("Migration service #main #service", () => {
   let migrationService: MigrationService;

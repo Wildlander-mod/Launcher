@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import BaseImage from "@/renderer/src/components/BaseImage.vue";
+import BaseImage from "../../../../renderer/src/components/BaseImage.vue";
 
 describe("BaseImage component #renderer #component", () => {
   it("should render image with all props correctly bound to attributes", () => {

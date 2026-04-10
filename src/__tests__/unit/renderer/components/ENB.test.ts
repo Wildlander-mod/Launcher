@@ -1,17 +1,17 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import ENB from "@/renderer/src/components/ENB.vue";
+import ENB from "../../../../renderer/src/components/ENB.vue";
 import {
   injectStrict,
   SERVICE_BINDINGS,
-} from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
-import { createMockEventService } from "@/__tests__/unit/renderer/utils/mock-event-service";
+} from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
+import { createMockEventService } from "../utils/mock-event-service";
 import {
   DISABLE_LOADING_EVENT,
   ENABLE_LOADING_EVENT,
-} from "@/renderer/src/services/event.service";
+} from "../../../../renderer/src/services/event.service";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     EVENT_SERVICE: Symbol("EVENT_SERVICE"),
@@ -19,7 +19,7 @@ jest.mock("@/renderer/src/services/service-container", () => ({
   },
 }));
 
-jest.mock("@/main/controllers/enb/enb.events", () => ({
+jest.mock("../../../../main/controllers/enb/enb.events", () => ({
   ENB_EVENTS: {
     GET_ENB_PRESETS: "GET_ENB_PRESETS",
     GET_ENB_PREFERENCE: "GET_ENB_PREFERENCE",

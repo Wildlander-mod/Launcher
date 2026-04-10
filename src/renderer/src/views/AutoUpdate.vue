@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import AppModal from "../components/AppModal.vue";
-import { UPDATE_EVENTS } from "@/main/controllers/update/update.events";
+import { UPDATE_EVENTS } from "../../../main/controllers/update/update.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
 const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);

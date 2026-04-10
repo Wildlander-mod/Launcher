@@ -1,17 +1,17 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import ViewAdvanced from "@/renderer/src/views/ViewAdvanced.vue";
+import ViewAdvanced from "../../../../renderer/src/views/ViewAdvanced.vue";
 import {
   injectStrict,
   SERVICE_BINDINGS,
-} from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
-import { createMockEventService } from "@/__tests__/unit/renderer/utils/mock-event-service";
+} from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
+import { createMockEventService } from "../utils/mock-event-service";
 import {
   DISABLE_LOADING_EVENT,
   ENABLE_LOADING_EVENT,
-} from "@/renderer/src/services/event.service";
+} from "../../../../renderer/src/services/event.service";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     EVENT_SERVICE: Symbol("EVENT_SERVICE"),
@@ -20,7 +20,7 @@ jest.mock("@/renderer/src/services/service-container", () => ({
   },
 }));
 
-jest.mock("@/main/controllers/profile/profile.events", () => ({
+jest.mock("../../../../main/controllers/profile/profile.events", () => ({
   PROFILE_EVENTS: {
     GET_SHOW_HIDDEN_PROFILES: "GET_SHOW_HIDDEN_PROFILES",
     SET_SHOW_HIDDEN_PROFILES: "SET_SHOW_HIDDEN_PROFILES",
@@ -28,20 +28,23 @@ jest.mock("@/main/controllers/profile/profile.events", () => ({
   },
 }));
 
-jest.mock("@/main/controllers/launcher/launcher.events", () => ({
+jest.mock("../../../../main/controllers/launcher/launcher.events", () => ({
   LAUNCHER_EVENTS: {
     GET_CHECK_PREREQUISITES: "GET_CHECK_PREREQUISITES",
     SET_CHECK_PREREQUISITES: "SET_CHECK_PREREQUISITES",
   },
 }));
 
-jest.mock("@/main/controllers/modOrganizer/modOrganizer.events", () => ({
-  MOD_ORGANIZER_EVENTS: {
-    LAUNCH_MO2: "LAUNCH_MO2",
-  },
-}));
+jest.mock(
+  "../../../../main/controllers/modOrganizer/modOrganizer.events",
+  () => ({
+    MOD_ORGANIZER_EVENTS: {
+      LAUNCH_MO2: "LAUNCH_MO2",
+    },
+  })
+);
 
-jest.mock("@/main/controllers/system/system.events", () => ({
+jest.mock("../../../../main/controllers/system/system.events", () => ({
   SYSTEM_EVENTS: {
     OPEN_APPLICATION_LOGS: "OPEN_APPLICATION_LOGS",
     CLEAR_APP_LOGS: "CLEAR_APP_LOGS",
@@ -49,19 +52,19 @@ jest.mock("@/main/controllers/system/system.events", () => ({
   },
 }));
 
-jest.mock("@/main/controllers/enb/enb.events", () => ({
+jest.mock("../../../../main/controllers/enb/enb.events", () => ({
   ENB_EVENTS: {
     RESTORE_ENB_PRESETS: "RESTORE_ENB_PRESETS",
   },
 }));
 
-jest.mock("@/main/controllers/graphics/graphics.events", () => ({
+jest.mock("../../../../main/controllers/graphics/graphics.events", () => ({
   GRAPHICS_EVENTS: {
     RESTORE_GRAPHICS: "RESTORE_GRAPHICS",
   },
 }));
 
-jest.mock("@/main/controllers/config/config.events", () => ({
+jest.mock("../../../../main/controllers/config/config.events", () => ({
   CONFIG_EVENTS: {
     EDIT_CONFIG: "EDIT_CONFIG",
   },

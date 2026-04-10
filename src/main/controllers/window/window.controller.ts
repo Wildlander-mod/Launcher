@@ -1,7 +1,7 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { WindowService } from "@/main/services/window.service";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { WindowService } from "../../services/window.service";
 import { service } from "@loopback/core";
-import { WINDOW_EVENTS } from "@/main/controllers/window/window.events";
+import { WINDOW_EVENTS } from "./window.events";
 
 @controller
 export class WindowController {

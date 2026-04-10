@@ -1,7 +1,7 @@
 import type {
   InstructionAction,
   InstructionType,
-} from "@/shared/enums/additional-instructions";
+} from "../enums/additional-instructions";
 
 interface AdditionalInstructionBase {
   // The version the instruction applies to

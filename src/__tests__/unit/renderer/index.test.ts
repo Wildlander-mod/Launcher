@@ -5,19 +5,19 @@ jest.mock("vue", () => ({
     mount: jest.fn(),
   })),
 }));
-jest.mock("@/renderer/src/router", () => ({
+jest.mock("../../../renderer/src/router", () => ({
   getRouter: jest.fn(() => ({})),
 }));
 jest.mock("vue-final-modal", () => jest.fn(() => ({})));
 jest.mock("vue3-click-away", () => ({}));
-jest.mock("@/renderer/src/App.vue", () => ({}));
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../renderer/src/App.vue", () => ({}));
+jest.mock("../../../renderer/src/services/service-container", () => ({
   registerServices: jest.fn(() => ({ modpackService: {} })),
 }));
 
 describe("index.ts #renderer #entry", () => {
   beforeAll(async () => {
-    await import("@/renderer/src/index");
+    await import("../../../renderer/src/index");
   });
 
   describe("mouseup event listener", () => {

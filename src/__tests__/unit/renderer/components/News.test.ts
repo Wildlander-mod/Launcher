@@ -1,10 +1,10 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import News from "@/renderer/src/components/News.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
-import type { Post } from "@/renderer/src/services/posts.service";
+import News from "../../../../renderer/src/components/News.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
+import type { Post } from "../../../../renderer/src/services/posts.service";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     NEWS_SERVICE: Symbol("NEWS_SERVICE"),

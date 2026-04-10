@@ -4,16 +4,16 @@ import {
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { ConfigService } from "@/main/services/config.service";
-import { GraphicsService } from "@/main/services/graphics.service";
+import { ConfigService } from "../../../../main/services/config.service";
+import { GraphicsService } from "../../../../main/services/graphics.service";
 import mockFs from "mock-fs";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { ProfileService } from "@/main/services/profile.service";
+import type { FriendlyDirectoryMap } from "../../../../shared/types/modpack-metadata";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
+import { ProfileService } from "../../../../main/services/profile.service";
 import fs from "fs";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { NoGraphicsError } from "@/shared/errors/no-graphics.error";
-import { readFilesFromDirectory } from "@/__tests__/unit/helpers/read-files";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { NoGraphicsError } from "../../../../shared/errors/no-graphics.error";
+import { readFilesFromDirectory } from "../../helpers/read-files";
 
 describe("Graphics service #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;

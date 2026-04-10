@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import ImageWithText from "@/renderer/src/components/ImageWithText.vue";
-import BaseImage from "@/renderer/src/components/BaseImage.vue";
+import ImageWithText from "../../../../renderer/src/components/ImageWithText.vue";
+import BaseImage from "../../../../renderer/src/components/BaseImage.vue";
 
 const selectors = {
   text: ".c-svg-with-text__text",

@@ -1,14 +1,14 @@
 import fs from "fs";
-import { ConfigService } from "@/main/services/config.service";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { ConfigService } from "./config.service";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import { not as isNotJunk } from "junk";
 import { inject, service } from "@loopback/core";
-import { ProfileService } from "@/main/services/profile.service";
+import { ProfileService } from "./profile.service";
 import path from "path";
 import { copy, existsSync } from "fs-extra";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import type { FriendlyDirectoryMap } from "@/shared/types/modpack-metadata";
-import { NoGraphicsError } from "@/shared/errors/no-graphics.error";
+import { type Logger, LoggerBinding } from "../logger";
+import type { FriendlyDirectoryMap } from "../../shared/types/modpack-metadata";
+import { NoGraphicsError } from "../../shared/errors/no-graphics.error";
 
 export class GraphicsService {
   constructor(

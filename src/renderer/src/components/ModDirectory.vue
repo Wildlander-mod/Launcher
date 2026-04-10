@@ -17,10 +17,10 @@ import { ref, onMounted } from "vue";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 import type { SelectOption } from "./BaseDropdown.vue";
 import BaseLabel from "./BaseLabel.vue";
-import { WildlanderModpack } from "@/shared/wildlander/modpack";
-import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
-import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
-import { WINDOW_EVENTS } from "@/main/controllers/window/window.events";
+import { WildlanderModpack } from "../../../shared/wildlander/modpack";
+import { MODPACK_EVENTS } from "../../../main/controllers/modpack/mopack.events";
+import { WABBAJACK_EVENTS } from "../../../main/controllers/wabbajack/wabbajack.events";
+import { WINDOW_EVENTS } from "../../../main/controllers/window/window.events";
 import { ENABLE_LOADING_EVENT } from "../services/event.service";
 import AppDropdownFileSelect from "./AppDropdownFileSelect.vue";
 

@@ -1,16 +1,16 @@
-import { UpdateService } from "@/main/services/update.service";
-import { WindowService } from "@/main/services/window.service";
+import { UpdateService } from "../../../../main/services/update.service";
+import { WindowService } from "../../../../main/services/window.service";
 import {
   createStubInstance,
   expect,
   sinon,
   type StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { ErrorService } from "@/main/services/error.service";
-import type { Logger } from "@/main/logger";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { getAutoUpdaterMock } from "@/__tests__/unit/helpers/mocks/autoUpdater.mock";
-import { UPDATE_EVENTS } from "@/main/controllers/update/update.events";
+import { ErrorService } from "../../../../main/services/error.service";
+import type { Logger } from "../../../../main/logger";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { getAutoUpdaterMock } from "../../helpers/mocks/autoUpdater.mock";
+import { UPDATE_EVENTS } from "../../../../main/controllers/update/update.events";
 import type { AppUpdater } from "electron-updater";
 import type Electron from "electron";
 import mockFs from "mock-fs";

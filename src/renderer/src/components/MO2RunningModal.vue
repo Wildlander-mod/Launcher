@@ -23,7 +23,7 @@
 import { ref, onMounted } from "vue";
 import AppModal from "./AppModal.vue";
 import BaseButton from "./BaseButton.vue";
-import { MOD_ORGANIZER_EVENTS } from "@/main/controllers/modOrganizer/modOrganizer.events";
+import { MOD_ORGANIZER_EVENTS } from "../../../main/controllers/modOrganizer/modOrganizer.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
 const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);

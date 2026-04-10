@@ -1,6 +1,6 @@
 import { createStubInstance, expect, sinon } from "@loopback/testlab";
-import { SystemService } from "@/main/services/system.service";
-import { BlacklistService } from "@/main/services/blacklist.service";
+import { SystemService } from "../../../../main/services/system.service";
+import { BlacklistService } from "../../../../main/services/blacklist.service";
 
 describe("Blacklist service #main #service", () => {
   afterEach(() => {

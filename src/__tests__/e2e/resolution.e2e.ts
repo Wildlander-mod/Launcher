@@ -6,7 +6,7 @@ import {
   startTestApp,
 } from "./util/setup";
 import { getUserPreferences } from "./util/user-preferences";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import type { Resolution } from "../../shared/types/Resolution";
 import type { ElectronApplication } from "playwright";
 import {

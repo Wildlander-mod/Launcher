@@ -1,4 +1,4 @@
-import { DialogProvider } from "@/main/services/dialog.service";
+import { DialogProvider } from "../../../../main/services/dialog.service";
 import { expect } from "@loopback/testlab";
 import { dialog } from "electron";
 

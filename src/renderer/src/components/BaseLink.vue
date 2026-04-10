@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
+import { SYSTEM_EVENTS } from "../../../main/controllers/system/system.events";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
 
 interface Props {

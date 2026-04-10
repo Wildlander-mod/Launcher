@@ -1,6 +1,6 @@
-import { PatreonService } from "@/renderer/src/services/patreon.service";
-import type { Patron } from "@/renderer/src/services/patreon.service";
-import type { CacheService } from "@/renderer/src/services/cache.service";
+import { PatreonService } from "../../../../renderer/src/services/patreon.service";
+import type { Patron } from "../../../../renderer/src/services/patreon.service";
+import type { CacheService } from "../../../../renderer/src/services/cache.service";
 
 jest.mock("electron-log/renderer", () => ({
   log: jest.fn(),

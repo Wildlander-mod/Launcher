@@ -12,7 +12,7 @@ import {
 } from "./util/mocks";
 import type { ElectronApplication } from "playwright";
 import { getUserPreferences } from "./util/user-preferences";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import { fileContains, filesDoNotExist, filesExist } from "./util/file-utils";
 import fs from "fs/promises";
 import path from "path";

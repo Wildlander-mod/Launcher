@@ -1,5 +1,5 @@
-import { ModpackService } from "@/renderer/src/services/modpack.service";
-import type { IpcService } from "@/renderer/src/services/ipc.service";
+import { ModpackService } from "../../../../renderer/src/services/modpack.service";
+import type { IpcService } from "../../../../renderer/src/services/ipc.service";
 
 describe("ModpackService #renderer #service", () => {
   let service: ModpackService;

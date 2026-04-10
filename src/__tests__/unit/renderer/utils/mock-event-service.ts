@@ -1,4 +1,4 @@
-import type { EventService } from "@/renderer/src/services/service-container";
+import type { EventService } from "../../../../renderer/src/services/service-container";
 import type { EventType } from "mitt";
 
 /**

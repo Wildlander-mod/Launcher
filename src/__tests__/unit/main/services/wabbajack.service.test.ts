@@ -1,15 +1,15 @@
 import mockFs from "mock-fs";
-import { WabbajackService } from "@/main/services/wabbajack.service";
-import { SystemService } from "@/main/services/system.service";
-import { ModpackService } from "@/main/services/modpack.service";
+import { WabbajackService } from "../../../../main/services/wabbajack.service";
+import { SystemService } from "../../../../main/services/system.service";
+import { ModpackService } from "../../../../main/services/modpack.service";
 import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import type { Modpack } from "@/shared/types/modpack-metadata";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import type { Modpack } from "../../../../shared/types/modpack-metadata";
 
 const mockLocalAppData = "mock/local/app/data";
 

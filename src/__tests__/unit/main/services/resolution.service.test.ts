@@ -1,23 +1,23 @@
-import { ResolutionService } from "@/main/services/resolution.service";
+import { ResolutionService } from "../../../../main/services/resolution.service";
 import type { StubbedInstanceWithSinonAccessor } from "@loopback/testlab";
 import { createStubInstance, expect, sinon } from "@loopback/testlab";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { ConfigService } from "@/main/services/config.service";
-import { InstructionService } from "@/main/services/instruction.service";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { ConfigService } from "../../../../main/services/config.service";
+import { InstructionService } from "../../../../main/services/instruction.service";
 import {
   InstructionAction,
   InstructionType,
-} from "@/shared/enums/additional-instructions";
+} from "../../../../shared/enums/additional-instructions";
 import type Electron from "electron";
 import type {
   OverloadParameters,
   OverloadReturnType,
-} from "@/shared/types/overloads";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+} from "../../../../shared/types/overloads";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
 import mockFs from "mock-fs";
 import { stringify } from "ini";
 import fs from "fs/promises";
-import { getChildProcessMock } from "@/__tests__/unit/helpers/mocks/child-process.mock";
+import { getChildProcessMock } from "../../helpers/mocks/child-process.mock";
 import type * as child_process from "child_process";
 import os from "os";
 import { parse } from "js-ini";

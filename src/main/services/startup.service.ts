@@ -1,18 +1,18 @@
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
 import type Electron from "electron";
-import { ModpackService } from "@/main/services/modpack.service";
-import { LauncherService } from "@/main/services/launcher.service";
+import { ModpackService } from "./modpack.service";
+import { LauncherService } from "./launcher.service";
 import * as os from "os";
 import { platform, type, version } from "os";
-import { WabbajackService } from "@/main/services/wabbajack.service";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { UpdateService } from "@/main/services/update.service";
-import { BlacklistService } from "@/main/services/blacklist.service";
-import { ErrorService } from "@/main/services/error.service";
-import { WindowService } from "@/main/services/window.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { ElectronBinding } from "@/main/bindings/electron.binding";
+import { WabbajackService } from "./wabbajack.service";
+import { ResolutionService } from "./resolution.service";
+import { UpdateService } from "./update.service";
+import { BlacklistService } from "./blacklist.service";
+import { ErrorService } from "./error.service";
+import { WindowService } from "./window.service";
+import { type Logger, LoggerBinding } from "../logger";
+import { ElectronBinding } from "../bindings/electron.binding";
 
 interface StartupCommand {
   // Only needed if the command is being filtered

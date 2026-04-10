@@ -1,7 +1,7 @@
 import { mount, VueWrapper } from "@vue/test-utils";
-import App from "@/renderer/src/App.vue";
-import TheTitleBar from "@/renderer/src/components/TheTitleBar.vue";
-import AppPage from "@/renderer/src/components/AppPage.vue";
+import App from "../../../renderer/src/App.vue";
+import TheTitleBar from "../../../renderer/src/components/TheTitleBar.vue";
+import AppPage from "../../../renderer/src/components/AppPage.vue";
 import { byTestId } from "./utils/test-utils";
 
 describe("App.vue", () => {

@@ -1,4 +1,4 @@
-import { IpcService } from "@/renderer/src/services/ipc.service";
+import { IpcService } from "../../../../renderer/src/services/ipc.service";
 
 const mockInvoke = jest.fn();
 const mockOn = jest.fn();

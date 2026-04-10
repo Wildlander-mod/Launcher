@@ -4,20 +4,20 @@ import {
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { InstructionService } from "@/main/services/instruction.service";
-import { ProfileService } from "@/main/services/profile.service";
-import { WabbajackService } from "@/main/services/wabbajack.service";
-import type { Logger } from "@/main/logger";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
+import { InstructionService } from "../../../../main/services/instruction.service";
+import { ProfileService } from "../../../../main/services/profile.service";
+import { WabbajackService } from "../../../../main/services/wabbajack.service";
+import type { Logger } from "../../../../main/logger";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
 import mockFs from "mock-fs";
 import { Dirent } from "fs-extra";
 import fs from "fs/promises";
 import os from "os";
-import type { AdditionalInstructions } from "@/shared/types/additional-instructions";
+import type { AdditionalInstructions } from "../../../../shared/types/additional-instructions";
 import {
   InstructionAction,
   InstructionType,
-} from "@/shared/enums/additional-instructions";
+} from "../../../../shared/enums/additional-instructions";
 
 describe("Instruction service #main #service", () => {
   let instructionService: InstructionService;

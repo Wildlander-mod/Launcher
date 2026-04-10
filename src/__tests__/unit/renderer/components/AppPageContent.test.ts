@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import AppPageContent from "@/renderer/src/components/AppPageContent.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import AppPageContent from "../../../../renderer/src/components/AppPageContent.vue";
+import { byTestId } from "../utils/test-utils";
 
 const selectors = {
   slotContent: byTestId("slot-content"),

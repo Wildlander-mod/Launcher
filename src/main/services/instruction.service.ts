@@ -1,16 +1,16 @@
 import type {
   AdditionalInstructions,
   PluginOrModInstruction,
-} from "@/shared/types/additional-instructions";
-import modpackAdditionalInstructions from "@/shared/wildlander/additional-instructions.json";
+} from "../../shared/types/additional-instructions";
+import modpackAdditionalInstructions from "../../shared/wildlander/additional-instructions.json";
 import fs from "fs";
 import { BindingScope, inject, injectable } from "@loopback/context";
 import { service } from "@loopback/core";
-import { ProfileService } from "@/main/services/profile.service";
+import { ProfileService } from "./profile.service";
 import * as os from "os";
 import type { PathLike } from "fs-extra";
-import { WabbajackService } from "@/main/services/wabbajack.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
+import { WabbajackService } from "./wabbajack.service";
+import { type Logger, LoggerBinding } from "../logger";
 
 @injectable({
   scope: BindingScope.SINGLETON,

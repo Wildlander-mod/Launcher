@@ -1,17 +1,17 @@
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import { service } from "@loopback/core";
-import { ProfileService } from "@/main/services/profile.service";
-import { EnbService } from "@/main/services/enb.service";
-import { ConfigService } from "@/main/services/config.service";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { ModpackService } from "@/main/services/modpack.service";
+import { ProfileService } from "./profile.service";
+import { EnbService } from "./enb.service";
+import { ConfigService } from "./config.service";
+import { ResolutionService } from "./resolution.service";
+import { ModpackService } from "./modpack.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { ErrorService } from "@/main/services/error.service";
-import { WindowService } from "@/main/services/window.service";
-import { GraphicsService } from "@/main/services/graphics.service";
-import { MigrationService } from "@/main/services/migration.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { VersionBinding } from "@/main/bindings/version.binding";
+import { ErrorService } from "./error.service";
+import { WindowService } from "./window.service";
+import { GraphicsService } from "./graphics.service";
+import { MigrationService } from "./migration.service";
+import { type Logger, LoggerBinding } from "../logger";
+import { VersionBinding } from "../bindings/version.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,

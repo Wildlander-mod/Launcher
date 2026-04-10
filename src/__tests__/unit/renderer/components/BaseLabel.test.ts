@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import BaseLabel from "@/renderer/src/components/BaseLabel.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import BaseLabel from "../../../../renderer/src/components/BaseLabel.vue";
+import { byTestId } from "../utils/test-utils";
 
 const selectors = {
   label: byTestId("input-label"),

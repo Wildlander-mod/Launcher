@@ -1,13 +1,13 @@
 import fs from "fs";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { WildlanderModpack } from "@/shared/wildlander/modpack";
-import type { IsModpackValidResponse } from "@/main/controllers/modpack/mopack.events";
-import type { Modpack } from "@/shared/types/modpack-metadata";
+import { WildlanderModpack } from "../../shared/wildlander/modpack";
+import type { IsModpackValidResponse } from "../controllers/modpack/mopack.events";
+import type { Modpack } from "../../shared/types/modpack-metadata";
 import { service } from "@loopback/core";
-import { ConfigService } from "@/main/services/config.service";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { MO2_NAMES } from "@/shared/enums/mo2";
+import { ConfigService } from "./config.service";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import { type Logger, LoggerBinding } from "../logger";
+import { MO2_NAMES } from "../../shared/enums/mo2";
 
 @injectable({
   scope: BindingScope.SINGLETON,

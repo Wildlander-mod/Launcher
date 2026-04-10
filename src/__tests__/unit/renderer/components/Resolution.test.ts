@@ -1,16 +1,16 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import Resolution from "@/renderer/src/components/Resolution.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import Resolution from "../../../../renderer/src/components/Resolution.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/resolution/resolution.events", () => ({
+jest.mock("../../../../main/controllers/resolution/resolution.events", () => ({
   RESOLUTION_EVENTS: {
     GET_RESOLUTIONS: "GET_RESOLUTIONS",
     IS_UNSUPPORTED_RESOLUTION: "IS_UNSUPPORTED_RESOLUTION",

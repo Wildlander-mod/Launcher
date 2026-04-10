@@ -1,9 +1,9 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
+import { controller, handle } from "../../decorators/controller.decorator";
 import { service } from "@loopback/core";
-import { SystemService } from "@/main/services/system.service";
-import { SYSTEM_EVENTS } from "@/main/controllers/system/system.events";
+import { SystemService } from "../../services/system.service";
+import { SYSTEM_EVENTS } from "./system.events";
 import { shell } from "electron";
-import { ErrorService } from "@/main/services/error.service";
+import { ErrorService } from "../../services/error.service";
 
 @controller
 export class SystemController {

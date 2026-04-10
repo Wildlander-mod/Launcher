@@ -26,8 +26,8 @@ import AppModal from "../components/AppModal.vue";
 import BaseImage from "../components/BaseImage.vue";
 import BaseLink from "../components/BaseLink.vue";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
-import type { Modpack } from "@/shared/types/modpack-metadata";
-import { MODPACK_EVENTS } from "@/main/controllers/modpack/mopack.events";
+import type { Modpack } from "../../../shared/types/modpack-metadata";
+import { MODPACK_EVENTS } from "../../../main/controllers/modpack/mopack.events";
 import ModDirectory from "../components/ModDirectory.vue";
 
 const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);

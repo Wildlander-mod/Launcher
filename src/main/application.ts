@@ -1,63 +1,63 @@
-import { StartupService } from "@/main/services/startup.service";
+import { StartupService } from "./services/startup.service";
 import type { Constructor } from "@loopback/context";
-import { WindowService } from "@/main/services/window.service";
-import { LoggerBinding } from "@/main/logger";
+import { WindowService } from "./services/window.service";
+import { LoggerBinding } from "./logger";
 import {
   Application,
   createServiceBinding,
   type ServiceOrProviderClass,
 } from "@loopback/core";
-import type { Controller } from "@/main/decorators/controller.decorator";
-import { ErrorService } from "@/main/services/error.service";
+import type { Controller } from "./decorators/controller.decorator";
+import { ErrorService } from "./services/error.service";
 import logger from "electron-log";
-import { VersionBinding } from "@/main/bindings/version.binding";
+import { VersionBinding } from "./bindings/version.binding";
 import electron, { app } from "electron";
-import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
-import { ChildProcessBinding } from "@/main/bindings/child-process.binding";
+import { IsDevelopmentBinding } from "./bindings/isDevelopment.binding";
+import { ChildProcessBinding } from "./bindings/child-process.binding";
 import * as child_process from "child_process";
-import { PsListBinding } from "@/main/bindings/psList.binding";
+import { PsListBinding } from "./bindings/psList.binding";
 import psList from "ps-list";
-import { ProcessKillBinding } from "@/main/bindings/process-kill.binding";
-import { ElectronBinding } from "@/main/bindings/electron.binding";
-import { AutoUpdaterBinding } from "@/main/bindings/autoUpdater.binding";
+import { ProcessKillBinding } from "./bindings/process-kill.binding";
+import { ElectronBinding } from "./bindings/electron.binding";
+import { AutoUpdaterBinding } from "./bindings/autoUpdater.binding";
 import { autoUpdater } from "electron-updater";
 import contextMenu from "electron-context-menu";
-import { ContextMenuBinding } from "@/main/bindings/context-menu.binding";
-import { ConfigBinding } from "@/main/bindings/config.binding";
-import { ConfigService } from "@/main/services/config.service";
+import { ContextMenuBinding } from "./bindings/context-menu.binding";
+import { ConfigBinding } from "./bindings/config.binding";
+import { ConfigService } from "./services/config.service";
 import { is } from "@electron-toolkit/utils";
 import log from "electron-log/main";
 
 // Services
-import { BlacklistService } from "@/main/services/blacklist.service";
-import { DialogProvider } from "@/main/services/dialog.service";
-import { EnbService } from "@/main/services/enb.service";
-import { GameService } from "@/main/services/game.service";
-import { GraphicsService } from "@/main/services/graphics.service";
-import { InstructionService } from "@/main/services/instruction.service";
-import { LauncherService } from "@/main/services/launcher.service";
-import { MigrationService } from "@/main/services/migration.service";
-import { ModOrganizerService } from "@/main/services/modOrganizer.service";
-import { ModpackService } from "@/main/services/modpack.service";
-import { ProfileService } from "@/main/services/profile.service";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { SystemService } from "@/main/services/system.service";
-import { UpdateService } from "@/main/services/update.service";
-import { WabbajackService } from "@/main/services/wabbajack.service";
+import { BlacklistService } from "./services/blacklist.service";
+import { DialogProvider } from "./services/dialog.service";
+import { EnbService } from "./services/enb.service";
+import { GameService } from "./services/game.service";
+import { GraphicsService } from "./services/graphics.service";
+import { InstructionService } from "./services/instruction.service";
+import { LauncherService } from "./services/launcher.service";
+import { MigrationService } from "./services/migration.service";
+import { ModOrganizerService } from "./services/modOrganizer.service";
+import { ModpackService } from "./services/modpack.service";
+import { ProfileService } from "./services/profile.service";
+import { ResolutionService } from "./services/resolution.service";
+import { SystemService } from "./services/system.service";
+import { UpdateService } from "./services/update.service";
+import { WabbajackService } from "./services/wabbajack.service";
 
 // Controllers
-import { ConfigController } from "@/main/controllers/config/config.controller";
-import { DialogController } from "@/main/controllers/dialog/dialog.controller";
-import { EnbController } from "@/main/controllers/enb/enb.controller";
-import { GraphicsController } from "@/main/controllers/graphics/graphics.controller";
-import { LauncherController } from "@/main/controllers/launcher/launcher.controller";
-import { ModOrganizerController } from "@/main/controllers/modOrganizer/modOrganizer.controller";
-import { ModpackController } from "@/main/controllers/modpack/modpack.controller";
-import { ProfileController } from "@/main/controllers/profile/profile.controller";
-import { ResolutionController } from "@/main/controllers/resolution/resolution.controller";
-import { SystemController } from "@/main/controllers/system/system.controller";
-import { WabbajackController } from "@/main/controllers/wabbajack/wabbajack.controller";
-import { WindowController } from "@/main/controllers/window/window.controller";
+import { ConfigController } from "./controllers/config/config.controller";
+import { DialogController } from "./controllers/dialog/dialog.controller";
+import { EnbController } from "./controllers/enb/enb.controller";
+import { GraphicsController } from "./controllers/graphics/graphics.controller";
+import { LauncherController } from "./controllers/launcher/launcher.controller";
+import { ModOrganizerController } from "./controllers/modOrganizer/modOrganizer.controller";
+import { ModpackController } from "./controllers/modpack/modpack.controller";
+import { ProfileController } from "./controllers/profile/profile.controller";
+import { ResolutionController } from "./controllers/resolution/resolution.controller";
+import { SystemController } from "./controllers/system/system.controller";
+import { WabbajackController } from "./controllers/wabbajack/wabbajack.controller";
+import { WindowController } from "./controllers/window/window.controller";
 
 const serviceNamespace = "services";
 

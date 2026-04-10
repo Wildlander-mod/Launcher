@@ -5,42 +5,42 @@ import {
   registerServices,
   injectStrict,
   SERVICE_BINDINGS,
-} from "@/renderer/src/services/service-container";
+} from "../../../../renderer/src/services/service-container";
 
 jest.mock("vue", () => ({
   ...jest.requireActual("vue"),
   inject: jest.fn(),
 }));
 
-jest.mock("@/renderer/src/services/ipc.service", () => ({
+jest.mock("../../../../renderer/src/services/ipc.service", () => ({
   IpcService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/modpack.service", () => ({
+jest.mock("../../../../renderer/src/services/modpack.service", () => ({
   ModpackService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/cache.service", () => ({
+jest.mock("../../../../renderer/src/services/cache.service", () => ({
   CacheService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/patreon.service", () => ({
+jest.mock("../../../../renderer/src/services/patreon.service", () => ({
   PatreonService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/posts.service", () => ({
+jest.mock("../../../../renderer/src/services/posts.service", () => ({
   PostsService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/message.service", () => ({
+jest.mock("../../../../renderer/src/services/message.service", () => ({
   MessageService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/modal.service", () => ({
+jest.mock("../../../../renderer/src/services/modal.service", () => ({
   ModalService: jest.fn(() => ({})),
 }));
 
-jest.mock("@/renderer/src/services/event.service", () => ({
+jest.mock("../../../../renderer/src/services/event.service", () => ({
   EventService: {},
 }));
 

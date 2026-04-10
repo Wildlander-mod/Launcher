@@ -1,5 +1,5 @@
-import { MessageService } from "@/renderer/src/services/message.service";
-import type { IpcService } from "@/renderer/src/services/ipc.service";
+import { MessageService } from "../../../../renderer/src/services/message.service";
+import type { IpcService } from "../../../../renderer/src/services/ipc.service";
 
 jest.mock("electron-log/renderer", () => ({
   error: jest.fn(),

@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import BaseButton from "@/renderer/src/components/BaseButton.vue";
+import BaseButton from "../../../../renderer/src/components/BaseButton.vue";
 
 describe("BaseButton Component #renderer #component", () => {
   describe("Props", () => {

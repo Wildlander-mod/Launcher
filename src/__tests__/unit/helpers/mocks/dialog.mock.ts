@@ -3,7 +3,7 @@ import { sinon, StubbedInstanceWithSinonAccessor } from "@loopback/testlab";
 import type {
   OverloadParameters,
   OverloadReturnType,
-} from "@/shared/types/overloads";
+} from "../../../../shared/types/overloads";
 
 /**
  * Electron's dialog doesn't exist in a testing environment.

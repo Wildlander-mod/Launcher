@@ -2,15 +2,15 @@ import type Electron from "electron";
 import path from "path";
 import fs from "fs";
 import { service } from "@loopback/core";
-import { WindowService } from "@/main/services/window.service";
+import { WindowService } from "./window.service";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { UPDATE_EVENTS } from "@/main/controllers/update/update.events";
-import { ErrorService } from "@/main/services/error.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
-import { IsDevelopmentBinding } from "@/main/bindings/isDevelopment.binding";
-import { AutoUpdaterBinding } from "@/main/bindings/autoUpdater.binding";
+import { UPDATE_EVENTS } from "../controllers/update/update.events";
+import { ErrorService } from "./error.service";
+import { type Logger, LoggerBinding } from "../logger";
+import { IsDevelopmentBinding } from "../bindings/isDevelopment.binding";
+import { AutoUpdaterBinding } from "../bindings/autoUpdater.binding";
 import { AppUpdater } from "electron-updater";
-import { ElectronBinding } from "@/main/bindings/electron.binding";
+import { ElectronBinding } from "../bindings/electron.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,

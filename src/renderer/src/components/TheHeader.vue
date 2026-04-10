@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { WildlanderModpack } from "@/shared/wildlander/modpack";
+import { WildlanderModpack } from "../../../shared/wildlander/modpack";
 import BaseLink from "./BaseLink.vue";
 import BaseImage from "./BaseImage.vue";
 

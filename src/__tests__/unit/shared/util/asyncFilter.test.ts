@@ -1,5 +1,5 @@
 import { expect } from "@loopback/testlab";
-import { asyncFilter } from "@/shared/util/asyncFilter";
+import { asyncFilter } from "../../../../shared/util/asyncFilter";
 
 describe("asyncFilter", () => {
   interface Person {

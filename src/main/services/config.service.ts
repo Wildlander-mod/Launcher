@@ -1,11 +1,11 @@
 import Store from "electron-store";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import type { Resolution } from "@/shared/types/Resolution";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import type { Resolution } from "../../shared/types/Resolution";
 import path from "path";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { type Logger, LoggerBinding } from "@/main/logger";
+import { type Logger, LoggerBinding } from "../logger";
 import fs from "fs";
-import { ConfigBinding } from "@/main/bindings/config.binding";
+import { ConfigBinding } from "../bindings/config.binding";
 import { Context } from "@loopback/core";
 
 export const appRoot = path.resolve(`${__dirname}/../`);

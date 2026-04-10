@@ -1,30 +1,33 @@
-import { ModOrganizerService } from "@/main/services/modOrganizer.service";
+import { ModOrganizerService } from "../../../../main/services/modOrganizer.service";
 import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { EnbService } from "@/main/services/enb.service";
-import { ErrorService } from "@/main/services/error.service";
-import { ConfigService, UserPreferences } from "@/main/services/config.service";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { GameService } from "@/main/services/game.service";
-import { ProfileService } from "@/main/services/profile.service";
-import { SystemService } from "@/main/services/system.service";
-import { GraphicsService } from "@/main/services/graphics.service";
+import { EnbService } from "../../../../main/services/enb.service";
+import { ErrorService } from "../../../../main/services/error.service";
+import {
+  ConfigService,
+  UserPreferences,
+} from "../../../../main/services/config.service";
+import { ResolutionService } from "../../../../main/services/resolution.service";
+import { GameService } from "../../../../main/services/game.service";
+import { ProfileService } from "../../../../main/services/profile.service";
+import { SystemService } from "../../../../main/services/system.service";
+import { GraphicsService } from "../../../../main/services/graphics.service";
 import mockFs from "mock-fs";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { MO2_NAMES } from "@/shared/enums/mo2";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { MO2_NAMES } from "../../../../shared/enums/mo2";
 import type { ProcessDescriptor } from "ps-list";
-import type { NonEmptyArray } from "@/shared/types/non-empty-array";
-import { getMockDialog } from "@/__tests__/unit/helpers/mocks/dialog.mock";
-import type { Dialog } from "@/main/services/dialog.service";
+import type { NonEmptyArray } from "../../../../shared/types/non-empty-array";
+import { getMockDialog } from "../../helpers/mocks/dialog.mock";
+import type { Dialog } from "../../../../main/services/dialog.service";
 import os from "os";
 import fs from "fs/promises";
 import Store from "electron-store";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import type { Logger } from "@/main/logger";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
+import type { Logger } from "../../../../main/logger";
 
 describe("ModOrganizer service #main #service", () => {
   let mockEnbService: StubbedInstanceWithSinonAccessor<EnbService>;

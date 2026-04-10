@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
-import TheHeader from "@/renderer/src/components/TheHeader.vue";
-import type { Modpack } from "@/shared/types/modpack-metadata";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import TheHeader from "../../../../renderer/src/components/TheHeader.vue";
+import type { Modpack } from "../../../../shared/types/modpack-metadata";
+import { byTestId } from "../utils/test-utils";
 
 const mockModpack: Modpack = {
   name: "Test Modpack",
@@ -13,7 +13,7 @@ const mockModpack: Modpack = {
 
 let WildlanderModpack: Modpack;
 
-jest.mock("@/shared/wildlander/modpack", () => ({
+jest.mock("../../../../shared/wildlander/modpack", () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   get WildlanderModpack() {
     return WildlanderModpack;

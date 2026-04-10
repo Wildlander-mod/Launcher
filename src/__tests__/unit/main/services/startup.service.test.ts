@@ -1,20 +1,23 @@
-import { COMMAND_IDS, StartupService } from "@/main/services/startup.service";
+import {
+  COMMAND_IDS,
+  StartupService,
+} from "../../../../main/services/startup.service";
 import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { ModpackService } from "@/main/services/modpack.service";
-import { LauncherService } from "@/main/services/launcher.service";
-import { WabbajackService } from "@/main/services/wabbajack.service";
-import { ResolutionService } from "@/main/services/resolution.service";
-import { UpdateService } from "@/main/services/update.service";
-import { BlacklistService } from "@/main/services/blacklist.service";
-import { ErrorService } from "@/main/services/error.service";
-import { WindowService } from "@/main/services/window.service";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import type { Logger } from "@/main/logger";
+import { ModpackService } from "../../../../main/services/modpack.service";
+import { LauncherService } from "../../../../main/services/launcher.service";
+import { WabbajackService } from "../../../../main/services/wabbajack.service";
+import { ResolutionService } from "../../../../main/services/resolution.service";
+import { UpdateService } from "../../../../main/services/update.service";
+import { BlacklistService } from "../../../../main/services/blacklist.service";
+import { ErrorService } from "../../../../main/services/error.service";
+import { WindowService } from "../../../../main/services/window.service";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import type { Logger } from "../../../../main/logger";
 import type electron from "electron";
 import os from "os";
 

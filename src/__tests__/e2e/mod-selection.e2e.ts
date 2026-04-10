@@ -21,7 +21,7 @@ import {
 import { navigateAndWait, PAGES } from "./util/navigation";
 import { filesExist } from "./util/file-utils";
 import path from "path";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
 import { ENB_PRESETS } from "./util/enb";
 import { PROFILES } from "./util/profile";
 import { GRAPHICS_PRESETS } from "./util/graphics";

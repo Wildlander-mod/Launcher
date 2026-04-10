@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import BaseList from "@/renderer/src/components/BaseList.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import BaseList from "../../../../renderer/src/components/BaseList.vue";
+import { byTestId } from "../utils/test-utils";
 
 const selectors = {
   title: byTestId("list-title"),

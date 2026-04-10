@@ -1,7 +1,7 @@
 import {
   type IsModpackValidResponse,
   MODPACK_EVENTS,
-} from "@/main/controllers/modpack/mopack.events";
+} from "../../../main/controllers/modpack/mopack.events";
 import type { IpcService } from "./ipc.service";
 
 export class ModpackService {

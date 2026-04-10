@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import BaseDropdown from "@/renderer/src/components/BaseDropdown.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import BaseDropdown from "../../../../renderer/src/components/BaseDropdown.vue";
+import { byTestId } from "../utils/test-utils";
 
 interface SelectOption {
   text: string;

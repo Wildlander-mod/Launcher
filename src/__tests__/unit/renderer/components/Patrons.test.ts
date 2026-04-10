@@ -1,10 +1,10 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import Patrons from "@/renderer/src/components/Patrons.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
-import type { Patron } from "@/renderer/src/services/patreon.service";
+import Patrons from "../../../../renderer/src/components/Patrons.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
+import type { Patron } from "../../../../renderer/src/services/patreon.service";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     PATRON_SERVICE: Symbol("PATRON_SERVICE"),

@@ -35,12 +35,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import BaseDropdown, { type SelectOption } from "./BaseDropdown.vue";
-import type { Resolution as ResolutionType } from "@/shared/types/Resolution";
+import type { Resolution as ResolutionType } from "../../../shared/types/Resolution";
 import BaseLink from "./BaseLink.vue";
 import logger from "electron-log/renderer";
 import { injectStrict, SERVICE_BINDINGS } from "../services/service-container";
-import { asyncFilter } from "@/shared/util/asyncFilter";
-import { RESOLUTION_EVENTS } from "@/main/controllers/resolution/resolution.events";
+import { asyncFilter } from "../../../shared/util/asyncFilter";
+import { RESOLUTION_EVENTS } from "../../../main/controllers/resolution/resolution.events";
 
 function isResolutionType(value: unknown): value is ResolutionType {
   return (

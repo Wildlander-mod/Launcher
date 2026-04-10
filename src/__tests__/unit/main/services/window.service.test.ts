@@ -1,14 +1,14 @@
-import { WindowService } from "@/main/services/window.service";
-import type { Logger } from "@/main/logger";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
+import { WindowService } from "../../../../main/services/window.service";
+import type { Logger } from "../../../../main/logger";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
 import sinon from "sinon";
 import {
   expect,
   type StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { getMockElectron } from "@/__tests__/unit/helpers/mocks/electron.mock";
+import { getMockElectron } from "../../helpers/mocks/electron.mock";
 import type { BrowserWindow } from "electron";
-import { getMockDialog } from "@/__tests__/unit/helpers/mocks/dialog.mock";
+import { getMockDialog } from "../../helpers/mocks/dialog.mock";
 
 describe("Window service #main #service", () => {
   let windowService: WindowService;

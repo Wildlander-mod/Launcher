@@ -1,23 +1,23 @@
-import { ConfigService } from "@/main/services/config.service";
+import { ConfigService } from "../../../../main/services/config.service";
 import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { InstructionService } from "@/main/services/instruction.service";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
-import { EnbService } from "@/main/services/enb.service";
+import { InstructionService } from "../../../../main/services/instruction.service";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import { EnbService } from "../../../../main/services/enb.service";
 import mockFs from "mock-fs";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { NoEnbsError } from "@/shared/errors/no-enbs.error";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
+import { NoEnbsError } from "../../../../shared/errors/no-enbs.error";
 import {
   InstructionAction,
   InstructionType,
-} from "@/shared/enums/additional-instructions";
+} from "../../../../shared/enums/additional-instructions";
 import fs from "fs";
-import { readFilesFromDirectory } from "@/__tests__/unit/helpers/read-files";
-import type { AdditionalInstruction } from "@/shared/types/additional-instructions";
+import { readFilesFromDirectory } from "../../helpers/read-files";
+import type { AdditionalInstruction } from "../../../../shared/types/additional-instructions";
 
 describe("ENB service #main #service", () => {
   let enbService: EnbService;

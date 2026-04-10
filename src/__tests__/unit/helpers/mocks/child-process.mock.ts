@@ -2,9 +2,9 @@ import { sinon, StubbedInstanceWithSinonAccessor } from "@loopback/testlab";
 import type {
   OverloadParameters,
   OverloadReturnType,
-} from "@/shared/types/overloads";
+} from "../../../../shared/types/overloads";
 import * as util from "util";
-import type { ChildProcess } from "@/main/bindings/child-process.binding";
+import type { ChildProcess } from "../../../../main/bindings/child-process.binding";
 import type * as child_process from "child_process";
 
 // Mock out the exec method from child_process, so it doesn't actually attempt to spawn anything in a test.

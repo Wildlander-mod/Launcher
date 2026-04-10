@@ -1,8 +1,8 @@
 import {
   ModalService,
   modalOpenedEvent,
-} from "@/renderer/src/services/modal.service";
-import type { EventService } from "@/renderer/src/services/service-container";
+} from "../../../../renderer/src/services/modal.service";
+import type { EventService } from "../../../../renderer/src/services/service-container";
 import type { VueFinalModalProperty } from "vue-final-modal";
 
 describe("ModalService #renderer #service", () => {

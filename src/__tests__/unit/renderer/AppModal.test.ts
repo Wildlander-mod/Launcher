@@ -1,9 +1,9 @@
 import { mount, VueWrapper } from "@vue/test-utils";
-import AppModal from "@/renderer/src/components/AppModal.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
+import AppModal from "../../../renderer/src/components/AppModal.vue";
+import { injectStrict } from "../../../renderer/src/services/service-container";
 import { byTestId } from "./utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     MODAL_SERVICE: Symbol("MODAL_SERVICE"),

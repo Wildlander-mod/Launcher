@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import NavigationItem from "@/renderer/src/components/NavigationItem.vue";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import NavigationItem from "../../../../renderer/src/components/NavigationItem.vue";
+import { byTestId } from "../utils/test-utils";
 
 const selectors = {
   navigationItem: byTestId("navigation-item"),

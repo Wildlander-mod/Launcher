@@ -3,12 +3,12 @@ import type {
   WabbajackInstallSettings,
   WabbajackModpackMetadata,
   WabbajackV2SettingsFile,
-} from "@/shared/types/wabbajack";
-import { SystemService } from "@/main/services/system.service";
+} from "../../shared/types/wabbajack";
+import { SystemService } from "./system.service";
 import { service } from "@loopback/core";
 import { BindingScope, inject, injectable } from "@loopback/context";
-import { ModpackService } from "@/main/services/modpack.service";
-import { type Logger, LoggerBinding } from "@/main/logger";
+import { ModpackService } from "./modpack.service";
+import { type Logger, LoggerBinding } from "../logger";
 
 @injectable({
   scope: BindingScope.SINGLETON,

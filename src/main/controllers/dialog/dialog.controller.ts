@@ -1,7 +1,7 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { DIALOG_EVENTS } from "@/main/controllers/dialog/dialog.events";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { DIALOG_EVENTS } from "./dialog.events";
 import { service } from "@loopback/core";
-import { ErrorService } from "@/main/services/error.service";
+import { ErrorService } from "../../services/error.service";
 import { dialog } from "electron";
 
 @controller

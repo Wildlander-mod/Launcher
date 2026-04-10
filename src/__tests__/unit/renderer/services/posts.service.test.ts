@@ -1,6 +1,6 @@
-import { PostsService } from "@/renderer/src/services/posts.service";
-import type { Post } from "@/renderer/src/services/posts.service";
-import type { CacheService } from "@/renderer/src/services/cache.service";
+import { PostsService } from "../../../../renderer/src/services/posts.service";
+import type { Post } from "../../../../renderer/src/services/posts.service";
+import type { CacheService } from "../../../../renderer/src/services/cache.service";
 
 jest.mock("electron-log/renderer", () => ({
   info: jest.fn(),

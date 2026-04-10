@@ -1,16 +1,16 @@
 import { mount } from "@vue/test-utils";
-import TheTitleBar from "@/renderer/src/components/TheTitleBar.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
-import { byTestId } from "@/__tests__/unit/renderer/utils/test-utils";
+import TheTitleBar from "../../../../renderer/src/components/TheTitleBar.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
+import { byTestId } from "../utils/test-utils";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/window/window.events", () => ({
+jest.mock("../../../../main/controllers/window/window.events", () => ({
   WINDOW_EVENTS: {
     CLOSE: "CLOSE",
     MINIMIZE: "MINIMIZE",

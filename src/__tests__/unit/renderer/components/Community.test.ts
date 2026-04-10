@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import Community from "@/renderer/src/components/Community.vue";
+import Community from "../../../../renderer/src/components/Community.vue";
 
 const createWrapper = () =>
   mount(Community, {

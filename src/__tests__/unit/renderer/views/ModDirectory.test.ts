@@ -1,15 +1,15 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import ModDirectoryView from "@/renderer/src/views/ModDirectory.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
+import ModDirectoryView from "../../../../renderer/src/views/ModDirectory.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
   },
 }));
 
-jest.mock("@/main/controllers/modpack/mopack.events", () => ({
+jest.mock("../../../../main/controllers/modpack/mopack.events", () => ({
   MODPACK_EVENTS: {
     GET_MODPACK_METADATA: "GET_MODPACK_METADATA",
   },

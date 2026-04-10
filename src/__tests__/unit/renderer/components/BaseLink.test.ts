@@ -1,8 +1,8 @@
 import { mount } from "@vue/test-utils";
-import BaseLink from "@/renderer/src/components/BaseLink.vue";
-import { injectStrict } from "@/renderer/src/services/service-container";
+import BaseLink from "../../../../renderer/src/components/BaseLink.vue";
+import { injectStrict } from "../../../../renderer/src/services/service-container";
 
-jest.mock("@/renderer/src/services/service-container", () => ({
+jest.mock("../../../../renderer/src/services/service-container", () => ({
   injectStrict: jest.fn(),
   SERVICE_BINDINGS: {
     IPC_SERVICE: Symbol("IPC_SERVICE"),
@@ -13,7 +13,7 @@ const mockInjectStrict = injectStrict as jest.MockedFunction<
   typeof injectStrict
 >;
 
-jest.mock("@/main/controllers/system/system.events", () => ({
+jest.mock("../../../../main/controllers/system/system.events", () => ({
   SYSTEM_EVENTS: {
     OPEN_LINK_IN_BROWSER: "OPEN_LINK_IN_BROWSER",
   },

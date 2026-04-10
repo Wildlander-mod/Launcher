@@ -1,12 +1,15 @@
-import { ConfigService, UserPreferences } from "@/main/services/config.service";
+import {
+  ConfigService,
+  UserPreferences,
+} from "../../../../main/services/config.service";
 import { expect } from "@loopback/testlab";
 import mockFs from "mock-fs";
 import Store from "electron-store";
 import sinon from "sinon";
 import log from "electron-log/main";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../../../shared/enums/userPreferenceKeys";
 import { Context } from "@loopback/core";
-import { ConfigBinding } from "@/main/bindings/config.binding";
+import { ConfigBinding } from "../../../../main/bindings/config.binding";
 
 describe("Config service #main #service", () => {
   let mockStore: Store<UserPreferences>;

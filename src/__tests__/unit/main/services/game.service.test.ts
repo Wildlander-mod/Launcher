@@ -5,10 +5,10 @@ import {
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from "@loopback/testlab";
-import { GameService } from "@/main/services/game.service";
-import { ConfigService } from "@/main/services/config.service";
+import { GameService } from "../../../../main/services/game.service";
+import { ConfigService } from "../../../../main/services/config.service";
 import fs from "fs";
-import { getMockLogger } from "@/__tests__/unit/helpers/mocks/logger.mock";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
 
 describe("Gameservice #main #service", () => {
   let mockConfigService: StubbedInstanceWithSinonAccessor<ConfigService>;
