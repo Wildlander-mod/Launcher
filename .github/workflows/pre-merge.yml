@@ -133,7 +133,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           CONTAINER_ID=$(docker ps -a --filter ancestor=playwright-screenshot-e2e-tests-ci:latest --format "{{.ID}}")
-          docker cp $CONTAINER_ID:/home/app/.playwright .
+          docker cp $CONTAINER_ID:/app/.playwright .
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
