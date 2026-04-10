@@ -14,25 +14,25 @@ const communityLinks = [
     label: "YouTube",
     index: 0,
     href: "https://www.youtube.com/channel/UC-Bq60LjSeYd-_uEBzae5ww",
-    imageSource: "/images/logos/youtube.svg",
+    imageSource: "./images/logos/youtube.svg",
   },
   {
     label: "Twitch",
     index: 1,
     href: "https://www.twitch.tv/dylanbperry",
-    imageSource: "/images/logos/twitch.svg",
+    imageSource: "./images/logos/twitch.svg",
   },
   {
     label: "Discord",
     index: 2,
     href: "https://discord.gg/8VkDrfq",
-    imageSource: "/images/logos/discord.svg",
+    imageSource: "./images/logos/discord.svg",
   },
   {
     label: "Reddit",
     index: 3,
     href: "https://reddit.com/r/wildlander",
-    imageSource: "/images/logos/reddit.svg",
+    imageSource: "./images/logos/reddit.svg",
   },
 ];
 

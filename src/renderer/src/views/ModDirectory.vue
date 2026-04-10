@@ -33,7 +33,7 @@ import ModDirectory from "../components/ModDirectory.vue";
 const ipcService = injectStrict(SERVICE_BINDINGS.IPC_SERVICE);
 
 const modpackMetadata = ref<Modpack | null>(null);
-const defaultLogo = "/images/logos/wildlander-full-light.svg";
+const defaultLogo = "./images/logos/wildlander-full-light.svg";
 
 onMounted(async () => {
   modpackMetadata.value = await ipcService.invoke(

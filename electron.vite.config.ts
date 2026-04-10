@@ -20,7 +20,7 @@ export default defineConfig({
     },
   },
   renderer: {
-    publicDir: resolve(__dirname, "public"),
+    publicDir: resolve(__dirname, "src/renderer/public"),
     plugins: [vue()],
     build: {
       rollupOptions: {
@@ -32,7 +32,6 @@ export default defineConfig({
     resolve: {
       alias: {
         "@": resolve(__dirname, "src"),
-        "@renderer": resolve(__dirname, "src/renderer/src"),
       },
     },
   },

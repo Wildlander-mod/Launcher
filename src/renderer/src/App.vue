@@ -16,11 +16,11 @@
 import TheTitleBar from "./components/TheTitleBar.vue";
 import AppPage from "./components/AppPage.vue";
 
-const backgroundImage = "/images/default-background.png";
+const backgroundImage = "./images/default-background.png";
 </script>
 
 <style lang="scss">
-@import "@/renderer/src/assets/scss/index";
+@import "./assets/scss/index";
 
 $size-scrollbar: 16px;
 $colour-scrollbar-arrows: white;

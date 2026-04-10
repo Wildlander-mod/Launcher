@@ -65,7 +65,7 @@ describe("TheHeader #renderer #component", () => {
       const logo = wrapper.findComponent({ name: "BaseImage" });
 
       expect(logo.props("imageSource")).toBe(
-        "/images/logos/wildlander-full-light.svg"
+        "./images/logos/wildlander-full-light.svg"
       );
       expect(logo.props("alt")).toBe("Test Modpack");
       expect(logo.attributes("class")).toBe("c-header__image");

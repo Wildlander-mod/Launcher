@@ -17,7 +17,7 @@ describe("App.vue", () => {
     expect(appElement.exists()).toBe(true);
 
     expect(appElement.attributes("style")).toContain(
-      "background-image: url(/images/default-background.png)"
+      "background-image: url(./images/default-background.png)"
     );
   });
 

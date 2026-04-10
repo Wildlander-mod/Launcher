@@ -49,7 +49,7 @@ import BaseLink from "./BaseLink.vue";
 import BaseImage from "./BaseImage.vue";
 
 const modpack = WildlanderModpack;
-const defaultLogo = "/images/logos/wildlander-full-light.svg";
+const defaultLogo = "./images/logos/wildlander-full-light.svg";
 </script>
 
 <style scoped lang="scss">
