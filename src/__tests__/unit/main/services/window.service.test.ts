@@ -245,6 +245,25 @@ describe("Window service #main #service", () => {
       sinon.assert.calledOnce(showStub);
     });
 
+    it("should show the window inactive if IS_E2E is set", async () => {
+      process.env["IS_E2E"] = "true";
+
+      const navigateStub = sinon.stub(windowService, "navigateInWindow");
+      const showStub = sinon.stub();
+      const showInactiveStub = sinon.stub();
+
+      windowService.setWindow({
+        show: showStub,
+        showInactive: showInactiveStub,
+      } as unknown as BrowserWindow);
+
+      await windowService.load("/test");
+
+      sinon.assert.calledOnce(navigateStub);
+      sinon.assert.notCalled(showStub);
+      sinon.assert.calledOnce(showInactiveStub);
+    });
+
     it("should handle the error if loading the local url fails", async () => {
       const error = new Error("test error");
       sinon.stub(windowService, "navigateInWindow").rejects(error);

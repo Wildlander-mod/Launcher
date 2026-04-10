@@ -131,7 +131,12 @@ export class WindowService {
       } else {
         const filePath = path.join(__dirname, "../renderer/index.html");
         await this.navigateInWindow(`file://${filePath}#${urlPath}`);
-        this.window.show();
+        // Show window without stealing focus during e2e tests
+        if (process.env["IS_E2E"]) {
+          this.window.showInactive();
+        } else {
+          this.window.show();
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
