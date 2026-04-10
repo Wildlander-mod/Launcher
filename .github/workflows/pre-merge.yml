@@ -21,10 +21,6 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
       - run: npm ci --legacy-peer-deps
       - run: npm run lint -- --no-fix
 
@@ -39,10 +35,6 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
 
       - run: npm ci --legacy-peer-deps
       - run: npm run test:unit
@@ -61,13 +53,9 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-  
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-  
+
       - name: Install Playwright dependencies
         run: npx playwright install
   
@@ -94,13 +82,9 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-  
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-  
+
       - name: Download artifacts from shards
         uses: actions/download-artifact@v4
         with:
@@ -159,10 +143,6 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
       - name: install dependencies
         run: npm ci --legacy-peer-deps
 
@@ -179,10 +159,6 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
 
       - name: bump version dry run
         run: npx standard-version --dry-run
