@@ -23,7 +23,7 @@ export default defineConfig({
   workers: process.env["WORKERS"]
     ? parseInt(process.env["WORKERS"])
     : process.env["CI"]
-    ? 1
+    ? 2
     : 3,
 
   /* Enable automatic project-based sharding */
