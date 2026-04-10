@@ -29,7 +29,7 @@ withDefaults(
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-page-content {
   &:not(:last-of-type) {

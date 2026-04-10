@@ -30,7 +30,8 @@ withDefaults(
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "sass:color";
+@use "../assets/scss/index" as *;
 
 .c-button {
   background-color: $colour-background--dark;
@@ -46,7 +47,7 @@ withDefaults(
 
   &:active:not(.c-button--disabled),
   &:hover:not(.c-button--disabled) {
-    background-color: lighten($colour-background--dark, 10%);
+    background-color: color.adjust($colour-background--dark, $lightness: 10%);
   }
 
   &:hover:not(.c-button--disabled) {

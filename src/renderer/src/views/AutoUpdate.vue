@@ -51,7 +51,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-auto-update__loading {
   margin: $size-spacing--x-large * 2;

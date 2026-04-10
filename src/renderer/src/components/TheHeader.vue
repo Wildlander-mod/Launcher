@@ -53,7 +53,7 @@ const defaultLogo = "./images/logos/wildlander-full-light.svg";
 </script>
 
 <style scoped lang="scss">
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 // Specific margin to enable the logo to sit more visually aligned with the links
 // This is due to the logo having a heavily weighted top compared to the bottom

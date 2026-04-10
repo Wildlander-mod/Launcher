@@ -83,7 +83,7 @@ function toggleModal(showModal: boolean) {
 </script>
 
 <style lang="scss">
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-modal {
   display: flex;

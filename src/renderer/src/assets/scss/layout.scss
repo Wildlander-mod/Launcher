@@ -1,4 +1,4 @@
-@import "settings/sizes";
+@use "settings/sizes" as *;
 
 // All layout items are prefaced with `l-` to separate them from others
 

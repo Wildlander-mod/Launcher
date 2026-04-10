@@ -80,7 +80,7 @@ function setLoading(loading: boolean) {
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-app__page {
   margin-top: $size-spacing--titlebar;

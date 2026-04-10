@@ -15,7 +15,7 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-nav-link {
   text-decoration: none;

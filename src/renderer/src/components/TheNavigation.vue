@@ -238,11 +238,12 @@ function onLoading(loading: boolean) {
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "sass:color";
+@use "../assets/scss/index" as *;
 
 .c-navigation {
   backdrop-filter: $background-blur--more;
-  background: transparentize($colour-background, 0.8);
+  background: color.adjust($colour-background, $alpha: -0.8);
 
   z-index: 1;
 

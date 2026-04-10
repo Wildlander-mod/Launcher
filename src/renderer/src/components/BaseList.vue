@@ -20,7 +20,7 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-list {
   display: flex;

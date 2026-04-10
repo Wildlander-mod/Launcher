@@ -65,7 +65,7 @@ function updateNews(updatedNews: Post[]) {
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 .c-news {
   font-size: $font-size--small;

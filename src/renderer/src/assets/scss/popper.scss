@@ -1,5 +1,5 @@
-@import "layout";
-@import "settings/colours";
+@use "settings/sizes" as *;
+@use "settings/colours" as *;
 
 // All popper classes need important because once built, the order of the css is not consistent
 :deep(.popper) {

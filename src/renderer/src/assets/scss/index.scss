@@ -1,13 +1,13 @@
 // The order of these imports is important.
 // It is roughly following itcss style
 
-@import "./settings/colours";
-@import "./settings/sizes";
-@import "./settings/font";
-@import "./settings/font-face";
+@forward "./settings/colours";
+@forward "./settings/sizes";
+@forward "./settings/font";
+@use "./settings/font-face";
 
-@import "./layout";
+@use "./layout";
 
-@import "./utility";
+@use "./utility";
 
-@import "./popper";
+@use "./popper";

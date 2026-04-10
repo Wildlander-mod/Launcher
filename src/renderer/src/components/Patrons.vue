@@ -68,7 +68,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/scss/index";
+@use "../assets/scss/index" as *;
 
 // The size and positioning of the "star" icons are heavily tied together
 // Changing the size of one will likely need all of these adjusting to fit

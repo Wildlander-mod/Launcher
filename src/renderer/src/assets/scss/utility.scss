@@ -1,6 +1,6 @@
-@import "settings/colours";
-@import "settings/sizes";
-@import "settings/font";
+@use "settings/colours" as *;
+@use "settings/sizes" as *;
+@use "settings/font" as *;
 
 // Utility classes not tied to a component
 

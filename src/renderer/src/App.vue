@@ -20,7 +20,7 @@ const backgroundImage = "./images/default-background.png";
 </script>
 
 <style lang="scss">
-@import "./assets/scss/index";
+@use "./assets/scss/index" as *;
 
 $size-scrollbar: 16px;
 $colour-scrollbar-arrows: white;
