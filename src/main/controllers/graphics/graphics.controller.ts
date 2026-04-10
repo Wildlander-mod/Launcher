@@ -1,6 +1,6 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { GRAPHICS_EVENTS } from "@/main/controllers/graphics/graphics.events";
-import { GraphicsService } from "@/main/services/graphics.service";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { GRAPHICS_EVENTS } from "./graphics.events";
+import { GraphicsService } from "../../services/graphics.service";
 import { service } from "@loopback/core";
 
 @controller

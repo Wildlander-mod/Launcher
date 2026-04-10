@@ -1,0 +1,77 @@
+@use "settings/sizes" as *;
+
+// All layout items are prefaced with `l-` to separate them from others
+
+.l-flex {
+  display: flex;
+  flex: 1;
+}
+
+.l-no-flex-grow {
+  flex: 0;
+}
+
+.l-column {
+  @extend .l-flex;
+  flex-direction: column;
+}
+
+.l-center {
+  @extend .l-flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.l-center-vertically {
+  @extend .l-flex;
+
+  flex-direction: row;
+  align-items: center;
+}
+
+.l-row {
+  @extend .l-flex;
+
+  flex-direction: row;
+
+  &--bottom {
+    align-items: flex-end;
+  }
+}
+
+.l-center-text {
+  text-align: center;
+}
+
+.l-start {
+  @extend .l-flex;
+
+  justify-content: flex-start;
+}
+
+.l-end {
+  @extend .l-flex;
+
+  justify-content: flex-end;
+}
+
+.l-flex-grow {
+  flex-grow: 1;
+}
+
+.l-space-around {
+  @extend .l-flex;
+
+  justify-content: space-around;
+}
+
+.l-space-between {
+  @extend .l-flex;
+
+  justify-content: space-between;
+}
+
+.l-spacing-right {
+  margin-right: $size-spacing;
+}

@@ -1,0 +1,43 @@
+name: playwright-screenshot
+
+services:
+  e2e-tests-base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npx xvfb-maybe playwright test --grep @screenshot
+    environment:
+      WORKERS: 1
+      COVERAGE: "false"
+#      DEBUG: "pw:*"
+    init: true
+    ipc: host
+    cap_add:
+      - 'SYS_ADMIN'
+
+  e2e-tests-ci:
+    environment:
+      CI: true
+    extends:
+      service: e2e-tests-base
+
+  e2e-tests:
+    extends:
+      service: e2e-tests-base
+    volumes:
+      - ./.playwright:/app/.playwright
+      - ./src/__tests__/e2e/screenshot.e2e.ts-snapshots:/app/src/__tests__/e2e/screenshot.e2e.ts-snapshots
+
+  e2e-tests-update-screenshots:
+    extends:
+      service: e2e-tests
+    command: npx xvfb-maybe playwright test --grep @screenshot --update-snapshots
+
+  e2e-tests-headless:
+    extends:
+      service: e2e-tests-base
+    command: npx xvfb-maybe playwright test --grep-invert @screenshot
+    environment:
+      WORKERS: 4
+    volumes:
+      - ./.playwright:/app/.playwright

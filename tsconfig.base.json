@@ -1,0 +1,22 @@
+{
+  "extends": "@tsconfig/node16-strictest/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "CommonJS",
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "noPropertyAccessFromIndexSignature": false
+  },
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "files": true
+  }
+}

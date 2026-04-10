@@ -2,7 +2,9 @@
 node_modules
 /dist
 /coverage
+/coverage-renderer
 .nyc_output
+.tsbuildinfo
 
 # local env files
 .env.local
@@ -25,5 +27,20 @@ pnpm-debug.log*
 
 dev-app-update.yml
 
-# Mock directory to replicate %APPDATA%
-local
+mock-modpack-install
+mock-files
+.windows-data
+
+# Playwright
+.playwright
+
+.junie/plans/completed/
+.junie/plans/archived/
+
+.claude/plans/completed/
+.claude/plans/archived/
+
+.claude/plans/completed/
+.claude/plans/archived/
+
+out

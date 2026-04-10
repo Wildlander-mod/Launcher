@@ -1,8 +1,8 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { ProfileService } from "@/main/services/profile.service";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { ProfileService } from "../../services/profile.service";
 import { service } from "@loopback/core";
-import { PROFILE_EVENTS } from "@/main/controllers/profile/profile.events";
-import { LauncherService } from "@/main/services/launcher.service";
+import { PROFILE_EVENTS } from "./profile.events";
+import { LauncherService } from "../../services/launcher.service";
 
 @controller
 export class ProfileController {

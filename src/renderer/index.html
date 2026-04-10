@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Electron</title>
+    <!--
+      Content Security Policy
+      https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+
+      connect-src includes ultsky.phinocio.com because the renderer fetches
+      Patreon posts and patron data directly from that API (PostsService,
+      PatreonService). Without this exception, Electron's default 'self'-only
+      policy blocks those requests.
+    -->
+    <link rel="stylesheet" href="./fonts.css" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://ultsky.phinocio.com"
+    />
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>

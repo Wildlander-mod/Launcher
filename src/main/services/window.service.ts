@@ -1,11 +1,18 @@
-import { app, BrowserWindow, dialog, protocol } from "electron";
+import type Electron from "electron";
+import type { BrowserWindow } from "electron";
 import { URL } from "url";
-import { readFile } from "fs";
 import path from "path";
-import { appRoot, isDevelopment } from "@/main/services/config.service";
-import { logger } from "@/main/logger";
-import { BindingScope, injectable } from "@loopback/context";
-import contextMenu from "electron-context-menu";
+import { appRoot } from "./config.service";
+import { BindingScope, inject, injectable } from "@loopback/context";
+import { type Logger, LoggerBinding } from "../logger";
+import { ElectronBinding } from "../bindings/electron.binding";
+import {
+  type ContextMenu,
+  ContextMenuBinding,
+} from "../bindings/context-menu.binding";
+import { service } from "@loopback/core";
+import { type Dialog, DialogProvider } from "./dialog.service";
+import { IsDevelopmentBinding } from "../bindings/isDevelopment.binding";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -13,21 +20,17 @@ import contextMenu from "electron-context-menu";
 export class WindowService {
   private window!: BrowserWindow;
 
-  private static handleFatalError(message: string, err: string | Error) {
-    logger.error(`${message}. ${err}`);
+  constructor(
+    @inject(LoggerBinding) private logger: Logger,
+    @inject(IsDevelopmentBinding) private isDevelopment: boolean,
+    @inject(ElectronBinding) private electron: typeof Electron,
+    @inject(ContextMenuBinding) private contextMenu: ContextMenu,
+    @service(DialogProvider) private dialog: Dialog
+  ) {}
 
-    dialog.showMessageBoxSync({
-      type: "error",
-      title: "A fatal error occurred!",
-      message: `
-    ${message}
-    ${err}
-    `,
-    });
-
-    app.quit();
+  setWindow(window: BrowserWindow) {
+    this.window = window;
   }
-
   getWindow() {
     return this.window;
   }
@@ -37,17 +40,17 @@ export class WindowService {
   }
 
   quit() {
-    logger.debug("Quit application");
-    app.quit();
+    this.logger.debug("Quit application");
+    this.electron.app.quit();
   }
 
   reload() {
-    logger.debug("Reload window");
+    this.logger.debug("Reload window");
     this.getWindow().reload();
   }
 
   minimize() {
-    logger.debug("Minimize window");
+    this.logger.debug("Minimize window");
     this.getWindow().minimize();
   }
 
@@ -60,28 +63,30 @@ export class WindowService {
   }
 
   async createBrowserWindow() {
-    logger.debug("Creating browser window");
+    this.logger.debug("Creating browser window");
 
     if (this.window) {
-      logger.debug("Browser window already exists");
+      this.logger.debug("Browser window already exists");
       return;
     }
 
     try {
       // Add default context menu
-      contextMenu({
+      this.contextMenu({
         showSaveImageAs: true,
       });
 
-      // Create the browser window.
-      this.window = new BrowserWindow({
+      const width = 1000;
+      const height = 580;
+
+      this.window = new this.electron.BrowserWindow({
         frame: false,
-        height: 580,
-        minHeight: 580,
-        maxHeight: 580,
-        width: 1000,
-        minWidth: 1000,
-        maxWidth: 1000,
+        height,
+        minHeight: height,
+        maxHeight: height,
+        width,
+        minWidth: width,
+        maxWidth: width,
         resizable: false,
         maximizable: false,
         // disable initial window from showing so focus can be prevented while developing
@@ -91,17 +96,14 @@ export class WindowService {
           // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
           nodeIntegration: false,
           contextIsolation: true,
-          preload: path.join(appRoot, "main/preload.js"),
+          preload: path.join(appRoot, "preload/index.js"),
         },
       });
     } catch (error) {
       if (error instanceof Error) {
-        WindowService.handleFatalError(
-          "Unable to create browser window",
-          error
-        );
+        this.handleFatalError("Unable to create browser window", error);
       } else {
-        WindowService.handleFatalError(
+        this.handleFatalError(
           "Unable to create browser window with unknown error",
           ""
         );
@@ -110,34 +112,37 @@ export class WindowService {
   }
 
   /**
-   *
-   * @param path - Must start with a '/'
+   * @param urlPath - Must start with a '/'
    */
-  async load(path: string) {
+  async load(urlPath: string) {
     try {
-      if (isDevelopment) {
-        const url = new URL(`http://localhost:8080/#${path}`).toString();
+      if (this.isDevelopment) {
+        // HMR for renderer base on electron-vite cli.
+        // Load the remote URL for development or the local html file for production.
+        const host =
+          process.env["ELECTRON_RENDERER_URL"] ?? "http://localhost:8080/";
+        const url = new URL(`${host}#${urlPath}`).toString();
         await this.navigateInWindow(url);
-        if (!process.env.IS_TEST) {
+        if (!process.env["IS_TEST"]) {
           this.window.webContents.openDevTools();
         }
         // Show window without setting focus
         this.window.showInactive();
       } else {
-        this.createProtocol("app");
-        // Load the index.html when not in development
-        const url = new URL(`app://./index.html/#${path}`).toString();
-        await this.navigateInWindow(url);
-        this.window.show();
+        const filePath = path.join(__dirname, "../renderer/index.html");
+        await this.navigateInWindow(`file://${filePath}#${urlPath}`);
+        // Show window without stealing focus during e2e tests
+        if (process.env["IS_E2E"]) {
+          this.window.showInactive();
+        } else {
+          this.window.show();
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
-        WindowService.handleFatalError(
-          "Unable to load application page",
-          error
-        );
+        this.handleFatalError("Unable to load application page", error);
       } else {
-        WindowService.handleFatalError(
+        this.handleFatalError(
           "Unable to load application page with unknown error",
           ""
         );
@@ -145,57 +150,41 @@ export class WindowService {
     }
   }
 
-  private async navigateInWindow(url: string) {
-    // If the browser window is already open, a URL change will cause electron to think the request is aborted.
-    // When the app loads a URL, the hash is changed immediately. If the window is already open,
-    // electron considers this a change in URl and a failure so it errors.
-    // If the window is open, just navigate from the browser instead.
-    logger.debug(`Loading url: ${url}`);
-    if (this.window.isVisible()) {
-      await this.window.webContents.executeJavaScript(
-        `window.location.href = '${url}'`
-      );
-      this.window.reload();
-    } else {
-      await this.window.loadURL(url);
-    }
+  private handleFatalError(message: string, err: string | Error) {
+    this.logger.error(`${message}. ${err}`);
+
+    this.dialog.showMessageBoxSync({
+      type: "error",
+      title: "A fatal error occurred!",
+      message: `
+    ${message}
+    ${err}
+    `,
+    });
+
+    this.electron.app.quit();
   }
 
-  /**
-   * Taken from vue-cli-plugin-electron-builder to remove import/export because the plugin doesn't ship a dist.
-   * If imported directly, it causes issues when dynamically requiring services that might require this file
-   */
-  private createProtocol(scheme: string) {
-    protocol.registerBufferProtocol(scheme, (request, respond) => {
-      let pathName = new URL(request.url).pathname;
-      pathName = decodeURI(pathName); // Needed in case URL contains spaces
+  async navigateInWindow(url: string) {
+    this.logger.debug(`Loading url: ${url}`);
 
-      readFile(path.join(appRoot, pathName), (error, data) => {
-        if (error) {
-          logger.error(
-            `Failed to read ${pathName} on ${scheme} protocol`,
-            error
-          );
-        }
-        const extension = path.extname(pathName).toLowerCase();
-        let mimeType = "";
+    const windowOpen = this.window.isVisible();
 
-        if (extension === ".js") {
-          mimeType = "text/javascript";
-        } else if (extension === ".html") {
-          mimeType = "text/html";
-        } else if (extension === ".css") {
-          mimeType = "text/css";
-        } else if (extension === ".svg" || extension === ".svgz") {
-          mimeType = "image/svg+xml";
-        } else if (extension === ".json") {
-          mimeType = "application/json";
-        } else if (extension === ".wasm") {
-          mimeType = "application/wasm";
-        }
-
-        respond({ mimeType, data });
-      });
-    });
+    try {
+      await this.window.loadURL(url);
+    } catch (error) {
+      const code = (error as { code?: string })?.code;
+      if ((code === "ERR_FAILED" || code === "ERR_ABORTED") && windowOpen) {
+        // If the browser window is already open, a URL change will cause electron to think the request is aborted.
+        // When the app loads a URL, the hash is changed immediately.
+        // If the window is already open, electron considers this a change in URL and a failure so it errors.
+        // Reload the window to continue the navigation
+        // TODO this is only necessary because of the hash based history. Replacing this with non-hash history should solve this
+        this.logger.debug(`Window already open. Reloading window`);
+        this.window.reload();
+      } else {
+        throw error;
+      }
+    }
   }
 }

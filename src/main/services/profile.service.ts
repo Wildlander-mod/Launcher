@@ -1,14 +1,18 @@
-import { ConfigService } from "@/main/services/config.service";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
-import { FriendlyDirectoryMap } from "@/modpack-metadata";
+import { ConfigService } from "./config.service";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import type { FriendlyDirectoryMap } from "../../shared/types/modpack-metadata";
 import fs from "fs";
 import { not as isNotJunk } from "junk";
-import { logger } from "@/main/logger";
 import { copy, existsSync } from "fs-extra";
-import { service } from "@loopback/core";
+import { inject, service, injectable, BindingScope } from "@loopback/core";
+import { type Logger, LoggerBinding } from "../logger";
 
+@injectable({ scope: BindingScope.SINGLETON })
 export class ProfileService {
-  constructor(@service(ConfigService) private configService: ConfigService) {}
+  constructor(
+    @service(ConfigService) private configService: ConfigService,
+    @inject(LoggerBinding) private logger: Logger
+  ) {}
 
   profileDirectory() {
     return `${this.configService.modDirectory()}/profiles`;
@@ -109,7 +113,12 @@ export class ProfileService {
   }
 
   async getDefaultPreference() {
-    return (await this.getPhysicalProfiles())[0].name;
+    return (
+      (await this.getPhysicalProfiles())[0]?.name ??
+      (() => {
+        throw new Error("No physical profiles found");
+      })()
+    );
   }
 
   setProfilePreference(profile: string) {
@@ -129,10 +138,10 @@ export class ProfileService {
 
   async backupOriginalProfiles() {
     const backupExists = existsSync(this.profileBackupDirectory());
-    logger.debug(`Backup for profiles exists: ${backupExists}`);
+    this.logger.debug(`Backup for profiles exists: ${backupExists}`);
 
     if (!backupExists) {
-      logger.info("No profiles backup exists. Backing up...");
+      this.logger.info("No profiles backup exists. Backing up...");
       await fs.promises.mkdir(this.configService.backupDirectory(), {
         recursive: true,
       });
@@ -142,7 +151,7 @@ export class ProfileService {
   }
 
   async restoreProfiles() {
-    logger.info("Restoring MO2 profiles");
+    this.logger.info("Restoring MO2 profiles");
     await copy(this.profileBackupDirectory(), this.profileDirectory(), {
       overwrite: true,
     });

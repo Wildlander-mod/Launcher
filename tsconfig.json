@@ -1,46 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "ES2021",
-    "module": "CommonJS",
-    "outDir": "dist",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": false,
-    "noImplicitThis": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "mocha"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*",
-        "src/types/*"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.main.json"
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    {
+      "path": "./tsconfig.renderer.json"
+    }
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "compilerOptions": {
+    "outDir": "dist"
+  }
 }

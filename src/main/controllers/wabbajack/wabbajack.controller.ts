@@ -1,7 +1,7 @@
-import { controller, handle } from "@/main/decorators/controller.decorator";
-import { WABBAJACK_EVENTS } from "@/main/controllers/wabbajack/wabbajack.events";
+import { controller, handle } from "../../decorators/controller.decorator";
+import { WABBAJACK_EVENTS } from "./wabbajack.events";
 import { service } from "@loopback/core";
-import { WabbajackService } from "@/main/services/wabbajack.service";
+import { WabbajackService } from "../../services/wabbajack.service";
 
 @controller
 export class WabbajackController {

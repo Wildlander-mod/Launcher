@@ -1,20 +1,27 @@
 import path from "path";
-import { BindingScope, injectable } from "@loopback/context";
-import { shell, app } from "electron";
-import { logger } from "@/main/logger";
+import { BindingScope, inject, injectable } from "@loopback/context";
 import fs, { createWriteStream } from "fs";
-import { service } from "@loopback/core";
-import { ConfigService } from "@/main/services/config.service";
-import { ErrorService } from "@/main/services/error.service";
-import log from "electron-log";
+import { Context, service } from "@loopback/core";
+import { ConfigService } from "./config.service";
+import { ErrorService } from "./error.service";
 import { pipeline } from "stream/promises";
 import fetch from "node-fetch";
 import { promisify } from "util";
-import childProcess from "child_process";
 import { reboot } from "electron-shutdown-command";
 import { getAllInstalledSoftware } from "fetch-installed-software";
-import psList from "ps-list";
-import { USER_PREFERENCE_KEYS } from "@/shared/enums/userPreferenceKeys";
+import { USER_PREFERENCE_KEYS } from "../../shared/enums/userPreferenceKeys";
+import { type Logger, LoggerBinding } from "../logger";
+import { ElectronBinding } from "../bindings/electron.binding";
+import {
+  type ChildProcess,
+  ChildProcessBinding,
+} from "../bindings/child-process.binding";
+import { type PSList, PsListBinding } from "../bindings/psList.binding";
+import {
+  type ProcessKill,
+  ProcessKillBinding,
+} from "../bindings/process-kill.binding";
+import * as os from "node:os";
 
 @injectable({
   scope: BindingScope.SINGLETON,
@@ -23,30 +30,32 @@ export class SystemService {
   constructor(
     @service(ConfigService) private configService: ConfigService,
     @service(ErrorService) private errorService: ErrorService,
-    private listProcesses = psList
+    @inject(LoggerBinding) private logger: Logger,
+    @inject(ElectronBinding) private electron: typeof Electron,
+    @inject.context() private context: Context
   ) {}
 
-  private static getInstallerFile() {
-    return path.normalize(`${app.getPath("userData")}/vc_redist.x64.exe`);
+  static getLocalAppData() {
+    return path.resolve(`${process.env["APPDATA"]}/../local`);
   }
 
-  private prerequisitesDownloaded = false;
-
-  static getLocalAppData() {
-    return path.resolve(`${process.env.APPDATA}/../local`);
+  public getCPlusPlusInstallerFile() {
+    return path.normalize(
+      `${this.electron.app.getPath("userData")}/vc_redist.x64.exe`
+    );
   }
 
   reboot() {
-    logger.debug("Rebooting system");
+    this.logger.debug("Rebooting system");
     reboot();
   }
 
   async openApplicationLogsPath() {
-    const error = await shell.openPath(
-      path.parse(log.transports?.file.getFile().path).dir
+    const error = await this.electron.shell.openPath(
+      path.parse(this.logger.transports?.file.getFile().path).dir
     );
     if (error) {
-      logger.error(error);
+      this.logger.error(error);
     }
   }
 
@@ -57,12 +66,12 @@ export class SystemService {
     );
 
     if (fs.existsSync(logPath)) {
-      const error = await shell.openPath(logPath);
+      const error = await this.electron.shell.openPath(logPath);
       if (error) {
-        logger.error(error);
+        this.logger.error(error);
       }
     } else {
-      await this.errorService.handleError(
+      this.errorService.handleError(
         "Error while opening crash logs folder",
         `Crash logs directory at ${logPath} does not exist. This likely means you do not have any crash logs.`
       );
@@ -70,33 +79,37 @@ export class SystemService {
   }
 
   async clearApplicationLogs() {
-    logger.transports?.file.getFile().clear();
+    this.logger.transports?.file.getFile().clear();
     /*
-    Due to the fact that the renderer proc has little to no node func / lib access,
+    Due to the fact that the renderer process has little to no node func / lib access,
     the renderer logs have to be manually cleared here.
     Because even if the entire logging object is exposed to the renderer it is unable to clear the file.
     */
-    const path = logger.transports?.file.getFile().path.split("\\") || [];
-    // replace main.log with renderer.log
-    path.pop();
-    path.push("renderer.log");
+    const logFilePath = this.logger.transports?.file.getFile().path;
+    const loggerDir = path.dirname(logFilePath);
+    const renderLog = path.join(loggerDir, "renderer.log");
 
     //clear renderer.log
-    const renderLog = path.join("\\");
     if (fs.existsSync(renderLog)) {
       await fs.promises.writeFile(renderLog, "", { flag: "w" });
     }
   }
 
   async checkPrerequisitesInstalled() {
-    logger.debug("Checking prerequisites are installed");
+    // If developing on a non-windows machine, just pretend everything is installed because the game will not launch anyway
+
+    if (os.platform() !== "win32") {
+      return true;
+    }
+
+    this.logger.debug("Checking prerequisites are installed");
 
     if (
       this.configService.getPreference(
         USER_PREFERENCE_KEYS.CHECK_PREREQUISITES
       ) === false
     ) {
-      logger.debug("Skip checking prerequisites due to user setting");
+      this.logger.debug("Skip checking prerequisites due to user setting");
       return true;
     }
 
@@ -106,7 +119,7 @@ export class SystemService {
       .map((x) => x.DisplayName);
 
     if (installedSoftware.length === 0) {
-      logger.debug(`${productTester} not detected`);
+      this.logger.debug(`${productTester} not detected`);
       return false;
     }
 
@@ -117,46 +130,52 @@ export class SystemService {
     );
 
     const sortedVersions = [...new Set(installedVersions.sort())];
-    logger.debug(`Installed ${productTester} versions ${sortedVersions}`);
+    this.logger.debug(`Installed ${productTester} versions ${sortedVersions}`);
 
     return installedVersions.filter((x) => Number(x) >= 2019).length > 0;
   }
-
   async installPrerequisites() {
     await this.downloadPrerequisites();
-    logger.debug("Downloads completed");
-    logger.debug(`Installing ${SystemService.getInstallerFile()}`);
-    return promisify(childProcess.exec)(
-      `"${SystemService.getInstallerFile()}"`
-    );
+    this.logger.debug("Downloads completed");
+    this.logger.debug(`Installing ${this.getCPlusPlusInstallerFile()}`);
+    return this.exec(`"${this.getCPlusPlusInstallerFile()}"`);
   }
 
   async downloadPrerequisites() {
-    logger.debug("Downloading prerequisites");
+    this.logger.debug("Downloading prerequisites");
     await this.downloadFile(
       "https://aka.ms/vs/17/release/vc_redist.x64.exe",
-      SystemService.getInstallerFile()
+      this.getCPlusPlusInstallerFile()
     );
-
-    this.prerequisitesDownloaded = true;
   }
 
   async downloadFile(url: string, output: string) {
     if (fs.existsSync(output)) {
-      logger.debug("Download already exists, skipping");
+      this.logger.debug("Download already exists, skipping");
       return;
     }
 
-    logger.debug(`Downloading from ${url} to ${output}`);
+    this.logger.debug(`Downloading from ${url} to ${output}`);
 
-    const body = (await fetch(url)).body;
-    if (body) {
-      logger.debug(`Download complete, writing to ${output}`);
-      await pipeline(body, createWriteStream(output));
-      logger.debug(`Finished writing to ${output}`);
-    } else {
-      logger.error(`Failed to download file from ${url}`);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const message = `Failed to download file from ${url} with response status ${response.status}`;
+      this.logger.error(message);
+      throw new Error(message);
     }
+
+    const body = response.body;
+
+    this.logger.debug(`Download complete, writing to ${output}`);
+    await pipeline(body, createWriteStream(output));
+    this.logger.debug(`Finished writing to ${output}`);
+  }
+
+  async listProcesses(): ReturnType<PSList> {
+    // Get psList from the context so it can be replaced dynamically if necessary
+    const psList = this.context.getSync<PSList>(PsListBinding);
+    return psList();
   }
 
   async isProcessRunning(process: string): Promise<boolean> {
@@ -165,5 +184,18 @@ export class SystemService {
         ({ name }) => name.toLowerCase() === process.toLowerCase()
       ).length > 0
     );
+  }
+
+  async exec(command: string): Promise<{ stdout: string; stderr: string }> {
+    // Get childProcess from the context so it can be replaced dynamically if necessary
+    const childProcess =
+      this.context.getSync<ChildProcess>(ChildProcessBinding);
+    return promisify(childProcess.exec)(command);
+  }
+
+  kill(pid: number, signal?: string | number): boolean {
+    // Get process.kill from the context so it can be replaced dynamically if necessary
+    const processKill = this.context.getSync<ProcessKill>(ProcessKillBinding);
+    return processKill(pid, signal);
   }
 }

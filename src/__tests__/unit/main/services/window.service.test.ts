@@ -1,0 +1,452 @@
+import { WindowService } from "../../../../main/services/window.service";
+import type { Logger } from "../../../../main/logger";
+import { getMockLogger } from "../../helpers/mocks/logger.mock";
+import sinon from "sinon";
+import {
+  expect,
+  type StubbedInstanceWithSinonAccessor,
+} from "@loopback/testlab";
+import { getMockElectron } from "../../helpers/mocks/electron.mock";
+import type { BrowserWindow } from "electron";
+import { getMockDialog } from "../../helpers/mocks/dialog.mock";
+
+describe("Window service #main #service", () => {
+  let windowService: WindowService;
+
+  let mockLogger: sinon.SinonStubbedInstance<Logger>;
+  let mockElectron: ReturnType<typeof getMockElectron>;
+  let mockContextMenu: sinon.SinonStub;
+  let mockDialog: StubbedInstanceWithSinonAccessor<Electron.Dialog>;
+
+  let originalEnv: typeof process.env;
+
+  beforeEach(() => {
+    originalEnv = { ...process.env };
+
+    mockLogger = getMockLogger();
+    mockElectron = getMockElectron();
+    mockContextMenu = sinon.stub();
+    mockDialog = getMockDialog();
+
+    windowService = new WindowService(
+      mockLogger,
+      false,
+      mockElectron,
+      mockContextMenu,
+      mockDialog
+    );
+  });
+
+  afterEach(() => {
+    sinon.restore();
+    process.env = { ...originalEnv };
+  });
+
+  describe("getWindow", () => {
+    it("should return the window", async () => {
+      windowService.setWindow({ test: 1234 } as unknown as BrowserWindow);
+      const window = windowService.getWindow();
+      expect(window).to.match({ test: 1234 });
+    });
+  });
+
+  describe("getWebContents", () => {
+    it("should return the web contents", async () => {
+      windowService.setWindow({
+        webContents: { test: 1234 },
+      } as unknown as BrowserWindow);
+      const webContents = windowService.getWebContents();
+      expect(webContents).to.match({ test: 1234 });
+    });
+  });
+
+  describe("quit", () => {
+    it("should quit the application", async () => {
+      windowService.quit();
+      sinon.assert.calledOnce(mockElectron.stubs.app.quit);
+    });
+  });
+
+  describe("reload", () => {
+    it("should reload the window", async () => {
+      const reloadStub = sinon.stub();
+      windowService.setWindow({
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+      windowService.reload();
+      sinon.assert.calledOnce(reloadStub);
+    });
+  });
+
+  describe("minimize", () => {
+    it("should minimize the window", async () => {
+      const minimizeStub = sinon.stub();
+      windowService.setWindow({
+        minimize: minimizeStub,
+      } as unknown as BrowserWindow);
+      windowService.minimize();
+      sinon.assert.calledOnce(minimizeStub);
+    });
+  });
+
+  describe("focusWindow", () => {
+    it("should focus the window", async () => {
+      const focusStub = sinon.stub();
+      const isMinimizedStub = sinon.stub().returns(false);
+      const restoreStub = sinon.stub();
+      windowService.setWindow({
+        focus: focusStub,
+        isMinimized: isMinimizedStub,
+        restore: restoreStub,
+      } as unknown as BrowserWindow);
+      windowService.focusWindow();
+      sinon.assert.calledOnce(focusStub);
+    });
+
+    it("should restore the window if minimized", async () => {
+      const focusStub = sinon.stub();
+      const isMinimizedStub = sinon.stub().returns(true);
+      const restoreStub = sinon.stub();
+      windowService.setWindow({
+        focus: focusStub,
+        isMinimized: isMinimizedStub,
+        restore: restoreStub,
+      } as unknown as BrowserWindow);
+      windowService.focusWindow();
+      sinon.assert.calledOnce(restoreStub);
+    });
+  });
+
+  describe("createBrowserWindow", () => {
+    it("should assign the browser window", async () => {
+      await windowService.createBrowserWindow();
+      expect(windowService.getWindow()).to.match({
+        getAllWindows: mockElectron.stubs.getAllWindows,
+      });
+    });
+
+    it("should not create a browser window if one already exists", async () => {
+      windowService.setWindow({ test: 5678 } as unknown as BrowserWindow);
+      await windowService.createBrowserWindow();
+      expect(
+        mockLogger.debug.calledWith("Browser window already exists")
+      ).to.be.true();
+    });
+
+    it("should add a default context menu", async () => {
+      await windowService.createBrowserWindow();
+      sinon.assert.calledWith(mockContextMenu, {
+        showSaveImageAs: true,
+      });
+    });
+
+    it("should handle the error if creating a browser window fails", async () => {
+      const error = new Error("test error");
+      mockElectron.stubs.BrowserWindow.throws(error);
+      await windowService.createBrowserWindow();
+      sinon.assert.calledWith(mockDialog.stubs.showMessageBoxSync, {
+        type: "error",
+        title: "A fatal error occurred!",
+        message:
+          "\n    Unable to create browser window\n    Error: test error\n    ",
+      });
+    });
+
+    it("should handle unknown errors", async () => {
+      const mockNonError = { message: "test error" };
+      mockElectron.stubs.BrowserWindow.throws(mockNonError);
+      await windowService.createBrowserWindow();
+      sinon.assert.calledWith(mockDialog.stubs.showMessageBoxSync, {
+        type: "error",
+        title: "A fatal error occurred!",
+        message:
+          "\n    Unable to create browser window with unknown error\n    \n    ",
+      });
+    });
+  });
+
+  describe("load", () => {
+    afterEach(() => {
+      process.env = { ...originalEnv };
+    });
+
+    it("should load the local url if in development", async () => {
+      windowService = new WindowService(
+        mockLogger,
+        true,
+        mockElectron,
+        mockContextMenu,
+        mockDialog
+      );
+
+      const openDevToolsStub = sinon.stub();
+      const showInactiveStub = sinon.stub();
+
+      windowService.setWindow({
+        webContents: {
+          openDevTools: openDevToolsStub,
+        },
+        showInactive: showInactiveStub,
+      } as unknown as BrowserWindow);
+
+      const navigateStub = sinon.stub(windowService, "navigateInWindow");
+
+      await windowService.load("/test");
+
+      sinon.assert.calledWith(navigateStub, "http://localhost:8080/#/test");
+      sinon.assert.calledOnce(openDevToolsStub);
+      sinon.assert.calledOnce(showInactiveStub);
+    });
+
+    it("should not open the dev tools if IS_TEST is true", async () => {
+      windowService = new WindowService(
+        mockLogger,
+        true,
+        mockElectron,
+        mockContextMenu,
+        mockDialog
+      );
+
+      process.env["IS_TEST"] = "true";
+
+      const openDevToolsStub = sinon.stub();
+      const showInactiveStub = sinon.stub();
+
+      windowService.setWindow({
+        webContents: {
+          openDevTools: openDevToolsStub,
+        },
+        showInactive: showInactiveStub,
+      } as unknown as BrowserWindow);
+
+      const navigateStub = sinon.stub(windowService, "navigateInWindow");
+
+      await windowService.load("/test");
+
+      sinon.assert.calledWith(navigateStub, "http://localhost:8080/#/test");
+      sinon.assert.notCalled(openDevToolsStub);
+      sinon.assert.calledOnce(showInactiveStub);
+    });
+
+    it("should load the index.html via navigateInWindow with a file:// URL if not in development", async () => {
+      const navigateStub = sinon.stub(windowService, "navigateInWindow");
+      const showStub = sinon.stub();
+
+      windowService.setWindow({
+        show: showStub,
+      } as unknown as BrowserWindow);
+
+      await windowService.load("/test");
+
+      sinon.assert.calledOnce(navigateStub);
+      expect(navigateStub.firstCall.args[0]).to.match(
+        /file:\/\/.*index\.html#\/test/
+      );
+      sinon.assert.calledOnce(showStub);
+    });
+
+    it("should show the window inactive if IS_E2E is set", async () => {
+      process.env["IS_E2E"] = "true";
+
+      const navigateStub = sinon.stub(windowService, "navigateInWindow");
+      const showStub = sinon.stub();
+      const showInactiveStub = sinon.stub();
+
+      windowService.setWindow({
+        show: showStub,
+        showInactive: showInactiveStub,
+      } as unknown as BrowserWindow);
+
+      await windowService.load("/test");
+
+      sinon.assert.calledOnce(navigateStub);
+      sinon.assert.notCalled(showStub);
+      sinon.assert.calledOnce(showInactiveStub);
+    });
+
+    it("should handle the error if loading the local url fails", async () => {
+      const error = new Error("test error");
+      sinon.stub(windowService, "navigateInWindow").rejects(error);
+
+      windowService.setWindow({
+        show: sinon.stub(),
+      } as unknown as BrowserWindow);
+
+      await windowService.load("/test");
+      sinon.assert.calledWith(mockDialog.stubs.showMessageBoxSync, {
+        type: "error",
+        title: "A fatal error occurred!",
+        message:
+          "\n    Unable to load application page\n    Error: test error\n    ",
+      });
+    });
+
+    it("should handle unknown errors", async () => {
+      const mockNonError = { message: "test error" };
+      sinon.stub(windowService, "navigateInWindow").rejects(mockNonError);
+
+      windowService.setWindow({
+        show: sinon.stub(),
+      } as unknown as BrowserWindow);
+
+      await windowService.load("/test");
+      sinon.assert.calledWith(mockDialog.stubs.showMessageBoxSync, {
+        type: "error",
+        title: "A fatal error occurred!",
+        message:
+          "\n    Unable to load application page with unknown error\n    \n    ",
+      });
+    });
+  });
+
+  describe("navigateInWindow", () => {
+    it("should navigate to the url", async () => {
+      const loadURLStub = sinon.stub();
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: () => false,
+      } as unknown as BrowserWindow);
+      await windowService.navigateInWindow("test");
+      sinon.assert.calledWith(loadURLStub, "test");
+    });
+
+    it("should handle ERR_ABORTED error with visible window by reloading", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      const errAbortedError = new Error("Navigation aborted") as Error & {
+        code: string;
+      };
+      errAbortedError.code = "ERR_ABORTED";
+      loadURLStub.rejects(errAbortedError);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      await windowService.navigateInWindow("test");
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.calledOnce(reloadStub);
+      sinon.assert.calledWith(
+        mockLogger.debug,
+        "Window already open. Reloading window"
+      );
+    });
+
+    it("should handle ERR_FAILED error with visible window by reloading", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      // Create error with ERR_FAILED code
+      const errFailedError = new Error("Navigation failed") as Error & {
+        code: string;
+      };
+      errFailedError.code = "ERR_FAILED";
+      loadURLStub.rejects(errFailedError);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should not throw error
+      await windowService.navigateInWindow("test");
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.calledOnce(reloadStub);
+      sinon.assert.calledWith(
+        mockLogger.debug,
+        "Window already open. Reloading window"
+      );
+    });
+
+    it("should re-throw other errors", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      // Create error with different code
+      const otherError = new Error("Other navigation error") as Error & {
+        code: string;
+      };
+      otherError.code = "OTHER_ERROR";
+      loadURLStub.rejects(otherError);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should throw the error
+      await expect(windowService.navigateInWindow("test")).to.be.rejectedWith(
+        otherError
+      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.notCalled(reloadStub);
+    });
+
+    it("should re-throw ERR_FAILED error when window is not visible", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(false);
+
+      // Create error with ERR_FAILED code
+      const errFailedError = new Error("Navigation failed") as Error & {
+        code: string;
+      };
+      errFailedError.code = "ERR_FAILED";
+      loadURLStub.rejects(errFailedError);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should throw the error because window is not visible
+      await expect(windowService.navigateInWindow("test")).to.be.rejectedWith(
+        errFailedError
+      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.notCalled(reloadStub);
+    });
+
+    it("should re-throw errors without code property", async () => {
+      const loadURLStub = sinon.stub();
+      const reloadStub = sinon.stub();
+      const isVisibleStub = sinon.stub().returns(true);
+
+      // Create error without code property
+      const errorWithoutCode = new Error("Error without code");
+      loadURLStub.rejects(errorWithoutCode);
+
+      windowService.setWindow({
+        loadURL: loadURLStub,
+        isVisible: isVisibleStub,
+        reload: reloadStub,
+      } as unknown as BrowserWindow);
+
+      // Should throw the error because it doesn't have code property
+      await expect(windowService.navigateInWindow("test")).to.be.rejectedWith(
+        errorWithoutCode
+      );
+
+      sinon.assert.calledWith(loadURLStub, "test");
+      sinon.assert.calledOnce(isVisibleStub);
+      sinon.assert.notCalled(reloadStub);
+    });
+  });
+});

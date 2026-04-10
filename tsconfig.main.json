@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "dist/main.tsbuildinfo",
+    "types": ["electron-vite/node"]
+  },
+  "include": [
+    "src/main.ts",
+    "src/main/**/*.ts",
+    "src/shared/**/*.ts",
+    "src/shared/**/*.json",
+    "src/preload/**/*.ts",
+    "src/**/*.d.ts",
+    //TODO add typing to this file when electron-vite is ready
+//    "electron.vite.config.*"
+  ]
+}

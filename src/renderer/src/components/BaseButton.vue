@@ -1,0 +1,91 @@
+<template>
+  <div
+    :class="[
+      'c-button u-text',
+      `c-button--${size}`,
+      `c-button--${type}`,
+      { 'c-button--disabled': disabled },
+    ]"
+  >
+    <slot />
+  </div>
+</template>
+
+<script setup lang="ts">
+export type ButtonSizes = "large" | "small" | "grow";
+export type ButtonTypes = "primary" | "default" | "warning";
+
+withDefaults(
+  defineProps<{
+    size?: ButtonSizes;
+    type?: ButtonTypes;
+    disabled?: boolean;
+  }>(),
+  {
+    size: "small",
+    type: "default",
+    disabled: false,
+  }
+);
+</script>
+
+<style lang="scss" scoped>
+@use "sass:color";
+@use "../assets/scss/index" as *;
+
+.c-button {
+  background-color: $colour-background--dark;
+  border: 0;
+  border-radius: 2px;
+  color: $colour-text;
+  display: flex;
+  min-height: $size-action-height;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  user-select: none;
+
+  &:active:not(.c-button--disabled),
+  &:hover:not(.c-button--disabled) {
+    background-color: color.adjust($colour-background--dark, $lightness: 10%);
+  }
+
+  &:hover:not(.c-button--disabled) {
+    cursor: pointer;
+  }
+
+  &--disabled {
+    cursor: progress;
+  }
+
+  &--large {
+    width: 155px;
+  }
+
+  &--grow {
+    flex: 1;
+  }
+
+  &--primary {
+    background-color: $colour-primary;
+
+    &:active:not(.c-button--disabled),
+    &:hover:not(.c-button--disabled) {
+      background-color: $colour-primary--light;
+    }
+  }
+
+  &--warning {
+    background-color: $color-warning;
+
+    &active:not(.c-button--disabled),
+    &:hover:not(.c-button--disabled) {
+      background-color: $color-warning--light;
+    }
+  }
+
+  &--small {
+    min-width: 85px;
+  }
+}
+</style>
