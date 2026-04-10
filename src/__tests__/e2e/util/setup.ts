@@ -108,7 +108,7 @@ export const startTestApp = async (
   // but only if playwrights is using more than one worker
   // this allows all windows to be visible when using multiple workers
   if (!process.env["CI"]) {
-    // CI uses 2 workers, local uses 3 workers by default
+    // CI uses only 1 worker, local uses 3 workers by default
     // eslint-disable-next-line @typescript-eslint/naming-convention
     await electronApp.evaluate(({ BrowserWindow }) => {
       const offset = 200;
