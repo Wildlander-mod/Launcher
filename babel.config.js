@@ -1,5 +1,5 @@
 module.exports = {
-  presets: ["@vue/cli-plugin-babel/preset"],
+  presets: ["@babel/preset-typescript"],
   // TODO only include in test mode
-  plugins: ["istanbul"],
+  plugins: ["istanbul", "@babel/plugin-proposal-class-properties"],
 };
